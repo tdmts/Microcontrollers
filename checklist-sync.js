@@ -7,14 +7,14 @@
    localStorage key scheme as dashboard.js (msDashboard:{labId}:{exerciseId}),
    so no changes to dashboard.js's read logic are needed.
 
-   Usage -- pass the lab's exercises.js manifest, and the current exercise
-   is auto-detected by matching its "href" against the current page
-   (see Labo1/Looplicht.html):
+   Usage -- pass the current lab's entry from the shared exercises.js
+   manifest, and the current exercise is auto-detected by matching its
+   "href" against the current page (see Labo1/Looplicht.html):
 
-     <script src="exercises.js"></script>
+     <script src="../exercises.js"></script>
      <script src="../checklist-sync.js"></script>
      <script>
-       initChecklistSync(LAB_EXERCISES);
+       initChecklistSync(LAB_EXERCISES.labo1);
      </script>
 
    A direct { labId, exerciseId } form is also accepted for one-off use
