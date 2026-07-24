@@ -1,0 +1,293 @@
+/* ============================================================
+   Shared styling for the per-lab exercise dashboards.
+   Included by Labo*/dashboard.html via a relative "../dashboard.css" link.
+   Scoped under .ms-dashboard to avoid clashing with orion.css.
+   ============================================================ */
+
+.ms-dashboard {
+    max-width: 720px;
+    margin: 0 auto;
+    font-family: inherit;
+}
+
+/* --- Level / XP hero card --- */
+.ms-xp-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: linear-gradient(135deg, #eef2ff, #ecfeff);
+    border: 1px solid #e0e7ff;
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.ms-level-badge {
+    flex: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.35);
+}
+
+.ms-xp-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.ms-xp-label {
+    font-weight: 700;
+    color: #3730a3;
+    margin-bottom: 0.35rem;
+}
+
+.ms-progress-bar {
+    background: #e0e7ff;
+    border-radius: 999px;
+    height: 14px;
+    overflow: hidden;
+}
+
+.ms-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4f46e5, #06b6d4);
+    border-radius: 999px;
+    transition: width 0.5s ease;
+}
+
+.ms-progress-label {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: #4338ca;
+}
+
+/* --- Badges --- */
+.ms-badges {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.ms-badge {
+    text-align: center;
+    padding: 0.9rem 0.5rem;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background: #f9fafb;
+    transition: transform 0.2s ease;
+}
+
+.ms-badge.unlocked {
+    background: linear-gradient(135deg, #fff7e6, #fff1cc);
+    border-color: #fcd34d;
+    animation: ms-pop 0.4s ease;
+}
+
+.ms-badge.locked {
+    opacity: 0.5;
+}
+
+.ms-badge-grand.unlocked {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border-color: #f59e0b;
+}
+
+.ms-badge-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+    margin-bottom: 0.35rem;
+}
+
+.ms-badge-name {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+@keyframes ms-pop {
+    0% { transform: scale(0.6); opacity: 0; }
+    70% { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+/* --- Exercise list --- */
+.ms-exercise-list {
+    list-style: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.ms-exercise-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+}
+
+.ms-exercise-item.done {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.ms-exercise-check {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    font-weight: 600;
+    color: #111827;
+}
+
+.ms-exercise-check input {
+    width: 18px;
+    height: 18px;
+    accent-color: #16a34a;
+    cursor: pointer;
+}
+
+.ms-exercise-item.done .ms-exercise-name {
+    text-decoration: line-through;
+    color: #15803d;
+}
+
+.ms-exercise-hint {
+    font-size: 0.78rem;
+    color: #9ca3af;
+    font-style: italic;
+}
+
+.ms-exercise-check input:disabled {
+    cursor: default;
+    opacity: 0.6;
+}
+
+.ms-exercise-link {
+    font-size: 0.85rem;
+    white-space: nowrap;
+    text-decoration: none;
+    color: #4f46e5;
+    font-weight: 600;
+}
+
+.ms-exercise-link:hover {
+    text-decoration: underline;
+}
+
+/* --- Reset button --- */
+.ms-reset-btn {
+    display: block;
+    margin: 0 auto;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 0.8rem;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.ms-reset-btn:hover {
+    color: #6b7280;
+}
+
+/* --- Toast --- */
+.ms-toast {
+    position: fixed;
+    left: 50%;
+    bottom: 28px;
+    transform: translateX(-50%) translateY(10px);
+    background: #111827;
+    color: #fff;
+    padding: 0.7rem 1.25rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 10000;
+    pointer-events: none;
+}
+
+.ms-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* --- Celebration overlay --- */
+.ms-celebration-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(17, 24, 39, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    padding: 1rem;
+}
+
+.ms-celebration-modal {
+    background: #fff;
+    border-radius: 18px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    max-width: 380px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    animation: ms-pop 0.35s ease;
+}
+
+.ms-celebration-emoji {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.ms-celebration-modal h2 {
+    margin: 0 0 0.5rem;
+    color: #b45309;
+}
+
+.ms-celebration-close {
+    margin-top: 1.25rem;
+    background: linear-gradient(135deg, #4f46e5, #06b6d4);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 0.6rem 1.5rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* --- Confetti canvas --- */
+.ms-confetti-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+@media (max-width: 480px) {
+    .ms-xp-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .ms-exercise-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
