@@ -299,6 +299,22 @@ Reading package lists... Done</pre>
                 </div>
             </div>
 
+            <!-- Oplossing (solution reveal) -->
+            <h2 id="oplossing">Oplossing</h2>
+            <p>
+                Voor oefeningen met een oplossing: gebruik <code>.solution-container</code> in
+                plaats van <code>.spoiler-container</code>. Het is een eenvoudige, eenrichtings
+                reveal (geen "Minder tonen" toggle), gestuurd door
+                <code>solution-reveal.js</code> in plaats van orion.js's eigen spoiler-logica.
+            </p>
+            <div class="solution-container">
+                <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+                <div class="spoiler-content solution-content">
+                    Dit is de oplossing. Kan tekst, een code-blok (<code>.code-wrapper</code>) of een afbeelding bevatten.
+                </div>
+            </div>
+            <script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
+
             <!-- STL Viewer -->
             <h2 id="stl-viewer">STL Viewer</h2>
             <p>Hieronder wordt het bestand <code>bolt.stl</code> weergegeven met behulp van de nieuwe STL viewer functionaliteit.</p>

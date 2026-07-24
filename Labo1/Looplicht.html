@@ -35,11 +35,53 @@
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                Dit is een <strong>sinking</strong>-schakeling: de leds hangen met de
+                anode aan een vaste +5V-rail en met de kathode (via de weerstand) aan
+                de Arduino-pin. Er vloeit dus enkel stroom wanneer de pin
+                <code>LOW</code> staat (de pin "zinkt" de stroom naar GND) &mdash; bij
+                <code>HIGH</code> staat er geen spanningsverschil over de led en blijft
+                hij uit. De code moet dus <code>LOW</code> gebruiken om een led aan te
+                zetten, en <code>HIGH</code> om hem uit te zetten.
+            </p>
+            <p>
+                De frequentie van 1Hz slaat op de volledige cyclus van de 4 leds:
+                elke led blijft dus <code>1000 / 4 = 250ms</code> aan.
+            </p>
+            <pre class="code-wrapper language-arduino show-language">
+const int ledPins[] = {3, 4, 5, 6};
+const int aantalLeds = 4;
+const int cyclusDuur = 1000; // ms, 1Hz voor de volledige cyclus
+
+void setup() {
+  for (int i = 0; i < aantalLeds; i++) {
+    pinMode(ledPins[i], OUTPUT);
+    digitalWrite(ledPins[i], HIGH); // sinking: HIGH = led uit
+  }
+}
+
+void loop() {
+  for (int i = 0; i < aantalLeds; i++) {
+    digitalWrite(ledPins[i], LOW); // sinking: LOW = led aan
+    delay(cyclusDuur / aantalLeds);
+    digitalWrite(ledPins[i], HIGH); // sinking: HIGH = led uit
+  }
+}
+            </pre>
+        </div>
+    </div>
 </div>
 
 <script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
 <script>
     initChecklistSync(LAB_EXERCISES.labo1);
 </script>
