@@ -7,12 +7,12 @@ description: Convert raw content (messy HTML export, plain text/Markdown, or an 
 
 Converts arbitrary source content into a clean HTML page that follows this
 repo's Orion styleguide conventions (see [`template.html`](../../../template.html)
-for the full component reference; [`Labo1/Morsecode.html`](../../../Labo1/Morsecode.html)
-for a real, correctly-converted example with a static checklist; and
+for the full component reference; [`Labo1/Morsecode.html`](../../../Labo1/Morsecode.html) /
 [`Labo1/Looplicht.html`](../../../Labo1/Looplicht.html) /
-[`Labo1/KnightRider.html`](../../../Labo1/KnightRider.html) for the
-checklist-driven pattern used when the target lab has an entry in the
-shared `exercises.js` manifest — see Checklist / QR block below).
+[`Labo1/KnightRider.html`](../../../Labo1/KnightRider.html) for real,
+correctly-converted examples of the checklist-driven pattern used when the
+target lab has an entry in the shared `exercises.js` manifest — see
+Checklist / QR block below).
 
 ## Inputs this skill handles
 
@@ -44,6 +44,10 @@ content or point at a file before proceeding.
    `exercises.js`, and include the `checklist-sync.js` scripts (see
    Checklist / QR block below). If that lab has no entry in the manifest
    yet, fall back to a static checklist instead.
+6a. **Every exercise page** (checklist-driven or static fallback alike, as
+   long as it isn't `dashboard.html` itself) gets the shared
+   `back-link.js` include right before `</body>` -- see Back link below.
+   It self-injects a "Terug naar dashboard" link, no init call needed.
 7. **If the target file already exists**, ask for a plain yes/no confirmation
    before overwriting it. No diff needed — just confirm intent.
 8. **After writing**, summarize in plain text: which components you used,
@@ -172,6 +176,7 @@ itself. So treat the checklist and the QR widget as two separate things:
     ```
     Then, right before `</body>`:
     ```html
+    <script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
     <script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
     <script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
     <script>
@@ -190,8 +195,7 @@ itself. So treat the checklist and the QR widget as two separate things:
     exactly match the output filename (case-insensitive) or the checklist
     silently won't sync.
   - **Static fallback (target lab has no key in `exercises.js` yet)** —
-    plain text, no inputs, no scripts. See
-    [`Labo1/Morsecode.html`](../../../Labo1/Morsecode.html)'s pattern:
+    plain text, no inputs, no scripts:
     ```html
     <div class="info-box evaluation">
         <p class="info-title evaluation">Checklist</p>
@@ -202,6 +206,9 @@ itself. So treat the checklist and the QR widget as two separate things:
         </ul>
     </div>
     ```
+    Still add the `back-link.js` include (see Back link below) right before
+    `</body>` even in this fallback case — it doesn't depend on the
+    manifest.
 
   In both variants:
   - Title text is `Checklist` (not "Evaluatie" — the class stays
@@ -224,6 +231,21 @@ itself. So treat the checklist and the QR widget as two separate things:
   Brightspace assignment and gives (or asks you to placeholder-and-flag) the
   real IDs. Never add the QR widget silently just because grading keywords
   were detected.
+
+## Back link
+
+Every `LaboN/` exercise page lives in the same folder as that lab's
+`dashboard.html`, so getting back there is just one shared, self-running
+script — no manifest lookup, no per-page href to get right:
+
+```html
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+```
+
+It injects a "← Terug naar dashboard" link above the `<h1>`, pointing at the
+relative `dashboard.html`, and no-ops on `dashboard.html` itself. Add this
+include on every exercise page (see Checklist / QR block above for exactly
+where it goes relative to the other script includes).
 
 Don't over-specify how/where students save their work — "Sla je oefening
 op." is enough. Don't invent or carry over specific file extensions (.ino,

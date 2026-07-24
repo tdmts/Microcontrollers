@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>RGB Led</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>RGB Led</h1>
+    <p class="lead">Plaats een RGB led op pinnen 3 (rood), 4 (groen) en 5 (blauw). Deze keer sturen we niet actief laag. Maak een programma dat door de 7 basismengkleuren heen loopt. Elke kleur moet 1 seconde zichtbaar zijn.</p>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Wat is de periode?</div>
+            <p>Een periode van een signaal is één volledige cyclus die steeds wordt herhaald. De eenheid is seconden. In dit geval is de periode 7 seconden.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat is de frequentie?</div>
+            <p>De relatie tussen frequentie en periode is als volgt: F = 1/T.</p>
+            <p>De frequentie is hier dus 1/7s ofwel ongeveer 0.143Hz</p>
+        </div>
+    </div>
+
+    <h2 id="schema">Schema</h2>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="/content/enforced/15860-OON-PBAEM-206737-2627/../../migration/afbeeldingen/image.9461119.png" class="img-fluid" alt="Schema">
+        </figure>
+    </div>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/qoETcNbAe9s?wmode=opaque&amp;rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> RGB led aangesloten op pinnen 3 (rood), 4 (groen) en 5 (blauw)</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Alle 7 basismengkleuren worden na elkaar getoond</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke kleur is 1 seconde zichtbaar</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo1);
+</script>
+</body>
+</html>
