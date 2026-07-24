@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Morsecode</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Morsecode</h1>
+    <p class="lead">Maak een nieuw programma. Plaats een rode LED op pin 12 en schrijf een programma waarbij de led SOS in morsecode weergeeft.</p>
+
+    <h2 id="opgave">Opgave</h2>
+    <div class="info-box">
+        <p>Een streep duurt 0,3s en een punt 0,1s. De pauze tussen strepen en punten is 0,1s. De pauze tussen twee letters is 0,3s en de pauze tussen twee woorden is 0,7s.</p>
+    </div>
+
+    <div class="info-box">
+        <div class="info-title tip">Tip: Efficiëntie</div>
+        <p>Gebruik lussen om het programma zo efficiënt mogelijk te maken. Bekijk de voorbeeldcode en vul aan.</p>
+    </div>
+
+    <h2 id="voorbeeldcode">Voorbeeldcode</h2>
+    <pre class="code-wrapper language-arduino linenumbers show-language">
+const bool KORT = false;
+const bool LANG = true;
+
+void setup()
+{
+  pinMode(12, OUTPUT);
+}
+
+void knipper(bool duur) {
+  digitalWrite(12,LOW);
+  delay(100);
+  if(duur) { delay(200); } //Extra delay
+  digitalWrite(12,HIGH);
+  delay(100);
+}
+
+void loop()
+{
+  //De letter S = 3x kort
+  for(int i = 0; i < 3; i++)
+  {
+    knipper(KORT);
+  }
+  delay(300); //Pauze tussen twee letters.
+
+  //Nu nog de O
+  //...
+
+  //Nu nog de S
+  //...
+
+}
+    </pre>
+</div>
+</body>
+</html>
