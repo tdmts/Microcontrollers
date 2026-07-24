@@ -259,3 +259,28 @@ external URLs) — this skill does not copy or manage asset files. Just wrap
 them in the correct component markup per the table above, and mention any
 `src` paths in your final summary so the user can verify they resolve
 correctly in the final location.
+
+**Exception — Brightspace-hosted images.** A source `<img src>` pointing at
+Brightspace's authenticated content store (relative paths under
+`/content/enforced/<course>-<academic-year-code>/...` or a
+`chamilo-downloads.hogent.be/...DocumentDownloader...` link) must **not** be
+kept as-is: the path bakes in that year's course/academic-year code and will
+break the following academic year, and it may also require an active
+Brightspace login to resolve at all. Instead:
+
+1. Ask the user for a working absolute URL to the image (a signed
+   `chamilo-downloads.hogent.be` download link works without login; a bare
+   `/content/enforced/...` path does not — it needs the domain). If they
+   don't have one, ask them to save the image from their logged-in browser
+   and give you the local file path instead.
+2. Fetch/copy it into the shared **repo-root `img/`** folder (this repo's
+   single shared asset folder — same pattern as the shared root
+   `exercises.js`/`back-link.js`, see the `single-source-of-truth`
+   preference), with a descriptive filename (e.g. `rgbled-schema.png`, not
+   the original `image.<id>.png`).
+3. Point the `<img src>` at it with a relative path from the lab folder,
+   e.g. `../img/rgbled-schema.png`.
+
+This does not apply to non-Brightspace image URLs (e.g. already-hosted
+CDN/placeholder images) — those keep the default "leave `src` as-is"
+behavior above.

@@ -18,8 +18,12 @@ window.LAB_EXERCISES = {
         labTitle: 'Labo 1',
         exercises: [
             { id: 'looplicht', order: 2, name: 'Looplicht', href: 'https://tdmts.github.io/Microcontrollers/Labo1/Looplicht.html', checklistDriven: true },
-            { id: 'morsecode', order: 1, name: 'Morsecode', href: 'https://tdmts.github.io/Microcontrollers/Labo1/Morsecode.html' },
-            { id: 'knightrider', order: 3, name: 'Knight rider', href: 'https://tdmts.github.io/Microcontrollers/Labo1/KnightRider.html', checklistDriven: true }
+            { id: 'morsecode', order: 1, name: 'Morsecode', href: 'https://tdmts.github.io/Microcontrollers/Labo1/Morsecode.html', checklistDriven: true },
+            { id: 'knightrider', order: 3, name: 'Knight rider', href: 'https://tdmts.github.io/Microcontrollers/Labo1/KnightRider.html', checklistDriven: true },
+            { id: 'rgbled', order: 4, name: 'RGB Led', href: 'https://tdmts.github.io/Microcontrollers/Labo1/RGBLed.html', checklistDriven: true },
+            { id: 'dubbel7segment', order: 5, name: 'Dubbel 7 segment', href: 'https://tdmts.github.io/Microcontrollers/Labo1/Dubbel7Segment.html', checklistDriven: true },
+            { id: 'sevensegmentmetteller', order: 6, name: '7 segment met teller', href: 'https://tdmts.github.io/Microcontrollers/Labo1/7SegmentMetTeller.html', checklistDriven: true },
+            { id: 'dubbel7segmentmetteller', order: 7, name: 'Dubbel 7 segment met teller', href: 'https://tdmts.github.io/Microcontrollers/Labo1/Dubbel7SegmentMetTeller.html', checklistDriven: true }
         ]
     }
 };

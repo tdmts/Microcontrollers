@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>7 segment met teller</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>7 segment met teller</h1>
+    <p class="lead">Maak een teller op 1 display die doorlopend telt van 0 tot en met 9. Gebruik een array om de letterpatronen op te slaan. segA=pin3, segB=pin4,... Frequentie van de teller is 2Hz.</p>
+
+    <p>Een array is te vergelijken met een List uit de lessen Technisch programmeren (C#). <strong>Een array bevat meerdere waarden in dezelfde variabele.</strong></p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../img/seven-segment-display.png" alt="Seven-segment-display" class="figure-img img-fluid">
+        </figure>
+    </div>
+
+    <p><strong>Voorbeeld array:</strong></p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int lijst[] = { 10, 4, -1, 0 }; //Declaratie van een int array
+
+void setup() {
+  // put your setup code here, to run once:
+  int eersteItem = lijst[0]; //Opvragen van één waarde met de index
+  lijst[1] = 5; //Een waarde aanpassen met de index
+}
+
+void loop() {
+  //Aantal items in een array tellen.
+  int count = sizeof(lijst) / sizeof(lijst[0]);
+
+  // Overlopen van een array met een lus
+  for(int i = 0; i &lt; count; i++)
+  {
+    lijst[i] = lijst[i] + 1; //Een waarde aanpassen binnen de lus.
+  }
+}</code></pre>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/zDzZnVyExlo?wmode=opaque&amp;rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Display telt doorlopend van 0 tot en met 9</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Letterpatronen worden opgeslagen in een array</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Segmenten zijn correct verbonden (segA=pin3, segB=pin4, ...)</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Frequentie van de teller is 2Hz</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo1);
+</script>
+</body>
+</html>
