@@ -60,6 +60,17 @@
         });
     }
 
+    var DIFFICULTY_LABELS = { 1: 'Makkelijk', 2: 'Gemiddeld', 3: 'Moeilijk' };
+
+    function pepperHtml(difficulty) {
+        var filled = Math.max(0, Math.min(3, difficulty || 0));
+        var out = '';
+        for (var i = 0; i < 3; i++) {
+            out += '<span class="ms-pepper' + (i < filled ? ' filled' : ' empty') + '">🌶️</span>';
+        }
+        return out;
+    }
+
     function initDashboard(config) {
         var root = document.getElementById('dashboard-root');
         if (!root || !config || !Array.isArray(config.exercises)) return;
@@ -86,38 +97,52 @@
 
             var badgesHtml = exercises.map(function (e) {
                 var unlocked = isDone(config.labId, e.id);
+                var diffLabel = DIFFICULTY_LABELS[e.difficulty] || '';
+                var tag = e.href ? 'a' : 'div';
+                var hrefAttr = e.href ? ' href="' + escapeHtml(e.href) + '"' : '';
+                var lockedHint = e.checklistDriven && !unlocked
+                    ? '<div class="ms-badge-tooltip-hint">Voltooi de checklist op de oefenpagina om te ontgrendelen</div>'
+                    : '';
+                var tooltipHtml = (e.blurb || lockedHint)
+                    ? '<div class="ms-badge-tooltip">' +
+                      (e.blurb ? '<div class="ms-badge-tooltip-text">' + escapeHtml(e.blurb) + '</div>' : '') +
+                      lockedHint +
+                      '</div>'
+                    : '';
+                var metaHtml =
+                    '<div class="ms-badge-meta">' +
+                    (diffLabel ? '<span class="ms-badge-difficulty" aria-label="Moeilijkheid: ' + diffLabel + '">' + pepperHtml(e.difficulty) + '</span>' : '') +
+                    (e.time ? '<span class="ms-badge-time">' + escapeHtml(e.time) + '</span>' : '') +
+                    '</div>';
+                var toggleHtml = (!e.checklistDriven)
+                    ? '<label class="ms-badge-toggle" title="Markeer als voltooid">' +
+                      '<input type="checkbox" data-toggle="' + escapeHtml(e.id) + '"' + (unlocked ? ' checked' : '') + '>' +
+                      '</label>'
+                    : '';
                 return (
-                    '<div class="ms-badge' + (unlocked ? ' unlocked' : ' locked') + '" title="' + escapeHtml(e.name) + '">' +
+                    '<div class="ms-badge-wrap">' +
+                    '<' + tag + ' class="ms-badge' + (unlocked ? ' unlocked' : ' locked') + '"' + hrefAttr + '>' +
                     '<div class="ms-badge-icon">' + (unlocked ? '\uD83C\uDFC5' : '\uD83D\uDD12') + '</div>' +
                     '<div class="ms-badge-name">' + escapeHtml(e.name) + '</div>' +
+                    metaHtml +
+                    tooltipHtml +
+                    '</' + tag + '>' +
+                    toggleHtml +
                     '</div>'
                 );
             }).join('');
 
             badgesHtml += (
-                '<div class="ms-badge ms-badge-grand' + (allDone ? ' unlocked' : ' locked') + '" title="' + escapeHtml(config.labTitle) + ' Meester">' +
+                '<div class="ms-badge-wrap">' +
+                '<div class="ms-badge ms-badge-grand' + (allDone ? ' unlocked' : ' locked') + '">' +
                 '<div class="ms-badge-icon">' + (allDone ? '\uD83D\uDC51' : '\uD83D\uDD12') + '</div>' +
                 '<div class="ms-badge-name">' + escapeHtml(config.labTitle) + ' Meester</div>' +
+                (allDone
+                    ? ''
+                    : '<div class="ms-badge-tooltip"><div class="ms-badge-tooltip-text">Voltooi alle oefeningen van ' + escapeHtml(config.labTitle) + ' om deze badge te ontgrendelen.</div></div>') +
+                '</div>' +
                 '</div>'
             );
-
-            var itemsHtml = exercises.map(function (e) {
-                var exDone = isDone(config.labId, e.id);
-                var disabledAttr = e.checklistDriven ? ' disabled' : '';
-                var hintHtml = e.checklistDriven && !exDone
-                    ? '<span class="ms-exercise-hint">Voltooi de checklist op de oefenpagina</span>'
-                    : '';
-                return (
-                    '<li class="ms-exercise-item' + (exDone ? ' done' : '') + '">' +
-                    '<label class="ms-exercise-check">' +
-                    '<input type="checkbox" data-toggle="' + escapeHtml(e.id) + '"' + (exDone ? ' checked' : '') + disabledAttr + '>' +
-                    '<span class="ms-exercise-name">' + escapeHtml(e.name) + '</span>' +
-                    '</label>' +
-                    hintHtml +
-                    (e.href ? '<a class="ms-exercise-link" href="' + escapeHtml(e.href) + '">Open oefening \u2192</a>' : '') +
-                    '</li>'
-                );
-            }).join('');
 
             root.innerHTML =
                 '<div class="ms-dashboard">' +
@@ -130,7 +155,6 @@
                 '</div>' +
                 '</div>' +
                 '<div class="ms-badges">' + badgesHtml + '</div>' +
-                '<ul class="ms-exercise-list">' + itemsHtml + '</ul>' +
                 '<button class="ms-reset-btn" type="button" id="ms-reset-btn">Voortgang resetten</button>' +
                 '</div>' +
                 '<canvas class="ms-confetti-canvas" id="ms-confetti-canvas"></canvas>';
