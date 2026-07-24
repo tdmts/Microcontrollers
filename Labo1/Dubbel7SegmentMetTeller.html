@@ -28,11 +28,104 @@
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <div class="info-box warning">
+                <div class="info-title warning">Let op: pas aan op basis van je eigen schema</div>
+                <p>
+                    Net als bij de enkelvoudige 7-segment-oplossing hangt het af van
+                    jouw specifieke sjabloon welke pinnen je precies gebruikt voor de
+                    segmenten, of het display common anode of common cathode is
+                    (<code>SEGMENT_AAN</code>), en welke stand van pin10 het eerste
+                    versus het tweede display activeert (<code>DIGIT_TIENTALLEN</code>).
+                    Zoek dit op in jouw schema en pas de placeholders hieronder aan.
+                </p>
+            </div>
+            <p>
+                Bij een dubbel 7-segment zonder aparte pinnen per display delen beide
+                digits dezelfde 7 segmentpinnen; enkel de common pin van elk display
+                wordt apart aangestuurd (hier via pin10). Om beide cijfers toch
+                gelijktijdig leesbaar te tonen, wissel je razendsnel (multiplexing)
+                tussen "toon tientallen op display 1" en "toon eenheden op display 2"
+                &mdash; snel genoeg dat het oog geen flikkering ziet.
+            </p>
+            <pre class="code-wrapper language-arduino show-language">
+// Placeholder-pinnen: vervang door de pinnen uit jouw eigen schema
+const int segPins[] = {2, 3, 4, 5, 6, 7, 8}; // a,b,c,d,e,f,g
+const int pinDigitSelect = 10;
+
+// Pas aan op basis van je display: HIGH voor common cathode, LOW voor common anode
+const bool SEGMENT_AAN = HIGH;
+// Pas aan: welke stand van pin10 activeert het display met de tientallen?
+const bool DIGIT_TIENTALLEN = HIGH;
+
+// Patronen per cijfer 0-9: volgorde a,b,c,d,e,f,g. 1 = segment aan.
+const bool cijferPatronen[10][7] = {
+  {1,1,1,1,1,1,0}, // 0
+  {0,1,1,0,0,0,0}, // 1
+  {1,1,0,1,1,0,1}, // 2
+  {1,1,1,1,0,0,1}, // 3
+  {0,1,1,0,0,1,1}, // 4
+  {1,0,1,1,0,1,1}, // 5
+  {1,0,1,1,1,1,1}, // 6
+  {1,1,1,0,0,0,0}, // 7
+  {1,1,1,1,1,1,1}, // 8
+  {1,1,1,1,0,1,1}, // 9
+};
+
+int teller = 0;
+unsigned long vorigeTelTick = 0;
+
+void setup() {
+  for (int i = 0; i < 7; i++) {
+    pinMode(segPins[i], OUTPUT);
+  }
+  pinMode(pinDigitSelect, OUTPUT);
+}
+
+void toonCijfer(int cijfer) {
+  for (int i = 0; i < 7; i++) {
+    bool segmentAan = cijferPatronen[cijfer][i];
+    digitalWrite(segPins[i], segmentAan ? SEGMENT_AAN : !SEGMENT_AAN);
+  }
+}
+
+void multiplexStap(int tientallen, int eenheden) {
+  // Even kort de tientallen tonen op display 1...
+  digitalWrite(pinDigitSelect, DIGIT_TIENTALLEN);
+  toonCijfer(tientallen);
+  delay(5);
+
+  // ...en dan kort de eenheden op display 2. Snel afwisselen = geen flikkering zichtbaar.
+  digitalWrite(pinDigitSelect, !DIGIT_TIENTALLEN);
+  toonCijfer(eenheden);
+  delay(5);
+}
+
+void loop() {
+  int tientallen = teller / 10;
+  int eenheden = teller % 10;
+  multiplexStap(tientallen, eenheden);
+
+  // Om de seconde de teller ophogen, zonder de multiplexing te blokkeren
+  if (millis() - vorigeTelTick >= 1000) {
+    vorigeTelTick = millis();
+    teller = (teller + 1) % 100; // 00 t.e.m. 99, dan terug naar 00
+  }
+}
+            </pre>
+        </div>
+    </div>
 </div>
 
 <script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
 <script>
     initChecklistSync(LAB_EXERCISES.labo1);
 </script>

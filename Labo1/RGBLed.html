@@ -53,11 +53,65 @@
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                Volgens het schema is dit een <strong>common cathode</strong> RGB led:
+                de gemeenschappelijke pin gaat rechtstreeks (zonder weerstand) naar de
+                vaste GND-rail, en elk kleurkanaal gaat via zijn eigen weerstand naar
+                een Arduino-pin. Dit is dus <strong>actief hoog</strong> ("niet actief
+                laag", zoals de opgave aangeeft): <code>HIGH</code> zet een kleurkanaal
+                aan, <code>LOW</code> zet het uit.
+            </p>
+            <p>
+                De 7 basismengkleuren zijn alle combinaties van rood/groen/blauw
+                behalve "alles uit": R, G, B, R+G (geel), G+B (cyaan), R+B (magenta) en
+                R+G+B (wit). Elke combinatie blijft 1 seconde staan, dus de periode van
+                7 seconden klopt met de 7 kleuren uit de opgave hierboven.
+            </p>
+            <pre class="code-wrapper language-arduino show-language">
+const int roodPin = 3;
+const int groenPin = 4;
+const int blauwPin = 5;
+
+// 7 basismengkleuren: alle combinaties van R/G/B behalve "alles uit"
+const bool kleuren[7][3] = {
+  {1, 0, 0}, // rood
+  {0, 1, 0}, // groen
+  {0, 0, 1}, // blauw
+  {1, 1, 0}, // geel
+  {0, 1, 1}, // cyaan
+  {1, 0, 1}, // magenta
+  {1, 1, 1}, // wit
+};
+
+void setup() {
+  pinMode(roodPin, OUTPUT);
+  pinMode(groenPin, OUTPUT);
+  pinMode(blauwPin, OUTPUT);
+}
+
+void loop() {
+  for (int i = 0; i < 7; i++) {
+    digitalWrite(roodPin, kleuren[i][0]);
+    digitalWrite(groenPin, kleuren[i][1]);
+    digitalWrite(blauwPin, kleuren[i][2]);
+    delay(1000); // elke kleur 1 seconde zichtbaar
+  }
+}
+            </pre>
+        </div>
+    </div>
 </div>
 
 <script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
 <script>
     initChecklistSync(LAB_EXERCISES.labo1);
 </script>

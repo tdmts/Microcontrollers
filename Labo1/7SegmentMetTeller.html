@@ -64,11 +64,81 @@ void loop() {
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                Dit display is <strong>common anode</strong>: de gemeenschappelijke pin
+                hangt rechtstreeks (zonder weerstand) aan de vaste +5V-rail, en elk
+                segment gaat via zijn eigen weerstand naar een Arduino-pin. Dit is dus
+                <strong>actief laag</strong>: een segment gaat aan bij <code>LOW</code>
+                en uit bij <code>HIGH</code>.
+            </p>
+            <p>
+                Elk cijfer wordt opgeslagen als een rij van 7 waarden (a t.e.m. g) in
+                een array; <code>0</code> betekent "segment aan" in de array, wat via
+                <code>SEGMENT_AAN</code> vertaald wordt naar het juiste
+                <code>HIGH</code>/<code>LOW</code>-niveau voor dit (actief lage)
+                display. Bij 2Hz wisselt het cijfer 2x per seconde, dus elk cijfer
+                blijft <code>500ms</code> staan.
+            </p>
+            <pre class="code-wrapper language-arduino show-language">
+const int segA = 3;
+const int segB = 4;
+const int segC = 5;
+const int segD = 6;
+const int segE = 7;
+const int segF = 8;
+const int segG = 9;
+const int segPins[] = {segA, segB, segC, segD, segE, segF, segG};
+
+const bool SEGMENT_AAN = LOW; // common anode: LOW = segment aan
+
+// Patronen per cijfer 0-9: volgorde a,b,c,d,e,f,g. 1 = segment aan.
+const bool cijferPatronen[10][7] = {
+  {1,1,1,1,1,1,0}, // 0
+  {0,1,1,0,0,0,0}, // 1
+  {1,1,0,1,1,0,1}, // 2
+  {1,1,1,1,0,0,1}, // 3
+  {0,1,1,0,0,1,1}, // 4
+  {1,0,1,1,0,1,1}, // 5
+  {1,0,1,1,1,1,1}, // 6
+  {1,1,1,0,0,0,0}, // 7
+  {1,1,1,1,1,1,1}, // 8
+  {1,1,1,1,0,1,1}, // 9
+};
+
+void setup() {
+  for (int i = 0; i < 7; i++) {
+    pinMode(segPins[i], OUTPUT);
+  }
+}
+
+void toonCijfer(int cijfer) {
+  for (int i = 0; i < 7; i++) {
+    bool segmentAan = cijferPatronen[cijfer][i];
+    digitalWrite(segPins[i], segmentAan ? SEGMENT_AAN : !SEGMENT_AAN);
+  }
+}
+
+void loop() {
+  for (int cijfer = 0; cijfer <= 9; cijfer++) {
+    toonCijfer(cijfer);
+    delay(500); // 2Hz => elk cijfer 500ms zichtbaar
+  }
+}
+            </pre>
+        </div>
+    </div>
 </div>
 
 <script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
 <script>
     initChecklistSync(LAB_EXERCISES.labo1);
 </script>

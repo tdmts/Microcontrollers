@@ -34,11 +34,73 @@
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <div class="info-box warning">
+                <div class="info-title warning">Let op: pas aan op basis van je eigen schema</div>
+                <p>
+                    De pinnummers hieronder zijn <strong>placeholders</strong> &mdash;
+                    vul ze aan met de pinnen die jij effectief gebruikt volgens het
+                    sjabloon dat je gekopieerd hebt. Of een segment aan gaat bij
+                    <code>HIGH</code> of bij <code>LOW</code> hangt af van of jouw
+                    display <strong>common anode</strong> of <strong>common
+                    cathode</strong> is &mdash; zoek dit op in de pinout/datasheet van
+                    je display en pas de constante <code>SEGMENT_AAN</code> hieronder
+                    aan.
+                </p>
+            </div>
+            <p>
+                De 8-vormige volgorde a &rarr; b &rarr; g &rarr; e &rarr; d &rarr; c
+                &rarr; g &rarr; f doorloopt de acht in twee lussen (boven- en
+                onderlus) die elkaar in het midden kruisen bij segment g, vandaar dat
+                g twee keer in de reeks voorkomt.
+            </p>
+            <pre class="code-wrapper language-arduino show-language">
+// Placeholder-pinnen: vervang door de pinnen uit jouw eigen schema
+const int pinA = 2;
+const int pinB = 3;
+const int pinC = 4;
+const int pinD = 5;
+const int pinE = 6;
+const int pinF = 7;
+const int pinG = 8;
+
+// Pas aan op basis van je display: HIGH voor common cathode, LOW voor common anode
+const bool SEGMENT_AAN = HIGH;
+const bool SEGMENT_UIT = !SEGMENT_AAN;
+
+// Volgorde van de 8-animatie
+const int volgorde[] = {pinA, pinB, pinG, pinE, pinD, pinC, pinG, pinF};
+const int aantalStappen = sizeof(volgorde) / sizeof(volgorde[0]);
+
+void setup() {
+  int pins[] = {pinA, pinB, pinC, pinD, pinE, pinF, pinG};
+  for (int i = 0; i < 7; i++) {
+    pinMode(pins[i], OUTPUT);
+    digitalWrite(pins[i], SEGMENT_UIT);
+  }
+}
+
+void loop() {
+  for (int i = 0; i < aantalStappen; i++) {
+    digitalWrite(volgorde[i], SEGMENT_AAN);
+    delay(1000); // elk segment 1 seconde aan
+    digitalWrite(volgorde[i], SEGMENT_UIT);
+  }
+}
+            </pre>
+        </div>
+    </div>
 </div>
 
 <script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
 <script>
     initChecklistSync(LAB_EXERCISES.labo1);
 </script>

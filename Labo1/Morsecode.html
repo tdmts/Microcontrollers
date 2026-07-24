@@ -84,11 +84,54 @@ void loop()
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                De letter <strong>O</strong> bestaat uit drie strepen, dus 3x
+                <code>knipper(LANG)</code>. Na elke letter volgt een pauze van 0,3s
+                (al gegeven na de eerste S). Na de laatste letter is er geen "volgende
+                letter" meer, maar omdat <code>loop()</code> meteen herbegint met een
+                nieuwe S, wordt die pauze hier gebruikt als pauze tussen twee woorden
+                (0,7s) &mdash; anders zou de laatste S van dit SOS direct overlopen in
+                de eerste S van de volgende herhaling.
+            </p>
+            <pre class="code-wrapper language-arduino show-language">
+void loop()
+{
+  //De letter S = 3x kort
+  for(int i = 0; i < 3; i++)
+  {
+    knipper(KORT);
+  }
+  delay(300); //Pauze tussen twee letters.
+
+  //Nu nog de O
+  for(int i = 0; i < 3; i++)
+  {
+    knipper(LANG);
+  }
+  delay(300); //Pauze tussen twee letters.
+
+  //Nu nog de S
+  for(int i = 0; i < 3; i++)
+  {
+    knipper(KORT);
+  }
+  delay(700); //Pauze tussen twee woorden (voor herhaling van SOS)
+}
+            </pre>
+        </div>
+    </div>
 </div>
 
 <script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
 <script>
     initChecklistSync(LAB_EXERCISES.labo1);
 </script>

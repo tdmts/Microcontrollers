@@ -33,11 +33,67 @@
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                Dit is een <strong>sourcing</strong>-schakeling: anders dan bij de
+                Looplicht-oefening hangen de leds hier met de kathode (via de
+                weerstand) aan een vaste GND-rail, en met de anode rechtstreeks aan de
+                Arduino-pin. Er vloeit dus enkel stroom wanneer de pin <code>HIGH</code>
+                staat (de pin "bront" de stroom naar de led) &mdash; bij <code>LOW</code>
+                staat er geen spanningsverschil over de led en blijft hij uit. De code
+                moet dus <code>HIGH</code> gebruiken om een led aan te zetten, en
+                <code>LOW</code> om hem uit te zetten.
+            </p>
+            <p>
+                Bij een knightrider-effect loopt het "lichtpuntje" heen en weer:
+                1&rarr;2&rarr;3&rarr;4&rarr;3&rarr;2&rarr;1&rarr;... Een volledige cyclus
+                bestaat dus niet uit 4, maar uit <strong>6</strong> stappen (de eerste en
+                laatste led worden maar 1x aangeraakt per cyclus, de 2 middelste leds
+                2x). Om de frequentie op 1Hz te houden moet de delay per stap dus
+                <code>1000 / 6 &asymp; 167ms</code> zijn in plaats van <code>1000 / 4</code>.
+            </p>
+            <pre class="code-wrapper language-arduino show-language">
+const int ledPins[] = {3, 4, 5, 6};
+const int aantalLeds = 4;
+const int cyclusDuur = 1000; // ms, 1Hz voor de volledige heen-en-weer-cyclus
+const int aantalStappen = 2 * aantalLeds - 2; // 6 stappen: 1,2,3,4,3,2
+const int stapDuur = cyclusDuur / aantalStappen;
+
+void setup() {
+  for (int i = 0; i < aantalLeds; i++) {
+    pinMode(ledPins[i], OUTPUT);
+    digitalWrite(ledPins[i], LOW); // sourcing: LOW = led uit
+  }
+}
+
+void loop() {
+  // Heen: 0,1,2,3
+  for (int i = 0; i < aantalLeds; i++) {
+    digitalWrite(ledPins[i], HIGH); // sourcing: HIGH = led aan
+    delay(stapDuur);
+    digitalWrite(ledPins[i], LOW);
+  }
+  // Terug: 2,1 (de uiteinden 0 en 3 niet herhalen, anders duurt de cyclus 8 stappen ipv 6)
+  for (int i = aantalLeds - 2; i > 0; i--) {
+    digitalWrite(ledPins[i], HIGH);
+    delay(stapDuur);
+    digitalWrite(ledPins[i], LOW);
+  }
+}
+            </pre>
+        </div>
+    </div>
 </div>
 
 <script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
 <script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
 <script>
     initChecklistSync(LAB_EXERCISES.labo1);
 </script>
