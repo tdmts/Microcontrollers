@@ -130,6 +130,11 @@
     margin-bottom: 0.35rem;
 }
 
+.ms-badge.locked .ms-badge-icon {
+    filter: grayscale(1);
+    opacity: 0.6;
+}
+
 .ms-badge-name {
     font-size: 0.78rem;
     font-weight: 600;
@@ -160,7 +165,10 @@
     color: #6b7280;
 }
 
-/* --- Badge tooltip (hover/focus reveal) --- */
+/* --- Badge tooltip (hover/focus reveal) ---
+   Reveal uses visibility + transform only (no opacity fade) so the tooltip
+   is either fully solid or fully gone -- top-row badges sit right under the
+   XP card, and a translucent tooltip there was hard to read against it. */
 .ms-badge-tooltip {
     position: absolute;
     bottom: calc(100% + 10px);
@@ -176,9 +184,9 @@
     padding: 0.65rem 0.8rem;
     border-radius: 10px;
     box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
-    opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.18s ease, transform 0.18s ease;
+    transition: transform 0.18s ease;
     z-index: 20;
 }
 
@@ -192,15 +200,9 @@
     border-top-color: #111827;
 }
 
-.ms-badge-tooltip-hint {
-    margin-top: 0.4rem;
-    color: #fcd34d;
-    font-style: italic;
-}
-
 .ms-badge:hover .ms-badge-tooltip,
 .ms-badge:focus-visible .ms-badge-tooltip {
-    opacity: 1;
+    visibility: visible;
     transform: translateX(-50%) translateY(0);
 }
 

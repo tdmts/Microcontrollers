@@ -100,14 +100,8 @@
                 var diffLabel = DIFFICULTY_LABELS[e.difficulty] || '';
                 var tag = e.href ? 'a' : 'div';
                 var hrefAttr = e.href ? ' href="' + escapeHtml(e.href) + '"' : '';
-                var lockedHint = e.checklistDriven && !unlocked
-                    ? '<div class="ms-badge-tooltip-hint">Voltooi de checklist op de oefenpagina om te ontgrendelen</div>'
-                    : '';
-                var tooltipHtml = (e.blurb || lockedHint)
-                    ? '<div class="ms-badge-tooltip">' +
-                      (e.blurb ? '<div class="ms-badge-tooltip-text">' + escapeHtml(e.blurb) + '</div>' : '') +
-                      lockedHint +
-                      '</div>'
+                var tooltipHtml = e.blurb
+                    ? '<div class="ms-badge-tooltip"><div class="ms-badge-tooltip-text">' + escapeHtml(e.blurb) + '</div></div>'
                     : '';
                 var metaHtml =
                     '<div class="ms-badge-meta">' +
@@ -122,7 +116,7 @@
                 return (
                     '<div class="ms-badge-wrap">' +
                     '<' + tag + ' class="ms-badge' + (unlocked ? ' unlocked' : ' locked') + '"' + hrefAttr + '>' +
-                    '<div class="ms-badge-icon">' + (unlocked ? '\uD83C\uDFC5' : '\uD83D\uDD12') + '</div>' +
+                    '<div class="ms-badge-icon">\uD83C\uDFC5</div>' +
                     '<div class="ms-badge-name">' + escapeHtml(e.name) + '</div>' +
                     metaHtml +
                     tooltipHtml +
@@ -135,7 +129,7 @@
             badgesHtml += (
                 '<div class="ms-badge-wrap">' +
                 '<div class="ms-badge ms-badge-grand' + (allDone ? ' unlocked' : ' locked') + '">' +
-                '<div class="ms-badge-icon">' + (allDone ? '\uD83D\uDC51' : '\uD83D\uDD12') + '</div>' +
+                '<div class="ms-badge-icon">\uD83D\uDC51</div>' +
                 '<div class="ms-badge-name">' + escapeHtml(config.labTitle) + ' Meester</div>' +
                 (allDone
                     ? ''
