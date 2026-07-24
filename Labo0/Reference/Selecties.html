@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Selecties</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Selecties</h1>
+    <p class="lead">Een keuze maken in je programma doe je op basis van een voorwaarde. Die voorwaarde stel je op als een vergelijking (is gelijk aan, is groter dan, ...) en die vergelijking moet altijd te herleiden zijn tot <code>true</code> of <code>false</code>.</p>
+    <p>De instructie <code>digitalRead(pinNummer)</code> leest de status in van een pin. Die kan 1 (= <code>HIGH</code>) of 0 (= <code>LOW</code>) zijn.</p>
+
+    <h2 id="voorbeeld-enkelvoudige-selectie">Voorbeeld enkelvoudige selectie</h2>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 3;
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+}
+
+void loop()
+{
+  int value = digitalRead(pinButton);
+  if(value == HIGH) // de voorwaarde is te herleiden tot true / false
+  {
+    // doe iets als de voorwaarde true is
+  }
+}</code></pre>
+
+    <h2 id="voorbeeld-tweevoudige-selectie">Voorbeeld tweevoudige selectie</h2>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 3;
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+}
+
+void loop()
+{
+  int value = digitalRead(pinButton);
+  if(value == HIGH) // de voorwaarde is te herleiden tot true / false
+  {
+    // doe iets als de voorwaarde true is
+  }
+  else
+  {
+    // doe iets anders als de voorwaarde false is
+  }
+}</code></pre>
+
+    <h2 id="voorbeeld-meervoudige-selectie">Voorbeeld meervoudige selectie</h2>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinSensor = A0;
+
+void setup()
+{
+  pinMode(pinSensor, INPUT);
+}
+
+void loop()
+{
+  int value = analogRead(pinSensor);
+  if(value &gt; 768)
+  {
+
+  }
+  else if (value &gt; 512)
+  {
+
+  }
+  else
+  {
+
+  }
+}</code></pre>
+    <div class="info-box">
+        <div class="info-title remark">Opmerking</div>
+        <p>De instructie <code>analogRead(pinNummer)</code> leest de analoge status (= de spanning) in van een pin. Dit kan een waarde tussen <code>0</code> en <code>1023</code> zijn waarbij <code>0</code> overeenkomt met <code>0 V</code> en <code>1023</code> overeenkomt met <code>5 V</code>.</p>
+    </div>
+
+    <h2 id="voorbeeld-meervoudige-selectie-met-logische-operatoren">Voorbeeld meervoudige selectie met logische operatoren</h2>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 3;
+const int pinSensor = A0;
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+  pinMode(pinSensor, INPUT);
+}
+
+void loop()
+{
+  int value = analogRead(pinSensor);
+  int status = digitalRead(pinButton);
+
+  if(value &gt; 768 &amp;&amp; status == HIGH)
+  {
+
+  }
+  else if (value &gt; 512 || status == LOW)
+  {
+
+  }
+  else
+  {
+
+  }
+}</code></pre>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Comparator</th>
+                    <th>Betekenis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>&gt;</code></td>
+                    <td>Groter dan</td>
+                </tr>
+                <tr>
+                    <td><code>&gt;=</code></td>
+                    <td>Groter dan of gelijk aan</td>
+                </tr>
+                <tr>
+                    <td><code>&lt;</code></td>
+                    <td>Kleiner dan</td>
+                </tr>
+                <tr>
+                    <td><code>&lt;=</code></td>
+                    <td>Kleiner dan of gelijk aan</td>
+                </tr>
+                <tr>
+                    <td><code>==</code></td>
+                    <td>Gelijk aan</td>
+                </tr>
+                <tr>
+                    <td><code>!=</code></td>
+                    <td>Verschillend van</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Operator</th>
+                    <th>Betekenis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>&amp;&amp;</code></td>
+                    <td>AND</td>
+                </tr>
+                <tr>
+                    <td><code>||</code></td>
+                    <td>OR</td>
+                </tr>
+                <tr>
+                    <td><code>!</code></td>
+                    <td>NOT</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>

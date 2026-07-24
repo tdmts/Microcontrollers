@@ -1,24 +1,52 @@
 /* ============================================================
-   Adds a "Terug naar dashboard" link to the top of an exercise page.
+   Adds a "Terug naar ..." link to the top of an exercise/reference page.
    Self-running -- just include the script, no init call needed:
 
      <script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
 
-   Every LaboN/ exercise page lives in the same folder as that lab's
-   dashboard.html, so the link always just points at the relative
-   "dashboard.html" -- no manifest lookup needed. Skips itself on
-   dashboard.html (and any page without a .container/<h1>).
+   dashboard.html always lives directly in the LaboN/ folder, but the
+   current page may be nested one or more levels below it (e.g.
+   LaboN/Reference/...), so the relative path back up is computed from
+   how many segments separate the page from its target folder.
+
+   Pages inside a Reference/ folder link back to that folder's
+   reference.html (the reference hub) instead of straight to the lab
+   dashboard -- except reference.html itself, which links up to
+   the lab dashboard like any other top-level page.
+
+   Skips itself on dashboard.html (and any page without a .container/<h1>).
    ============================================================ */
 
 (function () {
     'use strict';
 
-    var currentFile = (window.location.pathname.split('/').pop() || '').toLowerCase();
+    var parts = window.location.pathname.split('/').filter(Boolean);
+    var currentFile = (parts[parts.length - 1] || '').toLowerCase();
     if (currentFile === 'dashboard.html') return;
 
     var container = document.querySelector('.container');
     var heading = container && container.querySelector('h1');
     if (!heading) return;
+
+    var referenceIndex = parts.findIndex(function (p) { return /^reference$/i.test(p); });
+    var targetFile, targetLabel, anchorIndex;
+
+    if (referenceIndex !== -1 && currentFile !== 'reference.html') {
+        // anchorIndex points at the Reference/ segment itself, since
+        // reference.html (the hub) lives directly inside that folder.
+        targetFile = 'reference.html';
+        targetLabel = '← Terug naar overzicht';
+        anchorIndex = referenceIndex;
+    } else {
+        // anchorIndex points at the LaboN/ segment itself, since
+        // dashboard.html lives directly inside that folder.
+        targetFile = 'dashboard.html';
+        targetLabel = '← Terug naar dashboard';
+        anchorIndex = parts.findIndex(function (p) { return /^labo\d+$/i.test(p); });
+    }
+
+    var depth = anchorIndex === -1 ? 0 : parts.length - anchorIndex - 2;
+    var prefix = new Array(Math.max(depth, 0) + 1).join('../');
 
     var style = document.createElement('style');
     style.textContent =
@@ -30,8 +58,8 @@
 
     var link = document.createElement('a');
     link.className = 'ms-back-link';
-    link.href = 'dashboard.html';
-    link.textContent = '← Terug naar dashboard';
+    link.href = prefix + targetFile;
+    link.textContent = targetLabel;
 
     heading.parentNode.insertBefore(link, heading);
 })();

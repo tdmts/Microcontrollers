@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Debuggen</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Debuggen</h1>
+    <p class="lead">De kans is zeer groot dat je programma niet onmiddellijk foutloos zal werken. Spijtig genoeg is het niet eenvoudig om te zien wat er precies in je programma gebeurt of fout loopt.</p>
+    <p>Er is geen scherm of debugger zoals op een computer. Daarom gebruiken we <strong>seriële communicatie</strong> om informatie vanuit de microcontroller naar de computer te sturen.</p>
+
+    <h2 id="debuggen-met-serial">Debuggen met Serial</h2>
+    <p>In onderstaand programma tonen we de status van de knop met behulp van de seriële monitor.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
+const int pinLed = 3;
+
+void setup()
+{
+  pinMode(pinButton, INPUT_PULLUP);  // Interne pull-up weerstand
+  pinMode(pinLed, OUTPUT);
+  Serial.begin(9600);  // Start seriële communicatie
+  Serial.println("Programma gestart!");
+}
+
+void loop()
+{
+  int buttonState = digitalRead(pinButton);  // Lees de knop in
+
+  if (buttonState == LOW) // Actief laag door pull-up weerstand
+  {
+    digitalWrite(pinLed, HIGH);
+    Serial.println("Knop ingedrukt = LED AAN");
+  }
+  else
+  {
+    digitalWrite(pinLed, LOW);
+    Serial.println("Knop losgelaten = LED UIT");
+  }
+
+  delay(1000);  // Kleine pauze voor leesbaarheid in de seriële monitor
+}</code></pre>
+
+    <h2 id="in-tinkercad">In TinkerCAD</h2>
+    <p>In TinkerCAD kan je de seriële monitor zichtbaar (of onzichtbaar) maken door op de knop <strong>Seriële monitor</strong> te klikken.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/tinkercad-seriele-monitor-knop.png" class="img-fluid" alt="Knop seriële monitor in TinkerCAD">
+            <figcaption>De knop waarmee je de seriële monitor in TinkerCAD opent of sluit.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="in-arduino-ide">In Arduino IDE</h2>
+    <p>Rechtsbovenaan kan je de seriële monitor openen (of sluiten). Rechtsonderaan stel je de snelheid in. Zet de regelafsluiting (line separator) op <strong>New Line</strong>.</p>
+    <div class="info-box">
+        <div class="info-title tip">Tip</div>
+        <p>De ingestelde snelheid (baudrate) in de seriële monitor moet overeenkomen met de snelheid in je <code>Serial.begin()</code>-instructie. Komen die niet overeen, dan zie je onleesbare tekens.</p>
+    </div>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/arduino-ide-seriele-monitor.png" class="img-fluid" alt="Seriële monitor in de Arduino IDE">
+            <figcaption>De seriële monitor met de snelheidsinstelling in de Arduino IDE.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="schema">Schema</h2>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/debuggen-schema.png" class="img-fluid" alt="Schema van de schakeling">
+            <figcaption>Het schema van de schakeling met de knop en led.</figcaption>
+        </figure>
+    </div>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>

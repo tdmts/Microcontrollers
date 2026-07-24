@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Constanten, variabelen en gegevenstypes</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Constanten, variabelen en gegevenstypes</h1>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinLed = 2;
+bool isEnabled = false;
+double value = 10.5;
+
+void setup()
+{
+  isEnabled = true;
+}
+
+void loop()
+{
+  String text = "abc";
+  char c = 'a';
+
+  value = value + 0.5;
+}</code></pre>
+
+    <p>In dit voorbeeld zie je hoe we in Arduino werken met <strong>constanten</strong> en <strong>variabelen</strong>.</p>
+    <ul>
+        <li><strong>Constanten</strong> (zoals <code>const int pinLed = 2;</code>) krijgen één vaste waarde die tijdens het programma niet meer kan veranderen.</li>
+        <li><strong>Variabelen</strong> (zoals <code>bool isEnabled = false;</code> en <code>double value = 10.5;</code>) kunnen tijdens de uitvoering van het programma wél andere waarden krijgen. In <code>setup()</code> wordt <code>isEnabled</code> bijvoorbeeld aangepast naar <code>true</code>. In <code>loop()</code> wordt <code>value</code> telkens met <code>0.5</code> verhoogd.</li>
+    </ul>
+
+    <h2 id="gegevenstypes">Gegevenstypes</h2>
+    <p>Daarnaast zijn er verschillende <strong>gegevenstypes</strong>:</p>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Beschrijving</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>bool</code></td>
+                    <td>Kan enkel <code>true</code> of <code>false</code> zijn.</td>
+                </tr>
+                <tr>
+                    <td><code>byte</code></td>
+                    <td>Een geheel getal van 0 tot en met 255.</td>
+                </tr>
+                <tr>
+                    <td><code>int</code></td>
+                    <td>Een geheel getal. Op een Arduino Uno of Leonardo kan een <code>int</code> waarden aannemen van <strong>-32768 tot +32767</strong>.</td>
+                </tr>
+                <tr>
+                    <td><code>long</code></td>
+                    <td>Een geheel getal. Op een Arduino Uno of Leonardo kan een long waarden aannemen van ongeveer -2 miljard tot +2 miljard</td>
+                </tr>
+                <tr>
+                    <td><code>double</code></td>
+                    <td>Een kommagetal. Op een Arduino Uno of Leonardo is de kleinste en grootste waarde die je kan bijhouden ongeveer ±3 × 10³⁸</td>
+                </tr>
+                <tr>
+                    <td><code>float</code></td>
+                    <td>Op een Arduino Uno of Leonardo identiek hetzelfde als een double</td>
+                </tr>
+                <tr>
+                    <td><code>String</code></td>
+                    <td>Een stuk tekst. Kan letters, cijfers en speciale tekens bevatten maar je kan er niet mee rekenen.</td>
+                </tr>
+                <tr>
+                    <td><code>char</code></td>
+                    <td>Eén enkel teken, bv. <code>'a'</code>of <code>'@'</code> of <code>'5'</code>.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 id="globaal-en-lokaal">Globaal en lokaal</h2>
+    <p>Er is ook een verschil tussen <strong>globale</strong> en <strong>lokale</strong> variabelen:</p>
+    <ul>
+        <li>De variabelen bovenaan (<code>pinLed</code>, <code>isEnabled</code>, <code>value</code>) zijn <strong>globaal</strong> en kunnen overal in het programma gebruikt worden.</li>
+        <li>De variabelen die je in <code>loop()</code> schrijft (<code>text</code>, <code>c</code>) zijn <strong>lokaal</strong>: ze bestaan enkel binnen die functie en verdwijnen zodra de functie klaar is.</li>
+    </ul>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>

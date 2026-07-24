@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wiskundige operatoren</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Wiskundige operatoren</h1>
+    <p class="lead">Met wiskundige operatoren kan je berekeningen uitvoeren op variabelen en constanten.</p>
+    <p>In onderstaande voorbeeldcode zie je de meest gebruikte operatoren.</p>
+
+    <div class="info-box">
+        <div class="info-title warning">Let op!</div>
+        <p>Bij de deling moet je opletten, want het resultaat hangt af van het gegevenstype dat je gebruikt in teller en noemer. Zijn teller én noemer van het type int, dan maak je de gehele deling (quotientInt). Is teller en/of noemer van het type double, dan maak je de deling met kommagetal (quotientDouble).</p>
+    </div>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int a = 10;
+int b = 3;
+int som;
+int verschil;
+int product;
+int quotientInt;
+int rest;
+double quotientDouble;
+double macht;
+double wortel;
+void setup()
+{
+  som = a + b;              // optellen → 10 + 3 = 13
+  verschil = a - b;         // aftrekken → 10 - 3 = 7
+  product = a * b;          // vermenigvuldigen → 10 * 3 = 30
+  quotientInt = a / b;      // geheel getal delen → 10 / 3 = 3
+  rest = a % b;             // modulo → 10 % 3 = 1
+  quotientDouble = (double) a / b;  // delen met kommagetal → 10.0 / 3 = 3.33
+  macht = pow(a, b);               // macht → 10³ = 1000
+  wortel = sqrt(a);                // vierkantswortel → √10 ≈ 3.16
+}
+void loop()
+{
+
+}</code></pre>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>

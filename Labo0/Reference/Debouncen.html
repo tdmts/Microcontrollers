@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Debouncen</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Debouncen</h1>
+    <p class="lead">Een schakelaar is een mechanisch ding. Daardoor kan bij het sluiten van de verbinding een fenomeen optreden dat "bouncing" wordt genoemd. Op het moment dat het contact van de schakelaar verbinding maakt met het andere contact van de schakelaar, kan het gebeuren dat de contacten even op elkaar kaatsen, en er dus een opeenvolging van toestanden is waarbij de verbinding gemaakt en verbroken wordt.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="https://electrical.codidact.com/uploads/SLnbv35XhcTfro9UUps6QouF" class="img-fluid" alt="Bouncing van een ingangssignaal">
+            <figcaption>Bouncing</figcaption>
+        </figure>
+    </div>
+
+    <p>Dit is een ongewenst fenomeen. We willen een perfecte overgang tussen het ene niveau en het andere niveau. Om dat te bereiken kun je het signaal "debouncen", met andere woorden het kaatsen van de contacten tegenwerken.</p>
+    <p>Het bouncen zelf gebeurt in een fractie van een seconde. De duur ervan zal altijd minder zijn dan een tiende van een seconde, meestal zelfs nog korter. Een mogelijke debounce-oplossing is dan ook om het ingangssignaal te "pollen" (= constant na elkaar uitlezen) en, zodra een ander niveau gedetecteerd is, een pauze in het pollen in te lassen van 100 ms. Na deze pauze is het bouncen zeker voorbij en kan de nu stabiele ingang gelezen worden. Dit heeft natuurlijk wel de beperking dat het signaal niet sneller dan binnen 100 ms mag wisselen.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
+
+void setup()
+{
+	pinMode(pinButton, INPUT_PULLUP);
+}
+
+void loop()
+{
+  if(digitalRead(pinButton) == LOW)
+  {
+    // do something
+	delay(100); // debounce
+  }
+}</code></pre>
+
+    <p>Een tweede mogelijkheid is het gebruik van een externe schakeling zoals een flipflop. Zie daarvoor de cursus "digitale elektronica" uit het eerste jaar.</p>
+    <p>Bovenstaande code is een héél eenvoudige manier om het debounce probleem op te lossen maar ze heeft een belangrijk nadeel: het gebruik van delay(). Die functie blokeert de Arduino volledig. Er wordt geen andere instructie meer uitgevoerd. Wil je dat niet omdat de uitvoeren van je programma tijdskritisch is dan kan je onderstaande oplossing gebruiken. Deze kan je ook terugvinden in de Arduino documentatie.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
+const unsigned long debounceDelay = 50;
+
+int lastReading = HIGH;
+int buttonState = HIGH;
+unsigned long lastDebounceTime = 0;
+
+void setup() {
+  pinMode(pinButton, INPUT_PULLUP);
+}
+
+void loop() {
+  int reading = digitalRead(pinButton);
+
+  if (reading != lastReading) {
+    lastDebounceTime = millis();   // toestand veranderde -> timer resetten
+  }
+
+  if (millis() - lastDebounceTime > debounceDelay) {
+    if (reading != buttonState) {
+      buttonState = reading;
+      if (buttonState == LOW) {
+        // do something -> vuurt exact één keer per druk
+      }
+    }
+  }
+
+  lastReading = reading;
+}</code></pre>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>

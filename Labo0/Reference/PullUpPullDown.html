@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pull up en pull down weerstanden</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Pull up en pull down weerstanden</h1>
+    <p class="lead">In dit artikel gaan we wat dieper in op het uitlezen van knoppen. We gaan het daarbij hebben over termen zoals <strong>pull-up</strong> en <strong>pull-down</strong>.</p>
+
+    <h2 id="wat-is-een-knop">Wat is een knop?</h2>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/open-schakelaar.png" class="img-fluid" alt="Open schakelaar">
+            <figcaption>Open schakelaar</figcaption>
+        </figure>
+    </div>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/gesloten-schakelaar.png" class="img-fluid" alt="Gesloten schakelaar">
+            <figcaption>Gesloten schakelaar</figcaption>
+        </figure>
+    </div>
+    <p>Een knop is niets anders dan een verbinding die men maakt of verbreekt. Knoppen komen dan ook in twee versies voor: de NO en de NC. Deze letterwoorden staan voor "normally open" en "normally closed" en geven aan wat de rusttoestand van de knop is.</p>
+    <p>Bij een NO is de verbinding standaard verbroken (open) en zorgt het drukken op de knop voor het leggen van de verbinding, terwijl bij een NC de verbinding standaard gelegd is en het drukken op de knop de verbinding verbreekt.</p>
+
+    <h2 id="pushbutton">Pushbutton</h2>
+    <p>Een gewone schakelaar is bistabiel. Dit wil zeggen dat de status behouden blijft. In onze projecten gaan we echter heel vaak een pushbutton gebruiken. Dit eenvoudig knopje gedraagt zich zoals beschreven in de tabel.</p>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <tbody>
+                <tr>
+                    <td><strong>Niet ingedrukt</strong></td>
+                    <td><strong>Wel ingedrukt</strong></td>
+                </tr>
+                <tr>
+                    <td><img src="../../img/pushbutton-niet-ingedrukt.png" class="img-fluid" alt="Pushbutton niet ingedrukt"></td>
+                    <td><img src="../../img/pushbutton-ingedrukt.png" class="img-fluid" alt="Pushbutton ingedrukt"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>a is verbonden met b maar niet met c of d</p>
+                        <p>c is verbonden met d maar niet met a of b</p>
+                    </td>
+                    <td>a, b, c en d zijn met elkaar verbonden</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Normally open</h3>
+    <p>Er bestaan dus knoppen die in rust "normally open" zijn en waarbij de verbinding standaard onderbroken is. Wanneer we deze knop bekrachtigen, gaan we de verbinding maken. Belangrijk hierbij is om te beseffen dat er, wanneer de knop in rust is, geen verbinding is. Wanneer we zo'n knop verbinden met een ingangspin van de Arduino, hangt er aan de ingang van de Arduino een stuk draad dat met niks verbonden is.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/open-schakelaar.png" class="img-fluid" alt="Open schakelaar">
+            <figcaption>Open schakelaar</figcaption>
+        </figure>
+    </div>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/losse-draad-ingang.png" class="img-fluid" alt="Breadboard met knop zonder pull-weerstand">
+        </figure>
+    </div>
+    <p>Het probleem is dat zo'n stuk losse draad (in dit geval de gele draad) zich als een antenne gedraagt en alle soorten elektromagnetische storingen uit de omgeving kan oppikken, waardoor de ingang willekeurig een hoog of een laag signaal oppikt.</p>
+    <p>Een oplossing is om op de ingang te zorgen voor een standaardwaarde. Dit kan ook weer op twee manieren. We kunnen een pull-up- of een pull-downweerstand gebruiken. Daarbij gaat men de ingang via een grote weerstand verbinden met massa (pull-down, dus trek de ingang omlaag naar 0 V) of met de voedingsspanning Vcc (pull-up, trek de ingang omhoog naar +5 V).</p>
+
+    <h3>Pull-up</h3>
+    <p>Wanneer we een weerstand van een redelijk grote waarde (meestal 1 kΩ, kan ook 10 kΩ zijn) plaatsen tussen +5 V en de ingang, dan zal deze ingang altijd een 1 lezen wanneer er verder niks aan verbonden is.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/pullup-schema.png" class="img-fluid" alt="Ingang met pull-upweerstand">
+            <figcaption>Ingang met pull-upweerstand</figcaption>
+        </figure>
+    </div>
+    <p>Als we aan deze ingang ook nog een NO-knop hangen, heeft deze in rust geen invloed en blijven we een 1 lezen. Als we de andere kant van de knop verbinden met de massa, dan zal het indrukken van de knop ervoor zorgen dat de ingang nu rechtstreeks verbonden is met de massa, waardoor we op de ingang een 0 gaan lezen.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/pullup-breadboard-foto.png" class="img-fluid" alt="Breadboard met pull-upweerstand">
+        </figure>
+    </div>
+    <p>Een pull-upweerstand kan dus hardwarematig aan de schakeling worden toegevoegd, maar bij de Arduino kan deze ook softwarematig geïmplementeerd worden.</p>
+    <p>Bij het definiëren van de pin als ingang kunnen we namelijk naast <code>INPUT</code> ook kiezen voor <code>INPUT_PULLUP</code>. Wanneer we <code>INPUT_PULLUP</code> kiezen, zal bij de Arduino <strong>intern</strong> een pull-upweerstand ingeschakeld worden, zodat we deze extern niet meer moeten voorzien.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/input-pullup-schema.png" class="img-fluid" alt="Ingang met INPUT_PULLUP configuratie">
+            <figcaption>Ingang met INPUT_PULLUP-configuratie</figcaption>
+        </figure>
+    </div>
+    <div class="info-box">
+        <div class="info-title tip">Tip</div>
+        <p>De <code>INPUT_PULLUP</code>-configuratie is de meest gebruikte en eenvoudigste oplossing, omdat je geen externe weerstand meer hoeft te voorzien.</p>
+    </div>
+
+    <h3>Pull-down</h3>
+    <p>Men kan ook een pull-downweerstand voorzien. Daarbij wordt tussen de ingang en massa een weerstand geplaatst van dezelfde grootteorde als bij een pull-up. In rust en met een NO-knop staat op de ingang dan een 0, aangezien de ingang verbonden is met de massa.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/pulldown-schema.png" class="img-fluid" alt="Pull-downschakeling">
+            <figcaption>Pull-downschakeling</figcaption>
+        </figure>
+    </div>
+    <p>Om een 1 op de ingang te krijgen, moeten we de andere kant van de NO-knop verbinden met +5 V, zodat bij het indrukken van de knop de ingang rechtstreeks verbonden wordt met +5 V en de 1 op de ingang komt.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/pulldown-breadboard-foto.png" class="img-fluid" alt="Breadboard met pull-downweerstand">
+        </figure>
+    </div>
+    <div class="info-box">
+        <div class="info-title remark">Opmerking</div>
+        <p>Het is niet mogelijk om een ingebouwde pull-downweerstand in te stellen via de <code>pinMode()</code>-instructie. Dat lukt enkel bij een pull-up.</p>
+    </div>
+
+    <h3>Normally closed</h3>
+    <p>De tegenhanger van de normally-openschakelaar is de normally-closedversie. Dit type schakelaar wordt minder frequent gebruikt en verschilt enkel van de normally-openversie in het feit dat de rusttoestand en de bekrachtigde toestand gewisseld zijn.</p>
+    <p>Zo kun je bijvoorbeeld een noodstopknop realiseren door in serie met de voeding een normally-closedschakelaar op te nemen. Dit moet dan wel een versie met vergrendeling zijn, zodat de schakelaar na het verbreken van de voeding in open positie blijft.</p>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Iteraties</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Iteraties</h1>
+    <p class="lead">Naast de sequentie en de selectie is de iteratie één van de drie basisstructuren waarmee een programma wordt opgebouwd. Itereren betekent letterlijk herhalen. Het is dus een structuur om een stuk code een aantal keer te herhalen. Dit kan een oneindige herhaling zijn zoals de <code>loop()</code>-functie, maar kan ook een conditionele herhaling zijn zoals een for-lus of een while-constructie.</p>
+
+    <h2 id="de-for-instructie">De for-instructie</h2>
+    <p>Bij de for-instructie gaat het om een lus waarvan we op voorhand weten hoeveel keer hij moet doorlopen worden. Dit aantal keer kan ook een variabele waarde zijn, maar het gaat erom dat het zeker is dat na x aantal keer de lus te hebben doorlopen het programma verder gezet wordt.</p>
+
+    <h3>Syntax</h3>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>for(initialisatie; voorwaarde; aanpassing) {
+    // instructies
+}</code></pre>
+
+    <h3>Parameters</h3>
+    <ul>
+        <li><strong>initialisatie</strong> — gebeurt eerst en eenmalig. Hier wordt een variabele op een waarde geïnitialiseerd. Deze variabele gaat via de voorwaarde bepalen of de lus nog verder doorlopen wordt of beëindigd wordt. Typisch gebruikt men hiervoor een tellervariabele die men definieert in de initialisatie zelf.</li>
+        <li><strong>voorwaarde</strong> — een uitdrukking die resulteert in een booleaanse waarde <code>true</code> of <code>false</code>. Indien de voorwaarde <code>true</code> is, zal de code binnen de lus opnieuw doorlopen worden. Bij een <code>false</code> wordt de lus stopgezet en gaan we verder met de eerste instructie na de lusconstructie.</li>
+        <li><strong>aanpassing</strong> — na elke doorloop van de lus wordt deze instructie uitgevoerd. In de eenvoudigste vorm wordt hier een teller, die gedefinieerd werd bij de initialisatie, met een waarde verhoogd of verlaagd, waardoor deze variabele een nieuwe waarde krijgt. Deze wordt dan afgetoetst met de voorwaarde om te bepalen of de lus nog verder moet doorlopen worden.</li>
+    </ul>
+
+    <h3>Voorbeeld</h3>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>for(int i=0;i&lt;10;i++) {
+    Serial.println(i);
+}</code></pre>
+    <p>In bovenstaand voorbeeld wordt een variabele <code>i</code> van het type integer op 0 geïnitialiseerd. Daarna wordt de voorwaarde een eerste maal geëvalueerd, waarbij het resultaat <code>true</code> is, want <code>0&lt;10</code> resulteert in <code>true</code>. De luscode wordt een eerste keer doorlopen en via het serieel kanaal zien we 0 op de terminal verschijnen.</p>
+    <p>Na het uitvoeren van de luscode wordt de aanpassing uitgevoerd, en krijgt <code>i</code> de nieuwe waarde 1 door de verhoging ten gevolge van <code>i++</code>.</p>
+    <p>De voorwaarde wordt opnieuw geëvalueerd, waardoor er opnieuw een <code>true</code> als resultaat gevonden wordt: <code>1&lt;10</code> is immers waar. De luscode wordt dus een tweede maal doorlopen en op de terminal verschijnt een 1.</p>
+    <p>Opnieuw wordt <code>i</code> met één verhoogd, waardoor <code>i</code> gelijk wordt aan twee. We kunnen deze redenering verderzetten en zullen zien dat op de terminal achtereenvolgens nog de 2, 3, 4, 5, 6, 7, 8 en 9 verschijnen.</p>
+    <p>Bij <code>i=9</code> zal de aanpassing ervoor zorgen dat <code>i</code> nu de waarde 10 krijgt. De voorwaarde <code>10&lt;10</code> geeft nu als resultaat <code>false</code>, waardoor de lus niet meer uitgevoerd wordt en het programma verder gaat met de eerste instructie na de lus.</p>
+
+    <div class="info-box">
+        <div class="info-title warning">Opgepast!</div>
+        <p>Fouten zitten soms in kleine hoekjes. Bekijk even het programma:</p>
+        <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup() {
+  Serial.begin(115200);
+}
+void loop() {
+  for(byte i=250;i&lt;260;i++) {
+    Serial.println(i);
+  }
+}</code></pre>
+        <p>Op het eerste zicht zou men denken dat de lus 10x gaat doorlopen worden, met de waarden voor <code>i</code> die variëren van 250 tot en met 259, maar in de praktijk is dit niet waar.</p>
+        <p>Doordat <code>i</code> als <code>byte</code> gedefinieerd wordt, loopt zijn bereik slechts tot en met 255. Daarna krijg je een overflow en wordt <code>i</code> gelijk aan 0. De waarde 260 wordt dus nooit bereikt, met als gevolg dat deze lus oneindig gaat blijven doorlopen.</p>
+    </div>
+
+    <p>Hierboven hebben we de standaardwerking van de for-lus bekeken, maar er zijn nog heel veel andere mogelijkheden. Stel dat je de eerste 10 machten van 2 wil afprinten op de terminal, dan kan dit op verschillende manieren aangepakt worden. Men kan gebruikmaken van een variabele om de waarde elke keer te verdubbelen. De code ziet er dan als volgt uit:</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup() {
+  Serial.begin(115200);
+}
+
+void loop() {
+  int macht=1;
+  for(byte i=0;i&lt;10;i++) {
+    Serial.println(macht);
+    macht=macht*2;
+  }
+}</code></pre>
+
+    <p>Een tweede manier is om de waarde van de macht te berekenen met behulp van een functie. In C++ bestaat daarvoor de functie <code>pow(grondtal, exponent)</code>. Het resultaat is een float.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup() {
+  Serial.begin(115200);
+}
+
+void loop() {
+  for(byte i=0;i&lt;10;i++) {
+    Serial.println(pow(2,i));
+  }
+}</code></pre>
+
+    <p>Een derde manier maakt gebruik van de lus zelf. We laten de teller niet gewoon optellen, maar we verdubbelen hem elke keer hij door de lus geweest is.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup() {
+  Serial.begin(115200);
+}
+
+void loop() {
+  for(int i=1;i&lt;513;i=i*2) {
+    Serial.println(i);
+  }
+}</code></pre>
+
+    <h2 id="de-while-structuur">De while-structuur</h2>
+    <p>Een tweede iteratiestructuur is de while-instructie. Hier gaat het erom dat men op voorhand niet weet hoe lang de lus moet doorlopen worden. Bij de while-structuur is het zelfs helemaal niet zeker of de luscode ooit moet doorlopen worden. Alles is afhankelijk van de voorwaarde.</p>
+
+    <h3>Syntax</h3>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>while (voorwaarde) {
+    // instructies
+}</code></pre>
+
+    <h3>Parameters</h3>
+    <p><strong>voorwaarde:</strong> expressie die in <code>true</code> of <code>false</code> resulteert.</p>
+
+    <h3>Voorbeeld</h3>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup() {
+    pinMode(3,INPUT_PULLUP);
+}
+void loop() {
+    while(digitalRead(3)) { }
+}</code></pre>
+    <p>In bovenstaand voorbeeld wordt de luscode (waar niks in staat) uitgevoerd zolang er een hoog niveau op pin 3 staat. Zodra daar een laag niveau op komt, gaat het programma verder. Zo'n constructie kan gebruikt worden als je bijvoorbeeld wil dat het programma niet start voordat er op een startknop wordt gedrukt. Deze startknop kan dan tussen GND en pin 3 geplaatst worden.</p>
+
+    <div class="info-box">
+        <div class="info-title warning">Gevaar: oneindige lus</div>
+        <p>Aangezien de luscode uitgevoerd wordt zolang de voorwaarde resulteert in <code>true</code>, moet men extra opletten bij het opstellen van de voorwaarde.</p>
+        <p>Bijvoorbeeld:</p>
+        <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup() {
+  Serial.begin(115200);
+}
+
+void loop() {
+  bool voorwaarde = false;
+  while(voorwaarde=true) {
+    Serial.print("surprise");
+  }
+}</code></pre>
+        <p>In bovenstaande code verwacht je op het eerste zicht dat de tekst "surprise" nooit op de terminal zal verschijnen. In werkelijkheid hebben we een fout gemaakt bij het opstellen van de voorwaarde, omdat we een enkel <code>=</code>-teken gebruikt hebben i.p.v. een dubbel <code>=</code>-teken. Daardoor doen we hier een toekenning van <code>true</code> aan de variabele "voorwaarde", waardoor de uitdrukking tussen de haakjes van de while-functie resulteert in <code>true</code>, en de tekst dus toch verschijnt op de terminal.</p>
+        <p>Merk ook op dat je bij een while-constructie er altijd voor moet zorgen dat in de voorwaarde of in het while-codeblok een instructie zit die ervoor kan zorgen dat de voorwaarde verandert van logische toestand. Als dit niet het geval is, krijgen we een oneindige lus en zit het programma vast in deze oneindige lus.</p>
+    </div>
+
+    <div class="info-box">
+        <div class="info-title remark">Stop alles</div>
+        <p>Het kan soms de bedoeling zijn om het programma permanent te stoppen. Dat lijkt onmogelijk, aangezien het programma binnen de <code>loop()</code>-functie draait die oneindig herhaalt.</p>
+        <p>Je kunt met de while-instructie echter zorgen voor een oneindige lus waardoor de uitvoering van het programma gestopt lijkt voor de buitenwereld. Gebruik daarvoor de constructie:</p>
+        <pre class="code-wrapper language-cpp linenumbers show-language"><code>while(true) {}</code></pre>
+    </div>
+
+    <h2 id="de-do-while-structuur">De do-while-structuur</h2>
+    <p>Een variant op de while-structuur is de do-while-structuur. Hierbij komt de voorwaarde om de lus verder uit te voeren op het einde van de luscode, waardoor de luscode gegarandeerd één keer uitgevoerd wordt.</p>
+
+    <h3>Syntax</h3>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>do {
+    // instructies
+} while (voorwaarde);</code></pre>
+
+    <h3>Parameters</h3>
+    <p><strong>voorwaarde:</strong> idem zoals bij de while-structuur.</p>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>

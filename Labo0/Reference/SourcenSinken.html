@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sourcen en sinken</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Sourcen en sinken</h1>
+    <p class="lead">Nog twee termen die wat verduidelijking verdienen. Een pin van de Arduino kan een stroom "sourcen" of "sinken". Sourcen (van het Engelse <em>source</em>: bron) betekent dat de pin zich als bron gedraagt en de stroom zal leveren aan de externe schakeling.</p>
+    <p>"Sinken" is het omgekeerde: de stroom zal nu van de externe schakeling binnenvloeien in de Arduino via de pin. We kunnen dit aantonen via twee eenvoudige ledschakelingen.</p>
+
+    <h2 id="sourcing">Sourcing</h2>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/sourcing-schema.png" class="img-fluid" alt="Sourcing">
+            <figcaption>Sourcing</figcaption>
+        </figure>
+    </div>
+    <p>In bovenstaande afbeelding zal de Arduino-pin de stroom sourcen wanneer op die pin een 1 staat. De pin gedraagt zich als bron en levert de stroom om de led te laten branden. De <strong>absolute maximum stroom</strong> die een pin kan sourcen is <strong>40 mA</strong>. In de praktijk hou je beter zo'n <strong>20 mA per pin</strong> aan als <strong>veilige waarde</strong>. Bij 20 mA is de spanningsval van de output beperkt en richting 40 mA zakt je outputspanning bij high merkbaar weg en loopt de chip warm.</p>
+    <p>De Arduino UNO / Leonardo heeft zo'n 20 pinnen die je als uitgang kan configureren, maar de totale som van alle stromen door de VCC- en GND-pinnen mag niet boven <strong>200 mA</strong> komen. Je mag dus zeker niet verwachten dat je in totaal zo'n 400 mA (20 x 20 mA) of 800 mA (20 x 40 mA) aan stroom uit je Arduino kan halen.</p>
+
+    <h2 id="sinking">Sinking</h2>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/sinking-schema.png" class="img-fluid" alt="Sinking">
+            <figcaption>Sinking</figcaption>
+        </figure>
+    </div>
+    <p>Bij deze configuratie zal de voedingsbron Vcc de stroom leveren die door de led en de weerstand vloeit, en die binnenstroomt in de Arduino-pin. De Arduino zal die stroom inwendig afleiden naar massa, uiteraard op voorwaarde dat op de Arduino-pin een 0-niveau staat. <strong>Dezelfde waarden: maximum 40 mA per pin, nominaal 20 mA per pin, maximum 200 mA in totaal zijn hier ook van toepassing.</strong></p>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>

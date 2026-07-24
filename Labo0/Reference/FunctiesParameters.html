@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Functies en parameters</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Functies en parameters</h1>
+    <p class="lead">Een <strong>functie</strong> is een stukje code dat een bepaalde taak uitvoert. Het voordeel is dat je die taak kunt <strong>hergebruiken</strong> zonder telkens opnieuw dezelfde code te schrijven.</p>
+
+    <p>Elk Arduino-programma heeft standaard twee functies:</p>
+    <ul>
+        <li><code>setup()</code>: dit wordt <strong>één keer uitgevoerd</strong> wanneer de Arduino opstart. Hier zet je meestal de begininstellingen (bv. pinnummers instellen).</li>
+        <li><code>loop()</code>: dit wordt <strong>telkens opnieuw herhaald</strong> zolang de Arduino aanstaat. Hier zet je de code die continu moet draaien.</li>
+    </ul>
+
+    <h2 id="eigen-functies-maken">Eigen functies maken</h2>
+    <p>Je kan ook zelf functies maken. Bijvoorbeeld:</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinLed = 2;
+
+void setup()
+{
+  pinMode(pinLed, OUTPUT);
+}
+
+void loop()
+{
+  blinkLed(200);   // laat de LED 200 ms branden
+  blinkLed(1000);  // laat de LED 1000 ms branden
+}
+
+// functie met parameter
+void blinkLed(int tijd)
+{
+  digitalWrite(pinLed, HIGH);  // LED aan
+  delay(tijd);                 // wacht de opgegeven tijd
+  digitalWrite(pinLed, LOW);   // LED uit
+  delay(tijd);                 // wacht de opgegeven tijd
+}</code></pre>
+
+    <h2 id="uitleg">Uitleg</h2>
+    <ul>
+        <li>De functie heet <code>blinkLed</code>.</li>
+        <li>Tussen de haakjes staat <strong><code>int tijd</code></strong>, dat is de <strong>parameter</strong>.</li>
+        <li>Wanneer we de functie aanroepen (<code>blinkLed(200)</code> of <code>blinkLed(1000)</code>), vullen we die parameter in met een waarde.</li>
+        <li>Binnen de functie wordt die waarde gebruikt door <code>delay(tijd)</code>.</li>
+    </ul>
+    <p>Zo kan je dezelfde functie gebruiken voor <strong>verschillende situaties</strong>, zonder dat je code moet kopiëren of herschrijven.</p>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>

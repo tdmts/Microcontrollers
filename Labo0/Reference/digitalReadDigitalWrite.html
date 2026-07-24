@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>digitalRead / digitalWrite</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>digitalRead / digitalWrite</h1>
+    <p class="lead">Met <code>digitalRead()</code> en <code>digitalWrite()</code> kan je de <strong>digitale ingangen en uitgangen</strong> van de Arduino bedienen:</p>
+    <ul>
+        <li><code>digitalWrite(pin, waarde)</code> zet een pin <strong>hoog (HIGH)</strong> of <strong>laag (LOW)</strong>, bijvoorbeeld om een led aan of uit te zetten.</li>
+        <li><code>digitalRead(pin)</code> leest de toestand van een digitale pin, bijvoorbeeld of een knop is ingedrukt (<strong>HIGH</strong>) of niet (<strong>LOW</strong>).</li>
+    </ul>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinLed = 2;
+const int pinButton = 3;
+
+void setup()
+{
+  pinMode(pinLed, OUTPUT);     // LED als uitgang
+  pinMode(pinButton, INPUT);   // knop als ingang
+}
+
+void loop()
+{
+  int knopStatus = digitalRead(pinButton); // lees de knop
+
+  if (knopStatus == HIGH)
+  {
+    digitalWrite(pinLed, HIGH);  // LED aan als knop ingedrukt
+  }
+  else
+  {
+    digitalWrite(pinLed, LOW);   // LED uit als knop niet ingedrukt
+  }
+}</code></pre>
+
+    <ul>
+        <li><code>pinLed</code> en <code>pinButton</code> zijn <strong>globale constanten</strong>, zodat het pinnummer overal hetzelfde is.</li>
+        <li>In <code>setup()</code> worden de pinnen ingesteld.</li>
+        <li>In <code>loop()</code> leest de Arduino continu de knop en schakelt de led aan of uit.</li>
+    </ul>
+
+    <h2 id="schema-met-pull-downweerstand">Schema met pull-downweerstand</h2>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/pulldown-weerstand-schema.png" class="img-fluid" alt="Schema met pull-downweerstand" width="600">
+            <figcaption>Aansluitschema met een pull-downweerstand</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="schema-met-pull-upweerstand">Schema met pull-upweerstand</h2>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/pullup-weerstand-schema.png" class="img-fluid" alt="Schema met pull-upweerstand" width="600">
+            <figcaption>Aansluitschema met een pull-upweerstand</figcaption>
+        </figure>
+    </div>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>

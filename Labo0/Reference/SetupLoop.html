@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Setup en loop</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Setup en loop</h1>
+    <p class="lead">Een Arduino-programma MOET altijd bestaan uit twee functies: <code>setup</code> en <code>loop</code>.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup() {
+  // Hier komt code die maar één keer wordt uitgevoerd, bij de opstart van de Arduino
+}
+
+void loop() {
+  // Hier komt code die steeds opnieuw wordt uitgevoerd, na het uitvoeren van setup
+}</code></pre>
+
+    <h2 id="setup"><code>setup()</code></h2>
+    <ul>
+        <li>Wordt <strong>één keer uitgevoerd</strong>, direct nadat de Arduino wordt aangezet of gereset.</li>
+        <li>Gebruik je om de <strong>startinstellingen</strong> te maken.</li>
+        <li>Typische voorbeelden:
+            <ul>
+                <li>Pinnen instellen als <strong>input</strong> (invoer, bv. een knop) of <strong>output</strong> (uitvoer, bv. een led).</li>
+                <li>Starten van communicatie.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2 id="loop"><code>loop()</code></h2>
+    <ul>
+        <li>Wordt direct na <code>setup()</code> uitgevoerd.</li>
+        <li>Wordt <strong>steeds opnieuw uitgevoerd</strong>, in een eindeloze lus.</li>
+        <li>Hier schrijf je de code die je Arduino continu moet herhalen.</li>
+        <li>Typische voorbeelden:
+            <ul>
+                <li>Een led aan- en uitzetten.</li>
+                <li>Lezen van een sensorwaarde.</li>
+                <li>Reageren op een drukknop.</li>
+            </ul>
+        </li>
+    </ul>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>

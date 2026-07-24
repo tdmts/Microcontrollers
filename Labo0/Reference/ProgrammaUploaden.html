@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Een programma uploaden</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Een programma uploaden</h1>
+
+    <ol>
+        <li>Open de Arduino IDE.</li>
+        <li>Verbind de Arduino via de USB-kabel met je computer.</li>
+        <li>Als je klikt op <strong>Select board</strong>, dan zou je jouw Arduino in het lijstje moeten zien.
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../../img/arduino-ide-select-board.png" class="img-fluid" alt="Arduino in het Select board-lijstje" width="600">
+                    <figcaption>De Arduino verschijnt in het lijstje onder Select board.</figcaption>
+                </figure>
+            </div>
+        </li>
+        <li>Als je klikt op Verify (linkse knop) dan wordt de code gecompileerd.
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../../img/arduino-ide-verify-knop.png" class="img-fluid" alt="De Verify-knop in de Arduino IDE" width="600">
+                </figure>
+            </div>
+            <p>Als Verify gelukt is zonder fouten dan krijg je de boodschap <strong>Done compiling.</strong><br>
+            Als Verify niet lukt dan krijg je de boodschap <strong>Compilation error</strong> en ga je zelf op zoek moeten gaan naar de syntaxfout.</p>
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../../img/arduino-ide-done-compiling.png" class="img-fluid" alt="De boodschap Done compiling in de Arduino IDE" width="600">
+                </figure>
+            </div>
+        </li>
+        <li>Meestal ga je de moeite niet doen om op Verify te klikken en wil je gewoon <strong>Uploaden</strong> naar de Arduino om meteen te testen.<br>
+            De <strong>Upload</strong> knop gaat eerst een <strong>Verify</strong> uitvoeren om zeker te zijn dat er geen syntaxfouten in het programma zitten en de Arduino voldoende geheugen heeft om je programma op te slaan en uit te voeren.<br>
+            In het <strong>Output window</strong> zie je misschien rode tekst maar dat is niet noodzakelijk een foutmelding.
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../../img/arduino-ide-upload-knop.png" class="img-fluid" alt="De Upload-knop en het Output window in de Arduino IDE" width="600">
+                </figure>
+            </div>
+        </li>
+    </ol>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+</body>
+</html>
