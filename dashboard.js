@@ -64,19 +64,27 @@
         var root = document.getElementById('dashboard-root');
         if (!root || !config || !Array.isArray(config.exercises)) return;
 
+        // Display order follows each exercise's "order" number (lowest first);
+        // exercises without one are pushed to the end, in their original order.
+        var exercises = config.exercises.slice().sort(function (a, b) {
+            var orderA = typeof a.order === 'number' ? a.order : Number.MAX_SAFE_INTEGER;
+            var orderB = typeof b.order === 'number' ? b.order : Number.MAX_SAFE_INTEGER;
+            return orderA - orderB;
+        });
+
         function completedCount() {
-            return config.exercises.filter(function (e) { return isDone(config.labId, e.id); }).length;
+            return exercises.filter(function (e) { return isDone(config.labId, e.id); }).length;
         }
 
         function render() {
-            var total = config.exercises.length;
+            var total = exercises.length;
             var done = completedCount();
             var xp = done * XP_PER_EXERCISE;
             var level = Math.floor(xp / XP_PER_EXERCISE) + 1;
             var pct = total === 0 ? 0 : Math.round((done / total) * 100);
             var allDone = total > 0 && done === total;
 
-            var badgesHtml = config.exercises.map(function (e) {
+            var badgesHtml = exercises.map(function (e) {
                 var unlocked = isDone(config.labId, e.id);
                 return (
                     '<div class="ms-badge' + (unlocked ? ' unlocked' : ' locked') + '" title="' + escapeHtml(e.name) + '">' +
@@ -93,7 +101,7 @@
                 '</div>'
             );
 
-            var itemsHtml = config.exercises.map(function (e) {
+            var itemsHtml = exercises.map(function (e) {
                 var exDone = isDone(config.labId, e.id);
                 var disabledAttr = e.checklistDriven ? ' disabled' : '';
                 var hintHtml = e.checklistDriven && !exDone
@@ -106,7 +114,7 @@
                     '<span class="ms-exercise-name">' + escapeHtml(e.name) + '</span>' +
                     '</label>' +
                     hintHtml +
-                    (e.href ? '<a class="ms-exercise-link" href="' + escapeHtml(e.href) + '" target="_blank" rel="noopener">Open oefening \u2192</a>' : '') +
+                    (e.href ? '<a class="ms-exercise-link" href="' + escapeHtml(e.href) + '">Open oefening \u2192</a>' : '') +
                     '</li>'
                 );
             }).join('');
@@ -127,7 +135,7 @@
                 '</div>' +
                 '<canvas class="ms-confetti-canvas" id="ms-confetti-canvas"></canvas>';
 
-            config.exercises.forEach(function (e) {
+            exercises.forEach(function (e) {
                 if (e.checklistDriven) return;
                 var input = root.querySelector('[data-toggle="' + cssEscape(e.id) + '"]');
                 if (input) {
@@ -152,7 +160,7 @@
                 confettiBurst(60);
                 showToast(ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)]);
 
-                if (completedCount() === config.exercises.length) {
+                if (completedCount() === exercises.length) {
                     setTimeout(celebrateAll, 500);
                 }
             }
@@ -160,7 +168,7 @@
 
         function onReset() {
             if (!window.confirm('Weet je zeker dat je jouw voortgang voor dit labo wil resetten?')) return;
-            config.exercises.forEach(function (e) { setDone(config.labId, e.id, false); });
+            exercises.forEach(function (e) { setDone(config.labId, e.id, false); });
             render();
         }
 
@@ -261,7 +269,7 @@
         // exercise page itself, when this dashboard is open live in another tab.
         window.addEventListener('storage', function (event) {
             if (!event.key) return;
-            var matchedExercise = config.exercises.filter(function (e) {
+            var matchedExercise = exercises.filter(function (e) {
                 return e.checklistDriven && event.key === stateKey(config.labId, e.id);
             })[0];
             if (!matchedExercise) return;
@@ -271,7 +279,7 @@
             if (justCompleted) {
                 confettiBurst(60);
                 showToast(ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)]);
-                if (completedCount() === config.exercises.length) {
+                if (completedCount() === exercises.length) {
                     setTimeout(celebrateAll, 500);
                 }
             }
