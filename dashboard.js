@@ -130,7 +130,7 @@
                 '<div class="ms-badge-wrap">' +
                 '<div class="ms-badge ms-badge-grand' + (allDone ? ' unlocked' : ' locked') + '">' +
                 '<div class="ms-badge-icon">\uD83D\uDC51</div>' +
-                '<div class="ms-badge-name">' + escapeHtml(config.labTitle) + ' Meester</div>' +
+                '<div class="ms-badge-name">' + escapeHtml(config.labTitle) + ' Legende</div>' +
                 (allDone
                     ? ''
                     : '<div class="ms-badge-tooltip"><div class="ms-badge-tooltip-text">Voltooi alle oefeningen van ' + escapeHtml(config.labTitle) + ' om deze badge te ontgrendelen.</div></div>') +
