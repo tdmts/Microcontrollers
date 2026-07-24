@@ -11,17 +11,20 @@
 <body>
 <div class="container">
     <h1>Morsecode</h1>
-    <p class="lead">Maak een nieuw programma. Plaats een rode LED op pin 12 en schrijf een programma waarbij de led SOS in morsecode weergeeft.</p>
+    <p class="lead">Maak een nieuw programma. Plaats een rode LED op pin 12 en schrijf een programma waarbij de led het woord <strong>SOS</strong> in morsecode weergeeft.</p>
 
     <h2 id="opgave">Opgave</h2>
-    <div class="info-box">
-        <p>Een streep duurt 0,3s en een punt 0,1s. De pauze tussen strepen en punten is 0,1s. De pauze tussen twee letters is 0,3s en de pauze tussen twee woorden is 0,7s.</p>
-    </div>
+    <p>Morsecode bestaat uit korte signalen (punten) en lange signalen (strepen). De letter <strong>S</strong> bestaat uit drie punten, de letter <strong>O</strong> uit drie strepen. Om SOS te seinen laat je de LED dus knipperen volgens het patroon <strong>S - O - S</strong>.</p>
 
-    <div class="info-box">
-        <div class="info-title tip">Tip: Efficiëntie</div>
-        <p>Gebruik lussen om het programma zo efficiënt mogelijk te maken. Bekijk de voorbeeldcode en vul aan.</p>
-    </div>
+    <p>Hou hierbij rekening met de volgende timing:</p>
+    <ul>
+        <li>Een <strong>punt</strong> duurt 0,1s, een <strong>streep</strong> duurt 0,3s.</li>
+        <li>Tussen twee punten/strepen binnen dezelfde letter zit een pauze van 0,1s.</li>
+        <li>Tussen twee letters zit een pauze van 0,3s.</li>
+        <li>Tussen twee woorden zit een pauze van 0,7s.</li>
+    </ul>
+
+    <p>Gebruik lussen om je programma zo efficiënt mogelijk te maken. In de voorbeeldcode hieronder is de letter S al volledig uitgewerkt: vul zelf de O en de tweede S aan.</p>
 
     <h2 id="voorbeeldcode">Voorbeeldcode</h2>
     <pre class="code-wrapper language-arduino linenumbers show-language">
