@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Begeleide oefening</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Begeleide oefening</h1>
+    <p class="lead">In deze oefening bouw je stap voor stap een schakeling met een drukknop en een LED. We beginnen heel klein en breiden je programma telkens een beetje uit, tot je op het einde een LED laat knipperen met een functie die je zelf hebt geschreven. Neem rustig de tijd en lees bij elke stap ook even het waarom.</p>
+
+    <h2 id="stappenplan">Stappenplan</h2>
+
+    <h3>Stap 1: Sketch aanmaken</h3>
+    <p>Open de Arduino IDE en verbind je Arduino met een USB-kabel met je computer. De Arduino krijgt zo meteen ook stroom, je hoeft dus verder niets aan te sluiten.</p>
+    <p>Controleer nu of je computer je Arduino herkent. Bovenaan in de IDE kies je bij <strong>Select board</strong> je bord en de juiste poort. Lukt dat niet meteen? In <a href="../Reference/ProgrammaUploaden.html">Een programma uploaden</a> lees je hoe je het juiste bord en de juiste poort selecteert.</p>
+    <p>Maak daarna een nieuwe sketch en sla hem op onder de naam <code>Labo0_KnopEnLed</code>. Zo vind je je werk straks makkelijk terug.</p>
+    <!-- TODO: bestaande screenshot hergebruikt; vervang gerust door een recentere als de IDE-versie verandert -->
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/arduino-ide-select-board.png" class="img-fluid" alt="De Select board-dropdown in de Arduino IDE waarmee je je bord en poort kiest">
+        </figure>
+    </div>
+
+    <h3>Stap 2: Drukknop aansluiten op pin 2</h3>
+    <p>Verbind een <a href="../Reference/PullUpPullDown.html#pushbutton">pushbutton</a> met pin 2 van je Arduino. Werk altijd op een uitgeschakelde of losgekoppelde Arduino terwijl je bedraadt, zo vermijd je kortsluitingen.</p>
+    <p>Een knopingang mag niet "zweven": zonder vaste waarde leest de pin willekeurig hoog of laag. Daarom plaats je tussen pin 2 en de +5&nbsp;V een <a href="../Reference/PullUpPullDown.html">pull-upweerstand</a>, die de ingang een vaste rustwaarde geeft. Neem daarvoor best een weerstand van ongeveer <strong>10&nbsp;k&Omega;</strong> (een waarde tussen 1&nbsp;k&Omega; en 10&nbsp;k&Omega; werkt). Sluit alles aan zoals op de foto:</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/pullup-breadboard-foto.png" class="img-fluid" alt="Breadboard met een pushbutton op pin 2 en een externe pull-upweerstand naar de +5 V">
+        </figure>
+    </div>
+    <p>Pas nu je programma aan. Maak bovenaan een <a href="../Reference/ConstantenVariabelenGegevenstypes.html">constante</a> <code>pinButton</code> met de waarde 2. Door met een naam te werken in plaats van het getal 2 blijft je code leesbaar en pas je het pinnummer later op &eacute;&eacute;n plaats aan. Omdat je zelf een externe pull-upweerstand plaatst, stel je de pin in <a href="../Reference/SetupLoop.html#setup"><code>setup()</code></a> in als gewone ingang met <a href="../Reference/pinMode.html#hoe-definieer-je-een-pin"><code>pinMode(pinButton, INPUT)</code></a>.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language">
+const int pinButton = 2;
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+}
+
+void loop()
+{
+
+}
+    </pre>
+    <p>Wil je liever geen externe weerstand plaatsen? Dan kan je in plaats daarvan de ingebouwde pull-up van de Arduino gebruiken met <a href="../Reference/pinMode.html#wat-is-het-verschil"><code>INPUT_PULLUP</code></a>. Je hoeft de weerstand op de foto dan niet te plaatsen, en verder blijft alles gelijk.</p>
+
+    <h3>Stap 3: Denk eens na over de niveaus bij een pull-up</h3>
+    <p>Voor je iets uittest: probeer eerst zelf te redeneren. Als je een pull-up-weerstand gebruikt, welk niveau (hoog of laag) verwacht je op de pin wanneer je de knop <em>niet</em> indrukt? En welk niveau wanneer je de knop <em>wel</em> indrukt?</p>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
+        <div class="spoiler-content solution-content">
+            <p>Bij een pull-up trekt de weerstand de pin standaard naar 5&nbsp;V, dus je leest <strong>HIGH (1)</strong> zolang je de knop <strong>niet</strong> indrukt. Druk je de knop in, dan verbind je de pin met de massa (GND) en lees je <strong>LOW (0)</strong>. De logica is dus omgekeerd aan wat je intu&iuml;tief zou verwachten: ingedrukt = 0.</p>
+        </div>
+    </div>
+
+    <h3>Stap 4: Je redenering testen via de Seri&euml;le monitor</h3>
+    <p>Nu ga je controleren of je redenering klopt. Schrijf een kort debug-programma dat de status van de knop met <a href="../Reference/digitalReadDigitalWrite.html"><code>digitalRead</code></a> uitleest en naar de <a href="../Reference/Debuggen.html#in-arduino-ide">Seri&euml;le monitor</a> stuurt. Laad het daarna op met de knop <strong>Upload</strong> (zie <a href="../Reference/ProgrammaUploaden.html">Een programma uploaden</a> als je twijfelt).</p>
+    <p>Open vervolgens de Seri&euml;le monitor en druk de knop enkele keren in. De waarde die je ziet (1 = hoog, 0 = laag) zou moeten overeenkomen met wat je in stap 3 had voorspeld. Komt het overeen? Dan snap je de pull-up. Zo niet, controleer dan rustig je bedrading en je <code>pinMode</code>.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language">
+const int pinButton = 2;
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int state = digitalRead(pinButton);
+  Serial.print("Status: ");
+  Serial.println(state);
+}
+    </pre>
+    <div class="info-box">
+        <div class="info-title tip">Tip: instellingen van de Seri&euml;le monitor</div>
+        <p>Zet rechtsonder in de Seri&euml;le monitor de snelheid op <strong>9600 baud</strong>, gelijk aan de waarde in <code>Serial.begin(9600)</code>. Staat die anders, dan zie je onleesbare tekens. Zet er daarnaast het regeleinde op <strong>New line</strong>, omdat je in de code <code>Serial.println</code> gebruikt: zo komt elke status netjes op een eigen regel.</p>
+    </div>
+    <!-- TODO: bestaande screenshot hergebruikt -->
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/arduino-ide-seriele-monitor.png" class="img-fluid" alt="De Seri&euml;le monitor in de Arduino IDE die de status van de knop toont">
+        </figure>
+    </div>
+
+    <h3>Stap 5: LED aansluiten op pin 3</h3>
+    <p>Tijd voor licht. Verbind een LED met pin 3 en sluit hem aan volgens het principe van <a href="../Reference/SourcenSinken.html#sourcing">sourcing</a>: de pin levert de stroom die door de LED loopt. Plaats een voorschakelweerstand van <strong>220&nbsp;&Omega;</strong> in serie met de LED om die stroom te begrenzen. Hoe je precies aan die 220&nbsp;&Omega; komt, reken je zelf uit in stap 7.</p>
+    <p>Let goed op de polariteit van je LED. Met het ezelsbruggetje <strong>KNAP</strong> onthoud je het makkelijk: <strong>K</strong>athode <strong>N</strong>egatief, <strong>A</strong>node <strong>P</strong>ositief. Je herkent de kathode (de minkant) op twee manieren:</p>
+    <div class="table-responsive table-spacer">
+        <table class="table table-striped table-bordered align-middle" style="border-collapse: collapse;">
+            <thead class="table-header-custom">
+                <tr>
+                    <th style="border: 1px solid #000;">Manier 1</th>
+                    <th style="border: 1px solid #000;">Manier 2</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="border: 1px solid #000;">De behuizing is vlak aan de kant van de kathode en rond aan de kant van de anode.</td>
+                    <td style="border: 1px solid #000;">Het "vlakje" binnen in de LED is groter bij de kathode dan bij de anode.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/led-polariteit.webp" class="img-fluid" alt="Schematische voorstelling van de polariteit van een LED, met kathode en anode aangeduid">
+        </figure>
+    </div>
+    <p>Zo ziet een sourcing-aansluiting er schematisch uit:</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/sourcing-schema.png" class="img-fluid" alt="Schema van een LED die volgens het principe van sourcing wordt aangestuurd">
+        </figure>
+    </div>
+    <!-- TODO: voeg een echte foto toe van dit schema op het breadboard (LED met 220 ohm voorschakelweerstand op pin 3) -->
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-sourcing-led-breadboard.png" class="img-fluid" alt="TODO: foto van de LED met voorschakelweerstand op pin 3 op het breadboard">
+        </figure>
+    </div>
+    <div class="info-box">
+        <div class="info-title warning">Waarschuwing: bescherm je LED</div>
+        <p>Sluit een LED <strong>nooit</strong> rechtstreeks op een pin aan zonder voorschakelweerstand, en let op de polariteit. Zonder weerstand loopt er te veel stroom en beschadig je de LED en mogelijk ook de pin van je Arduino. Welke weerstand je nodig hebt, bereken je in stap 7.</p>
+    </div>
+
+    <h3>Stap 6: Denk eens na over de niveaus voor sourcing</h3>
+    <p>Opnieuw eerst zelf redeneren. Als je de LED aanstuurt volgens sourcing, welk niveau moet er dan op de anode staan en welk op de kathode om de LED te doen oplichten?</p>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
+        <div class="spoiler-content solution-content">
+            <p>Bij sourcing komt de anode (de pluskant) aan de pin. Zet je de pin <strong>HIGH</strong>, dan staat de anode op ongeveer 5&nbsp;V en de kathode via de weerstand op 0&nbsp;V (GND). Er loopt dan stroom van de anode naar de kathode en de LED brandt. Zet je de pin <strong>LOW</strong>, dan is er geen spanningsverschil en blijft de LED uit.</p>
+        </div>
+    </div>
+
+    <h3>Stap 7: De juiste voorschakelweerstand berekenen</h3>
+    <p>Nu berekenen we welke weerstand je nodig hebt. In de datasheet van een LED vind je twee waarden terug. De <strong>I<sub>forward</sub></strong> is de nominale stroom die je door de LED wil sturen om die mooi te laten branden, vaak ongeveer 20&nbsp;mA. De <strong>V<sub>forward</sub></strong> is de spanning die over de LED staat bij die stroom, meestal tussen 1,8&nbsp;V en 2&nbsp;V.</p>
+    <p>Met de <a href="../Reference/WiskundigeOperatoren.html">wet van Ohm</a> reken je de weerstand uit. Je trekt eerst de spanning over de LED af van de voedingsspanning, want dat is het stuk spanning dat de weerstand moet opnemen:</p>
+    <div class="math-tex">
+        $$ R = \frac{U}{I} = \frac{V_{CC} - V_{forward}}{I_{forward}} = \frac{5\,\text{V} - 1{,}8\,\text{V}}{20\,\text{mA}} \approx 160\ \Omega \text{ (theoretisch)} $$
+    </div>
+
+    <h3>Stap 8: Denk eens na over de beschikbare weerstandswaarden</h3>
+    <p>Je berekende 160&nbsp;&Omega;, maar dat is een theoretische waarde. Zit die 160&nbsp;&Omega; ook echt in je Arduino-starterkit? En welke weerstand neem je dan best?</p>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
+        <div class="spoiler-content solution-content">
+            <p>160&nbsp;&Omega; is een standaardwaarde uit de E24-reeks (de reeks van de gangbare 5%-weerstanden), maar in een basis-starterkit zit die waarde meestal niet. Je neemt dan de dichtstbijzijnde <strong>hogere</strong> waarde die je w&eacute;l hebt: <strong>220&nbsp;&Omega;</strong>. Rond bij twijfel altijd naar boven af: een iets grotere weerstand betekent iets minder stroom en dus een iets minder felle, maar veiligere LED.</p>
+        </div>
+    </div>
+
+    <h3>Stap 9: Denk eens na over de stroom die een pin levert</h3>
+    <p>Nog een denkoefening. Hoeveel stroom kan een pin van de Arduino eigenlijk leveren? En hebben we die voorschakelweerstand dan wel echt nodig?</p>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
+        <div class="spoiler-content solution-content">
+            <p>Een pin van de Arduino Uno levert veilig ongeveer <strong>20&nbsp;mA</strong>. Het <strong>absolute maximum</strong> is 40&nbsp;mA (de schadegrens), en alle pinnen samen mogen niet boven ongeveer 200&nbsp;mA komen. Een LED brandt mooi rond die 20&nbsp;mA, dus qua LED zit je goed.</p>
+            <p>Sluit je de LED echter <strong>zonder</strong> weerstand aan, dan legt niets de stroom vast behalve de LED zelf en de kleine inwendige weerstand van de pin (grofweg 25&nbsp;&Omega;). De stroom is dan geen nette 40&nbsp;mA, maar loopt ongecontroleerd op tot ruim boven de aanbevolen 20&nbsp;mA en voorbij het absolute maximum van 40&nbsp;mA. Dat overbelast de pin en kan zowel de pin als de LED beschadigen. Net daarom heb je de weerstand nodig: die legt de stroom vast op een gekende, veilige waarde. Meer hierover lees je bij <a href="../Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
+            <p>Ben je nieuwsgierig? Bouw dit gerust zelf na in TinkerCAD en meet de stroom met een multimeter die je op <strong>Stroomsterkte</strong> zet. Je ziet dan een stroom van ongeveer <strong>53&nbsp;mA</strong> verschijnen, ruim boven de veilige grens. &#128521;</p>
+        </div>
+    </div>
+
+    <h3>Stap 10: De LED laten reageren op de knop</h3>
+    <p>Nu koppelen we knop en LED aan elkaar. Breid je programma uit met een <a href="../Reference/digitalReadDigitalWrite.html"><code>digitalWrite</code></a> zodat de LED aangaat wanneer je de knop indrukt en weer uitgaat wanneer je loslaat. Denk terug aan stap 3: bij een pull-up is de knop ingedrukt wanneer je <code>LOW</code> leest, dus daar test je met een <a href="../Reference/Selecties.html#voorbeeld-tweevoudige-selectie">tweevoudige selectie</a> (<code>if</code> / <code>else</code>) op.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language">
+const int pinButton = 2;
+const int pinLED = 3;  // pinLED definiëren
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int state = digitalRead(pinButton);
+  Serial.print("Status: ");
+  Serial.println(state);
+
+  if(state == LOW)
+  {
+    // pull up -&gt; LOW = er werd op de knop gedrukt
+    digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+  }
+  else
+  {
+    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  }
+}
+    </pre>
+    <!-- TODO: voeg een breadboardfoto toe van de volledige schakeling (knop op pin 2, LED + weerstand op pin 3) -->
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-breadboard-knop-en-led.png" class="img-fluid" alt="TODO: breadboardfoto van de volledige schakeling met de knop op pin 2 en de LED met weerstand op pin 3">
+        </figure>
+    </div>
+
+    <h3>Stap 11: Debouncing toevoegen</h3>
+    <p>Een mechanische knop "kaatst" bij het indrukken heel even, waardoor de Arduino snel na elkaar meerdere drukken kan zien. Dat heet contactdender. Je lost het hier eenvoudig op met een korte <a href="../Reference/Debouncen.html">debouncing</a>: een kleine <code>delay</code> na het uitlezen van de knop. Voeg die toe na het uitlezen van de status.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language">
+const int pinButton = 2;
+const int pinLED = 3;  // pinLED definiëren
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int state = digitalRead(pinButton);
+  delay(100); // debouncing
+  Serial.print("Status: ");
+  Serial.println(state);
+
+  if(state == LOW)
+  {
+    // pull up -&gt; LOW = er werd op de knop gedrukt
+    digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+  }
+  else
+  {
+    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  }
+}
+    </pre>
+
+    <h3>Stap 12: Een eigen blink()-functie maken</h3>
+    <p>Vanaf hier maken we je code netter met een <a href="../Reference/FunctiesParameters.html#eigen-functies-maken">eigen functie</a>. Schrijf een functie <code>blink()</code> die de LED 3 keer na elkaar aan- en uitzet wanneer je de knop indrukt. Vergeet niet om de functie ook echt op te roepen in je <a href="../Reference/SetupLoop.html#loop"><code>loop()</code></a>.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language">
+const int pinButton = 2;
+const int pinLED = 3;  // pinLED definiëren
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int state = digitalRead(pinButton);
+  delay(100); // debouncing
+  Serial.print("Status: ");
+  Serial.println(state);
+
+  if(state == LOW)
+  {
+    // pull up -&gt; LOW = er werd op de knop gedrukt
+    blink(); // verwijs naar de functie blink
+  }
+  else
+  {
+    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  }
+}
+
+void blink()
+{
+  digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+  delay(50);
+  digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  delay(50);
+
+  digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+  delay(50);
+  digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  delay(50);
+
+  digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+  delay(50);
+  digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  delay(50);
+}
+    </pre>
+
+    <h3>Stap 13: blink() vereenvoudigen met een iteratie</h3>
+    <p>Merk je hoe je dezelfde regels drie keer hebt gekopieerd? Dat kan korter. Vervang de herhaling door een <a href="../Reference/Iteraties.html#de-for-instructie">for-lus</a>, die het blok automatisch drie keer uitvoert. Kortere code die hetzelfde doet, is makkelijker te lezen en aan te passen.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language">
+const int pinButton = 2;
+const int pinLED = 3;  // pinLED definiëren
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int state = digitalRead(pinButton);
+  delay(100); // debouncing
+  Serial.print("Status: ");
+  Serial.println(state);
+
+  if(state == LOW)
+  {
+    // pull up -&gt; LOW = er werd op de knop gedrukt
+    blink(); // verwijs naar de functie blink
+  }
+  else
+  {
+    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  }
+}
+
+void blink()
+{
+  for(int i = 1; i &lt;= 3; i++)
+  {
+    digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+    delay(50);
+    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    delay(50);
+  }
+}
+    </pre>
+
+    <h3>Stap 14: Het aantal knipperingen instelbaar maken</h3>
+    <p>Nu maken we de functie flexibeler met een <a href="../Reference/FunctiesParameters.html#uitleg">parameter</a>. Voeg een parameter <code>aantal</code> toe zodat je zelf kan kiezen hoe vaak de LED knippert. Roep de functie daarna zo op dat de LED 4 keer aan- en uitgaat: <code>blink(4)</code>.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language">
+const int pinButton = 2;
+const int pinLED = 3;  // pinLED definiëren
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int state = digitalRead(pinButton);
+  delay(100); // debouncing
+  Serial.print("Status: ");
+  Serial.println(state);
+
+  if(state == LOW)
+  {
+    // pull up -&gt; LOW = er werd op de knop gedrukt
+    blink(4); // verwijs naar de functie blink
+  }
+  else
+  {
+    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  }
+}
+
+void blink(int aantal)
+{
+  for(int i = 1; i &lt;= aantal; i++)
+  {
+    digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+    delay(50);
+    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    delay(50);
+  }
+}
+    </pre>
+
+    <h3>Stap 15: Ook de duurtijd instelbaar maken</h3>
+    <p>Als laatste stap maak je ook de snelheid instelbaar. Voeg een tweede parameter <code>duurtijd</code> toe die bepaalt hoe lang de LED telkens aan en uit staat. Roep de functie zo op dat de LED 4 keer knippert met een duurtijd van 100&nbsp;ms: <code>blink(4, 100)</code>. Proficiat, je hebt nu een herbruikbare functie waarmee je zelf het aantal en het tempo bepaalt.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language">
+const int pinButton = 2;
+const int pinLED = 3;  // pinLED definiëren
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int state = digitalRead(pinButton);
+  delay(100); // debouncing
+  Serial.print("Status: ");
+  Serial.println(state);
+
+  if(state == LOW)
+  {
+    // pull up -&gt; LOW = er werd op de knop gedrukt
+    blink(4, 100); // verwijs naar de functie blink
+  }
+  else
+  {
+    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  }
+}
+
+void blink(int aantal, int duurtijd)
+{
+  for(int i = 1; i &lt;= aantal; i++)
+  {
+    digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+    delay(duurtijd);
+    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    delay(duurtijd);
+  }
+}
+    </pre>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Drukknop op pin 2 werkt met een externe pull-upweerstand (ongeveer 10&nbsp;k&Omega;) en <code>pinMode(pinButton, INPUT)</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De status van de knop verschijnt correct in de Seri&euml;le monitor (1 = los, 0 = ingedrukt)</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> LED op pin 3 is volgens sourcing aangesloten, met een gepaste voorschakelweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LED gaat aan bij het indrukken van de knop en uit bij het loslaten</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Debouncing is toegevoegd</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De functie <code>blink(aantal, duurtijd)</code> laat de LED het gewenste aantal keer knipperen met instelbare duurtijd</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo0);
+</script>
+</body>
+</html>
