@@ -26,6 +26,122 @@
 
     var STORAGE_PREFIX = 'msDashboard:';
 
+    /* ------------------------------------------------------------
+       Celebration: fires once when the student ticks the final box
+       and the whole checklist becomes complete. Self-contained
+       (no external libraries): a short confetti burst plus a small
+       "Proficiat!"-banner. Shared here so every exercise page with a
+       checklist gets it automatically. Honours prefers-reduced-motion
+       by skipping the confetti but still showing the banner.
+       ------------------------------------------------------------ */
+
+    var CONFETTI_COLORS = ['#2e7d32', '#66bb6a', '#fbc02d', '#29b6f6', '#ab47bc', '#ef5350'];
+
+    function prefersReducedMotion() {
+        return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
+    function showBanner() {
+        var banner = document.createElement('div');
+        banner.setAttribute('role', 'status');
+        banner.style.cssText = [
+            'position:fixed', 'top:24px', 'left:50%', 'transform:translateX(-50%) translateY(-16px)',
+            'z-index:10000', 'background:#2e7d32', 'color:#fff',
+            'padding:14px 22px', 'border-radius:10px', 'font-weight:600',
+            'font-family:inherit', 'font-size:1.05rem', 'box-shadow:0 6px 24px rgba(0,0,0,.25)',
+            'opacity:0', 'transition:opacity .35s ease, transform .35s ease',
+            'max-width:90vw', 'text-align:center', 'pointer-events:none'
+        ].join(';');
+        banner.textContent = '🎉 Proficiat! Je hebt de oefening volledig afgewerkt.';
+        document.body.appendChild(banner);
+
+        // Force reflow so the transition runs, then fade in.
+        void banner.offsetWidth;
+        banner.style.opacity = '1';
+        banner.style.transform = 'translateX(-50%) translateY(0)';
+
+        setTimeout(function () {
+            banner.style.opacity = '0';
+            banner.style.transform = 'translateX(-50%) translateY(-16px)';
+            setTimeout(function () {
+                if (banner.parentNode) banner.parentNode.removeChild(banner);
+            }, 400);
+        }, 3200);
+    }
+
+    function launchConfetti() {
+        var canvas = document.createElement('canvas');
+        canvas.style.cssText = 'position:fixed;inset:0;width:100vw;height:100vh;z-index:9999;pointer-events:none';
+        document.body.appendChild(canvas);
+
+        var ctx = canvas.getContext('2d');
+        var dpr = window.devicePixelRatio || 1;
+
+        function resize() {
+            canvas.width = window.innerWidth * dpr;
+            canvas.height = window.innerHeight * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        var W = window.innerWidth;
+        var particles = [];
+        var count = 130;
+        for (var i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * W,
+                y: -20 - Math.random() * window.innerHeight * 0.5,
+                w: 6 + Math.random() * 6,
+                h: 8 + Math.random() * 8,
+                color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+                vy: 2 + Math.random() * 3,
+                vx: -1.5 + Math.random() * 3,
+                rot: Math.random() * Math.PI,
+                vrot: -0.15 + Math.random() * 0.3
+            });
+        }
+
+        var start = null;
+        var duration = 3000;
+
+        function frame(ts) {
+            if (start === null) start = ts;
+            var elapsed = ts - start;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            var fade = elapsed > duration - 800
+                ? Math.max(0, (duration - elapsed) / 800)
+                : 1;
+
+            particles.forEach(function (p) {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.rot += p.vrot;
+                ctx.save();
+                ctx.globalAlpha = fade;
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rot);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+                ctx.restore();
+            });
+
+            if (elapsed < duration) {
+                requestAnimationFrame(frame);
+            } else {
+                window.removeEventListener('resize', resize);
+                if (canvas.parentNode) canvas.parentNode.removeChild(canvas);
+            }
+        }
+        requestAnimationFrame(frame);
+    }
+
+    function celebrate() {
+        showBanner();
+        if (!prefersReducedMotion()) launchConfetti();
+    }
+
     function itemKey(labId, exerciseId, index) {
         return STORAGE_PREFIX + labId + ':' + exerciseId + ':item:' + index;
     }
@@ -61,7 +177,12 @@
         var checkboxes = Array.prototype.slice.call(document.querySelectorAll(selector));
         if (checkboxes.length === 0) return;
 
-        function updateDoneState() {
+        // Tracks whether the checklist was already complete, so the
+        // celebration fires only on the transition to complete caused by
+        // the student, never on page load of an already-finished exercise.
+        var wasComplete = false;
+
+        function updateDoneState(fromUserAction) {
             var allChecked = checkboxes.every(function (cb) { return cb.checked; });
             var key = doneKey(config.labId, config.exerciseId);
             if (allChecked) {
@@ -69,6 +190,11 @@
             } else {
                 localStorage.removeItem(key);
             }
+
+            if (fromUserAction && allChecked && !wasComplete) {
+                celebrate();
+            }
+            wasComplete = allChecked;
         }
 
         checkboxes.forEach(function (cb, index) {
@@ -81,11 +207,11 @@
                 } else {
                     localStorage.removeItem(key);
                 }
-                updateDoneState();
+                updateDoneState(true);
             });
         });
 
-        updateDoneState();
+        updateDoneState(false);
     }
 
     window.initChecklistSync = initChecklistSync;
