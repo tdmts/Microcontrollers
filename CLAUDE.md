@@ -9,6 +9,11 @@ authored to the **Orion styleguide** and deployed via **GitHub Pages** at
 `https://tdmts.github.io/Microcontrollers/`. Each page is then iframed into a Brightspace/Orion topic
 using [pasteInOrion.html](pasteInOrion.html) (edit only the iframe `src` per topic).
 
+> **The only file ever uploaded to Orion is [pasteInOrion.html](pasteInOrion.html).** Every other
+> page in this repo is served from GitHub Pages, never uploaded. Inside `pasteInOrion.html` the
+> iframe `src` must point at a GitHub-hosted HTML page (a `https://tdmts.github.io/Microcontrollers/...`
+> URL), not a local file — that hosted page is what Orion embeds.
+
 There is **no build system, package manager, linter, or test suite**. You edit HTML/CSS/JS directly.
 To preview, open a page in a browser or push to GitHub Pages. Note: some behavior only works over
 `http(s)://`, not a `file://`-opened page — e.g. YouTube embeds need `referrerpolicy` (error 153
