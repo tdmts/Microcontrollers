@@ -48,6 +48,7 @@ void loop()
 
 }
     </pre>
+    <p>Elke Arduino-sketch bevat altijd deze twee functies. <a href="../Reference/SetupLoop.html#setup"><code>setup()</code></a> wordt <strong>&eacute;&eacute;n keer</strong> uitgevoerd bij het opstarten en gebruik je om alles klaar te zetten, zoals hier je <code>pinMode</code>. <a href="../Reference/SetupLoop.html#loop"><code>loop()</code></a> wordt daarna <strong>continu herhaald</strong> en bevat de eigenlijke werking van je programma. Ze moeten allebei aanwezig zijn, ook als er (zoals nu) nog niets in <code>loop()</code> staat.</p>
     <p>Wil je liever geen externe weerstand plaatsen? Dan kan je in plaats daarvan de ingebouwde pull-up van de Arduino gebruiken met <a href="../Reference/pinMode.html#wat-is-het-verschil"><code>INPUT_PULLUP</code></a>. Je hoeft de weerstand op de foto dan niet te plaatsen, en verder blijft alles gelijk.</p>
 
     <h3>Stap 3: Denk eens na over de niveaus bij een pull-up</h3>
@@ -429,10 +430,10 @@ void blink(int aantal, int duurtijd)
     </div>
 </div>
 
-<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
-<script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
-<script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
-<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
 <script>
     initChecklistSync(LAB_EXERCISES.labo0);
 </script>
