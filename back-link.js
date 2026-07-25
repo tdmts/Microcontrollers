@@ -4,10 +4,11 @@
 
      <script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
 
-   dashboard.html always lives directly in the LaboN/ folder, but the
-   current page may be nested one or more levels below it (e.g.
-   LaboN/Reference/...), so the relative path back up is computed from
-   how many segments separate the page from its target folder.
+   dashboard.html lives in the LaboN/Exercises/ folder, and the current
+   page may be nested at various depths under LaboN/ (e.g. an exercise in
+   LaboN/Exercises/ or a page in LaboN/Reference/), so the relative path
+   back up is computed from how many segments separate the page from the
+   LaboN/ folder, then extended down into Exercises/.
 
    Pages inside a Reference/ folder link back to that folder's
    reference.html (the reference hub) instead of straight to the lab
@@ -38,9 +39,9 @@
         targetLabel = '← Terug naar overzicht';
         anchorIndex = referenceIndex;
     } else {
-        // anchorIndex points at the LaboN/ segment itself, since
-        // dashboard.html lives directly inside that folder.
-        targetFile = 'dashboard.html';
+        // anchorIndex points at the LaboN/ segment; the prefix walks up
+        // to LaboN/, then Exercises/ steps back down to the dashboard.
+        targetFile = 'Exercises/dashboard.html';
         targetLabel = '← Terug naar dashboard';
         anchorIndex = parts.findIndex(function (p) { return /^labo\d+$/i.test(p); });
     }

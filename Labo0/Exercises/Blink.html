@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blink</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Blink</h1>
+    <p class="lead">Begin met het testen van je programmeeromgeving door het voorbeeldprogramma "blink" uit te voeren.</p>
+
+    <h2 id="onderzoeksvragen">Onderzoeksvragen</h2>
+    <p>Zoek daarnaast de antwoorden op de volgende vragen op:</p>
+    <ul>
+        <li>Zoek uit via welke poort de Arduino verbonden is met de laptop.</li>
+        <li>Zoek op hoeveel stroom elke pin kan leveren (sourcing) of verwerken (sinking).</li>
+        <li>Wat zijn de verschillende pinModes, en wat is het onderscheid?</li>
+        <li>Wat is de standaard pinMode na het opstarten?</li>
+    </ul>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het blink-voorbeeld draait: de ingebouwde LED knippert</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je weet via welke poort de Arduino met de laptop verbonden is</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je weet hoeveel stroom een pin kan leveren (sourcing) en verwerken (sinking)</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je kan de verschillende pinModes en hun onderscheid uitleggen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je kent de standaard pinMode na het opstarten</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <ul>
+                <li>
+                    <strong>Via welke poort is de Arduino verbonden?</strong> In de Arduino IDE kies je het bord en de poort via de <strong>Select board</strong>-dropdown of via <strong>Tools &gt; Port</strong>. Op Windows is dat meestal een <code>COM</code>-poort (bv. <code>COM3</code>), op macOS/Linux een <code>/dev/tty...</code>-apparaat. Meer hierover in <a href="../Reference/ProgrammaUploaden.html">Een programma uploaden</a>.
+                </li>
+                <li>
+                    <strong>Hoeveel stroom kan een pin leveren of verwerken?</strong> Een pin kan <strong>absoluut maximaal 40 mA</strong> sourcen of sinken, maar in de praktijk hou je best <strong>~20 mA per pin</strong> aan als veilige waarde. De som van alle pinstromen samen mag bovendien niet boven <strong>200 mA</strong> komen. Zie <a href="../Reference/SourcenSinken.html">Sourcen en sinken</a>.
+                </li>
+                <li>
+                    <strong>Wat zijn de verschillende pinModes, en wat is het onderscheid?</strong> Er zijn drie modes: <code>INPUT</code> (hoogimpedant, om een signaal in te lezen), <code>OUTPUT</code> (laagimpedant, om iets aan te sturen en stroom te leveren) en <code>INPUT_PULLUP</code> (zoals INPUT, maar met de ingebouwde pullupweerstand ingeschakeld). Zie <a href="../Reference/pinMode.html#wat-is-het-verschil">pinMode() – Wat is het verschil?</a>.
+                </li>
+                <li>
+                    <strong>Wat is de standaard pinMode na het opstarten?</strong> Elke pin staat na het opstarten standaard in <code>INPUT</code>-mode. Zie opnieuw <a href="../Reference/pinMode.html#wat-is-het-verschil">pinMode() – Wat is het verschil?</a>.
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo0);
+</script>
+</body>
+</html>
