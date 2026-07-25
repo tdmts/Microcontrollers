@@ -9,7 +9,7 @@
 
    Usage -- pass the current lab's entry from the shared exercises.js
    manifest, and the current exercise is auto-detected by matching its
-   "href" against the current page (see Labo1/Looplicht.html):
+   "href" against the current page (see Labo1/Exercises/Looplicht.html):
 
      <script src="../exercises.js"></script>
      <script src="../checklist-sync.js"></script>

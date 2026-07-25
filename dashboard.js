@@ -1,6 +1,6 @@
 /* ============================================================
    Shared engine for the per-lab exercise dashboards.
-   Usage (see Labo0/dashboard.html or Labo1/dashboard.html):
+   Usage (see Labo0/Exercises/dashboard.html or Labo1/Exercises/dashboard.html):
 
      <div id="dashboard-root"></div>
      <script src="../dashboard.js"></script>
