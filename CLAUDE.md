@@ -56,6 +56,13 @@ local `orion.css` and uses placehold.co demo images; the Orion wrapper is not an
 Section 5 still applies to them, because their code samples set the house style for everything
 copied out of them.
 
+`bash scripts/check-content.sh --audit` adds an advisory pass over the house conventions the check
+proper stays out of: every code block must be `code-wrapper language-cpp linenumbers show-language`
+(uniform everywhere, sketch or theory snippet alike), every content page needs a `lead`, images
+belong in a `figure` (table cells excluded), exercise pages need `indienen` and `oplossing` sections,
+and a manifest `checklistDriven` flag must agree with the page's own markup. **It never affects the
+exit code** and never runs in CI or the hook, so a stylistic deviation cannot block anyone.
+
 `bash scripts/check-content.sh --fix` repairs the mechanical violations first and then reports the
 rest: em-dashes, K&R braces that end a line, a missing `referrerpolicy`, an init call naming the
 wrong lab, a manifest `href` with the wrong casing, and assets that exist but were never staged.

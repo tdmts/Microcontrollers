@@ -29,6 +29,13 @@
 #   bash scripts/check-content.sh --hook   # hook mode: errors to stderr,
 #                                          # exit 2 on errors (blocks Stop),
 #                                          # silent + 0 when clean.
+#   bash scripts/check-content.sh --audit  # also report house-style drift
+#                                          # (code block classes, missing
+#                                          # lead, unwrapped images, missing
+#                                          # sections, checklistDriven vs
+#                                          # markup). Advisory: it never
+#                                          # changes the exit code, and it
+#                                          # cannot be combined with --hook.
 #   bash scripts/check-content.sh --fix    # repair the mechanical violations
 #                                          # first, then report the rest.
 #                                          # Wants a clean tree so "git diff"
@@ -48,14 +55,21 @@ cd "$(dirname "$0")/.." || exit 2
 HOOK_MODE=0
 FIX_MODE=0
 FORCE=0
+AUDIT=0
 for arg in "$@"; do
   case "$arg" in
     --hook)  HOOK_MODE=1 ;;
     --fix)   FIX_MODE=1 ;;
     --force) FORCE=1 ;;
+    --audit) AUDIT=1 ;;
     *) echo "check-content: unknown option '$arg'" >&2; exit 2 ;;
   esac
 done
+
+if [ "$AUDIT" -eq 1 ] && [ "$HOOK_MODE" -eq 1 ]; then
+  echo "check-content: --audit is advisory and cannot be combined with --hook" >&2
+  exit 2
+fi
 
 # Never repair from the hook: that would rewrite files at session end without
 # anyone looking at the diff.
@@ -342,6 +356,7 @@ take; link_errs="$TAKEN"
 declare -A MANIFEST_PAGES=()
 declare -A EX_LABS=()
 declare -A REF_LABS=()
+declare -A DRIVEN=()   # pages the manifest marks checklistDriven, for --audit
 
 # A dashboard card renders blank rather than erroring when a field is absent,
 # so every field the engines read is required. checklistDriven is deliberately
@@ -398,6 +413,7 @@ if [ -f exercises.js ]; then
       *) norm_path "$href"; target="$NP" ;;
     esac
     MANIFEST_PAGES["$target"]=1
+    [[ "$line" == *"checklistDriven: true"* ]] && DRIVEN["$target"]=1
 
     labdir="Labo${lab#labo}"
     case "$target" in
@@ -553,6 +569,74 @@ for f in "${checked[@]}"; do
 done
 take; wiring_errs="$TAKEN"
 
+# ------------------------------------------- style audit (--audit only)
+#
+# House conventions rather than breakage: a page that trips these still works
+# perfectly, it just doesn't look like its neighbours. Advisory by design, so
+# it never fails CI and never blocks your coworker over a stylistic call. Run
+# it when you feel like tidying, not on every push.
+
+audit_notes=""
+note() { audit_notes+="  $1"$'\n'; }
+
+if [ "$AUDIT" -eq 1 ]; then
+  declare -A HAS_LEAD=() HAS_INDIENEN=() HAS_OPLOSSING=()
+  mark HAS_LEAD      'class="lead"'
+  mark HAS_INDIENEN  '<h2[^>]*id="indienen"'
+  mark HAS_OPLOSSING '<h2[^>]*id="oplossing"'
+
+  # Every code block is language-cpp with line numbers and the language badge,
+  # everywhere, so blocks read the same on a theory page and in a solution.
+  while IFS= read -r hit; do
+    [ -z "$hit" ] && continue
+    f="${hit%%:*}"; cls="${hit#*:}"
+    cls="${cls#class=\"}"; cls="${cls%\"}"
+    case "$cls" in
+      *language-cpp*) ;;
+      *) note "$f: code block is '$cls' (house style is language-cpp)"; continue ;;
+    esac
+    [[ "$cls" == *linenumbers* ]]   || note "$f: code block without linenumbers"
+    [[ "$cls" == *show-language* ]] || note "$f: code block without show-language"
+  done < <(grep -oHE 'class="code-wrapper[^"]*"' "${checked[@]}" 2>/dev/null)
+
+  for f in "${checked[@]}"; do
+    base="${f##*/}"
+    case "$f" in
+      Labo*/Exercises/*|Labo*/Reference/*) ;;
+      *) continue ;;
+    esac
+    [ "$base" = "dashboard.html" ] && continue
+    [ "$base" = "reference.html" ] && continue
+
+    [ -n "${HAS_LEAD[$f]:-}" ] || note "$f: no <p class=\"lead\"> under the <h1>"
+
+    # Heuristic: more <img> than <figure> means at least one bare image.
+    # Images inside a table cell are excluded, since a comparison table puts
+    # them in <td> deliberately and wrapping those in a figure would be wrong.
+    # grep -c already prints 0 when nothing matches, it just exits 1.
+    imgs=$(grep -c '<img' "$f" 2>/dev/null || true)
+    cells=$(grep -cE '<t[dh][ >].*<img' "$f" 2>/dev/null || true)
+    figs=$(grep -c '<figure' "$f" 2>/dev/null || true)
+    [ "$(( imgs - cells ))" -gt "$figs" ] \
+      && note "$f: $(( imgs - cells )) <img> outside a table but only $figs <figure> (images belong in a figure wrapper)"
+
+    case "$f" in
+      Labo*/Exercises/*)
+        [ -n "${HAS_INDIENEN[$f]:-}" ]  || note "$f: no <h2 id=\"indienen\"> section"
+        [ -n "${HAS_OPLOSSING[$f]:-}" ] || note "$f: no <h2 id=\"oplossing\"> section"
+        # The manifest flag and the page's own markup must tell the same story:
+        # a mismatch means the dashboard reads progress the page never writes.
+        if [ -n "${DRIVEN[$f]:-}" ]; then
+          [ -n "${HAS_CHECKLIST[$f]:-}" ] || note "$f: manifest says checklistDriven but the page has no .checklist"
+          [ -n "${HAS_SYNC[$f]:-}" ]      || note "$f: manifest says checklistDriven but the page never loads checklist-sync.js"
+        elif [ -n "${MANIFEST_PAGES[$f]:-}" ] && [ -n "${HAS_CHECKLIST[$f]:-}" ]; then
+          note "$f: page has a live .checklist but the manifest entry is not checklistDriven"
+        fi
+        ;;
+    esac
+  done
+fi
+
 # ---------------------------------------------------- 4. asset hygiene
 
 while IFS= read -r hit; do
@@ -597,6 +681,11 @@ report=""
 
 if [ -n "$FIXED" ]; then
   printf 'Fixed automatically (review with "git diff"):\n%s' "$FIXED"
+fi
+
+# Advisory: printed to stdout and never allowed to affect the exit code.
+if [ -n "$audit_notes" ]; then
+  printf 'Style audit (advisory, does not fail):\n%s\n' "$audit_notes"
 fi
 
 if [ -n "$report" ]; then

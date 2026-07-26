@@ -45,6 +45,17 @@ niet kan verzinnen (een ontbrekende `blurb` bijvoorbeeld) blijft gewoon in de li
 Het script herschrijft je bestanden, dus het vraagt een propere werkmap: commit of stash eerst, en
 bekijk daarna met `git diff` wat het precies veranderd heeft voor je commit.
 
+### Huisstijl nakijken (vrijblijvend)
+
+```bash
+bash scripts/check-content.sh --audit
+```
+
+Dit laat zien waar een pagina wel werkt maar er anders uitziet dan de rest: een codeblok zonder
+`linenumbers`, een pagina zonder `lead`, een afbeelding zonder `figure`, een oefening zonder
+`indienen`- of `oplossing`-sectie. **Dit blokkeert nooit iets**, het draait niet in CI, en je mag het
+gerust negeren. Handig als je eens wil opruimen.
+
 ## Een oefening toevoegen
 
 1. **Kopieer een bestaande oefening** als vertrekpunt, bijvoorbeeld

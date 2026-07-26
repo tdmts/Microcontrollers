@@ -153,7 +153,7 @@ source explicitly references an `.stl` file.
 | Paragraph explicitly prefixed "Tip:" | `.info-box` + `.info-title.tip` | |
 | Paragraph explicitly prefixed "Opmerking:" (EN "Note:") | `.info-box` + `.info-title.remark` | |
 | General context/explanation with no label but clearly a callout in the source (e.g. was already in a highlighted/bordered box) | `.info-box` (no title) | |
-| `<pre>`/`<code>` blocks, fenced ```code``` blocks, or text that is unmistakably source code | `<pre class="code-wrapper language-X linenumbers show-language">` | See Code blocks below |
+| `<pre>`/`<code>` blocks, fenced ```code``` blocks, or text that is unmistakably source code | `<pre class="code-wrapper language-cpp linenumbers show-language">` | Always these exact classes, see Code blocks below |
 | `<table>` or Markdown table syntax | `.table-responsive` wrapping `.table.table-striped.table-bordered.align-middle` | Add `<caption>` only if source has a table title |
 | Command-line transcript (lines with a shell prompt like `$` or `user@host:~$`) | `.terminal-window` with `.term-line`/`.term-prompt`/`.term-cmd`/`.term-out` | Only when source is clearly a terminal session, not just any code |
 | Config file listing explicitly marked with changed/new lines | `.config-window` with `.conf-line.mod`/`.conf-line.new` | Only when the distinction between changed/new is explicit in source |
@@ -168,9 +168,15 @@ source explicitly references an `.stl` file.
 
 ## Code blocks
 
-- Auto-detect the language from context/content and set
-  `language-{arduino|sql|cpp|python|...}`.
-- Default to `linenumbers show-language` classes on.
+- **Every code block on every page uses the same three classes:**
+  ```html
+  <pre class="code-wrapper language-cpp linenumbers show-language">
+  ```
+  `language-cpp` regardless of whether the block is an Arduino sketch, a
+  snippet on a theory page or a single declaration, and `linenumbers` always
+  on. The house rule is uniformity: a block should read identically in a
+  reference topic and in a solution. `bash scripts/check-content.sh --audit`
+  reports any block that deviates.
 - Preserve `<code>` inline for short inline code references (e.g.
   `<code>&lt;h3&gt;</code>`).
 
@@ -313,7 +319,7 @@ Markup:
 
     <div class="spoiler-content solution-content">
         <p>{1-2 zinnen die de aanpak uitleggen: welke instructies, waarom}</p>
-        <pre class="code-wrapper language-arduino show-language">
+        <pre class="code-wrapper language-cpp linenumbers show-language">
 {volledige, werkende sketch}
         </pre>
     </div>
