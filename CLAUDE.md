@@ -183,6 +183,24 @@ An exercise page whose lab has a `laboN` key in `exercises.js` gets a **live** c
 `initChecklistSync(LAB_EXERCISES.laboN)`. See [Labo1/Exercises/Looplicht.html](Labo1/Exercises/Looplicht.html)
 for the canonical example. Every new exercise must also get a matching entry in `exercises.js`.
 
+## Didactic review (the guardrail no script can be)
+
+`check-content.sh` answers *is this page wired correctly*. It cannot answer *would a
+student who knows nothing actually learn this*, and that question has its own protocol:
+the **orion-review** skill (`.claude/skills/orion-review/`). One lab per pass, read in the
+honest student order (exercises by `order`, reference pages only when the exercise sends
+you there), with the prior-knowledge baseline rebuilt from the manifests of labo 0..N-1.
+It reports four kinds of finding only (`BEGRIP`, `SPRONG`, `OPDRACHT`, `BEELD`), never
+technical correctness and never anything the script already covers.
+
+The pass ends in an interview, not in edits: every finding gets two or three concrete fix
+options, and the user decides. **The decisions live in [`review/labo4.md`](review/labo4.md)
+and friends**, one committed ledger per lab, with a permanent id per finding and a status
+of `open` / `aanvaard` / `opgelost` / `verworpen`. A rejected finding keeps its reason
+forever, because that is what stops the next pass from relitigating it. The reader is
+never shown the ledger, so a finding that resurfaces on its own is evidence rather than
+noise; reconciliation happens afterwards.
+
 ## Authoring conventions
 
 ### Bulk import from Brightspace

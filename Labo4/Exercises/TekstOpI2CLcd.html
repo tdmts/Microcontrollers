@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tekst op een I²C LCD display</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Tekst op een I²C LCD display</h1>
+    <p class="lead">Deze oefening werk je uit in TinkerCAD. Gebruik een LCD display om op de eerste regel 'Microcontrollers' en op de tweede regel jouw naam te schrijven. Het display hangt via een PCF8574 aan dezelfde twee lijnen als in de vorige oefeningen.</p>
+
+    <h2 id="schema">Schema</h2>
+
+    <p>Vertrek van dit project in TinkerCAD: <a href="https://www.tinkercad.com/things/6B7Ib6kwr8j-labo-4-basis-oefening-3?sharecode=0DzQP3KFrN9GrMLEvnpp5E3wNpDtdUn6bzPEQNn4jnM" target="_blank" rel="noopener">labo 4 LCD display</a>.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/labo-4-basis-oefening-3-image-9581107.png" alt="Een Arduino UNO met een 16x2 LCD module die via vier draden aangesloten is: GND, VCC, SDA en SCL">
+        </figure>
+    </div>
+
+    <p>Merk op dat er maar vier draden naar het display gaan: GND, VCC, SDA en SCL. Zonder I²C zou zo'n display al gauw zes tot elf pinnen van je Arduino opeisen.</p>
+
+    <h2 id="het-type-instellen">Het type instellen</h2>
+
+    <p>Verander het type van het LCD naar <strong>PCF8574</strong>.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/labo-4-basis-oefening-3-image-9581108.png" alt="Het eigenschappenvenster van de LCD in TinkerCAD, met Type op PCF8574-based en Address op 32 (0x20)">
+        </figure>
+    </div>
+
+    <h2 id="het-adres">Het adres</h2>
+
+    <p>Ga op zoek naar het adres van de LCD-module met de <a href="../Reference/I2CAdres.html">I2C scanner</a>, of gebruik het adres dat TinkerCAD zelf invult. In het venster hierboven zie je dat staan bij <strong>Address</strong>.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Dit is niet hetzelfde adres als in de vorige oefeningen</div>
+        <p>De LCD-module gebruikt de gewone PCF8574 met basisadres <strong>0x20</strong>, terwijl je in de vorige oefeningen met de A-versie op 0x38 werkte. Neem het adres dus niet blindelings over uit je vorige sketch.</p>
+    </div>
+
+    <h2 id="de-bibliotheek">De bibliotheek</h2>
+
+    <p>In plaats van de Wire-bibliotheek rechtstreeks te gebruiken, zijn er twee bibliotheken geschikt om LCD displays via I²C aan te sturen:</p>
+
+    <ol>
+        <li><code>Adafruit_LiquidCrystal.h</code>, geschikt voor de MCP23008 IO-expander. <strong>Niet gebruiken.</strong></li>
+        <li><code>LiquidCrystal_I2C.h</code>, geschikt voor de PCF8574 IO-expander. <strong>Deze heb je nodig.</strong></li>
+    </ol>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/labo-4-basis-oefening-3-image-9581109.png" alt="De bibliothekenlijst in TinkerCAD, met LiquidCrystal I2C aangeduid">
+        </figure>
+    </div>
+
+    <p>De bibliotheek gebruikt Wire onderliggend, dus de I²C-communicatie verloopt nog altijd over A4 en A5. Je schrijft ze alleen niet meer zelf uit. Hoe je een bibliotheek toevoegt lees je op <a href="../Reference/Bibliotheken.html">Bibliotheken gebruiken</a>.</p>
+
+    <h2 id="documentatie">Documentatie</h2>
+
+    <p>Als je op Google zoekt naar LiquidCrystal I2C, dan duurt het niet lang voor je deze link vindt: <a href="https://github.com/johnrickman/LiquidCrystal_I2C" target="_blank" rel="noopener">johnrickman/LiquidCrystal_I2C</a>.</p>
+
+    <p>Klik de map <strong>examples</strong> open en zoek naar het <strong>HelloWorld</strong>-voorbeeld. HelloWorld is vaak het meest basale voorbeeld dat je kan vinden, en dus een goed startpunt.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Drie functies volstaan</div>
+        <p>Met <code>lcd.init()</code> start je het display op, met <code>lcd.setCursor(kolom, rij)</code> bepaal je waar de volgende tekst komt, en met <code>lcd.print()</code> schrijf je die tekst. Kolommen en rijen tellen vanaf 0, dus de tweede regel is rij 1. Zie je niets staan, probeer dan ook eens <code>lcd.backlight()</code>.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het type van het display staat op PCF8574</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het adres in je code komt overeen met dat van je module</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt <code>LiquidCrystal_I2C</code> en niet <code>Adafruit_LiquidCrystal</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Op de eerste regel staat 'Microcontrollers'</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Op de tweede regel staat jouw naam</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De tekst blijft staan en flikkert niet</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>Alles gebeurt in de <code>setup()</code>. De tekst moet maar één keer geschreven worden: het display onthoudt zelf wat er op staat. Zet je dit in de <code>loop()</code>, dan schrijf je duizenden keren per seconde dezelfde tekst en gaat het beeld flikkeren.</p>
+            <p>Het adres geef je mee aan de constructor, samen met het aantal kolommen en rijen van je display.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+// Adres zoals TinkerCAD het invult voor een PCF8574-module.
+// Werk je met echte hardware, zoek het dan eerst met de I2C scanner.
+const int adresLcd = 0x20;
+
+const int aantalKolommen = 16;
+const int aantalRijen = 2;
+
+LiquidCrystal_I2C lcd(adresLcd, aantalKolommen, aantalRijen);
+
+void setup()
+{
+  lcd.init();
+  lcd.backlight();
+
+  lcd.setCursor(0, 0);
+  lcd.print("Microcontrollers");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Jouw naam"); // vervang dit door je eigen naam
+}
+
+void loop()
+{
+  // De tekst blijft staan, er hoeft niets herhaald te worden
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo4);
+</script>
+</body>
+</html>

@@ -14,6 +14,11 @@
     <p class="lead">Een keuze maken in je programma doe je op basis van een voorwaarde. Die voorwaarde stel je op als een vergelijking (is gelijk aan, is groter dan, ...) en die vergelijking moet altijd te herleiden zijn tot <code>true</code> of <code>false</code>.</p>
     <p>De instructie <code>digitalRead(pinNummer)</code> leest de status in van een pin. Die kan 1 (= <code>HIGH</code>) of 0 (= <code>LOW</code>) zijn.</p>
 
+    <div class="info-box">
+        <div class="info-title remark">Waarop test je bij een knop?</div>
+        <p>De voorbeelden hieronder testen op <code>HIGH</code>, wat past bij een knop met een <strong>pull-down</strong>weerstand. Werk je met een <strong>pull-up</strong> of met <code>INPUT_PULLUP</code>, dan is een ingedrukte knop juist <code>LOW</code> en test je dus op <code>LOW</code>. Zie <a href="PullUpPullDown.html">Pull up en pull down weerstanden</a>. De selectiestructuur zelf blijft in beide gevallen dezelfde.</p>
+    </div>
+
     <h2 id="voorbeeld-enkelvoudige-selectie">Voorbeeld enkelvoudige selectie</h2>
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 3;
 

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LEDs aansturen met de PCF8574</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>LEDs aansturen met de PCF8574</h1>
+    <p class="lead">Bouw je eerste I²C-schakeling: een PCF8574 I/O-expander aan de bus, met twee LEDs eraan die om de seconde afwisselend branden. Onderweg zoek je op welk adres jouw chip heeft.</p>
+
+    <p>Tot nu toe hing elke LED en elke knop aan een eigen pin van de Arduino. In dit labo werk je met een <strong>I/O-expander</strong>: een chip die je met twee draden aan de Arduino hangt en die er acht in- of uitgangen bij levert. Hoe die bus werkt, wat SDA en SCL zijn en hoe de chip aan zijn adres komt, staat op <a href="../Reference/PCF8574.html">Werken met de PCF8574</a>. Je gebruikt hier ook je eerste bibliotheek, en hoe dat werkt lees je op <a href="../Reference/Bibliotheken.html">Bibliotheken gebruiken</a>. Lees die twee pagina's door voor je begint te bouwen.</p>
+
+    <h2 id="de-basisschakeling">De basisschakeling</h2>
+
+    <p>Maak eerst de basisschakeling, met enkel de PCF8574AN aangesloten op de Arduino.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/labo-4-basis-oefening-1-image-9581100.png" alt="Breadboardschema met een Arduino UNO en een PCF8574AN, met A0, A1 en A2 aan GND">
+        </figure>
+    </div>
+
+    <p>Laad het programma in de Arduino dat je op de pagina <a href="../Reference/I2CAdres.html">Het I²C adres vinden</a> kan terugvinden en noteer het adres dat gevonden werd. Dat ga je in elke oefening van dit labo nodig hebben.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Waarom staan A0, A1 en A2 laag?</div>
+        <p>Om het <strong>basisadres</strong> te vinden zetten we A0 tot A2 allemaal laag. De PCF8574AN heeft dan adres 0x38. Hang je later een van die lijnen aan Vcc, dan verandert het adres mee. Zie <a href="../Reference/PCF8574.html">Werken met de PCF8574</a>.</p>
+    </div>
+
+    <div class="info-box remark">
+        <div class="info-title remark">SDA en SCL zijn geen keuze</div>
+        <p>Op de UNO ligt de I²C-bus vast op <strong>A4 (SDA)</strong> en <strong>A5 (SCL)</strong>. Op een UNO R3 zijn diezelfde twee lijnen ook uitgebracht naast de AREF-pin, dus je mag ze daar even goed op aansluiten.</p>
+    </div>
+
+    <h2 id="de-leds-erbij">De LEDs erbij</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/labo-4-basis-oefening-2-image-9581104.png" alt="Breadboardschema met een Arduino UNO, een PCF8574 en twee LEDs met voorschakelweerstanden op P0 en P1">
+        </figure>
+    </div>
+
+    <p>Dezelfde schakeling als hierboven, met twee LEDs op P0 en P1 erbij. A0, A1 en A2 blijven aan GND, dus je chip houdt het adres dat je net gevonden hebt.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">De LEDs staan actief laag</div>
+        <p>Een uitgang van de PCF8574 kan maar ongeveer 4 mA <strong>leveren</strong>, te weinig om een LED deftig te doen branden. Opnemen kan hij wel veel meer. Daarom hangen de LEDs met hun weerstand aan de <strong>plus</strong>, en niet aan de massa. Een <strong>0</strong> op de uitgang doet de LED branden, een <strong>1</strong> laat ze gedoofd.</p>
+    </div>
+
+    <p>Blijft de vraag wat je doet met P2 tot P7, die je hier niet gebruikt. Je mag ze gewoon <strong>open</strong> laten hangen, en dat is wat deze oefening doet. Je mag ze ook aan <strong>GND</strong> leggen, zoals verderop in dit labo bij de volloper gebeurt, maar dan geldt er een voorwaarde: zo'n pin moet dan in <em>elk</em> bitpatroon dat je uitstuurt laag blijven. Stuur je er een 1 naartoe, dan probeert de uitgang een pin hoog te trekken die vastligt aan de massa. Een weerstand tussen de pin en GND vangt dat op.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Het gevaar zit in het bitpatroon, niet in de draad</div>
+        <p>Onthoud dus vooral het verband: hoe je een ongebruikte pin bedraadt, bepaalt welke waarde je die bit moet geven. Open laten hangen is het veiligst zolang je nog aan het uitproberen bent, want dan kan geen enkel patroon kwaad.</p>
+    </div>
+
+    <h2 id="wat-stuur-je-uit">Wat stuur je uit?</h2>
+
+    <p>Je stuurt telkens één byte naar de chip, en die byte bevat de toestand van alle acht de pinnen tegelijk. Je kan dus niet één LED apart aansturen: je schrijft altijd het hele patroon. Hoe je zo'n patroon opbouwt en leest, staat op <a href="../Reference/Bits.html">Werken met bits</a>.</p>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: hoe ziet dat patroon eruit?</button>
+        <div class="spoiler-content solution-content">
+            <p>Het meest rechtse bit van je byte is P0, het meest linkse is P7. Wil je enkel de LED op P0 laten branden, dan moet enkel dat bit 0 zijn en de rest 1. Dat is dus <code>B11111110</code>.</p>
+            <p>Voor de LED op P1 schuift die nul één plaats op: <code>B11111101</code>.</p>
+        </div>
+    </div>
+
+    <p>Schrijven naar de chip gaat in drie stappen: <code>Wire.beginTransmission()</code>, <code>Wire.write()</code> en <code>Wire.endTransmission()</code>. Die staan uitgelegd op <a href="../Reference/PCF8574.html">Werken met de PCF8574</a>.</p>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je hebt het adres van je eigen chip opgezocht met de I2C scanner</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> A0, A1 en A2 hangen vast aan GND en zweven niet</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke LED heeft een eigen voorschakelweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt altijd precies één LED tegelijk</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LEDs wisselen om de seconde af</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De pinnen die je niet gebruikt hangen open, of ze blijven laag in elk patroon dat je uitstuurt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De twee bitpatronen staan als constante bovenaan, met een naam die zegt wat ze doen. Dat leest een stuk beter dan twee kale hexwaarden midden in de <code>loop()</code>.</p>
+            <p>De drie Wire-instructies zitten samen in <code>schrijfExpander()</code>. Je gebruikt ze in elke oefening van dit labo opnieuw, dus het loont om ze één keer te schrijven.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
+
+const int adresExpander = 0x38; // PCF8574AN met A0, A1 en A2 aan GND
+
+// De LEDs hangen actief laag aan P0 en P1: een 0 laat de LED branden.
+// De vrije pinnen laten we hoog, dan blijft er nergens stroom lopen.
+const byte led1Aan = B11111110; // alleen P0 laag
+const byte led2Aan = B11111101; // alleen P1 laag
+
+void schrijfExpander(byte waarde)
+{
+  Wire.beginTransmission(adresExpander);
+  Wire.write(waarde);
+  Wire.endTransmission();
+}
+
+void setup()
+{
+  Wire.begin();
+}
+
+void loop()
+{
+  schrijfExpander(led1Aan);
+  delay(1000);
+
+  schrijfExpander(led2Aan);
+  delay(1000);
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo4);
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Het I²C adres vinden</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Het I²C adres vinden</h1>
+    <p class="lead">Onderstaand programma, de I2C scanner, loopt alle adressen van de bus af om te kijken welke chips er aanwezig zijn. Het adres van elke gevonden chip verschijnt in de seriële monitor.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Zet je seriële monitor eerst op 115200 baud</div>
+        <p>Open eerst de seriële monitor en pas de snelheid aan zoals ze in de code staat. Doe je dat niet, dan krijg je alleen onleesbare tekens te zien en kan de Arduino IDE vastlopen.</p>
+    </div>
+
+    <h2 id="de-scanner">De scanner</h2>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
+
+void setup()
+{
+  Wire.begin();
+
+  Serial.begin(115200);
+  while (!Serial); // op een Leonardo: wacht tot de seriële monitor open is
+
+  Serial.println("\nI2C scanner");
+}
+
+void loop()
+{
+  int aantalGevonden = 0;
+
+  Serial.println("Scannen...");
+
+  // Adres 0 en 127 zijn gereserveerd, die slaan we over
+  for (byte adres = 1; adres &lt; 127; adres++)
+  {
+    // De scanner gebruikt de returnwaarde van endTransmission() om te zien
+    // of er op dit adres een chip antwoordt
+    Wire.beginTransmission(adres);
+    byte fout = Wire.endTransmission();
+
+    if (fout == 0)
+    {
+      Serial.print("I2C-toestel gevonden op adres 0x");
+      if (adres &lt; 16)
+      {
+        Serial.print("0");
+      }
+      Serial.println(adres, HEX);
+
+      aantalGevonden++;
+    }
+    else if (fout == 4)
+    {
+      Serial.print("Onbekende fout op adres 0x");
+      if (adres &lt; 16)
+      {
+        Serial.print("0");
+      }
+      Serial.println(adres, HEX);
+    }
+  }
+
+  if (aantalGevonden == 0)
+  {
+    Serial.println("Geen I2C-toestellen gevonden");
+  }
+  else
+  {
+    Serial.println("Klaar");
+  }
+
+  delay(5000); // wacht 5 seconden op de volgende scan
+}</code></pre>
+
+    <h2 id="hoe-werkt-dat">Hoe werkt dat?</h2>
+
+    <p>De scanner doet voor elk adres alsof hij iets gaat versturen, maar stuurt niets mee. <code>Wire.endTransmission()</code> geeft een getal terug dat vertelt hoe dat afgelopen is. Antwoordt er een chip op dat adres, dan is die returnwaarde <strong>0</strong>. Antwoordt er niets, dan krijg je een andere waarde en weet je dat daar niets hangt.</p>
+
+    <p>Deze sketch test de standaard 7-bit adressen. Toestellen met een langer adres worden mogelijk niet correct herkend.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Vind je niets?</div>
+        <p>Controleer dan eerst je bedrading. De meest voorkomende oorzaken zijn een vergeten GND-verbinding tussen Arduino en breadboard, SDA en SCL die omgewisseld staan, of adreslijnen A0 tot A2 die nergens aan vasthangen. Zie ook <a href="PCF8574.html">Werken met de PCF8574</a>.</p>
+    </div>
+
+    <p>Deze sketch komt uit het cursusmateriaal en circuleert in veel varianten, onder andere op het Arduino-forum. De oorspronkelijke auteur is niet gekend.</p>
+</div>
+
+<script src="../../back-link.js"></script>
+</body>
+</html>

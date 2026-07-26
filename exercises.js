@@ -54,5 +54,16 @@ window.LAB_EXERCISES = {
             { id: 'ledbarmetpotentiometer', order: 5, name: 'Ledbar met potentiometer', href: 'https://tdmts.github.io/Microcontrollers/Labo3/Exercises/LedbarMetPotentiometer.html', checklistDriven: true, difficulty: 3, time: '~30 min', blurb: 'Laat de stand van een potentiometer bepalen hoeveel LEDs van de ledbar oplichten.' },
             { id: 'lichtpatronenuitarray', order: 6, name: 'Lichtpatronen uit een array', href: 'https://tdmts.github.io/Microcontrollers/Labo3/Exercises/LichtpatronenUitEenArray.html', checklistDriven: true, difficulty: 3, time: '~45 min', blurb: 'Doorloop drie patronen uit een multidimensionele array, met de potentiometer als snelheidsregelaar.' }
         ]
+    },
+    labo4: {
+        labId: 'labo4',
+        labTitle: 'Labo 4',
+        exercises: [
+            { id: 'ledsaansturen', order: 1, name: 'LEDs aansturen met de PCF8574', href: 'https://tdmts.github.io/Microcontrollers/Labo4/Exercises/LedsAansturen.html', checklistDriven: true, difficulty: 2, time: '~30 min', blurb: 'Bouw je eerste I²C-schakeling, zoek het adres van je PCF8574 en laat er twee LEDs afwisselend op branden.' },
+            { id: 'drukknoppeninlezen', order: 2, name: 'Drukknoppen inlezen via de PCF8574', href: 'https://tdmts.github.io/Microcontrollers/Labo4/Exercises/DrukknoppenInlezen.html', checklistDriven: true, difficulty: 2, time: '~30 min', blurb: 'Lees twee drukknoppen in via de I/O-expander en meld op de seriële monitor elke keer dat er eentje verandert.' },
+            { id: 'tekstopi2clcd', order: 3, name: 'Tekst op een I²C LCD display', href: 'https://tdmts.github.io/Microcontrollers/Labo4/Exercises/TekstOpI2CLcd.html', checklistDriven: true, difficulty: 2, time: '~25 min', blurb: 'Schrijf twee regels tekst naar een LCD-module die via een PCF8574 aan de I2C-bus hangt.' },
+            { id: 'vollopermetdrukknoppen', order: 4, name: 'Volloper met twee drukknoppen', href: 'https://tdmts.github.io/Microcontrollers/Labo4/Exercises/VolloperMetDrukknoppen.html', checklistDriven: true, difficulty: 3, time: '~45 min', blurb: 'Laat vier LEDs op de expander vollopen vanaf de ene of de andere kant, afhankelijk van welke knop je indrukt.' },
+            { id: 'tellermeti2cdrukknoppen', order: 5, name: 'Teller met I²C-drukknoppen', href: 'https://tdmts.github.io/Microcontrollers/Labo4/Exercises/TellerMetI2CDrukknoppen.html', checklistDriven: true, difficulty: 3, time: '~60 min', blurb: 'Combineer twee schuifregisters en een I/O-expander tot een teller van 0 tot 99 die je kan op- en aftellen en pauzeren.' }
+        ]
     }
 };

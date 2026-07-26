@@ -35,8 +35,8 @@ const int pinButton = 3;
 
 void setup()
 {
-  pinMode(pinLed, INPUT);
-  pinMode(pinButton, OUTPUT);
+  pinMode(pinLed, OUTPUT);    // een led stuur je aan: uitgang
+  pinMode(pinButton, INPUT);  // een knop lees je uit: ingang
 }
 
 void loop()
@@ -58,8 +58,8 @@ void loop()
     </div>
 
     <h3>OUTPUT</h3>
-    <p>In deze mode staat de pin in laagimpedante toestand. De pin kan op dat ogenblik tot zo'n <strong>40 mA</strong> stroom leveren aan de buitenwereld, wat genoeg is om een led aan te sturen, maar ruim onvoldoende om een motor aan te sturen. Daarvoor is dan een interfaceschakeling nodig (zie verder).</p>
-    <p>Hoewel een led rechtstreeks op de pin kan worden aangesloten, is het toch altijd verstandig om een outputpin te voorzien van een externe serieweerstand. Een outputpin die bijvoorbeeld kortgesloten wordt, kan beschadigd worden waardoor hij niet meer werkt. Dit heeft meestal geen gevolgen voor de rest van de controller, maar men heeft dan wel een "dode pin" waar men niets meer mee kan aanvangen. Standaardwaarden voor op de output zijn 100 of 220 Ohm voor leds en 1 KOhm voor andere toepassingen.</p>
+    <p>In deze mode staat de pin in laagimpedante toestand en levert hij stroom aan de buitenwereld. Het <strong>absolute maximum</strong> is 40 mA, maar in de praktijk hou je <strong>20 mA per pin</strong> aan als veilige waarde. Dat is genoeg om een led aan te sturen, maar ruim onvoldoende om een motor aan te sturen. Daarvoor is dan een interfaceschakeling nodig (zie verder). De volledige uitleg over die grenzen staat op <a href="SourcenSinken.html">Sourcen en sinken</a>.</p>
+    <p>Hoewel een led rechtstreeks op de pin kan worden aangesloten, is het toch altijd verstandig om een outputpin te voorzien van een externe serieweerstand. Een outputpin die bijvoorbeeld kortgesloten wordt, kan beschadigd worden waardoor hij niet meer werkt. Dit heeft meestal geen gevolgen voor de rest van de controller, maar men heeft dan wel een "dode pin" waar men niets meer mee kan aanvangen. Voor een led op 5 V kom je uit bij <strong>220 Ohm</strong>, en voor andere toepassingen is 1 KOhm een gangbare waarde. Hoe je die 220 Ohm zelf berekent, lees je op <a href="WetVanOhm.html">De wet van Ohm</a>.</p>
     <div class="info-box">
         <div class="info-title remark">Stroombeperking</div>
         <p>Men zou verkeerdelijk kunnen rekenen dat we, als elke pin 40 mA kan leveren, in totaal 13 × 40 mA = 520 mA kunnen leveren. Dit is onmogelijk, aangezien de USB-aansluiting zelf al beperkt is tot 500 mA max. Maar zelfs 500 mA is niet haalbaar omdat <strong>de Arduino de stroom op alle pinnen samen beperkt tot een maximum van 200 mA.</strong></p>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Werken met de PCF8574</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Werken met de PCF8574</h1>
+    <p class="lead">De PCF8574 is een I/O-expander: met twee pinnen van je Arduino krijg je er acht in- of uitgangen bij, en je kan er meerdere aan dezelfde bus hangen.</p>
+
+    <h2 id="de-i2c-bus">De I²C bus</h2>
+
+    <p>De <strong>I²C bus</strong> bestaat uit twee lijnen: <strong>SDA (Serial Data)</strong> en <strong>SCL (Serial Clock)</strong>. Meestal worden ook <strong>Vcc</strong> en <strong>GND</strong> meegenomen, waardoor je in de praktijk een <strong>4-lijns bus</strong> krijgt.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Waar zitten SDA en SCL op de UNO?</div>
+        <p>Op de Arduino UNO liggen SDA en SCL vast: <strong>SDA is A4</strong> en <strong>SCL is A5</strong>. Op een UNO R3 zijn diezelfde twee lijnen ook nog eens apart uitgebracht naast de AREF-pin, dus je mag ze daar even goed aansluiten. Dat is geen keuze die je zelf maakt: de I²C-hardware in de chip hangt nu eenmaal aan die pinnen. Op een Leonardo, die je in sommige schema's hier ziet staan, zijn het pinnen 2 en 3.</p>
+    </div>
+
+    <p>Op deze bus kan je de PCF8574 aansluiten. <strong>Per PCF8574 krijg je 8 extra I/O-lijnen</strong>, en er kunnen tot 8 exemplaren van deze chip op dezelfde bus geplaatst worden. Met 2 pinnen van de Arduino beschik je dus over maximaal 64 extra in- en uitgangen.</p>
+
+    <h2 id="aansluitingen">Aansluitingen</h2>
+
+    <p>We beginnen met 1 PCF8574, goed voor 8 extra ingangen en/of uitgangen. De aansluitingen zien er als volgt uit:</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/werken-met-de-pcf8574-image-9581092.png" alt="Pinout van de PCF8574 in een 16-pins behuizing, met A0 tot A2, P0 tot P7, INT, Vcc en GND">
+        </figure>
+    </div>
+
+    <p>De vier pinnen die op de bus aangesloten worden zijn Vcc en GND voor de voeding, en SDA en SCL voor de communicatie. De pinnen <strong>P0 tot en met P7 zijn de 8 extra I/O-aansluitingen</strong> die we willen. Blijven nog over: A0 tot A2 en /INT.</p>
+
+    <h2 id="het-adres-van-de-chip">Het adres van de chip</h2>
+
+    <p><strong>Elk I²C-component heeft een eigen ingebouwd adres dat het uniek maakt op de bus.</strong> Aan de hand van dat adres kan de master naar die component schrijven of ervan lezen.</p>
+
+    <p><strong>Er zijn twee versies van de PCF8574.</strong> De ene heeft basisadres <strong>0x20</strong>, de andere (de A-versie, herkenbaar aan de <strong>A</strong> in de typenaam zoals PCF8574AN) heeft basisadres <strong>0x38</strong>. De lijnen <strong>A2, A1 en A0</strong> zijn verbonden met de <strong>laagste 3 bits van dat adres</strong>. Nemen we als voorbeeld de versie met basisadres 0x38, dan is het adres zo opgebouwd:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Opbouw van het 7-bit adres van een PCF8574 met basisadres 0x38</caption>
+            <thead>
+                <tr>
+                    <th scope="col">bit 6</th>
+                    <th scope="col">bit 5</th>
+                    <th scope="col">bit 4</th>
+                    <th scope="col">bit 3</th>
+                    <th scope="col">bit 2</th>
+                    <th scope="col">bit 1</th>
+                    <th scope="col">bit 0</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td><strong>A2</strong></td>
+                    <td><strong>A1</strong></td>
+                    <td><strong>A0</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p><strong>Met die drie lijnen A2, A1 en A0 kan je 8 verschillende adressen instellen.</strong> Staan ze alle drie op 0, dan krijg je het basisadres 0x38. Zet je A0 op 1, dan heeft de chip adres 0x39. Door die drie lijnen elke mogelijke combinatie te geven kan je 8 PCF8574's op dezelfde bus gebruiken, goed voor 64 extra lijnen.</p>
+
+    <p>Gebruik je daarnaast ook nog de versie met basisadres 0x20, dan kan je er nog eens 8 chips bij plaatsen, wat het totaal op 128 extra I/O-lijnen brengt.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Laat de adreslijnen nooit zweven</div>
+        <p>A0, A1 en A2 moeten altijd ergens aan vasthangen, aan GND of aan Vcc. Laat je ze los, dan is het adres van je chip niet voorspelbaar en vind je de chip soms wel en soms niet terug met de <a href="I2CAdres.html">I2C scanner</a>.</p>
+    </div>
+
+    <h2 id="wie-heb-ik-aan-de-lijn">Wie heb ik aan de lijn?</h2>
+
+    <p>Op onderstaand schema staan twee PCF8574's op dezelfde bus. De I2C scanner vindt de adressen <strong>0x3F</strong> en <strong>0x23</strong>.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/i2c-voorbeelden-pcf8574-bb-9581096.png" alt="Breadboardschema met twee PCF8574 chips, U1 links en U2 rechts, samen op dezelfde I2C bus">
+        </figure>
+    </div>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">De linkse chip is U1 en de rechtse U2. Welke van de twee heeft adres 0x23?</div>
+            <p>Aangezien er twee types PCF8574 bestaan, de ene met basisadres 0x38 en de andere met 0x20, is meteen duidelijk dat we hier één chip van elke soort hebben.</p>
+            <p>Bekijken we U1, dan zien we dat de drie adresbits (pinnen 1, 2 en 3) allemaal hoog staan. Bij het basisadres komt dus de waarde 7 bij. Die chip heeft dan als adres 0x38 + 0x07 (= 0x3F) of 0x20 + 0x07 (= 0x27). Daaruit besluiten we dat adres 0x3F bij U1 hoort, en dat het andere gevonden adres (0x23) dat van U2 moet zijn.</p>
+        </div>
+    </div>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Waarom staat er een Leonardo op het schema?</div>
+        <p>Dit schema komt uit het cursusmateriaal en is met een Leonardo getekend. Voor de PCF8574 maakt dat niets uit: het zijn dezelfde vier draden. Werk je met een UNO, sluit SDA dan aan op A4 en SCL op A5.</p>
+    </div>
+
+    <h2 id="de-int-pin">De /INT pin</h2>
+
+    <p>De <strong>/INT</strong>-pin wordt <strong>geactiveerd zodra er een wijziging optreedt op één of meer van de 8 I/O-lijnen</strong>. Daardoor kan die pin dienen als <strong>interruptsignaal</strong> voor de master wanneer je de 8 lijnen als ingangen gebruikt. In plaats van constant via de bus te moeten checken of een pin van waarde veranderd is, krijg je via /INT een signaal.</p>
+
+    <p>In dit labo gebruiken we die functie nog niet. Ze wordt pas interessant als we het over interrupts hebben.</p>
+
+    <h2 id="aan-de-slag">Aan de slag</h2>
+
+    <p>We maken gebruik van de <a href="Bibliotheken.html">Wire-bibliotheek</a>. Bovenaan je programma staat dus de regel:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;</code></pre>
+
+    <p>Vooraleer je de I²C kan gebruiken moet je het Wire-object initialiseren. Dat doe je in de <code>setup()</code>-functie:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.begin();</code></pre>
+
+    <h3>Schrijven naar de bus</h3>
+
+    <p><strong>Het <em>schrijven</em> naar de I²C bus gebeurt in 3 stappen.</strong></p>
+
+    <p><strong>Eerst</strong> wordt de communicatie geïnitialiseerd:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.beginTransmission(adres);</code></pre>
+
+    <p><code>adres</code> is het adres van de chip die je wil aanspreken. Wanneer A2, A1 en A0 op 0 staan gebruik je hier 0x38 (of 0x20, afhankelijk van je type).</p>
+
+    <p><strong>Vervolgens</strong> geef je de waarde van de byte mee die op de uitgangen moet komen:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.write(waarde);</code></pre>
+
+    <p><code>waarde</code> mag je in elk talstelsel schrijven. Wil je het bitpatroon 10101010 op de pinnen P7 tot P0 plaatsen, dan schrijf je 170 decimaal, 0xAA hexadecimaal of B10101010 binair.</p>
+
+    <p>De communicatie wordt <strong>afgesloten</strong> met:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.endTransmission();</code></pre>
+
+    <h3>Lezen van de bus</h3>
+
+    <p><strong>Het <em>lezen</em> gebeurt op een net iets andere manier.</strong> Om een byte te lezen van de I/O-lijnen begin je met:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.requestFrom(adres, aantal);</code></pre>
+
+    <p>Het adres is uiteraard dat van het IC. <code>aantal</code> geeft aan hoeveel bytes informatie je verwacht. Bij een PCF8574 is dat altijd 1, maar er bestaan ook I²C-sensoren die meerdere bytes na elkaar versturen.</p>
+
+    <p><strong>Vervolgens</strong> kijk je of er een byte klaarstaat om van de PCF8574 naar de master te gaan:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>if (Wire.available())
+{
+  waarde = Wire.read();
+}</code></pre>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Een uitgang die laag staat, lees je niet</div>
+        <p>De pinnen van de PCF8574 zijn <strong>quasi-bidirectioneel</strong>: er is geen aparte instelling voor ingang of uitgang. Een pin die je wil <em>lezen</em>, moet in zijn uitgangslatch een <strong>1</strong> hebben staan. Bij het opstarten staan alle pinnen hoog, dus meestal merk je hier niets van. Maar heb je er eerder een 0 naar geschreven, dan lees je die 0 gewoon terug en lijkt je knop permanent ingedrukt. Schrijf in je <code>setup()</code> dus een 1 naar elke pin die je als ingang gebruikt.</p>
+    </div>
+
+    <p>Voor de volledige specificaties, zoals hoeveel stroom een uitgang kan leveren of opnemen, kan je terecht in de <a href="../../datasheets/datasheet-pcf8574.pdf" target="_blank" rel="noopener">datasheet</a>.</p>
+</div>
+
+<script src="../../back-link.js"></script>
+</body>
+</html>

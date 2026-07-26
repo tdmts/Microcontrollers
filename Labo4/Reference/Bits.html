@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Werken met bits</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Werken met bits</h1>
+    <p class="lead">De PCF8574 stuurt acht pinnen tegelijk aan met één byte. Je kan dus niet één pin apart aanspreken: je leest en schrijft altijd alle acht samen. Om toch met één pin te kunnen werken heb je een paar operatoren nodig die je in de vorige labo's nog niet gebruikt hebt.</p>
+
+    <h2 id="een-byte-is-acht-bits">Een byte is acht bits</h2>
+
+    <p>Een <code>byte</code> bestaat uit 8 bits, en elke bit is 0 of 1. Bij de PCF8574 hoort elke bit bij één pin. De <strong>rechtse</strong> bit is P0, de <strong>linkse</strong> is P7:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De byte B00100110 pin per pin</caption>
+            <thead>
+                <tr>
+                    <th scope="col">P7</th>
+                    <th scope="col">P6</th>
+                    <th scope="col">P5</th>
+                    <th scope="col">P4</th>
+                    <th scope="col">P3</th>
+                    <th scope="col">P2</th>
+                    <th scope="col">P1</th>
+                    <th scope="col">P0</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Die bit helemaal rechts noemen we <strong>bit 0</strong>, de volgende bit 1, en zo verder tot bit 7. De nummers van de bits komen dus overeen met de nummers van de pinnen, en dat is geen toeval.</p>
+
+    <h2 id="drie-schrijfwijzen">Drie schrijfwijzen voor dezelfde waarde</h2>
+
+    <p>Je mag een byte in je code op drie manieren schrijven. Ze betekenen exact hetzelfde, de compiler maakt er geen onderscheid tussen:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte a = B00100110; // binair: je ziet elke bit staan
+byte b = 0x26;      // hexadecimaal
+byte c = 38;        // decimaal</code></pre>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Kies de schrijfwijze die je code leesbaar maakt</div>
+        <p>Gaat het over welke pin aan of uit staat, gebruik dan <strong>binair</strong>. In <code>B11111110</code> zie je meteen dat enkel P0 laag staat. In <code>0xFE</code> moet je dat eerst omrekenen. Gaat het over een gewoon getal, dan is decimaal natuurlijk duidelijker.</p>
+    </div>
+
+    <h2 id="de-operatoren">De operatoren</h2>
+
+    <p>Deze vier operatoren werken <strong>bit per bit</strong>. Ze rekenen niet met de waarde van de byte als geheel, maar zetten bit 0 tegenover bit 0, bit 1 tegenover bit 1, enzovoort.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De bitoperatoren die je in dit labo nodig hebt</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Operator</th>
+                    <th scope="col">Naam</th>
+                    <th scope="col">Wat ze doet</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>&amp;</code></td>
+                    <td>AND</td>
+                    <td>Een bit in het resultaat is 1 als hij in <em>beide</em> operanden 1 is.</td>
+                </tr>
+                <tr>
+                    <td><code>|</code></td>
+                    <td>OR</td>
+                    <td>Een bit in het resultaat is 1 als hij in <em>minstens één</em> van beide operanden 1 is.</td>
+                </tr>
+                <tr>
+                    <td><code>~</code></td>
+                    <td>NOT</td>
+                    <td>Keert elke bit om: elke 0 wordt 1 en elke 1 wordt 0.</td>
+                </tr>
+                <tr>
+                    <td><code>&lt;&lt;</code></td>
+                    <td>schuiven naar links</td>
+                    <td>Schuift alle bits een aantal plaatsen naar links. Rechts komen nullen bij.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Verwar <code>&amp;</code> niet met <code>&amp;&amp;</code></div>
+        <p><code>&amp;&amp;</code> is de logische EN die je in een <code>if</code> gebruikt: die kijkt naar twee voorwaarden als geheel en levert waar of niet waar op. <code>&amp;</code> met één teken werkt bit per bit en levert een byte op. Datzelfde verschil bestaat tussen <code>|</code> en <code>||</code>. Eén teken te veel of te weinig compileert vaak gewoon, en dan zoek je lang.</p>
+    </div>
+
+    <h2 id="een-bit-uitlezen">Eén bit uitlezen: maskeren</h2>
+
+    <p>Je leest de hele byte in, maar je wil weten hoe het met één bepaalde pin gesteld is. Daarvoor gebruik je een <strong>masker</strong>: een byte waarin enkel de bit staat waarin je geïnteresseerd bent. Met <code>&amp;</code> houd je van de ingelezen waarde alleen die ene bit over, want overal waar het masker 0 staat wordt het resultaat sowieso 0.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte waarde = B01010101; // wat we van de chip lazen
+
+bool bit0 = waarde &amp; B00000001; // 1, want de rechtse bit van waarde is 1
+bool bit1 = waarde &amp; B00000010; // 0, want de tweede bit van waarde is 0</code></pre>
+
+    <p>Uitgeschreven voor <code>bit1</code>:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>B01010101 &amp; B00000010</caption>
+            <tbody>
+                <tr>
+                    <th scope="row">waarde</th>
+                    <td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td>
+                </tr>
+                <tr>
+                    <th scope="row">masker</th>
+                    <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td>
+                </tr>
+                <tr>
+                    <th scope="row">resultaat</th>
+                    <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Het resultaat is 0, dus die bit stond laag. Merk op dat het resultaat van zo'n maskering niet 1 hoeft te zijn wanneer de bit hoog staat: <code>waarde &amp; B00000010</code> levert bij een hoge bit de waarde 2 op, niet 1. Voor een <code>bool</code> of een <code>if</code> maakt dat niets uit, want alles wat niet 0 is telt als waar.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Bij een pull-upweerstand is ingedrukt een 0</div>
+        <p>Wil je expliciet weten of een knop ingedrukt is, schrijf dan de vergelijking er voluit bij. Dat leest een stuk duidelijker dan een omgekeerde <code>bool</code>:</p>
+        <pre class="code-wrapper language-cpp linenumbers show-language"><code>bool knop1 = (waarde &amp; B00000001) == 0;</code></pre>
+    </div>
+
+    <h2 id="een-masker-berekenen">Een masker berekenen met <code>&lt;&lt;</code></h2>
+
+    <p>Zolang je de maskers zelf uitschrijft is er niets aan de hand. Maar zodra je in een lus werkt, ken je het bitnummer pas terwijl je programma loopt. Dan bereken je het masker met <code>&lt;&lt;</code>: je vertrekt van een 1 helemaal rechts en schuift ze zoveel plaatsen naar links als je nodig hebt.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>1 &lt;&lt; 0  // B00000001, de bit van P0
+1 &lt;&lt; 1  // B00000010, de bit van P1
+1 &lt;&lt; 5  // B00100000, de bit van P5</code></pre>
+
+    <p><code>1 &lt;&lt; n</code> is dus het masker van bit <code>n</code>, en daarmee kan je in een lus elke pin apart aanspreken.</p>
+
+    <h2 id="een-bit-zetten">Eén bit aanpassen zonder de rest te raken</h2>
+
+    <p>Je schrijft altijd de hele byte naar de chip, dus wil je één bit veranderen en de zeven andere laten staan. Met OR zet je een bit op 1, met AND van het omgekeerde masker zet je hem op 0:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte patroon = B11111111;
+
+patroon = patroon | (1 &lt;&lt; 2);  // bit 2 op 1 zetten
+patroon = patroon &amp; ~(1 &lt;&lt; 3); // bit 3 op 0 zetten</code></pre>
+
+    <p>Die tweede regel lees je van binnen naar buiten. <code>1 &lt;&lt; 3</code> is <code>B00001000</code>, het masker van bit 3. <code>~</code> keert dat om tot <code>B11110111</code>: overal een 1 behalve op de plaats van bit 3. Doe je daar een AND mee, dan blijft elke andere bit gewoon zichzelf, en wordt enkel bit 3 gegarandeerd 0.</p>
+
+    <p>Omdat je het resultaat meestal in dezelfde variabele terugstopt, mag je dat korter schrijven. <code>a &amp;= b</code> betekent precies hetzelfde als <code>a = a &amp; b</code>, net zoals <code>a += b</code> hetzelfde is als <code>a = a + b</code>:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>patroon |= (1 &lt;&lt; 2);  // bit 2 op 1
+patroon &amp;= ~(1 &lt;&lt; 3); // bit 3 op 0</code></pre>
+
+    <h2 id="veranderingen-opsporen">Alle bits vergelijken in één keer</h2>
+
+    <p>Een laatste patroon dat je in dit labo tegenkomt: nagaan welke knoppen <em>net</em> ingedrukt zijn. Een knop die je ingedrukt houdt, blijft immers doorlopend een 0 geven, waardoor je programma denkt dat je tientallen keren per seconde drukt.</p>
+
+    <p>Bewaar daarvoor de vorige byte, en zoek de bits die van 1 naar 0 gegaan zijn:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte netIngedrukt = ~knoppen &amp; vorigeKnoppen;</code></pre>
+
+    <p><code>~knoppen</code> heeft een 1 staan op elke plaats waar een knop <strong>nu</strong> ingedrukt is. <code>vorigeKnoppen</code> heeft een 1 staan op elke plaats waar een knop <strong>vorige keer</strong> los was. Een AND van die twee houdt dus precies de knoppen over die deze doorloop van los naar ingedrukt gegaan zijn. Alle acht de knoppen worden daarbij in één bewerking behandeld.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Twijfel je? Schrijf de tabel uit</div>
+        <p>Bij twijfel helpt het altijd om de twee bytes onder elkaar te zetten, zoals in de tabellen hierboven, en de bewerking kolom per kolom te maken. Dat is trager dan het in je hoofd doen, maar je hebt het antwoord wel meteen juist.</p>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+</body>
+</html>

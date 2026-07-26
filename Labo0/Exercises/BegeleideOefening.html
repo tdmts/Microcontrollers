@@ -147,7 +147,7 @@ void loop()
 
     <h3>Stap 7: De juiste voorschakelweerstand berekenen</h3>
     <p>Nu berekenen we welke weerstand je nodig hebt. In de datasheet van een LED vind je twee waarden terug. De <strong>I<sub>forward</sub></strong> is de nominale stroom die je door de LED wil sturen om die mooi te laten branden, vaak ongeveer 20&nbsp;mA. De <strong>V<sub>forward</sub></strong> is de spanning die over de LED staat bij die stroom, meestal tussen 1,8&nbsp;V en 2&nbsp;V.</p>
-    <p>Met de <a href="../Reference/WiskundigeOperatoren.html">wet van Ohm</a> reken je de weerstand uit. Je trekt eerst de spanning over de LED af van de voedingsspanning, want dat is het stuk spanning dat de weerstand moet opnemen:</p>
+    <p>Met de <a href="../Reference/WetVanOhm.html">wet van Ohm</a> reken je de weerstand uit. Je trekt eerst de spanning over de LED af van de voedingsspanning, want dat is het stuk spanning dat de weerstand moet opnemen:</p>
     <div class="math-tex">
         $$ R = \frac{U}{I} = \frac{V_{CC} - V_{forward}}{I_{forward}} = \frac{5\,\text{V} - 1{,}8\,\text{V}}{20\,\text{mA}} \approx 160\ \Omega \text{ (theoretisch)} $$
     </div>
@@ -210,7 +210,7 @@ void loop()
     </div>
 
     <h3>Stap 11: Debouncing toevoegen</h3>
-    <p>Een mechanische knop "kaatst" bij het indrukken heel even, waardoor de Arduino snel na elkaar meerdere drukken kan zien. Dat heet contactdender. Je lost het hier eenvoudig op met een korte <a href="../Reference/Debouncen.html">debouncing</a>: een kleine <code>delay</code> na het uitlezen van de knop. Voeg die toe na het uitlezen van de status.</p>
+    <p>Een mechanische knop "kaatst" bij het indrukken heel even, waardoor de Arduino snel na elkaar meerdere drukken kan zien. Dat heet contactdender. Je lost het hier eenvoudig op met een korte <a href="../Reference/Debouncen.html">debouncing</a>: zodra je gedetecteerd hebt dat de knop ingedrukt is, wacht je even tot dat kaatsen voorbij is. Zet de <code>delay</code> dus <strong>binnen</strong> de <code>if</code>, na wat je bij een druk wil doen.</p>
     <pre class="code-wrapper language-cpp linenumbers show-language">
 const int pinButton = 2;
 const int pinLED = 3;  // pinLED definiëren
@@ -225,7 +225,6 @@ void setup()
 void loop()
 {
   int state = digitalRead(pinButton);
-  delay(100); // debouncing
   Serial.print("Status: ");
   Serial.println(state);
 
@@ -233,6 +232,7 @@ void loop()
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+    delay(100); // debouncing: wacht tot het kaatsen voorbij is
   }
   else
   {
@@ -257,7 +257,6 @@ void setup()
 void loop()
 {
   int state = digitalRead(pinButton);
-  delay(100); // debouncing
   Serial.print("Status: ");
   Serial.println(state);
 
@@ -265,6 +264,7 @@ void loop()
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     blink(); // verwijs naar de functie blink
+    delay(100); // debouncing: wacht tot het kaatsen voorbij is
   }
   else
   {
@@ -307,7 +307,6 @@ void setup()
 void loop()
 {
   int state = digitalRead(pinButton);
-  delay(100); // debouncing
   Serial.print("Status: ");
   Serial.println(state);
 
@@ -315,6 +314,7 @@ void loop()
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     blink(); // verwijs naar de functie blink
+    delay(100); // debouncing: wacht tot het kaatsen voorbij is
   }
   else
   {
@@ -350,7 +350,6 @@ void setup()
 void loop()
 {
   int state = digitalRead(pinButton);
-  delay(100); // debouncing
   Serial.print("Status: ");
   Serial.println(state);
 
@@ -358,6 +357,7 @@ void loop()
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     blink(4); // verwijs naar de functie blink
+    delay(100); // debouncing: wacht tot het kaatsen voorbij is
   }
   else
   {
@@ -393,7 +393,6 @@ void setup()
 void loop()
 {
   int state = digitalRead(pinButton);
-  delay(100); // debouncing
   Serial.print("Status: ");
   Serial.println(state);
 
@@ -401,6 +400,7 @@ void loop()
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     blink(4, 100); // verwijs naar de functie blink
+    delay(100); // debouncing: wacht tot het kaatsen voorbij is
   }
   else
   {

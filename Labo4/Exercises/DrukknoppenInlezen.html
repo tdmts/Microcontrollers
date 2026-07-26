@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Drukknoppen inlezen via de PCF8574</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Drukknoppen inlezen via de PCF8574</h1>
+    <p class="lead">In de vorige oefening schreef je naar de expander, nu lees je ervan. Sluit twee drukknoppen aan op de PCF8574 en geef via de seriële monitor weer welke knop ingedrukt is.</p>
+
+    <p>Je vertrekt van de schakeling uit <a href="LedsAansturen.html">LEDs aansturen met de PCF8574</a>: dezelfde chip op dezelfde twee lijnen, A0 tot A2 nog altijd aan GND, en dus ook hetzelfde adres dat je daar met de <a href="../Reference/I2CAdres.html">I2C scanner</a> gevonden hebt.</p>
+
+    <h2 id="drukknoppen-met-pull-up-weerstand">Drukknoppen met pull-up weerstand</h2>
+
+    <p>Bij de Arduino kon je tijdens het definiëren van de <code>pinMode</code> instellen dat een pin als <code>INPUT_PULLUP</code> moest dienen. Bij de PCF8574AN ga je hier zelf voor moeten zorgen.</p>
+
+    <p>Voeg twee drukknoppen toe aan de schakeling, telkens met een <strong>pull-upweerstand</strong>. Een goede waarde is bijvoorbeeld 1 kOhm.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/labo-4-basis-oefening-1-image-9581101.png" alt="Hetzelfde breadboardschema, uitgebreid met twee drukknoppen en pull-upweerstanden op P0 en P1">
+        </figure>
+    </div>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: waarom is een pull-upweerstand nodig?</button>
+        <div class="spoiler-content solution-content">
+            <p>Als je er geen gebruikt, dan kan de ingang 'floating' zijn en wisselen tussen 0 en 1. Met een pull-up (of pull-down) weerstand zet je de toestand vast. In dit geval is de toestand in rust 1, en trekt een ingedrukte knop de pin naar 0.</p>
+        </div>
+    </div>
+
+    <h2 id="status-van-de-knoppen-uitlezen">Status van de knoppen uitlezen</h2>
+
+    <p>Bekijk eens deze voorbeeldcode. Wat de bewerking met <code>&amp;</code> precies doet, en waarom een byte je acht pinnen tegelijk geeft, staat op <a href="../Reference/Bits.html">Werken met bits</a>.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
+
+const int adresExpander = 0x38;
+
+void setup()
+{
+  Wire.begin();
+  Serial.begin(9600);
+
+  // Alle pinnen hoog zetten, anders lees je een pin die je zelf laag
+  // gezet hebt gewoon terug als een ingedrukte knop
+  Wire.beginTransmission(adresExpander);
+  Wire.write(0xFF);
+  Wire.endTransmission();
+}
+
+void loop()
+{
+  Wire.requestFrom(adresExpander, 1);
+
+  byte waarde = 0;
+
+  if (Wire.available())
+  {
+    waarde = Wire.read();
+
+    bool knop1 = waarde &amp; B00000001;
+    bool knop2 = waarde &amp; B00000010;
+
+    if (knop1 == false) // pull-up: ingedrukt is 0
+    {
+      Serial.println("Knop 1 ingedrukt");
+    }
+
+    if (knop2 == false) // pull-up: ingedrukt is 0
+    {
+      Serial.println("Knop 2 ingedrukt");
+    }
+  }
+}</code></pre>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: wat doet <code>bool knop1 = waarde &amp; B00000001;</code>?</button>
+        <div class="spoiler-content solution-content">
+            <p>Het is een AND-bewerking op 2 getallen.</p>
+            <p>Stel dat <code>waarde</code> gelijk is aan 01010101, dan is het resultaat van de AND-bewerking 00000001, ofwel 1, ofwel true.</p>
+            <p>Eigenlijk zijn we van de byte <code>waarde</code> enkel geïnteresseerd in de status van de laatste bit. Dezelfde redenering volgen we voor <code>knop2</code>, waarbij we enkel geïnteresseerd zijn in de voorlaatste bit.</p>
+        </div>
+    </div>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Waarom die 0xFF in de setup?</div>
+        <p>De pinnen van de PCF8574 zijn <strong>quasi-bidirectioneel</strong>: er is geen aparte instelling voor ingang of uitgang. Een pin die je wil lezen moet een <strong>1</strong> hebben staan. Kom je hier rechtstreeks van de vorige oefening, dan staan P0 en P1 nog laag van je LEDs, en lees je die nullen gewoon terug alsof beide knoppen ingedrukt zijn. Zie <a href="../Reference/PCF8574.html">Werken met de PCF8574</a>.</p>
+    </div>
+
+    <h2 id="maak-het-af">Maak het af</h2>
+
+    <p>Deze voorbeeldcode werkt, maar ze stuurt zolang je een knop ingedrukt houdt tientallen regels per seconde naar de monitor. Zorg ervoor dat je alleen iets ziet verschijnen wanneer er <strong>iets verandert</strong>: op het moment dat je een knop indrukt, en op het moment dat je ze weer loslaat.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Hoe merk je een verandering op?</div>
+        <p>Onthoud de vorige toestand van elke knop in een variabele buiten de <code>loop()</code>. Vergelijk bij elke doorloop de nieuwe toestand met de vorige, en stuur alleen iets naar de monitor als die twee verschillen. Vergeet daarna niet de vorige toestand bij te werken.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt het adres dat je in de vorige oefening gevonden hebt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke drukknop heeft een eigen pull-upweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je schrijft in de setup een 1 naar elke pin die je als ingang gebruikt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De seriële monitor staat op dezelfde snelheid als je <code>Serial.begin()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Beide knoppen worden apart herkend, ook als je ze samen indrukt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er verschijnt enkel een regel wanneer een knop van toestand verandert</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>Het lezen zelf zit in <code>leesExpander()</code>: die vraagt één byte op en geeft ze terug. Krijgt hij niets, dan geeft hij 0xFF terug, wat er uitziet als 'geen enkele knop ingedrukt'. Zo hoeft de rest van het programma geen rekening te houden met een mislukte overdracht.</p>
+            <p>In de <code>loop()</code> vergelijken we elke knop met zijn vorige toestand en sturen we alleen iets naar de monitor als die verschilt. De <code>delay()</code> op het einde is meteen een eenvoudige ontdendering: een mechanische knop stuitert bij het indrukken een paar milliseconden.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
+
+const int adresExpander = 0x38; // PCF8574AN met A0, A1 en A2 aan GND
+
+const unsigned long ontdenderTijd = 50;
+
+bool vorigeKnop1 = false;
+bool vorigeKnop2 = false;
+
+void schrijfExpander(byte waarde)
+{
+  Wire.beginTransmission(adresExpander);
+  Wire.write(waarde);
+  Wire.endTransmission();
+}
+
+byte leesExpander()
+{
+  Wire.requestFrom(adresExpander, 1);
+
+  if (Wire.available())
+  {
+    return Wire.read();
+  }
+
+  return 0xFF; // niets ontvangen: doe alsof geen enkele knop ingedrukt is
+}
+
+void setup()
+{
+  Wire.begin();
+  Serial.begin(9600);
+
+  // Een pin van de PCF8574 leest pas betrouwbaar als zijn uitgangslatch hoog
+  // staat. Na het opstarten is dat al zo, maar we zetten het expliciet.
+  schrijfExpander(0xFF);
+}
+
+void loop()
+{
+  byte waarde = leesExpander();
+
+  // Door de pull-upweerstand trekt een ingedrukte knop zijn pin naar 0
+  bool knop1 = (waarde &amp; B00000001) == 0;
+  bool knop2 = (waarde &amp; B00000010) == 0;
+
+  // Alleen bij een verandering iets sturen, anders loopt de monitor vol
+  if (knop1 != vorigeKnop1)
+  {
+    Serial.println(knop1 ? "Knop 1 ingedrukt" : "Knop 1 losgelaten");
+    vorigeKnop1 = knop1;
+  }
+
+  if (knop2 != vorigeKnop2)
+  {
+    Serial.println(knop2 ? "Knop 2 ingedrukt" : "Knop 2 losgelaten");
+    vorigeKnop2 = knop2;
+  }
+
+  delay(ontdenderTijd);
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo4);
+</script>
+</body>
+</html>

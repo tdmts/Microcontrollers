@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teller met I²C-drukknoppen</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Teller met I²C-drukknoppen</h1>
+    <p class="lead">Deze oefening werk je uit in TinkerCAD. Je krijgt deze keer geen schema, enkel een probleemstelling. Je combineert de schuifregisters uit labo 3 met de I/O-expander uit dit labo.</p>
+
+    <h2 id="de-opdracht">De opdracht</h2>
+
+    <p>Voeg <strong>twee schuifregisters</strong> toe aan de sketch. Elk schuifregister stuurt een <strong>7 segment display</strong> aan. Houd rekening met de configuratie van het display, common anode of common cathode, en gebruik <strong>serieweerstanden</strong> voor ieder segment.</p>
+
+    <p>Via een <strong>I²C I/O-expander</strong> lees je drie drukknoppen in:</p>
+
+    <ul>
+        <li>De eerste drukknop laat de teller omhoog gaan.</li>
+        <li>De tweede laat de teller omlaag gaan.</li>
+        <li>De derde pauzeert of herneemt het op- of aftellen.</li>
+    </ul>
+
+    <p>Het tellen gebeurt telkens met een interval van 1 seconde.</p>
+
+    <h2 id="wat-je-al-hebt">Wat je al hebt</h2>
+
+    <p>Je bouwt hier verder op twee dingen die je al gemaakt hebt. Van <a href="../../Labo3/Exercises/Dubbel7SegmentDisplay.html">2x 7 segment display</a> in labo 3 hergebruik je de cascade van twee 74HC595's en de manier waarop je een getal van twee cijfers uitschuift. Van <a href="DrukknoppenInlezen.html">Drukknoppen inlezen via de PCF8574</a> hergebruik je het uitlezen van de knoppen.</p>
+
+    <p>De twee delen zitten elkaar niet in de weg: de schuifregisters hangen aan gewone digitale pinnen, de expander aan A4 en A5.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Bouw het in twee stappen</div>
+        <p>Zorg eerst dat je teller vanzelf van 0 naar 99 loopt, zonder knoppen. Werkt dat, voeg dan pas de expander en de drie knoppen toe. Zo weet je bij een probleem meteen aan welke kant je moet zoeken.</p>
+    </div>
+
+    <h2 id="drie-knoppen-op-een-byte">Drie knoppen op één byte</h2>
+
+    <p>Je leest de drie knoppen in één keer in, als één byte. Elke knop is één bit van die byte, en door de pull-upweerstand is een ingedrukte knop een <strong>0</strong>. Op <a href="../Reference/Bits.html">Werken met bits</a> vind je terug hoe je met een masker één bit uit die byte haalt, en hoe je in één bewerking alle knoppen met hun vorige toestand vergelijkt.</p>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: hoe merk je één druk op?</button>
+        <div class="spoiler-content solution-content">
+            <p>Als je gewoon kijkt of een bit 0 is, dan blijft die voorwaarde waar zolang je de knop ingedrukt houdt. Voor de pauzeknop is dat een probleem: die zou dan tientallen keren per seconde blijven omschakelen tussen pauze en niet-pauze.</p>
+            <p>Wat je wil weten is niet 'staat de knop ingedrukt', maar 'is de knop <em>net</em> ingedrukt'. Bewaar daarvoor de vorige byte in een variabele en vergelijk. Een bit dat vorige keer 1 was en nu 0 is, hoort bij een knop die net ingedrukt werd.</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elk segment van beide displays heeft een eigen serieweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De twee schuifregisters staan in cascade en gebruiken samen maar drie pinnen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Beide cijfers springen tegelijk om, je latcht dus pas na 16 bits</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De drie drukknoppen hangen aan de I/O-expander, niet aan de Arduino zelf</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke drukknop heeft een eigen pull-upweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De teller telt op met knop 1 en af met knop 2, telkens per seconde</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Knop 3 pauzeert, en een tweede druk herneemt op dezelfde waarde</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een knop ingedrukt houden zorgt niet voor herhaald schakelen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Boven 99 en onder 0 loopt de teller netjes door in plaats van vast te lopen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <div class="info-box warning">
+                <div class="info-title warning">Twee aannames in deze oplossing</div>
+                <p>De displays zijn <strong>common cathode</strong>, dus een 1 laat een segment branden. Zijn die van jou common anode, keer dan de patronen in <code>cijferPatronen</code> om. En het <strong>eerste</strong> schuifregister, dat aan pin 2, 3 en 4 hangt, stuurt hier het <strong>linkse</strong> display aan. Staan jouw cijfers omgewisseld, wissel dan in <code>toonGetal()</code> de twee <code>schuifCijfer()</code>-regels om.</p>
+            </div>
+
+            <p>De onderste helft is letterlijk die van labo 3: <code>cijferPatronen</code>, <code>schuifCijfer()</code> en <code>toonGetal()</code> schuiven twee cijfers na elkaar uit en latchen pas op het einde, zodat beide displays tegelijk omspringen.</p>
+            <p>Nieuw is de knoppenlogica. <code>~knoppen &amp; vorigeKnoppen</code> levert een byte waarin enkel de bits staan die <em>deze doorloop</em> van 1 naar 0 gegaan zijn, dus de knoppen die net ingedrukt werden. Zo blijft een knop die je vasthoudt maar één keer tellen, wat vooral voor de pauzeknop belangrijk is.</p>
+            <p><code>richting</code> begint op 0, dus na het opstarten staat de teller stil tot je een richting kiest. Het tellen zelf gebeurt met <code>millis()</code>, want met een <code>delay(1000)</code> zou je een knopdruk van een halve seconde gewoon missen.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
+
+const int adresExpander = 0x38; // PCF8574AN met A0, A1 en A2 aan GND
+
+const int pinDS = 2;   // Data ingang van het eerste schuifregister
+const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
+const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
+
+const unsigned long telInterval = 1000;
+const unsigned long ontdenderTijd = 20;
+
+// Volgorde van de segmenten: Q0=a, Q1=b, Q2=c, Q3=d, Q4=e, Q5=f, Q6=g, Q7=dp
+const bool cijferPatronen[10][8] = {
+  {1, 1, 1, 1, 1, 1, 0, 0}, // 0
+  {0, 1, 1, 0, 0, 0, 0, 0}, // 1
+  {1, 1, 0, 1, 1, 0, 1, 0}, // 2
+  {1, 1, 1, 1, 0, 0, 1, 0}, // 3
+  {0, 1, 1, 0, 0, 1, 1, 0}, // 4
+  {1, 0, 1, 1, 0, 1, 1, 0}, // 5
+  {1, 0, 1, 1, 1, 1, 1, 0}, // 6
+  {1, 1, 1, 0, 0, 0, 0, 0}, // 7
+  {1, 1, 1, 1, 1, 1, 1, 0}, // 8
+  {1, 1, 1, 1, 0, 1, 1, 0}  // 9
+};
+
+int teller = 0;
+int richting = 0; // 0 = stilstaan, 1 = optellen, -1 = aftellen
+bool gepauzeerd = false;
+
+unsigned long vorigeTel = 0;
+byte vorigeKnoppen = 0xFF;
+
+void schrijfExpander(byte waarde)
+{
+  Wire.beginTransmission(adresExpander);
+  Wire.write(waarde);
+  Wire.endTransmission();
+}
+
+byte leesExpander()
+{
+  Wire.requestFrom(adresExpander, 1);
+
+  if (Wire.available())
+  {
+    return Wire.read();
+  }
+
+  return 0xFF; // niets ontvangen: doe alsof geen enkele knop ingedrukt is
+}
+
+void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}
+
+// Schuift 8 bits naar buiten, maar latcht nog niet: zo kunnen we eerst
+// beide cijfers klaarzetten voor er iets zichtbaar wordt.
+void schuifCijfer(int cijfer)
+{
+  for (int i = 7; i &gt;= 0; i--)
+  {
+    digitalWrite(pinDS, cijferPatronen[cijfer][i] ? HIGH : LOW);
+    risingEdge(pinSHCP);
+  }
+}
+
+void toonGetal(int waarde)
+{
+  int tientallen = waarde / 10;
+  int eenheden = waarde % 10;
+
+  // Wat je eerst inschuift, schuift door naar het tweede register
+  schuifCijfer(eenheden);
+  schuifCijfer(tientallen);
+
+  risingEdge(pinSTCP); // pas nu springen beide displays tegelijk om
+}
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+
+  Wire.begin();
+
+  // De knoppinnen moeten hoog staan voor we ze kunnen uitlezen
+  schrijfExpander(0xFF);
+
+  toonGetal(teller);
+}
+
+void loop()
+{
+  byte knoppen = leesExpander();
+
+  // Een knop is net ingedrukt als zijn bit van 1 naar 0 ging
+  byte netIngedrukt = ~knoppen &amp; vorigeKnoppen;
+  vorigeKnoppen = knoppen;
+
+  if (netIngedrukt &amp; B00000001)
+  {
+    richting = 1;
+    gepauzeerd = false;
+  }
+
+  if (netIngedrukt &amp; B00000010)
+  {
+    richting = -1;
+    gepauzeerd = false;
+  }
+
+  if (netIngedrukt &amp; B00000100)
+  {
+    gepauzeerd = !gepauzeerd;
+  }
+
+  if (richting != 0 &amp;&amp; !gepauzeerd &amp;&amp; millis() - vorigeTel &gt;= telInterval)
+  {
+    vorigeTel = millis();
+
+    teller = teller + richting;
+
+    if (teller &gt; 99)
+    {
+      teller = 0;
+    }
+
+    if (teller &lt; 0)
+    {
+      teller = 99;
+    }
+
+    toonGetal(teller);
+  }
+
+  delay(ontdenderTijd);
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo4);
+</script>
+</body>
+</html>

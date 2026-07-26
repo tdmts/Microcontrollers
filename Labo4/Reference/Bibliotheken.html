@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bibliotheken gebruiken</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Bibliotheken gebruiken</h1>
+    <p class="lead">Eén van de sterke punten van de Arduino-omgeving is het grote aanbod aan softwarebibliotheken. Grote stukken ingewikkelde code zitten verpakt in een bibliotheek, zodat jij alleen nog de functies hoeft te kennen die ze aanbiedt.</p>
+
+    <p>We bekijken als voorbeeld de <strong>Wire</strong>-bibliotheek, waarmee je I²C-elektronica kan aansturen.</p>
+
+    <h2 id="een-bibliotheek-toevoegen">Een bibliotheek toevoegen</h2>
+
+    <p>Om een bibliotheek te gebruiken moet ze eerst toegevoegd zijn aan de Arduino-omgeving. Wire is standaard al geïnstalleerd, dus die hoef je niet apart te installeren. Andere bibliotheken voeg je het gemakkelijkst toe via de optie <strong>Bibliotheken beheren</strong>, te vinden via het menu <strong>Schets &gt; Bibliotheek gebruiken</strong>. Via datzelfde menu kies je daarna de bibliotheek die je wil gebruiken.</p>
+
+    <p>Bovenaan je programma verschijnt dan een regel:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;naamVanDeBibliotheek.h&gt;</code></pre>
+
+    <p>In het geval van de Wire-bibliotheek wordt dat:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;</code></pre>
+
+    <h2 id="uitzoeken-welke-functies-er-zijn">Uitzoeken welke functies er zijn</h2>
+
+    <p>Welke functies een bibliotheek allemaal aanbiedt, vind je terug via de officiële Arduino-site. Via <strong>Software &gt; Reference</strong> kom je op het overzicht van alle instructies. Onderaan die pagina staat een link naar de libraries-pagina, met een overzicht van de meeste bibliotheken. Kies je daar Wire, dan kom je op de specifieke pagina van die bibliotheek terecht en zie je rechts een lijst van de beschikbare functies.</p>
+
+    <h2 id="bibliotheekfuncties-gebruiken">Bibliotheekfuncties gebruiken</h2>
+
+    <p>Door de <code>#include</code>-instructie zijn al die functies beschikbaar in je eigen programma. Voor het aansturen van een PCF8574 volstaat het bijvoorbeeld om in de setup een <code>Wire.begin()</code> op te nemen:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
+{
+  Wire.begin();
+}</code></pre>
+
+    <p>En in de loop-functie de combinatie:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
+{
+  Wire.beginTransmission(adres);
+  Wire.write(waarde);
+  Wire.endTransmission();
+}</code></pre>
+
+    <p>Elk van die functies moet natuurlijk de nodige parameters meekrijgen:</p>
+
+    <ul>
+        <li><code>beginTransmission()</code> krijgt het <strong>adres</strong> mee van de chip waar je naartoe wil schrijven.</li>
+        <li><code>write()</code> krijgt de <strong>waarde</strong> mee die geschreven moet worden.</li>
+        <li><code>endTransmission()</code> zorgt ervoor dat de I²C-communicatie opgestart en uitgevoerd wordt.</li>
+    </ul>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Let op de hoofdletters</div>
+        <p>De functie heet <code>Wire.write()</code> met een kleine w. <code>Wire.Write()</code> bestaat niet en levert je een compileerfout op. Datzelfde geldt voor <code>Wire.read()</code> en <code>Wire.available()</code>.</p>
+    </div>
+
+    <h2 id="voorbeeldprogrammas">Voorbeeldprogramma's</h2>
+
+    <p>Elke goede bibliotheek (ja, er zijn er ook slechte) bevat een aantal voorbeeldprogramma's. Die kunnen vaak als leidraad dienen om te zien hoe je de functies het best implementeert. Je vindt ze terug via <strong>Bestand &gt; Voorbeelden &gt; naam van de bibliotheek</strong>.</p>
+</div>
+
+<script src="../../back-link.js"></script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>De wet van Ohm</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>De wet van Ohm</h1>
+    <p class="lead">Eén formule die je in dit vak blijft nodig hebben: het verband tussen spanning, stroom en weerstand. Je gebruikt ze vooral om uit te rekenen welke voorschakelweerstand een led nodig heeft.</p>
+
+    <h2 id="de-formule">De formule</h2>
+
+    <p>De wet van Ohm zegt dat de spanning over een weerstand gelijk is aan de stroom door die weerstand maal zijn waarde:</p>
+
+    <div class="math-tex">
+        $$ U = R \cdot I $$
+    </div>
+
+    <p>Daarin is <strong>U</strong> de spanning in volt (V), <strong>I</strong> de stroom in ampère (A) en <strong>R</strong> de weerstand in ohm (&Omega;). Je kan de formule omvormen naar wat je zoekt:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De drie vormen van dezelfde formule</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Wat je zoekt</th>
+                    <th scope="col">Formule</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>De spanning over de weerstand</td>
+                    <td>U = R &middot; I</td>
+                </tr>
+                <tr>
+                    <td>De weerstandswaarde</td>
+                    <td>R = U / I</td>
+                </tr>
+                <tr>
+                    <td>De stroom door de weerstand</td>
+                    <td>I = U / R</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Let op je eenheden</div>
+        <p>Stromen op een Arduino zijn klein en worden meestal in <strong>milliampère</strong> (mA) gegeven. In de formule moet je ampère invullen: 20 mA is 0,020 A. Vergeet je dat, dan zit je er een factor duizend naast en kom je uit op een weerstand van 0,16 &Omega; in plaats van 160 &Omega;.</p>
+    </div>
+
+    <h2 id="voorschakelweerstand-berekenen">De voorschakelweerstand van een led berekenen</h2>
+
+    <p>Een led is geen weerstand. Er staat een min of meer vaste spanning over zodra hij brandt, en hij begrenst zelf de stroom niet. Sluit je hem rechtstreeks op een pin aan, dan loopt er dus veel te veel stroom en beschadig je de led en mogelijk de pin. De weerstand in serie is wat die stroom vastlegt.</p>
+
+    <p>In de datasheet van een led vind je twee waarden terug:</p>
+
+    <ul>
+        <li><strong>I<sub>forward</sub></strong>: de nominale stroom waarbij de led mooi brandt, vaak ongeveer 20 mA.</li>
+        <li><strong>V<sub>forward</sub></strong>: de spanning die bij die stroom over de led staat, meestal tussen 1,8 V en 2 V.</li>
+    </ul>
+
+    <p>Van de 5 V die je Arduino levert, neemt de led dus al een stuk voor zijn rekening. Wat overblijft, is het stuk spanning dat over de weerstand komt te staan. Dat vul je in de formule in:</p>
+
+    <div class="math-tex">
+        $$ R = \frac{U}{I} = \frac{V_{CC} - V_{forward}}{I_{forward}} = \frac{5\,\text{V} - 1{,}8\,\text{V}}{0{,}020\,\text{A}} = 160\ \Omega $$
+    </div>
+
+    <h2 id="afronden-naar-een-bestaande-waarde">Afronden naar een weerstand die je echt hebt</h2>
+
+    <p>160 &Omega; is een theoretische waarde. In je starterkit zit die meestal niet, dus neem je de dichtstbijzijnde waarde die je w&eacute;l hebt. Rond daarbij altijd naar <strong>boven</strong> af: een grotere weerstand betekent minder stroom, dus een iets minder felle maar veilige led. Naar beneden afronden doet het omgekeerde en dat wil je niet.</p>
+
+    <p>In de praktijk kom je voor een led op 5 V zo goed als altijd uit bij <strong>220 &Omega;</strong>. Dat is de waarde die je in de oefeningen van dit vak zal gebruiken.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Even controleren wat er dan echt loopt</div>
+        <p>Met 220 &Omega; in plaats van 160 &Omega; wordt de stroom I = (5 - 1,8) / 220 &asymp; 0,0145 A, dus ongeveer <strong>14,5 mA</strong>. Ruim onder de 20 mA die een pin veilig levert, en genoeg om de led goed te zien branden. Zo controleer je achteraf of je keuze klopt. Meer over die grenzen staat op <a href="SourcenSinken.html">Sourcen en sinken</a>.</p>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+</body>
+</html>
