@@ -5,10 +5,10 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash scripts/check-style.sh --hook",
+            "command": "bash scripts/check-content.sh --hook",
             "shell": "bash",
-            "timeout": 30,
-            "statusMessage": "Checking Orion style (Allman braces, no em-dashes)"
+            "timeout": 60,
+            "statusMessage": "Checking links, manifests, wiring and style"
           }
         ]
       }

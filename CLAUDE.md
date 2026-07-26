@@ -19,14 +19,53 @@ To preview, open a page in a browser or push to GitHub Pages. Note: some behavio
 `http(s)://`, not a `file://`-opened page — e.g. YouTube embeds need `referrerpolicy` (error 153
 otherwise) and the cross-tab dashboard sync relies on same-origin `localStorage`.
 
-## Style check (the one automated guardrail)
+## Content check (the one automated guardrail)
 
-[`scripts/check-style.sh`](scripts/check-style.sh) greps every tracked `.html` for two banned
-patterns and fails if it finds any: **K&R braces** in Arduino/C++ code (the house style is Allman —
-opening `{` on its own line; data initializers `= { ... }` are exempt) and **em-dashes** (`&mdash;`
-or `—`) anywhere in prose. Run `bash scripts/check-style.sh` before finishing any content edit. A
-`Stop` hook in [`.claude/settings.json`](.claude/settings.json) runs it automatically (`--hook` mode,
-blocking) so a session cannot end while a violation exists. Treat a green check as part of "done".
+[`scripts/check-content.sh`](scripts/check-content.sh) is the single "is this repo publishable"
+check. Run `bash scripts/check-content.sh` before finishing any content edit; a `Stop` hook in
+[`.claude/settings.json`](.claude/settings.json) also runs it automatically (`--hook` mode, blocking)
+so a session cannot end while a violation exists. Treat a green check as part of "done". It covers,
+in order:
+
+1. **Links and assets resolve** — every relative `href`/`src` must point at a real file that is
+   tracked by git with the exact same casing (GitHub Pages is case-sensitive and serves only tracked
+   files, so a case typo or an uncommitted image works locally and 404s in production). Assets named
+   `TODO-*` are reported as non-blocking warnings, for artwork that is planned but not drawn yet.
+2. **Manifests match the filesystem** — every `exercises.js` / `reference.js` `href` resolves, sits
+   under its own lab folder, and has a unique `id` and `order`; every entry carries every field the
+   engines read (`name`, `difficulty`, `time`, `blurb` for exercises, `name` + `blurb` for reference
+   topics, all non-empty, since a missing field renders a blank card rather than an error);
+   every page under `LaboN/Exercises/` or `LaboN/Reference/` is listed in the matching manifest (an
+   unlisted page earns no XP and is unreachable). This is the rule that otherwise fails *silently*:
+   a mismatched basename makes checklist sync no-op with no error anywhere.
+3. **Page wiring** — every page links the hosted `orion.css`/`orion.js`; a page with a `.checklist`
+   carries `back-link.js`, `exercises.js`, `checklist-sync.js` and calls `initChecklistSync` for
+   *its own* lab; a `.solution-container` carries `solution-reveal.js`; `dashboard.html` and
+   `reference.html` call `initDashboard` / `initReferenceHub` for their own lab; and any page in a
+   `LaboN/` folder whose `laboN` block does not exist yet in the manifest is flagged (adding a lab
+   folder before its manifest block renders an empty dashboard, silently). Init calls are matched
+   with either quote style.
+4. **Asset hygiene** — no Brightspace `/content/enforced/` hotlinks, no remote `<img src="http...">`
+   (self-host in `img/`), and every YouTube embed carries `referrerpolicy` (error 153 without it).
+5. **Code style** — **K&R braces** in Arduino/C++ code (the house style is Allman: opening `{` on
+   its own line; data initializers `= { ... }` are exempt) and **em-dashes** (`&mdash;` or `—`)
+   anywhere in prose.
+
+`template.html` and `pasteInOrion.html` are exempt from 1, 3 and 4 by design (the styleguide links a
+local `orion.css` and uses placehold.co demo images; the Orion wrapper is not an Orion-styled page).
+Section 5 still applies to them, because their code samples set the house style for everything
+copied out of them.
+
+The same script runs in CI ([`.github/workflows/check-content.yml`](.github/workflows/check-content.yml))
+on every push and pull request, so it also covers edits made outside a Claude Code session (this repo
+has a second author). [`CONTRIBUTING.md`](CONTRIBUTING.md) is the human-facing version of these
+rules, written in Dutch for that coworker: **when a rule changes, update the script, CLAUDE.md and
+CONTRIBUTING.md together.** [`.gitattributes`](.gitattributes) normalizes line endings (and pins
+`*.sh` to LF, since a CRLF script fails on the Linux CI runner).
+
+Keep the script fork-free (one `grep` per rule over
+the whole file list, bash string ops for the rest): a per-file `grep` loop made it 48s, past the
+hook timeout, versus ~2s now.
 
 ## Layout
 

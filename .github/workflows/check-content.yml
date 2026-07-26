@@ -1,0 +1,21 @@
+name: Content check
+
+# Runs the same check as the local Stop hook, but for everyone: any editor,
+# any machine, every push. A red X here means the site would ship broken
+# links, an unregistered page, or a style violation.
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check-content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check links, manifests, wiring and style
+        run: bash scripts/check-content.sh
