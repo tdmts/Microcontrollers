@@ -728,6 +728,8 @@ fi
 if [ -n "$report" ]; then
   [ -n "$FIXED" ] && printf '\nStill needs a human:\n'
   printf '%s' "$report" >&2
+  # Nobody has to remember the flags: the moment they would help, say so.
+  [ "$FIX_MODE" -eq 0 ] && printf '\nMany of these repair themselves: bash scripts/check-content.sh --fix\n' >&2
   [ "$HOOK_MODE" -eq 1 ] && exit 2
   [ -n "$warnings" ] && printf 'Pending placeholders (not blocking):\n%s' "$warnings" >&2
   exit 1
@@ -736,5 +738,6 @@ fi
 if [ "$HOOK_MODE" -eq 0 ]; then
   [ -n "$warnings" ] && printf 'Pending placeholders (not blocking):\n%s' "$warnings"
   echo "check-content: OK (${#files[@]} .html files: links, manifests, wiring, assets, style)"
+  [ "$AUDIT" -eq 0 ] && echo "                 (--audit also reports house-style drift, --fix repairs the mechanical ones)"
 fi
 exit 0
