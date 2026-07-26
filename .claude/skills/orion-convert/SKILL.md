@@ -7,17 +7,23 @@ description: Convert raw content (messy HTML export, plain text/Markdown, or an 
 
 Converts arbitrary source content into a clean HTML page that follows this
 repo's Orion styleguide conventions (see [`template.html`](../../../template.html)
-for the full component reference; [`Labo1/Morsecode.html`](../../../Labo1/Morsecode.html) /
-[`Labo1/Looplicht.html`](../../../Labo1/Looplicht.html) /
-[`Labo1/KnightRider.html`](../../../Labo1/KnightRider.html) for real,
+for the full component reference; [`Labo1/Exercises/Morsecode.html`](../../../Labo1/Exercises/Morsecode.html) /
+[`Labo1/Exercises/Looplicht.html`](../../../Labo1/Exercises/Looplicht.html) /
+[`Labo1/Exercises/KnightRider.html`](../../../Labo1/Exercises/KnightRider.html) for real,
 correctly-converted examples of the checklist-driven pattern used when the
 target lab has an entry in the shared `exercises.js` manifest — see
 Checklist / QR block below).
 
+**The output must pass [`scripts/check-content.sh`](../../../scripts/check-content.sh).**
+That script is the repo's one automated guardrail (links, manifest
+consistency, page wiring, asset hygiene, code style) and it also runs in CI on
+every push. Running it is step 9 of the Process below, and a green result is
+part of "done" for this skill.
+
 ## Inputs this skill handles
 
 - Raw/messy HTML (e.g. pasted from Brightspace or CKEditor, like the original
-  `Labo1/Looplicht.html` before conversion)
+  `Labo1/Exercises/Looplicht.html` before conversion)
 - Plain text or Markdown
 - An existing lab page that needs to be migrated/restyled to current
   conventions
@@ -54,6 +60,20 @@ content or point at a file before proceeding.
    any placeholder values that still need to be filled in (see Evaluation
    block below), any `exercises.js` entry you added, and any source `src=`
    paths/URLs the user should double check.
+9. **Run the content check and fix what it reports:**
+
+   ```bash
+   bash scripts/check-content.sh
+   ```
+
+   It catches exactly the mistakes this skill is most likely to make: an
+   `href` whose basename or casing does not match the file, a manifest entry
+   missing `blurb`/`difficulty`/`time`, a forgotten script include, an
+   `initChecklistSync` pointing at the wrong lab, an image that was never
+   `git add`ed, a YouTube embed without `referrerpolicy`, a K&R brace, an
+   em-dash. Fix every finding and re-run until it prints `check-content: OK`.
+   Don't hand the page back while it is red: the same script runs in CI, so a
+   red result here is a red X on the user's next push.
 
 ## Exercise pages vs. reference (theory) pages
 
@@ -156,8 +176,9 @@ source explicitly references an `.stl` file.
 
 ## Submission ("indienen") claims
 
-These pages are static content (iframed into Brightspace via `index.html`),
-not the actual assignment dropbox. Source content sometimes carries over
+These pages are static content (served from GitHub Pages and iframed into
+Brightspace via [`pasteInOrion.html`](../../../pasteInOrion.html), the only
+file ever uploaded to Orion), not the actual assignment dropbox. Source content sometimes carries over
 submission language that was only accurate in its original context (e.g.
 "Dien je oefening in op deze opdracht. Bij het indienen krijg je onmiddellijk
 de oplossing te zien.") — implying you submit *here* and get an *immediate
@@ -187,7 +208,7 @@ itself. So treat the checklist and the QR widget as two separate things:
   - **Checklist-driven (default whenever the target lab has a `laboN` key
     in the root `exercises.js`)** — a live, per-student checklist that
     syncs to the lab's `dashboard.html` (XP/badges) via `localStorage`. See
-    [`Labo1/Looplicht.html`](../../../Labo1/Looplicht.html) for the
+    [`Labo1/Exercises/Looplicht.html`](../../../Labo1/Exercises/Looplicht.html) for the
     canonical example:
     ```html
     <div class="info-box evaluation">
@@ -199,11 +220,14 @@ itself. So treat the checklist and the QR widget as two separate things:
         </ul>
     </div>
     ```
-    Then, right before `</body>`:
+    Then, right before `</body>` (**relative paths**, so the page also works
+    when opened locally — no page in this repo uses absolute URLs for the
+    shared scripts; from `LaboN/Exercises/` or `LaboN/Reference/` that is
+    `../../`):
     ```html
-    <script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
-    <script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
-    <script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+    <script src="../../back-link.js"></script>
+    <script src="../../exercises.js"></script>
+    <script src="../../checklist-sync.js"></script>
     <script>
         initChecklistSync(LAB_EXERCISES.laboN);
     </script>
@@ -211,14 +235,26 @@ itself. So treat the checklist and the QR widget as two separate things:
     And add an entry for this exercise under `LAB_EXERCISES.laboN.exercises`
     in the root [`exercises.js`](../../../exercises.js) (the single source
     of truth, shared across all labs, read by both every lab's dashboard
-    and each exercise page's sync script) — give it a lowercase-no-spaces
-    `id`, the next unused `order` number (scoped to that lab), `name`
-    matching the `<h1>`, the page's own `href` under
-    `https://tdmts.github.io/Microcontrollers/LaboN/{file}`, and
-    `checklistDriven: true`. `checklist-sync.js` matches the current page to
-    a manifest entry by comparing filenames, so the `href`'s basename must
-    exactly match the output filename (case-insensitive) or the checklist
-    silently won't sync.
+    and each exercise page's sync script). **Every field below is required**
+    (the content check fails on a missing one, and the dashboard renders a
+    blank card rather than an error):
+
+    | field | value |
+    |---|---|
+    | `id` | lowercase, no spaces, unique within the lab |
+    | `order` | next unused number, scoped to that lab |
+    | `name` | matches the `<h1>` |
+    | `href` | `https://tdmts.github.io/Microcontrollers/LaboN/Exercises/{file}` |
+    | `difficulty` | 1, 2 or 3 |
+    | `time` | rough estimate, e.g. `'~20 min'` |
+    | `blurb` | one sentence for the dashboard card |
+    | `checklistDriven` | `true` for this pattern |
+
+    `checklist-sync.js` matches the current page to a manifest entry by
+    comparing filenames, so the `href`'s basename must match the output
+    filename **exactly, including casing** (the sync itself is
+    case-insensitive, but GitHub Pages is not: a casing mismatch resolves on
+    Windows and 404s once deployed).
   - **Static fallback (target lab has no key in `exercises.js` yet)** —
     plain text, no inputs, no scripts:
     ```html
@@ -287,10 +323,10 @@ Markup:
 And add `solution-reveal.js` to the includes (after `checklist-sync.js`):
 
 ```html
-<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
-<script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
-<script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
-<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
 <script>
     initChecklistSync(LAB_EXERCISES.laboN);
 </script>
@@ -350,13 +386,15 @@ Every `LaboN/` exercise page lives in the same folder as that lab's
 script — no manifest lookup, no per-page href to get right:
 
 ```html
-<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+<script src="../../back-link.js"></script>
 ```
 
-It injects a "← Terug naar dashboard" link above the `<h1>`, pointing at the
-relative `dashboard.html`, and no-ops on `dashboard.html` itself. Add this
-include on every exercise page (see Checklist / QR block above for exactly
-where it goes relative to the other script includes).
+It injects a "← Terug naar ..." link above the `<h1>` and at the bottom,
+targeting the previous page when that is known (a trusted same-origin `.html`
+referrer), else the lab dashboard, else the reference hub for pages under
+`Reference/`. It no-ops on `dashboard.html` itself. Add this include on every
+exercise and reference page (see Checklist / QR block above for exactly where
+it goes relative to the other script includes).
 
 Don't over-specify how/where students save their work — "Sla je oefening
 op." is enough. Don't invent or carry over specific file extensions (.ino,
@@ -365,14 +403,28 @@ concrete reason (e.g. an upload form only accepts one extension).
 
 ## Media
 
-Keep original `src`/`href` values exactly as given (local relative paths or
-external URLs) — this skill does not copy or manage asset files. Just wrap
-them in the correct component markup per the table above, and mention any
-`src` paths in your final summary so the user can verify they resolve
-correctly in the final location.
+**Every image this repo serves is self-hosted in the shared repo-root `img/`
+folder. No exceptions, no asking first.** A remote `<img src="http...">` is a
+content-check failure, and a hotlink rots: the other site can move, rename or
+delete the file, and the page silently loses its illustration mid-semester.
 
-**Exception — Brightspace-hosted images.** A source `<img src>` pointing at
-Brightspace's authenticated content store (relative paths under
+So for **any** `<img>` whose source is an external URL:
+
+1. Download it into repo-root `img/` with a descriptive filename
+   (`servo-aansluiting.png`, not `image.847213.png`). If the host blocks the
+   download, retry with a browser `User-Agent`; some CDNs return an HTML
+   challenge page to a bare `curl`, which is easy to mistake for the image.
+2. Point the `<img src>` at it with a relative path from the page's folder,
+   e.g. `../../img/servo-aansluiting.png`.
+3. `git add` the file. An image that exists locally but is untracked is
+   invisible on GitHub Pages, and the content check flags it.
+
+Keep local relative `src`/`href` values exactly as given, wrap them in the
+correct component markup per the table above, and mention every `src` path in
+your final summary so the user can verify it resolves in the final location.
+
+**Brightspace-hosted images need an extra step.** A source `<img src>`
+pointing at Brightspace's authenticated content store (relative paths under
 `/content/enforced/<course>-<academic-year-code>/...` or a
 `chamilo-downloads.hogent.be/...DocumentDownloader...` link) must **not** be
 kept as-is: the path bakes in that year's course/academic-year code and will
@@ -389,9 +441,10 @@ Brightspace login to resolve at all. Instead:
    `exercises.js`/`back-link.js`, see the `single-source-of-truth`
    preference), with a descriptive filename (e.g. `rgbled-schema.png`, not
    the original `image.<id>.png`).
-3. Point the `<img src>` at it with a relative path from the lab folder,
-   e.g. `../img/rgbled-schema.png`.
+3. Point the `<img src>` at it with a relative path from the page's folder,
+   e.g. `../../img/rgbled-schema.png`, and `git add` it.
 
-This does not apply to non-Brightspace image URLs (e.g. already-hosted
-CDN/placeholder images) — those keep the default "leave `src` as-is"
-behavior above.
+The extra step is only the *asking*: a Brightspace path can't simply be
+downloaded, so you need the user to supply a working URL or a local file.
+Every other external image is downloaded without asking, per the rule at the
+top of this section.
