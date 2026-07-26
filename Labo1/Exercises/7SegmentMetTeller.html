@@ -25,13 +25,15 @@
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>int lijst[] = { 10, 4, -1, 0 }; //Declaratie van een int array
 
-void setup() {
+void setup()
+{
   // put your setup code here, to run once:
   int eersteItem = lijst[0]; //Opvragen van één waarde met de index
   lijst[1] = 5; //Een waarde aanpassen met de index
 }
 
-void loop() {
+void loop()
+{
   //Aantal items in een array tellen.
   int count = sizeof(lijst) / sizeof(lijst[0]);
 
@@ -111,21 +113,27 @@ const bool cijferPatronen[10][7] = {
   {1,1,1,1,0,1,1}, // 9
 };
 
-void setup() {
-  for (int i = 0; i < 7; i++) {
+void setup()
+{
+  for (int i = 0; i < 7; i++)
+  {
     pinMode(segPins[i], OUTPUT);
   }
 }
 
-void toonCijfer(int cijfer) {
-  for (int i = 0; i < 7; i++) {
+void toonCijfer(int cijfer)
+{
+  for (int i = 0; i < 7; i++)
+  {
     bool segmentAan = cijferPatronen[cijfer][i];
     digitalWrite(segPins[i], segmentAan ? SEGMENT_AAN : !SEGMENT_AAN);
   }
 }
 
-void loop() {
-  for (int cijfer = 0; cijfer <= 9; cijfer++) {
+void loop()
+{
+  for (int cijfer = 0; cijfer <= 9; cijfer++)
+  {
     toonCijfer(cijfer);
     delay(500); // 2Hz => elk cijfer 500ms zichtbaar
   }

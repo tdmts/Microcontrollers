@@ -19,6 +19,15 @@ To preview, open a page in a browser or push to GitHub Pages. Note: some behavio
 `http(s)://`, not a `file://`-opened page — e.g. YouTube embeds need `referrerpolicy` (error 153
 otherwise) and the cross-tab dashboard sync relies on same-origin `localStorage`.
 
+## Style check (the one automated guardrail)
+
+[`scripts/check-style.sh`](scripts/check-style.sh) greps every tracked `.html` for two banned
+patterns and fails if it finds any: **K&R braces** in Arduino/C++ code (the house style is Allman —
+opening `{` on its own line; data initializers `= { ... }` are exempt) and **em-dashes** (`&mdash;`
+or `—`) anywhere in prose. Run `bash scripts/check-style.sh` before finishing any content edit. A
+`Stop` hook in [`.claude/settings.json`](.claude/settings.json) runs it automatically (`--hook` mode,
+blocking) so a session cannot end while a violation exists. Treat a green check as part of "done".
+
 ## Layout
 
 - `LaboN/Exercises/` — one HTML page per exercise, plus that lab's `dashboard.html` (progress/XP view).

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LED dimmen</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>LED dimmen</h1>
+    <p class="lead">Maak een programma waarbij een LED langzaam van gedoofd naar volle sterkte gaat, en terug naar gedoofd.</p>
+
+    <p>Gebruik de <code>analogWrite()</code> instructie om een analoge waarde op de pin te zetten.</p>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/teeeNqqF3Vs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="vragen">Vragen</h2>
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Kan men naar elke pin van de Arduino een analoge spanning sturen?</div>
+            <p>Het hangt er vanaf welke Arduino je gebruikt. Je kan dit enkel doen naar een PWM (Pulse Width Modulation) pin, maar niet bij iedere Arduino zijn die PWM-pinnen dezelfde.</p>
+            <p>Op <a href="https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/" target="_blank">deze website</a> zie je een overzicht per Arduino waar je die PWM-pinnen terug kan vinden. Ze worden aangeduid met een ~ op de PCB.</p>
+            <p>Voor de UNO is dat bijvoorbeeld pin 11, 10, 9, 6, 5 en 3.</p>
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../../img/pwm-pinnen-overzicht.png" class="img-fluid" alt="Overzicht van de PWM-pinnen per Arduino-bord">
+                </figure>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wordt op de pin echt een analoge spanning aangeboden?</div>
+            <p>Nee, men past een trucje toe door de <strong>pulsbreedte</strong> aan te passen. De gemiddelde waarde komt dan overeen met de uitgestuurde analoge spanning.</p>
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../../img/pwm-pulsbreedte.gif" class="img-fluid" alt="PWM-signaal waarvan de gemiddelde waarde overeenkomt met de analoge spanning">
+                </figure>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Verloopt het dimmen lineair? Hoe zou dat komen?</div>
+            <p>Nee, want de uitgangskarakteristiek van een LED is niet lineair.</p>
+            <p>Afhankelijk van de kleur van de LED is er een andere doorlaatspanning. Bij een rode LED is dat bijvoorbeeld 1,7 V.</p>
+            <p>Zolang de spanning over de LED lager is dan die 1,7 V is de LED dus gedoofd. Eenmaal hoger dan de doorlaatspanning gaat dit eerder exponentieel.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat is de maximale spanning die men op een pin kan plaatsen?</div>
+            <p>5 V.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Welke spanning zal er op de pin staan wanneer ik de waarde 128 gebruik in een analogWrite?</div>
+            <p><strong>Let op</strong>: de waarde die je uitstuurt is deze keer niet tussen 0 en 1023 maar wel tussen <strong>0 en 255</strong>. Zie ook <a href="https://docs.arduino.cc/language-reference/en/functions/analog-io/analogWrite/" target="_blank">analogWrite() - Arduino Reference</a>.</p>
+            <p>Om de spanning te berekenen passen we opnieuw de regel van 3 toe.</p>
+            <p>255 = 5 V, dus 1 = 5 V / 255 = 0,01960 V.</p>
+            <p>128 * 0,01960 V = <strong>2,5088 V</strong>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Hoe kan men de bekomen spanning stabieler maken?</div>
+            <p>Door er een condensator (met eventueel nog een weerstand, dus een RC-combinatie) op te zetten. Die gedraagt zich als een laagdoorlaatfilter waardoor het PWM-signaal afgevlakt wordt en er effectief een spanning op de uitgang komt te staan in plaats van een blokgolf.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat als de analoge pin meer dan 40 mA moet leveren aan de aan te sturen schakeling?</div>
+            <p>Dan kan je de analoge pin gebruiken om een <strong>transistor / FET / relais</strong> te schakelen in combinatie met een <strong>externe voeding</strong>.</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LED is aangesloten op een PWM-pin (aangeduid met ~)</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De helderheid wordt geregeld met <code>analogWrite()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LED gaat langzaam van gedoofd naar volle sterkte en terug</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De waarde in <code>analogWrite()</code> blijft tussen 0 en 255</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                De led hangt op een PWM-pin (aangeduid met een <code>~</code>,
+                bijvoorbeeld pin 9). Met een <code>for</code>-lus laat je de helderheid
+                stap voor stap oplopen van 0 naar 255 en daarna weer terug naar 0. Elke
+                stap zet je met <code>analogWrite()</code> op de pin, met telkens een
+                korte <code>delay()</code> zodat het dimmen zichtbaar traag verloopt.
+            </p>
+            <pre class="code-wrapper language-arduino show-language">
+const int ledPin = 9; // led op een PWM-pin (~)
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop()
+{
+  // langzaam feller
+  for (int helderheid = 0; helderheid <= 255; helderheid++)
+  {
+    analogWrite(ledPin, helderheid);
+    delay(10);
+  }
+  // langzaam terug gedoofd
+  for (int helderheid = 255; helderheid >= 0; helderheid--)
+  {
+    analogWrite(ledPin, helderheid);
+    delay(10);
+  }
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo2);
+</script>
+</body>
+</html>

@@ -55,6 +55,30 @@ content or point at a file before proceeding.
    block below), any `exercises.js` entry you added, and any source `src=`
    paths/URLs the user should double check.
 
+## Exercise pages vs. reference (theory) pages
+
+Two kinds of page live under `LaboN/`, and they differ:
+
+- **Exercise pages** (`LaboN/Exercises/`) — a task the student builds. These get
+  the checklist (see Checklist / QR block), sync to the lab `dashboard.html`, and
+  are registered in `exercises.js`. Everything above assumes this case.
+- **Reference (theory) pages** (`LaboN/Reference/`) — quick-reference topics the
+  student consults while working (e.g. `analogRead.html`). These are **not**
+  exercises, so:
+  - **No checklist and no QR widget.** They aren't a task, so nothing to
+    self-evaluate.
+  - **Register in `reference.js`, not `exercises.js`** — add the topic under that
+    lab's `laboN` key (`window.LAB_REFERENCE.laboN`), inside the appropriate
+    category (`{ id, name, href, blurb }`; `id` lowercase-no-spaces, `href`
+    basename matching the filename, `blurb` a one-line summary). Create the
+    `laboN` block if it doesn't exist yet.
+  - **The reference hub is named `reference.html`** (never `index.html`) and calls
+    `initReferenceHub('laboN')`. Mirror an existing hub such as
+    [`Labo0/Reference/reference.html`](../../../Labo0/Reference/reference.html) —
+    it also links `reference-dashboard.css` and `reference-dashboard.js`.
+  - **`back-link.js` is still included** right before `</body>`, same as exercise
+    pages. It self-targets the reference hub for pages under `Reference/`.
+
 ## Base page skeleton
 
 Always use the hosted CDN for CSS/JS (this is what actually-deployed lab
@@ -151,7 +175,8 @@ itself. So treat the checklist and the QR widget as two separate things:
 - **Checklist — always, on every exercise page:** any page that describes a
   task/opdracht for the student to build or program (i.e. basically every
   `LaboN/` page this skill produces) gets an evaluation checklist block as
-  the **last thing in `.container`**, regardless of whether the source text
+  the **second-to-last section in `.container`** (only the Oplossing block
+  below comes after it), regardless of whether the source text
   mentions grading/submission/indienen at all. Don't gate this on keywords —
   it's part of the standard page structure now, same as the `<h1>`/lead
   paragraph. Skip it only for pages that clearly aren't a student exercise
@@ -231,6 +256,92 @@ itself. So treat the checklist and the QR widget as two separate things:
   Brightspace assignment and gives (or asks you to placeholder-and-flag) the
   real IDs. Never add the QR widget silently just because grading keywords
   were detected.
+
+## Solution block (Oplossing)
+
+**Every exercise page gets an Oplossing section** — same rule as the checklist:
+it's part of the standard page structure, not gated on whether the source
+provides a solution. **Reference (theory) pages never get one** (they aren't a
+task to solve). Place it as the **last section inside `.container`, directly
+after the checklist `.info-box.evaluation`**, and add the
+`solution-reveal.js` include to the script list before `</body>`. See
+[`Labo1/Exercises/Looplicht.html`](../../../Labo1/Exercises/Looplicht.html) for the
+canonical example.
+
+Markup:
+
+```html
+<h2 id="oplossing">Oplossing</h2>
+<div class="solution-container">
+    <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+    <div class="spoiler-content solution-content">
+        <p>{1-2 zinnen die de aanpak uitleggen: welke instructies, waarom}</p>
+        <pre class="code-wrapper language-arduino show-language">
+{volledige, werkende sketch}
+        </pre>
+    </div>
+</div>
+```
+
+And add `solution-reveal.js` to the includes (after `checklist-sync.js`):
+
+```html
+<script src="https://tdmts.github.io/Microcontrollers/back-link.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/exercises.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/checklist-sync.js"></script>
+<script src="https://tdmts.github.io/Microcontrollers/solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.laboN);
+</script>
+```
+
+The solution is **almost never present in the source**, so you write it. Give
+a complete, working sketch (not a fragment) plus a short explanation of the
+approach. Because you authored it, **flag in your final summary that the
+solution is yours to sanity-check** — especially concrete pin numbers, wiring
+assumptions, and baud rates, which you can only guess from the exercise. If
+the correct approach is genuinely ambiguous, ask the user rather than inventing
+a plausible-but-wrong sketch.
+
+### Code style (all Arduino/C++ code on the page)
+
+**This applies to every code block on the page, not just the solution** — the
+solution sketch, any skeleton/"Voorbeeldcode" the student completes, and any
+inline example must all follow the same style so pages read as one system:
+
+- **Dutch identifiers and Dutch comments** (`potWaarde`, `helderheid`,
+  `ledPin`), matching the Dutch je-vorm course voice. Not English names.
+- **camelCase** for variables and pin/config constants (`ledPin`, not
+  `LED_PIN`). `ALL_CAPS` stays for symbolic hardware constants
+  (`SEGMENT_AAN`, `KORT`, `DIGIT_TIENTALLEN`); don't rewrite those (renaming
+  `SEGMENT_AAN` would even collide with the local `segmentAan` variable).
+- **`const int` for pins and fixed values** (`const int ledPin = 9;`), not
+  `#define` and not `const byte`. Type-safe and debuggable.
+- **Allman braces**: the opening `{` of `setup()`, `loop()`, `if`, `for`,
+  `while`, etc. goes on its **own line**, aligned with the statement. This
+  includes short bodies (no `if (x) { ... }` on one line). Data initializers
+  (`const int pins[] = {2, 3, 4};`, 2-D pattern arrays) keep their `{` on the
+  same line as the `=`; Allman is only for control-flow/function braces.
+  ```arduino
+  void loop()
+  {
+    for (int i = 0; i < 4; i++)
+    {
+      analogWrite(ledPin, i);
+    }
+  }
+  ```
+- **2-space indentation** (Arduino IDE default).
+- Comments are Dutch, short, and explain *why* where it isn't obvious
+  (`// herschaal naar 0..255`), not restating the obvious.
+
+## Prose style
+
+Never use em-dashes (`—` or `&mdash;`) anywhere in student-facing prose; they
+read as an AI-tell. Rewrite the sentence with a comma, a colon, a period, or a
+word like "en"/"maar" instead. This applies to all body text, callouts,
+accordion answers, and solution explanations.
 
 ## Back link
 

@@ -50,8 +50,8 @@
                 digits dezelfde 7 segmentpinnen; enkel de common pin van elk display
                 wordt apart aangestuurd (hier via pin10). Om beide cijfers toch
                 gelijktijdig leesbaar te tonen, wissel je razendsnel (multiplexing)
-                tussen "toon tientallen op display 1" en "toon eenheden op display 2"
-                &mdash; snel genoeg dat het oog geen flikkering ziet.
+                tussen "toon tientallen op display 1" en "toon eenheden op display 2",
+                snel genoeg dat het oog geen flikkering ziet.
             </p>
             <pre class="code-wrapper language-arduino show-language">
 // Placeholder-pinnen: vervang door de pinnen uit jouw eigen schema
@@ -80,21 +80,26 @@ const bool cijferPatronen[10][7] = {
 int teller = 0;
 unsigned long vorigeTelTick = 0;
 
-void setup() {
-  for (int i = 0; i < 7; i++) {
+void setup()
+{
+  for (int i = 0; i < 7; i++)
+  {
     pinMode(segPins[i], OUTPUT);
   }
   pinMode(pinDigitSelect, OUTPUT);
 }
 
-void toonCijfer(int cijfer) {
-  for (int i = 0; i < 7; i++) {
+void toonCijfer(int cijfer)
+{
+  for (int i = 0; i < 7; i++)
+  {
     bool segmentAan = cijferPatronen[cijfer][i];
     digitalWrite(segPins[i], segmentAan ? SEGMENT_AAN : !SEGMENT_AAN);
   }
 }
 
-void multiplexStap(int tientallen, int eenheden) {
+void multiplexStap(int tientallen, int eenheden)
+{
   // Even kort de tientallen tonen op display 1...
   digitalWrite(pinDigitSelect, DIGIT_TIENTALLEN);
   toonCijfer(tientallen);
@@ -106,13 +111,15 @@ void multiplexStap(int tientallen, int eenheden) {
   delay(5);
 }
 
-void loop() {
+void loop()
+{
   int tientallen = teller / 10;
   int eenheden = teller % 10;
   multiplexStap(tientallen, eenheden);
 
   // Om de seconde de teller ophogen, zonder de multiplexing te blokkeren
-  if (millis() - vorigeTelTick >= 1000) {
+  if (millis() - vorigeTelTick >= 1000)
+  {
     vorigeTelTick = millis();
     teller = (teller + 1) % 100; // 00 t.e.m. 99, dan terug naar 00
   }

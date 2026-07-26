@@ -89,14 +89,17 @@ const bool kleuren[7][3] = {
   {1, 1, 1}, // wit
 };
 
-void setup() {
+void setup()
+{
   pinMode(roodPin, OUTPUT);
   pinMode(groenPin, OUTPUT);
   pinMode(blauwPin, OUTPUT);
 }
 
-void loop() {
-  for (int i = 0; i < 7; i++) {
+void loop()
+{
+  for (int i = 0; i < 7; i++)
+  {
     digitalWrite(roodPin, kleuren[i][0]);
     digitalWrite(groenPin, kleuren[i][1]);
     digitalWrite(blauwPin, kleuren[i][2]);

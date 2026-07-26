@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>analogRead()</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>analogRead</h1>
+    <p class="lead">Met <code>analogRead()</code> kan je analoge spanningen inlezen op de analoge pinnen van je Arduino.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/analoge-ingangen-leonardo.png" alt="Arduino met de analoge ingangen A0 tot A5 aangeduid" width="322" height="234">
+        </figure>
+    </div>
+
+    <p>Deze functie zet een analoge spanning om naar een digitale waarde die je in je programma kunt gebruiken.</p>
+
+    <h2 id="hoe-werkt-het">Hoe werkt het?</h2>
+    <p>De Arduino gebruikt een ingebouwde ADC (Analog-to-Digital Converter) om analoge signalen om te zetten naar digitale waarden. Bij de meeste Arduino borden (zoals de Uno of Leonardo) heeft de ADC een resolutie van 10 bits, wat betekent dat de waarde tussen <strong>0 en 1023</strong> (2^10 = 1024) ligt:</p>
+    <ul>
+        <li><strong>0</strong> komt overeen met 0V</li>
+        <li><strong>1023</strong> komt overeen met de referentiespanning (5V bij de Uno en Leonardo)</li>
+        <li><strong>512</strong> komt ongeveer overeen met 2.5 V</li>
+    </ul>
+
+    <h2 id="voorbeeld">Voorbeeld</h2>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinAnalogIn = A0;
+
+void setup()
+{
+  pinMode(pinAnalogIn, INPUT); // OPTIONEEL
+}
+
+void loop()
+{
+  int value = analogRead(pinAnalogIn); // Een geheel getal tussen 0 en 1023
+  double voltage = value / 1023.0 * 5; // De overeenkomstige spanning tussen 0V en 5V
+}</code></pre>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Waarom delen we door 1023.0 en niet door 1023?</div>
+            <p>Als we zouden delen door 1023 (een int) dan is in de breuk zowel de teller als de noemer een int en dan maken we de gehele deling. Het resultaat zou dus geen cijfer na de komma bevatten. Zie ook het hoofdstuk Wiskundige operatoren in labo 0.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+</body>
+</html>

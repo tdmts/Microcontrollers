@@ -44,10 +44,14 @@ void setup()
   pinMode(12, OUTPUT);
 }
 
-void knipper(bool duur) {
+void knipper(bool duur)
+{
   digitalWrite(12,LOW);
   delay(100);
-  if(duur) { delay(200); } //Extra delay
+  if(duur)
+  {
+    delay(200); //Extra delay
+  }
   digitalWrite(12,HIGH);
   delay(100);
 }
@@ -96,7 +100,7 @@ void loop()
                 (al gegeven na de eerste S). Na de laatste letter is er geen "volgende
                 letter" meer, maar omdat <code>loop()</code> meteen herbegint met een
                 nieuwe S, wordt die pauze hier gebruikt als pauze tussen twee woorden
-                (0,7s) &mdash; anders zou de laatste S van dit SOS direct overlopen in
+                (0,7s), anders zou de laatste S van dit SOS direct overlopen in
                 de eerste S van de volgende herhaling.
             </p>
             <pre class="code-wrapper language-arduino show-language">

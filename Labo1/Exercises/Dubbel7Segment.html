@@ -43,12 +43,12 @@
             <div class="info-box warning">
                 <div class="info-title warning">Let op: pas aan op basis van je eigen schema</div>
                 <p>
-                    De pinnummers hieronder zijn <strong>placeholders</strong> &mdash;
-                    vul ze aan met de pinnen die jij effectief gebruikt volgens het
+                    De pinnummers hieronder zijn <strong>placeholders</strong>.
+                    Vul ze aan met de pinnen die jij effectief gebruikt volgens het
                     sjabloon dat je gekopieerd hebt. Of een segment aan gaat bij
                     <code>HIGH</code> of bij <code>LOW</code> hangt af van of jouw
                     display <strong>common anode</strong> of <strong>common
-                    cathode</strong> is &mdash; zoek dit op in de pinout/datasheet van
+                    cathode</strong> is. Zoek dit op in de pinout/datasheet van
                     je display en pas de constante <code>SEGMENT_AAN</code> hieronder
                     aan.
                 </p>
@@ -77,16 +77,20 @@ const bool SEGMENT_UIT = !SEGMENT_AAN;
 const int volgorde[] = {pinA, pinB, pinG, pinE, pinD, pinC, pinG, pinF};
 const int aantalStappen = sizeof(volgorde) / sizeof(volgorde[0]);
 
-void setup() {
+void setup()
+{
   int pins[] = {pinA, pinB, pinC, pinD, pinE, pinF, pinG};
-  for (int i = 0; i < 7; i++) {
+  for (int i = 0; i < 7; i++)
+  {
     pinMode(pins[i], OUTPUT);
     digitalWrite(pins[i], SEGMENT_UIT);
   }
 }
 
-void loop() {
-  for (int i = 0; i < aantalStappen; i++) {
+void loop()
+{
+  for (int i = 0; i < aantalStappen; i++)
+  {
     digitalWrite(volgorde[i], SEGMENT_AAN);
     delay(1000); // elk segment 1 seconde aan
     digitalWrite(volgorde[i], SEGMENT_UIT);

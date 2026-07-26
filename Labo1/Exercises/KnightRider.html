@@ -44,7 +44,7 @@
                 Looplicht-oefening hangen de leds hier met de kathode (via de
                 weerstand) aan een vaste GND-rail, en met de anode rechtstreeks aan de
                 Arduino-pin. Er vloeit dus enkel stroom wanneer de pin <code>HIGH</code>
-                staat (de pin "bront" de stroom naar de led) &mdash; bij <code>LOW</code>
+                staat (de pin "bront" de stroom naar de led). Bij <code>LOW</code>
                 staat er geen spanningsverschil over de led en blijft hij uit. De code
                 moet dus <code>HIGH</code> gebruiken om een led aan te zetten, en
                 <code>LOW</code> om hem uit te zetten.
@@ -64,22 +64,27 @@ const int cyclusDuur = 1000; // ms, 1Hz voor de volledige heen-en-weer-cyclus
 const int aantalStappen = 2 * aantalLeds - 2; // 6 stappen: 1,2,3,4,3,2
 const int stapDuur = cyclusDuur / aantalStappen;
 
-void setup() {
-  for (int i = 0; i < aantalLeds; i++) {
+void setup()
+{
+  for (int i = 0; i < aantalLeds; i++)
+  {
     pinMode(ledPins[i], OUTPUT);
     digitalWrite(ledPins[i], LOW); // sourcing: LOW = led uit
   }
 }
 
-void loop() {
+void loop()
+{
   // Heen: 0,1,2,3
-  for (int i = 0; i < aantalLeds; i++) {
+  for (int i = 0; i < aantalLeds; i++)
+  {
     digitalWrite(ledPins[i], HIGH); // sourcing: HIGH = led aan
     delay(stapDuur);
     digitalWrite(ledPins[i], LOW);
   }
   // Terug: 2,1 (de uiteinden 0 en 3 niet herhalen, anders duurt de cyclus 8 stappen ipv 6)
-  for (int i = aantalLeds - 2; i > 0; i--) {
+  for (int i = aantalLeds - 2; i > 0; i--)
+  {
     digitalWrite(ledPins[i], HIGH);
     delay(stapDuur);
     digitalWrite(ledPins[i], LOW);

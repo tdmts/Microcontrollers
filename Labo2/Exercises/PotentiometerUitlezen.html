@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Potentiometer uitlezen</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Potentiometer uitlezen</h1>
+    <p class="lead">Maak een schakeling waarbij de waarde op een potentiometer ingelezen wordt, en stuur die waarde naar de PC via seriële communicatie.</p>
+
+    <p>Gebruik de <code>analogRead()</code> instructie om een analoge waarde te lezen.</p>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/HqUjOSZU8bo?wmode=opaque&amp;rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="vragen">Vragen</h2>
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Kan men op elke pin van de Leonardo een analoge spanning inlezen? Indien niet, op welke dan wel?</div>
+            <p>Enkel op de analoge ingangen kan je dit doen.</p>
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../../img/analoge-ingangen-leonardo.png" class="img-fluid" alt="Analoge ingangen op de Arduino Leonardo">
+                </figure>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Tussen welke spanningen mag de in te lezen spanning liggen?</div>
+            <p>Tussen 0 V en 5 V.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Welke waarden krijgt men terug in het programma als men een analoge spanning inleest?</div>
+            <p>Een numerieke waarde tussen 0 en 1023. 0 stelt dan 0 V voor en 1023 stelt 5 V voor.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Uitgaande van een voedingsspanning van 5 V, met welke waarde moet ik de gelezen waarde vermenigvuldigen om de werkelijke spanning te bekomen?</div>
+            <p>Om dit probleem op te lossen moet je de regel van 3 toepassen.</p>
+            <p>Een gelezen waarde van 1023 komt overeen met 5 V. Eén eenheid komt dus overeen met 5 V / 1023 = <strong>0,00489 V</strong>.</p>
+            <p>Stel dat je 712 inleest, dan is de spanning 712 * 0,00489 V = 3,48 V.</p>
+            <p>Let wel: als je dit doet, moet je het resultaat opslaan in een <strong>double</strong> of een <strong>float</strong>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Uitgaande van een voedingsspanning van 5 V, met welke spanning komt een waarde van 255 overeen?</div>
+            <p>255 * 0,00489 V ≈ 1,25 V.</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De potentiometer is aangesloten op een analoge ingang</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De waarde wordt ingelezen met <code>analogRead()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De waarde wordt via <code>Serial</code> naar de PC gestuurd</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De waarde verandert in de seriële monitor als je aan de potentiometer draait</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                Je sluit de potentiometer aan op een analoge ingang (bijvoorbeeld
+                <code>A0</code>) en leest de spanning in met <code>analogRead()</code>,
+                wat een waarde tussen 0 en 1023 oplevert. Met <code>Serial.begin()</code>
+                open je de seriële communicatie, en met <code>Serial.println()</code>
+                stuur je elke gelezen waarde naar de PC. Open daarna de seriële monitor
+                om de waarde te zien veranderen als je aan de potentiometer draait.
+            </p>
+            <pre class="code-wrapper language-arduino show-language">
+const int potPin = A0; // potentiometer op analoge ingang A0
+
+void setup()
+{
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int potWaarde = analogRead(potPin); // 0..1023
+  Serial.println(potWaarde);
+  delay(100); // even wachten zodat de monitor leesbaar blijft
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo2);
+</script>
+</body>
+</html>

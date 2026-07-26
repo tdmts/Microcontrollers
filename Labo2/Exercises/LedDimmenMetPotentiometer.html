@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LED dimmen met potentiometer</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>LED dimmen met potentiometer</h1>
+    <p class="lead">Maak een dimmer waarbij de potentiometer de LED regelt.</p>
+
+    <p>Plaats eventueel ook een kleine weerstand (bijvoorbeeld 100 Ohm) in serie met de potentiometer zodat je bij verkeerd schakelen niets kapot maakt.</p>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/AzI4Kgt_zLA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De potentiometer wordt ingelezen met <code>analogRead()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LED is aangesloten op een PWM-pin (aangeduid met ~)</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De helderheid van de LED wordt geregeld met <code>analogWrite()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De waarde van de potentiometer (0-1023) wordt herschaald naar 0-255, bijvoorbeeld met <code>map()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Draaien aan de potentiometer maakt de LED zichtbaar feller of zwakker</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                Je leest de potentiometer in met <code>analogRead()</code>, wat een
+                waarde tussen 0 en 1023 oplevert. <code>analogWrite()</code> verwacht
+                echter een waarde tussen 0 en 255, dus herschaal je de gelezen waarde
+                met <code>map()</code> voor je ze naar de led stuurt. De led moet op een
+                PWM-pin hangen (aangeduid met een <code>~</code>, bijvoorbeeld pin 9).
+            </p>
+            <pre class="code-wrapper language-arduino show-language">
+const int potPin = A0; // potentiometer op analoge ingang A0
+const int ledPin = 9;  // led op een PWM-pin (~)
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop()
+{
+  int potWaarde = analogRead(potPin);               // 0..1023
+  int helderheid = map(potWaarde, 0, 1023, 0, 255); // herschaal naar 0..255
+  analogWrite(ledPin, helderheid);
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo2);
+</script>
+</body>
+</html>

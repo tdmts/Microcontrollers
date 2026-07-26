@@ -45,7 +45,7 @@
                 Dit is een <strong>sinking</strong>-schakeling: de leds hangen met de
                 anode aan een vaste +5V-rail en met de kathode (via de weerstand) aan
                 de Arduino-pin. Er vloeit dus enkel stroom wanneer de pin
-                <code>LOW</code> staat (de pin "zinkt" de stroom naar GND) &mdash; bij
+                <code>LOW</code> staat (de pin "zinkt" de stroom naar GND). Bij
                 <code>HIGH</code> staat er geen spanningsverschil over de led en blijft
                 hij uit. De code moet dus <code>LOW</code> gebruiken om een led aan te
                 zetten, en <code>HIGH</code> om hem uit te zetten.
@@ -59,15 +59,19 @@ const int ledPins[] = {3, 4, 5, 6};
 const int aantalLeds = 4;
 const int cyclusDuur = 1000; // ms, 1Hz voor de volledige cyclus
 
-void setup() {
-  for (int i = 0; i < aantalLeds; i++) {
+void setup()
+{
+  for (int i = 0; i < aantalLeds; i++)
+  {
     pinMode(ledPins[i], OUTPUT);
     digitalWrite(ledPins[i], HIGH); // sinking: HIGH = led uit
   }
 }
 
-void loop() {
-  for (int i = 0; i < aantalLeds; i++) {
+void loop()
+{
+  for (int i = 0; i < aantalLeds; i++)
+  {
     digitalWrite(ledPins[i], LOW); // sinking: LOW = led aan
     delay(cyclusDuur / aantalLeds);
     digitalWrite(ledPins[i], HIGH); // sinking: HIGH = led uit

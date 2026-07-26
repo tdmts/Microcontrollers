@@ -49,21 +49,27 @@ int lastReading = HIGH;
 int buttonState = HIGH;
 unsigned long lastDebounceTime = 0;
 
-void setup() {
+void setup()
+{
   pinMode(pinButton, INPUT_PULLUP);
 }
 
-void loop() {
+void loop()
+{
   int reading = digitalRead(pinButton);
 
-  if (reading != lastReading) {
+  if (reading != lastReading)
+  {
     lastDebounceTime = millis();   // toestand veranderde -> timer resetten
   }
 
-  if (millis() - lastDebounceTime > debounceDelay) {
-    if (reading != buttonState) {
+  if (millis() - lastDebounceTime > debounceDelay)
+  {
+    if (reading != buttonState)
+    {
       buttonState = reading;
-      if (buttonState == LOW) {
+      if (buttonState == LOW)
+      {
         // do something -> vuurt exact één keer per druk
       }
     }

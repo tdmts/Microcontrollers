@@ -1,5 +1,5 @@
 /* Single source of truth for every lab's reference topics, keyed by labId.
-   Read by each LaboN/Reference/index.html (via initReferenceHub) -- add new
+   Read by each LaboN/Reference/reference.html (via initReferenceHub) -- add new
    reference topics here only.
 
    Categories are always shown in full (no accordion/collapse); "order" is
@@ -41,6 +41,20 @@ window.LAB_REFERENCE = {
                 topics: [
                     { id: 'debouncen', name: 'Debouncen', href: 'Debouncen.html', blurb: 'Hoe je het bouncen van een mechanische schakelaar softwarematig opvangt.' },
                     { id: 'debuggen', name: 'Debuggen', href: 'Debuggen.html', blurb: 'Seriële communicatie gebruiken om te zien wat er in je programma gebeurt, want er is geen scherm of debugger.' }
+                ]
+            }
+        ]
+    },
+    labo2: {
+        labId: 'labo2',
+        labTitle: 'Labo 2',
+        categories: [
+            {
+                name: 'Analoge in- en uitgangen',
+                topics: [
+                    { id: 'analogread', name: 'analogRead()', href: 'analogRead.html', blurb: 'Analoge spanningen inlezen op de analoge pinnen en omzetten naar een waarde tussen 0 en 1023.' },
+                    { id: 'analogwrite', name: 'analogWrite()', href: 'analogWrite.html', blurb: 'Met PWM een pin een waarde tussen volledig uit en volledig aan geven, bijvoorbeeld om een led te dimmen.' },
+                    { id: 'map', name: 'map()', href: 'map.html', blurb: 'Een waarde uit een bereik herschalen naar een ander bereik.' }
                 ]
             }
         ]
