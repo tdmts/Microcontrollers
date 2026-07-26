@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Het 7-segment display</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Het 7-segment display</h1>
+    <p class="lead">Een 7-segment display is niets meer dan zeven leds in de vorm van een acht, plus meestal een achtste voor de decimale punt. Elk cijfer dat je toont, is gewoon een keuze welke van die zeven branden.</p>
+
+    <h2 id="de-segmenten">De segmenten en hun namen</h2>
+
+    <p>De zeven segmenten heten <strong>a</strong> tot en met <strong>g</strong>, en die namen zijn een afspraak die overal hetzelfde is. Segment a is de bovenste balk, en vanaf daar loop je met de klok mee: b rechtsboven, c rechtsonder, d onderaan, e linksonder, f linksboven, en g de balk in het midden. De decimale punt heet <strong>dp</strong>.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/seven-segment-display.png" class="img-fluid" alt="Een 7-segment display met de segmenten a tot en met g aangeduid">
+        </figure>
+    </div>
+
+    <p>Elk segment heeft zijn eigen aansluiting, en daarnaast is er één <strong>gemeenschappelijke</strong> pin waar alle zeven leds met hun andere kant op uitkomen. Een display sturen kost je dus zeven Arduino-pinnen, en daarom kom je in labo 3 het schuifregister tegen: dat brengt dat aantal terug.</p>
+
+    <h2 id="common-anode-of-common-cathode">Common anode of common cathode</h2>
+
+    <p>Er bestaan twee soorten, en welke je hebt bepaalt of je een segment met <code>HIGH</code> of met <code>LOW</code> laat branden. Het verschil zit in wat er met die gemeenschappelijke pin gebeurt:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De twee soorten 7-segment displays</caption>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Common cathode</th>
+                    <th scope="col">Common anode</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">De gemeenschappelijke pin gaat naar</th>
+                    <td>GND</td>
+                    <td>+5 V</td>
+                </tr>
+                <tr>
+                    <th scope="row">Een segment brandt bij</th>
+                    <td><code>HIGH</code></td>
+                    <td><code>LOW</code></td>
+                </tr>
+                <tr>
+                    <th scope="row">De Arduino-pin</th>
+                    <td>sourcet de stroom</td>
+                    <td>sinkt de stroom</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Dat is precies het onderscheid uit <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>, maar dan zeven keer naast elkaar.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Schrijf het niveau nooit rechtstreeks in je code</div>
+        <p>Zet het in een constante bovenaan, dan pas je bij een ander display één regel aan in plaats van je hele programma:</p>
+        <pre class="code-wrapper language-cpp linenumbers show-language"><code>const bool SEGMENT_AAN = LOW;  // common anode; HIGH bij common cathode
+const bool SEGMENT_UIT = !SEGMENT_AAN;</code></pre>
+        <p>Weet je niet welk type je hebt? Sluit één segment aan met zijn weerstand en probeer beide niveaus uit. Wat het segment doet oplichten, is jouw <code>SEGMENT_AAN</code>.</p>
+    </div>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Elk segment heeft zijn eigen weerstand nodig</div>
+        <p>Zeven leds delen hun gemeenschappelijke pin, maar niet hun stroom. Zet je één weerstand in die gemeenschappelijke tak, dan verdeelt de stroom zich over de segmenten die toevallig aan staan en verandert de helderheid met elk cijfer: een 1 (twee segmenten) brandt dan feller dan een 8 (zeven segmenten). Geef daarom elk segment zijn eigen serieweerstand. Hoe je die berekent, staat op <a href="../../Labo0/Reference/WetVanOhm.html">De wet van Ohm</a>.</p>
+    </div>
+
+    <h2 id="van-cijfer-naar-patroon">Van cijfer naar patroon</h2>
+
+    <p>Om een cijfer te tonen moet je weten welke segmenten erbij horen. Voor een 7 zijn dat a, b en c; voor een 0 alles behalve g. Die kennis leg je vast in een <a href="Arrays.html">tweedimensionale array</a>: één rij per cijfer, één kolom per segment.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De eerste vier cijfers, met 1 voor "segment aan"</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Cijfer</th>
+                    <th scope="col">a</th>
+                    <th scope="col">b</th>
+                    <th scope="col">c</th>
+                    <th scope="col">d</th>
+                    <th scope="col">e</th>
+                    <th scope="col">f</th>
+                    <th scope="col">g</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">0</th>
+                    <td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td>
+                </tr>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Merk op dat er in die tabel nergens <code>HIGH</code> of <code>LOW</code> staat. Een 1 betekent "dit segment moet branden", en pas op het moment dat je schrijft, vertaal je dat via <code>SEGMENT_AAN</code> naar het niveau dat jouw display nodig heeft. Zo blijft dezelfde tabel bruikbaar voor allebei de soorten.</p>
+
+    <h2 id="meerdere-displays">Meerdere displays</h2>
+
+    <p>Wil je twee cijfers tonen, dan heb je in principe veertien pinnen nodig. Dat hoeft niet: je kan de segmentpinnen delen tussen beide displays en razendsnel wisselen welk display je aanstuurt. Hoe dat werkt, staat op <a href="Multiplexing.html">Multiplexing</a>.</p>
+</div>
+
+<script src="../../back-link.js"></script>
+</body>
+</html>

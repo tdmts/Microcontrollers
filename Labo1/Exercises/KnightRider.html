@@ -13,6 +13,16 @@
     <h1>Knight rider</h1>
     <p class="lead">Verbind 4 led's met pinnen 3 tot en met 6 en programmeer een looplicht maar dan met een knightrider effect. Frequentie is opnieuw 1Hz. Wat ga je moeten doen met de delay?</p>
 
+    <!-- TODO: teken het schema van deze sourcing-schakeling (4 leds op pin 3 t.e.m. 6,
+         kathode via de weerstand aan de GND-rail, anode aan de pin). Let op: dit is de
+         omgekeerde bedrading van de Looplicht-oefening, en dat verschil moet uit de
+         tekening blijken -->
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-knightrider-sourcing-schema.png" class="img-fluid" alt="TODO: schema van de knight rider met 4 leds volgens sourcing aangesloten op de pinnen 3 tot en met 6">
+        </figure>
+    </div>
+
     <div class="video-container">
         <div class="ratio ratio-16x9">
             <iframe src="https://www.youtube.com/embed/1F55clpCmmc?wmode=opaque&amp;rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -57,38 +67,53 @@
                 2x). Om de frequentie op 1Hz te houden moet de delay per stap dus
                 <code>1000 / 6 &asymp; 167ms</code> zijn in plaats van <code>1000 / 4</code>.
             </p>
+            <p>
+                Net als bij het looplicht zit &eacute;&eacute;n stap in
+                <code>laatBranden()</code>. In de <code>loop()</code> zie je de zes
+                stappen dan onder elkaar staan, en meteen ook waarom het er zes zijn en
+                geen acht: led 1 en led 4 komen maar &eacute;&eacute;n keer voor.
+            </p>
             <pre class="code-wrapper language-cpp linenumbers show-language">
-const int ledPins[] = {3, 4, 5, 6};
-const int aantalLeds = 4;
-const int cyclusDuur = 1000; // ms, 1Hz voor de volledige heen-en-weer-cyclus
-const int aantalStappen = 2 * aantalLeds - 2; // 6 stappen: 1,2,3,4,3,2
-const int stapDuur = cyclusDuur / aantalStappen;
+const int led1 = 3;
+const int led2 = 4;
+const int led3 = 5;
+const int led4 = 6;
+
+// 6 stappen per volledige cyclus, dus 1000 / 6 = 166 ms per stap
+const int stapDuur = 166;
 
 void setup()
 {
-  for (int i = 0; i < aantalLeds; i++)
-  {
-    pinMode(ledPins[i], OUTPUT);
-    digitalWrite(ledPins[i], LOW); // sourcing: LOW = led uit
-  }
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+
+  // sourcing: LOW = led uit, dus we beginnen met alles uit
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, LOW);
+}
+
+void laatBranden(int pin)
+{
+  digitalWrite(pin, HIGH); // sourcing: HIGH = led aan
+  delay(stapDuur);
+  digitalWrite(pin, LOW); // sourcing: LOW = led uit
 }
 
 void loop()
 {
-  // Heen: 0,1,2,3
-  for (int i = 0; i < aantalLeds; i++)
-  {
-    digitalWrite(ledPins[i], HIGH); // sourcing: HIGH = led aan
-    delay(stapDuur);
-    digitalWrite(ledPins[i], LOW);
-  }
-  // Terug: 2,1 (de uiteinden 0 en 3 niet herhalen, anders duurt de cyclus 8 stappen ipv 6)
-  for (int i = aantalLeds - 2; i > 0; i--)
-  {
-    digitalWrite(ledPins[i], HIGH);
-    delay(stapDuur);
-    digitalWrite(ledPins[i], LOW);
-  }
+  // Heen
+  laatBranden(led1);
+  laatBranden(led2);
+  laatBranden(led3);
+  laatBranden(led4);
+
+  // En terug, zonder de uiteinden nog eens: anders zou de cyclus 8 stappen duren
+  laatBranden(led3);
+  laatBranden(led2);
 }
             </pre>
         </div>

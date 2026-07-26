@@ -13,7 +13,9 @@
     <h1>7 segment met teller</h1>
     <p class="lead">Maak een teller op 1 display die doorlopend telt van 0 tot en met 9. Gebruik een array om de letterpatronen op te slaan. segA=pin3, segB=pin4,... Frequentie van de teller is 2Hz.</p>
 
-    <p>Een array is te vergelijken met een List uit de lessen Technisch programmeren (C#). <strong>Een array bevat meerdere waarden in dezelfde variabele.</strong></p>
+    <p>Je vertrekt van de schakeling uit <a href="AchtAnimatieOp7Segment.html">de 8-animatie</a>: hetzelfde display, dezelfde zeven segmentpinnen, en je weet intussen of het common anode of common cathode is. Wat er nieuw bijkomt, is dat een segment nu niet meer los oplicht, maar als deel van een cijfer.</p>
+
+    <p>Daarvoor heb je een tabel nodig: per cijfer welke van de zeven segmenten aan moeten. Hoe je zo'n tabel opbouwt en uitleest, staat op <a href="../Reference/Arrays.html">Arrays</a>, bij het stuk over tweedimensionale arrays. De segmentnamen en het verschil tussen common anode en cathode kan je nalezen op <a href="../Reference/ZevenSegmentDisplay.html">Het 7-segment display</a>.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
@@ -21,28 +23,7 @@
         </figure>
     </div>
 
-    <p><strong>Voorbeeld array:</strong></p>
-
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int lijst[] = { 10, 4, -1, 0 }; //Declaratie van een int array
-
-void setup()
-{
-  // put your setup code here, to run once:
-  int eersteItem = lijst[0]; //Opvragen van één waarde met de index
-  lijst[1] = 5; //Een waarde aanpassen met de index
-}
-
-void loop()
-{
-  //Aantal items in een array tellen.
-  int count = sizeof(lijst) / sizeof(lijst[0]);
-
-  // Overlopen van een array met een lus
-  for(int i = 0; i &lt; count; i++)
-  {
-    lijst[i] = lijst[i] + 1; //Een waarde aanpassen binnen de lus.
-  }
-}</code></pre>
+    <p>Kort samengevat: je maakt één rij per cijfer en één kolom per segment, en de rij die je uitleest bepaalt welk cijfer op het display verschijnt.</p>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">

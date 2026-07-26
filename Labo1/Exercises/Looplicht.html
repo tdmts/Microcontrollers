@@ -15,6 +15,15 @@
 
     <p>Kijk eens naar het schema in onderstaande video. Wordt hier gebruik gemaakt van <strong>sourcing</strong> of <strong>sinking</strong>? Welke invloed heeft dat op de <strong>schakeling</strong> en de <strong>code</strong>?</p>
 
+    <!-- TODO: teken het schema van deze sinking-schakeling (4 leds op pin 3 t.e.m. 6,
+         anode aan de +5V-rail, kathode via de weerstand naar de pin), zodat de
+         schakeling ook zonder de video te zien is -->
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-looplicht-sinking-schema.png" class="img-fluid" alt="TODO: schema van het looplicht met 4 leds volgens sinking aangesloten op de pinnen 3 tot en met 6">
+        </figure>
+    </div>
+
     <div class="video-container">
         <div class="ratio ratio-16x9">
             <iframe src="https://www.youtube.com/embed/jEOSIbBoFwM?wmode=opaque&amp;rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -54,30 +63,55 @@
                 De frequentie van 1Hz slaat op de volledige cyclus van de 4 leds:
                 elke led blijft dus <code>1000 / 4 = 250ms</code> aan.
             </p>
+            <p>
+                Het aan- en uitzetten van &eacute;&eacute;n led zit in
+                <code>laatBranden()</code>, een functie met een parameter zoals je die
+                in de begeleide oefening van labo 0 gemaakt hebt. Zo schrijf je die drie
+                regels &eacute;&eacute;n keer in plaats van vier keer.
+            </p>
             <pre class="code-wrapper language-cpp linenumbers show-language">
-const int ledPins[] = {3, 4, 5, 6};
-const int aantalLeds = 4;
-const int cyclusDuur = 1000; // ms, 1Hz voor de volledige cyclus
+const int led1 = 3;
+const int led2 = 4;
+const int led3 = 5;
+const int led4 = 6;
+
+const int stapDuur = 250; // 1000 ms gedeeld door 4 leds, dus 1Hz per cyclus
 
 void setup()
 {
-  for (int i = 0; i < aantalLeds; i++)
-  {
-    pinMode(ledPins[i], OUTPUT);
-    digitalWrite(ledPins[i], HIGH); // sinking: HIGH = led uit
-  }
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+
+  // sinking: HIGH = led uit, dus we beginnen met alles uit
+  digitalWrite(led1, HIGH);
+  digitalWrite(led2, HIGH);
+  digitalWrite(led3, HIGH);
+  digitalWrite(led4, HIGH);
+}
+
+void laatBranden(int pin)
+{
+  digitalWrite(pin, LOW); // sinking: LOW = led aan
+  delay(stapDuur);
+  digitalWrite(pin, HIGH); // sinking: HIGH = led uit
 }
 
 void loop()
 {
-  for (int i = 0; i < aantalLeds; i++)
-  {
-    digitalWrite(ledPins[i], LOW); // sinking: LOW = led aan
-    delay(cyclusDuur / aantalLeds);
-    digitalWrite(ledPins[i], HIGH); // sinking: HIGH = led uit
-  }
+  laatBranden(led1);
+  laatBranden(led2);
+  laatBranden(led3);
+  laatBranden(led4);
 }
             </pre>
+            <p>
+                Vier keer dezelfde regel in de <code>loop()</code> blijft wat omslachtig.
+                Vanaf <a href="RGBLed.html">RGB Led</a> leer je met
+                <a href="../Reference/Arrays.html">arrays</a> werken, en daarmee kort je
+                dit soort herhaling in tot een lus van twee regels.
+            </p>
         </div>
     </div>
 </div>

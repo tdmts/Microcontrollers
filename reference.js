@@ -46,6 +46,25 @@ window.LAB_REFERENCE = {
             }
         ]
     },
+    labo1: {
+        labId: 'labo1',
+        labTitle: 'Labo 1',
+        categories: [
+            {
+                name: 'Programmeerconcepten',
+                topics: [
+                    { id: 'arrays', name: 'Arrays', href: 'Arrays.html', blurb: 'Eén variabele met een hele rij waarden erin, hoe je die met een lus doorloopt, en de tweedimensionale vorm waarmee je cijferpatronen bijhoudt.' }
+                ]
+            },
+            {
+                name: 'Displays',
+                topics: [
+                    { id: 'zevensegment', name: 'Het 7-segment display', href: 'ZevenSegmentDisplay.html', blurb: 'De segmenten a tot g, het verschil tussen common anode en common cathode, en hoe een cijfer een patroon wordt.' },
+                    { id: 'multiplexing', name: 'Multiplexing', href: 'Multiplexing.html', blurb: 'Twee cijfers tonen met de pinnen van één display door er zo snel tussen te wisselen dat je oog het verschil niet ziet.' }
+                ]
+            }
+        ]
+    },
     labo2: {
         labId: 'labo2',
         labTitle: 'Labo 2',

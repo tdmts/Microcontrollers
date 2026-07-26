@@ -35,24 +35,28 @@
     <p>Gebruik lussen om je programma zo efficiënt mogelijk te maken. In de voorbeeldcode hieronder is de letter S al volledig uitgewerkt: vul zelf de O en de tweede S aan.</p>
 
     <h2 id="voorbeeldcode">Voorbeeldcode</h2>
+
+    <p>Lees de functie <code>knipper()</code> eerst eens aandachtig door voor je begint. Er staat iets in dat op het eerste gezicht omgekeerd lijkt aan wat je in labo 0 gebouwd hebt.</p>
     <pre class="code-wrapper language-cpp linenumbers show-language">
+const int pinLed = 12;
+
 const bool KORT = false;
 const bool LANG = true;
 
 void setup()
 {
-  pinMode(12, OUTPUT);
+  pinMode(pinLed, OUTPUT);
 }
 
 void knipper(bool duur)
 {
-  digitalWrite(12,LOW);
+  digitalWrite(pinLed,LOW);
   delay(100);
   if(duur)
   {
     delay(200); //Extra delay
   }
-  digitalWrite(12,HIGH);
+  digitalWrite(pinLed,HIGH);
   delay(100);
 }
 
@@ -73,6 +77,19 @@ void loop()
 
 }
     </pre>
+
+    <h2 id="denk-eens-na-over-de-niveaus">Denk eens na over de niveaus</h2>
+
+    <p>In de begeleide oefening van labo 0 liet <code>digitalWrite(pin, HIGH)</code> je LED branden. Hier doet <code>knipper()</code> net het omgekeerde: de LED gaat aan bij <code>LOW</code> en uit bij <code>HIGH</code>. Hoe kan dat, en wat zegt dat over de manier waarop de LED in deze schakeling aangesloten is?</p>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
+        <div class="spoiler-content solution-content">
+            <p>Deze schakeling is <strong>sinking</strong>. De LED hangt met de anode aan de +5V-rail en met de kathode (via de weerstand) aan pin 12. Er staat dus pas spanning over de LED wanneer de pin <code>LOW</code> is: de pin "zinkt" de stroom naar de massa. Bij <code>HIGH</code> staan beide kanten op 5 V, is er geen spanningsverschil, en blijft de LED gedoofd.</p>
+            <p>In labo 0 hing de LED er net andersom in, met de anode aan de pin: dat is <strong>sourcing</strong>, waarbij <code>HIGH</code> hem doet branden. Welke van de twee je hebt, lees je dus af van je schema en niet van je code. Zie <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
+            <p>Zo'n actief lage schakeling kom je in dit vak nog vaak tegen, onder meer bij het 7-segment display met common anode en bij de I/O-expander in labo 4.</p>
+        </div>
+    </div>
 
     <hr>
 

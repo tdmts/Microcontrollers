@@ -51,6 +51,25 @@ Three levels, and they mean something specific about the student:
   could have told them.
 - **detail** — a real improvement, no one is stuck.
 
+## The shape that keeps showing up
+
+Three rounds in, the heaviest finding has been the same shape every time: **one exercise
+carrying several new ideas at once, with the theory for them somewhere else or nowhere.**
+Labo 4's first exercise stacked address hunting, pull-ups, bit masking and edge detection.
+Labo 1's counter exercise introduced the display, the two-dimensional array and the counter
+together. Labo 0's contradictions all sat on pages a single exercise linked to for three
+different things.
+
+The fix has been the same shape too: unbundle. Split the exercise so each one adds exactly
+one thing, and move the concept onto a reference page that the exercise needing it links to
+*before* the student opens the solution. Labo 1's 7-segment sequence was rebuilt that way,
+which is why it now has four exercises where it had three.
+
+So when reading, ask of every exercise: *what is the one new thing here?* If the answer is
+a list, that is a `SPRONG`, even when nothing on the page is wrong. And when a concept only
+appears inside a solution spoiler, that is a `BEGRIP`, because the student who is trying not
+to peek is exactly the one who needs it.
+
 ## Process
 
 ### 1. Pick the lab and check who is reading

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Arrays</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Arrays</h1>
+    <p class="lead">Tot nu toe hield elke variabele één waarde bij. Zodra je met acht leds of tien cijferpatronen werkt, wordt dat onwerkbaar. Een array is één variabele die een hele rij waarden bevat, en die je met een lus kan doorlopen.</p>
+
+    <p>Ken je de lessen Technisch programmeren (C#), dan is een array te vergelijken met een <code>List</code>. Het grote verschil: bij een array leg je op voorhand vast hoeveel plaatsen er zijn, en dat aantal verandert daarna niet meer.</p>
+
+    <h2 id="een-array-declareren">Een array declareren</h2>
+
+    <p>Je zet vierkante haakjes achter de naam en geeft de beginwaarden mee tussen accolades:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int lijst[] = {10, 4, -1, 0};</code></pre>
+
+    <p>Dit is één variabele, <code>lijst</code>, met vier plaatsen erin. Alle plaatsen hebben hetzelfde type, hier <code>int</code>. Je kan dus geen getallen en tekst door elkaar in dezelfde array steken.</p>
+
+    <h2 id="een-waarde-opvragen-of-aanpassen">Een waarde opvragen of aanpassen</h2>
+
+    <p>Elke plaats heeft een <strong>index</strong>, en die <strong>begint bij 0</strong>. In een array van vier plaatsen zijn de geldige indexen dus 0, 1, 2 en 3:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De array <code>lijst</code> plaats per plaats</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Index</th>
+                    <th scope="col">0</th>
+                    <th scope="col">1</th>
+                    <th scope="col">2</th>
+                    <th scope="col">3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Waarde</th>
+                    <td>10</td>
+                    <td>4</td>
+                    <td>-1</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int eersteItem = lijst[0]; // 10, de eerste plaats
+lijst[1] = 5;              // de tweede plaats krijgt de waarde 5</code></pre>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Buiten de array lezen merkt niemand op</div>
+        <p>Schrijf je <code>lijst[4]</code> in een array van vier plaatsen, dan lees of schrijf je geheugen dat niet van jou is. De compiler zegt daar niets over en je sketch loopt gewoon door, maar je krijgt een willekeurige waarde terug of je overschrijft een andere variabele. Dat soort fout is achteraf lastig te vinden, dus tel je indexen goed na.</p>
+    </div>
+
+    <h2 id="het-aantal-plaatsen">Het aantal plaatsen laten berekenen</h2>
+
+    <p>Je kan het aantal plaatsen zelf tellen, maar dan moet je dat getal aanpassen telkens je er eentje bijzet. Laat de compiler het liever uitrekenen:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int aantal = sizeof(lijst) / sizeof(lijst[0]);</code></pre>
+
+    <p><code>sizeof(lijst)</code> is hoeveel geheugen de hele array inneemt, <code>sizeof(lijst[0])</code> hoeveel één plaats inneemt. De deling geeft dus het aantal plaatsen. Voeg je later een waarde toe, dan klopt het getal nog altijd.</p>
+
+    <h2 id="een-array-doorlopen">Een array doorlopen met een lus</h2>
+
+    <p>Hier komt de winst. Met een <a href="../../Labo0/Reference/Iteraties.html#de-for-instructie">for-lus</a> behandel je alle plaatsen zonder de code te herhalen:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPins[] = {3, 4, 5, 6};
+const int aantalLeds = sizeof(ledPins) / sizeof(ledPins[0]);
+
+void setup()
+{
+  for (int i = 0; i &lt; aantalLeds; i++)
+  {
+    pinMode(ledPins[i], OUTPUT);
+  }
+}</code></pre>
+
+    <p>De tellervariabele van de lus dient meteen als index. Vier pinnen instellen kost zo drie regels in plaats van vier, en bij zestien leds nog altijd drie.</p>
+
+    <h2 id="tweedimensionale-arrays">Tweedimensionale arrays</h2>
+
+    <p>Soms hoort bij elke plaats niet één waarde maar een hele rij. Denk aan een 7-segment display: voor elk cijfer van 0 tot 9 moet je weten welke van de zeven segmenten aan moeten. Dat zijn tien rijen van zeven waarden, en dan gebruik je <strong>twee</strong> paar haakjes:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>// 3 rijen van 2 waarden
+const int tabel[3][2] = {
+  {1, 2},
+  {3, 4},
+  {5, 6}
+};</code></pre>
+
+    <p>Het eerste getal tussen de haakjes is het aantal <strong>rijen</strong>, het tweede het aantal <strong>kolommen</strong>. Je spreekt een waarde aan met twee indexen, in diezelfde volgorde: eerst de rij, dan de kolom.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Welke waarde staat waar in <code>tabel</code></caption>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">kolom 0</th>
+                    <th scope="col">kolom 1</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">rij 0</th>
+                    <td><code>tabel[0][0]</code> = 1</td>
+                    <td><code>tabel[0][1]</code> = 2</td>
+                </tr>
+                <tr>
+                    <th scope="row">rij 1</th>
+                    <td><code>tabel[1][0]</code> = 3</td>
+                    <td><code>tabel[1][1]</code> = 4</td>
+                </tr>
+                <tr>
+                    <th scope="row">rij 2</th>
+                    <td><code>tabel[2][0]</code> = 5</td>
+                    <td><code>tabel[2][1]</code> = 6</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Bij een tweedimensionale array moet je het aantal rijen wel zelf schrijven</div>
+        <p>Bij een gewone array mag je de haakjes leeg laten (<code>int lijst[] = {...}</code>), want de compiler telt zelf. Bij twee dimensies moet minstens het aantal kolommen erin staan, anders weet hij niet waar een rij ophoudt. Schrijf ze in de praktijk gewoon allebei, dan lees je meteen hoe groot de tabel is.</p>
+    </div>
+
+    <h2 id="een-rij-uit-een-tabel-gebruiken">Een rij uit de tabel gebruiken</h2>
+
+    <p>De gebruikelijke vorm is een lus over de kolommen, waarbij de rij bepaalt welk geval je behandelt:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>// Per cijfer: welke van de 7 segmenten moeten aan? 1 = aan.
+const bool cijferPatronen[10][7] = {
+  {1, 1, 1, 1, 1, 1, 0}, // 0
+  {0, 1, 1, 0, 0, 0, 0}  // 1
+  // ... enzovoort tot en met 9
+};
+
+void toonCijfer(int cijfer)
+{
+  for (int i = 0; i &lt; 7; i++)
+  {
+    // rij = het cijfer, kolom = het segment
+    digitalWrite(segPins[i], cijferPatronen[cijfer][i]);
+  }
+}</code></pre>
+
+    <p>Zonder array zou je hier tien keer zeven <code>digitalWrite</code>-regels moeten schrijven, of een selectie met tien takken. Nu staat de kennis in een tabel die je in één oogopslag kan nalezen en aanpassen, en blijft de code die ze gebruikt drie regels lang.</p>
+</div>
+
+<script src="../../back-link.js"></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>8-animatie op een 7-segment display</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>8-animatie op een 7-segment display</h1>
+    <p class="lead">Je eerste display. Je begint met één segment, zoekt uit welk type display je hebt, en laat daarna de segmenten na elkaar oplichten in de vorm van een acht. Elk segment blijft 1 seconde aan.</p>
+
+    <p>Een 7-segment display is niets anders dan zeven leds in de vorm van een acht. Hoe ze heten en hoe ze aangesloten zijn, staat op <a href="../Reference/ZevenSegmentDisplay.html">Het 7-segment display</a>. Lees dat eerst even door.</p>
+
+    <h2 id="begin-met-een-segment">Begin met één segment</h2>
+
+    <p>Sluit eerst alleen <strong>segment a</strong> aan, met zijn eigen voorschakelweerstand, en verbind de gemeenschappelijke pin volgens het schema van je display. Schrijf een sketchje dat die ene pin afwisselend hoog en laag zet, met een seconde ertussen.</p>
+
+    <p>Dat kleine programma beantwoordt meteen twee vragen die je verderop nodig hebt: welke Arduino-pin hangt effectief aan segment a, en gaat het segment branden bij <code>HIGH</code> of bij <code>LOW</code>?</p>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: wat betekent het als je segment brandt bij LOW?</button>
+        <div class="spoiler-content solution-content">
+            <p>Dan heb je een <strong>common anode</strong> display: de gemeenschappelijke pin hangt aan de +5V-rail, en een segment gaat pas branden wanneer de Arduino-pin die kant naar de massa trekt. Brandt het segment bij <code>HIGH</code>, dan is het een <strong>common cathode</strong> display en gaat de gemeenschappelijke pin naar GND.</p>
+            <p>Het is precies hetzelfde onderscheid als tussen sourcing en sinking uit <a href="../../Labo0/Reference/SourcenSinken.html">labo 0</a>, en als de omgekeerde logica die je bij <a href="Morsecode.html">Morsecode</a> tegenkwam. Onthoud welk van de twee jij hebt, want de rest van deze oefening hangt ervan af.</p>
+        </div>
+    </div>
+
+    <h2 id="alle-zeven-segmenten">Alle zeven segmenten</h2>
+
+    <p>Sluit nu de overige zes segmenten aan, elk met zijn eigen weerstand. Noteer erbij welke Arduino-pin bij welk segment hoort, want dat heb je zo nodig.</p>
+
+    <p>Zeven keer <code>pinMode</code> uitschrijven mag, maar het kan korter. Zet de zeven pinnummers in een <a href="../Reference/Arrays.html">array</a> en loop er met een for-lus overheen. Je hebt die array straks toch nodig.</p>
+
+    <h2 id="de-8-animatie">De 8-animatie</h2>
+
+    <p>Een 8-animatie laat de segmenten na elkaar oplichten alsof je met een pen een acht tekent, zonder je hand op te heffen: <strong>a, b, g, e, d, c, g, f</strong> en dan weer van voor af aan. Er brandt telkens maar één segment tegelijk, en elk segment blijft 1 seconde aan.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Waarom staat g twee keer in de reeks?</div>
+        <p>De acht bestaat uit twee lussen, een bovenste en een onderste, die elkaar in het midden kruisen. Dat kruispunt is segment g, en daar kom je dus twee keer voorbij: één keer op weg naar beneden en één keer op weg naar boven.</p>
+    </div>
+
+    <div class="info-box tip">
+        <div class="info-title tip">De volgorde is niet de pinvolgorde</div>
+        <p>Je hebt hier twee verschillende rijen nodig, en dat is makkelijk door elkaar te halen. De ene is "welke pin hoort bij welk segment", de andere is "in welke volgorde licht de animatie op". Zet ze in twee aparte arrays, dan blijft je code leesbaar.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elk segment heeft zijn eigen voorschakelweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je weet of jouw display common anode of common cathode is, en hoe je dat vastgesteld hebt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je hebt genoteerd welke Arduino-pin bij welk segment hoort</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De segmenten lichten op in de volgorde a, b, g, e, d, c, g, f</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt telkens precies één segment tegelijk</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elk segment blijft 1 seconde aan</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het niveau voor "segment aan" staat in één constante, niet overal in je code</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <div class="info-box warning">
+                <div class="info-title warning">Pas de pinnen en het niveau aan op jouw schakeling</div>
+                <p>De pinnummers hieronder zijn die van een display dat met segment a op pin 2 begint. Hangt het bij jou anders, pas dan de constanten bovenaan aan. Datzelfde geldt voor <code>SEGMENT_AAN</code>: die staat hier op <code>LOW</code> voor een common anode display, en moet <code>HIGH</code> zijn als het jouwe common cathode is.</p>
+            </div>
+            <p>
+                Er staan twee arrays in deze oplossing, en ze doen echt iets anders.
+                <code>segPins</code> zegt welke pin bij welk segment hoort en dient om
+                alles in één lus als uitgang te zetten. <code>animatie</code> is de
+                volgorde waarin de segmenten oplichten, en daar staat <code>pinG</code>
+                twee keer in.
+            </p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinA = 2;
+const int pinB = 3;
+const int pinC = 4;
+const int pinD = 5;
+const int pinE = 6;
+const int pinF = 7;
+const int pinG = 8;
+
+// common anode: een segment brandt bij LOW. HIGH bij common cathode.
+const bool SEGMENT_AAN = LOW;
+const bool SEGMENT_UIT = !SEGMENT_AAN;
+
+const int segPins[] = {pinA, pinB, pinC, pinD, pinE, pinF, pinG};
+const int aantalSegmenten = sizeof(segPins) / sizeof(segPins[0]);
+
+// De acht in één beweging: a, b, g, e, d, c, g, f
+const int animatie[] = {pinA, pinB, pinG, pinE, pinD, pinC, pinG, pinF};
+const int aantalStappen = sizeof(animatie) / sizeof(animatie[0]);
+
+void setup()
+{
+  for (int i = 0; i &lt; aantalSegmenten; i++)
+  {
+    pinMode(segPins[i], OUTPUT);
+    digitalWrite(segPins[i], SEGMENT_UIT);
+  }
+}
+
+void loop()
+{
+  for (int i = 0; i &lt; aantalStappen; i++)
+  {
+    digitalWrite(animatie[i], SEGMENT_AAN);
+    delay(1000);
+    digitalWrite(animatie[i], SEGMENT_UIT);
+  }
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo1);
+</script>
+</body>
+</html>
