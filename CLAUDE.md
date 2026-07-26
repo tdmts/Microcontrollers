@@ -48,10 +48,18 @@ in order:
    folder before its manifest block renders an empty dashboard, silently). Init calls are matched
    with either quote style.
 4. **Asset hygiene** — no Brightspace `/content/enforced/` hotlinks, no remote `<img src="http...">`
-   (self-host in `img/`), and every YouTube embed carries `referrerpolicy` (error 153 without it).
+   (self-host in `img/`), no remote document links (`href` ending in `.pdf`/`.zip`/`.docx`/`.pptx`/
+   `.xlsx` — self-host in `datasheets/`, since a vendor PDF URL dies mid-semester exactly like a
+   hotlinked image), and every YouTube embed carries `referrerpolicy` (error 153 without it).
 5. **Code style** — **K&R braces** in Arduino/C++ code (the house style is Allman: opening `{` on
    its own line; data initializers `= { ... }` are exempt) and **em-dashes** (`&mdash;` or `—`)
    anywhere in prose.
+6. **Exercise names say what the student builds** — an `exercises.js` `name`, or a page `<h1>`/
+   `<title>`, may not be a generic slot label like "Gevorderde oefening 2", "Basis oefening 3" or
+   "Oefening 1". Those tell a student nothing about the task, read as a placeholder, and stop meaning
+   anything as soon as the `order` changes. Name it after the thing it makes ("Ledbar met
+   potentiometer"). A label *without* a number is fine, since it describes the format rather than a
+   slot: `Begeleide oefening` in labo 0 passes deliberately.
 
 `template.html` and `pasteInOrion.html` are exempt from 1, 3 and 4 by design (the styleguide links a
 local `orion.css` and uses placehold.co demo images; the Orion wrapper is not an Orion-styled page).
@@ -101,8 +109,13 @@ hook timeout, versus ~2s now.
 - `LaboN/Reference/` — theory pages, plus `reference.html` (the non-linear reference hub).
 - Repo-root shared JS/CSS — the **single source of truth**, referenced by every page via relative
   paths (`../../back-link.js` etc). Do not fork per-folder copies.
-- `img/` — the one shared asset folder. Self-host images here (descriptive filenames), never hotlink
+- `img/` — the one shared image folder. Self-host images here (descriptive filenames), never hotlink
   Brightspace-authenticated content (`/content/enforced/...`) — those paths break each academic year.
+- `datasheets/` — the same idea for documents: component datasheets and other PDFs a page links to,
+  self-hosted with descriptive filenames (`74hc595.pdf`, not `74HC_HCT595-datasheet.9581058.pdf`).
+  `scripts/import-brightspace.py` fills this folder automatically, see below. Lecture slides stay on
+  Brightspace; they are course-internal and large (the export's biggest is 200 MB, past GitHub's
+  100 MB per-file hard limit).
 
 ## Two style/script origins (don't confuse them)
 
@@ -124,7 +137,12 @@ there, not in the per-page HTML:
   `order` number (not array position). `href` basename **must** match the page's filename
   (case-insensitive) or checklist sync silently no-ops.
 - [reference.js](reference.js) → `window.LAB_REFERENCE.laboN` — every lab's reference topics, grouped
-  into categories (shown in full, ordered by array position).
+  into categories (shown in full, ordered by array position). A topic `href` is normally a bare
+  filename next to `reference.html`, but it may also reach out of the lab folder to a document, as
+  the **Datasheets** category in labo 2 and labo 3 does (`../../datasheets/74hc595.pdf`). The engine
+  renders it as an ordinary card that opens in a new tab (see `reference-dashboard.js` below) and the
+  content check resolves it like any other relative href, so a datasheet that is missing, misspelled
+  or unstaged fails the check the same way a page would.
 
 Engines (all IIFEs exposing one `window.*` init function):
 
@@ -135,7 +153,11 @@ Engines (all IIFEs exposing one `window.*` init function):
   page, auto-detects the current exercise by filename, persists each checkbox, and marks the exercise
   "done" only when **all** boxes are checked. Fires a one-time celebration on the completing tick.
 - [reference-dashboard.js](reference-dashboard.js) `initReferenceHub('laboN')` — renders the
-  reference hub from `LAB_REFERENCE`. Pure navigation, no progress.
+  reference hub from `LAB_REFERENCE`. Pure navigation, no progress. A topic whose `href` is a
+  document (`.pdf`, `.zip`, `.docx`, `.pptx`, `.xlsx`) gets `target="_blank" rel="noopener"`; a
+  topic pointing at a page does not. The hub is iframed into Orion, so a PDF in the same tab would
+  render inside that narrow frame. The card itself looks identical either way, and the decision is
+  made from the `href`, so a new datasheet needs nothing beyond its `reference.js` entry.
 - [back-link.js](back-link.js) — self-running, no init. Injects a "← Terug naar ..." link above the
   `<h1>` and at the bottom. Targets the previous page (trusted same-origin `.html` referrer) when
   known, else the lab dashboard, else the reference hub for pages under `Reference/`. No-ops on
@@ -174,6 +196,18 @@ header comment. It also copies every referenced course image into `img/` and rew
 `/content/enforced/...` srcs to `../../img/...`, deduplicating against images already in the repo, so
 the hotlink rule is satisfied before conversion even starts. `--dry-run` reports without writing;
 `--img-dir`/`--img-prefix` override the destinations.
+
+**Documents get the same treatment into `datasheets/`** (`--doc-dir`/`--doc-prefix`), by both routes
+they arrive: a datasheet hanging in the module tree as a topic of its own (it has no page to convert,
+but the file is worth keeping) and a `.pdf`/`.zip` linked from inside a page (the `href` is rewritten
+to `../../datasheets/...`). Naming comes from the Brightspace title with D2L's numeric id stripped,
+never from the page that linked it, since one datasheet is usually shared across labs. Dedup is by
+content hash, so re-importing a lab reuses a datasheet already in the repo *even if you renamed it*.
+`DOC_EXTS` is deliberately just `.pdf`/`.zip`: slides and office documents are course-internal, so
+they stay on Brightspace and are reported as skipped rather than staged. `MAX_DOC_BYTES` (25 MB)
+catches anything that would bloat the repo. Anything genuinely remote (a vendor URL rather than a
+Brightspace path) is left alone and listed as unresolved, for `check-content.sh` rule 4 to flag and a
+human to decide on.
 
 It reads the package's `imsmanifest.xml` for the module tree and ordering, falling back to a plain
 scan for `.html` entries if there is none. Image refs it cannot find in the package (a genuinely

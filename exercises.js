@@ -39,8 +39,20 @@ window.LAB_EXERCISES = {
             { id: 'nachtlampmettijd', order: 6, name: 'Nachtlamp met tijd', href: 'https://tdmts.github.io/Microcontrollers/Labo2/Exercises/NachtlampMetTijd.html', checklistDriven: true, difficulty: 3, time: '~30 min', blurb: 'Schakel de LED in zodra het donker wordt en na 10 seconden weer uit, met millis() in plaats van delay().' },
             { id: 'temperatuursensortmp36', order: 7, name: 'Temperatuursensor TMP36', href: 'https://tdmts.github.io/Microcontrollers/Labo2/Exercises/TemperatuursensorTMP36.html', checklistDriven: true, difficulty: 3, time: '~30 min', blurb: 'Lees de TMP36 uit, reken de spanning om naar graden Celsius en toon de temperatuur in de seriële monitor.' },
             { id: 'temperatuursensorlm35', order: 8, name: 'Temperatuursensor LM35', href: 'https://tdmts.github.io/Microcontrollers/Labo2/Exercises/TemperatuursensorLM35.html', checklistDriven: true, difficulty: 2, time: '~20 min', blurb: 'Doe hetzelfde met de LM35 uit je starterkit, die de spanning anders omrekent dan de TMP36.' },
-            { id: 'gevorderdeoefening1', order: 9, name: 'Gevorderde oefening 1: RGB-LED', href: 'https://tdmts.github.io/Microcontrollers/Labo2/Exercises/GevorderdeOefening1.html', checklistDriven: true, difficulty: 3, time: '~35 min', blurb: 'Duid met een RGB-LED aan of de gemeten temperatuur te hoog, goed of te laag is.' },
-            { id: 'gevorderdeoefening2', order: 10, name: 'Gevorderde oefening 2: 7-segment', href: 'https://tdmts.github.io/Microcontrollers/Labo2/Exercises/GevorderdeOefening2.html', checklistDriven: true, difficulty: 3, time: '~45 min', blurb: 'Toon de temperatuur van -9 tot 99 graden op het dubbele 7-segment display, met multiplexing.' }
+            { id: 'temperatuurindicatorrgbled', order: 9, name: 'Temperatuurindicator met RGB-LED', href: 'https://tdmts.github.io/Microcontrollers/Labo2/Exercises/TemperatuurindicatorMetRGBLed.html', checklistDriven: true, difficulty: 3, time: '~35 min', blurb: 'Duid met een RGB-LED aan of de gemeten temperatuur te hoog, goed of te laag is.' },
+            { id: 'thermometerop7segment', order: 10, name: 'Thermometer op 7-segment display', href: 'https://tdmts.github.io/Microcontrollers/Labo2/Exercises/ThermometerOp7Segment.html', checklistDriven: true, difficulty: 3, time: '~45 min', blurb: 'Toon de temperatuur van -9 tot 99 graden op het dubbele 7-segment display, met multiplexing.' }
+        ]
+    },
+    labo3: {
+        labId: 'labo3',
+        labTitle: 'Labo 3',
+        exercises: [
+            { id: 'enkel7segment', order: 1, name: '1x 7 segment display', href: 'https://tdmts.github.io/Microcontrollers/Labo3/Exercises/Enkel7SegmentDisplay.html', checklistDriven: true, difficulty: 2, time: '~40 min', blurb: 'Stuur een 7-segment display aan met een 74HC595 schuifregister en tel af van 3 naar 1.' },
+            { id: 'dubbel7segment', order: 2, name: '2x 7 segment display', href: 'https://tdmts.github.io/Microcontrollers/Labo3/Exercises/Dubbel7SegmentDisplay.html', checklistDriven: true, difficulty: 2, time: '~30 min', blurb: 'Plaats twee schuifregisters in cascade en tel af van 10 naar 0 op twee displays.' },
+            { id: 'looplicht8bit', order: 3, name: '8-bit looplicht', href: 'https://tdmts.github.io/Microcontrollers/Labo3/Exercises/Looplicht8Bit.html', checklistDriven: true, difficulty: 2, time: '~30 min', blurb: 'Laat één LED over acht uitgangen van het schuifregister wandelen, met een lus in plaats van een sequentie.' },
+            { id: 'looplicht16bit', order: 4, name: '16-bit looplicht', href: 'https://tdmts.github.io/Microcontrollers/Labo3/Exercises/Looplicht16Bit.html', checklistDriven: true, difficulty: 3, time: '~20 min', blurb: 'Breid je looplicht uit naar 16 LEDs met een tweede schuifregister in cascade.' },
+            { id: 'ledbarmetpotentiometer', order: 5, name: 'Ledbar met potentiometer', href: 'https://tdmts.github.io/Microcontrollers/Labo3/Exercises/LedbarMetPotentiometer.html', checklistDriven: true, difficulty: 3, time: '~30 min', blurb: 'Laat de stand van een potentiometer bepalen hoeveel LEDs van de ledbar oplichten.' },
+            { id: 'lichtpatronenuitarray', order: 6, name: 'Lichtpatronen uit een array', href: 'https://tdmts.github.io/Microcontrollers/Labo3/Exercises/LichtpatronenUitEenArray.html', checklistDriven: true, difficulty: 3, time: '~45 min', blurb: 'Doorloop drie patronen uit een multidimensionele array, met de potentiometer als snelheidsregelaar.' }
         ]
     }
 };

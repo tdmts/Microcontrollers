@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>2x 7 segment display</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>2x 7 segment display</h1>
+    <p class="lead">Plaats twee 74HC595 schuifregisters in cascade en stuur er twee 7 segment displays mee aan. Je telt af van 10 naar 0, zonder ook maar één extra pin van je Arduino te gebruiken.</p>
+
+    <p>Maar wat als je bijvoorbeeld meerdere 7 segment displays wil aansturen? Je kan de 74595 <strong>in cascade</strong> plaatsen. Op deze <a href="https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut" target="_blank" rel="noopener">pagina</a> kan je daar meer over lezen.</p>
+
+    <p><strong>TLDR:</strong> verbind Q7S van de eerste 74595 met DS van de tweede. SHCP en STCP mag je gewoon doorverbinden met elkaar.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Waarom werkt dat?</div>
+        <p>Q7S is de bit die aan de achterkant het schuifregister verlaat. Door die op DS van het tweede register aan te sluiten, vormen de twee IC's samen één lang schuifregister van 16 bits. Je schuift dus gewoon 16 keer in plaats van 8 keer, en omdat STCP van beide registers aan elkaar hangt, springen alle 16 uitgangen op hetzelfde moment naar hun nieuwe waarde.</p>
+    </div>
+
+    <h2 id="schema">Schema</h2>
+    <p>In TinkerCAD kan je het schema openen met deze <a href="https://www.tinkercad.com/things/c6V0b7p1iab-labo-3-oefening-2?sharecode=7FFXCIkYPzsnqE3_arUPvlBv1RwkzdEUQy4ceauQ_HI" target="_blank" rel="noopener">link</a>.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/schuifregister-dubbel-7segment-schema.png" alt="Breadboardschema met twee 74HC595 schuifregisters in cascade, elk met een 7 segment display">
+        </figure>
+    </div>
+
+    <p>De Arduino hangt nog steeds aan dezelfde drie pinnen als in de vorige oefening: DS op pin 2, STCP op pin 3 en SHCP op pin 4. Enkel het tweede schuifregister komt erbij.</p>
+
+    <h2 id="code">Code</h2>
+    <p>Als je de vorige oefening hebt gemaakt dan heb je nu 3 subroutines: <code>three()</code>, <code>two()</code> en <code>one()</code>. Breid uit zodanig dat je aftelt van 10 tot 0.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Denk eerst na over de volgorde</div>
+        <p>De bits die je <strong>eerst</strong> naar buiten schuift, schuiven het verst door en belanden in het <strong>tweede</strong> schuifregister. Wat je als laatste inschuift, blijft in het eerste register zitten. De volgorde waarin je de twee cijfers wegschrijft bepaalt dus op welk display ze terechtkomen.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Q7S van het eerste schuifregister is verbonden met DS van het tweede</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> SHCP en STCP van beide schuifregisters zijn doorverbonden</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt nog altijd maar drie pinnen van de Arduino</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Beide displays tonen het juiste cijfer, tientallen links en eenheden rechts</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het aftellen loopt van 10 tot 0 met 1 seconde tussen elk getal</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Beide displays veranderen tegelijk, je ziet geen tussenliggend verkeerd cijfer flikkeren</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <div class="info-box warning">
+                <div class="info-title warning">Let op: staan je cijfers omgewisseld?</div>
+                <p>Welk display de tientallen toont, hangt af van welk schuifregister jij aan je Arduino hebt gehangen. Deze oplossing gaat ervan uit dat het <strong>eerste</strong> register (het register dat aan pin 2, 3 en 4 hangt) het <strong>linkse</strong> display aanstuurt. Ziet het er bij jou omgekeerd uit, wissel dan in <code>toonGetal()</code> de twee <code>schuifCijfer()</code>-regels om.</p>
+            </div>
+
+            <p>In plaats van tien aparte procedures zet je de tien cijferpatronen in één array. <code>schuifCijfer()</code> schuift dan acht bits naar buiten zonder te latchen, en <code>toonGetal()</code> roept die twee keer na elkaar op en geeft pas op het einde één stijgende flank op STCP. Zo verschijnen beide cijfers op exact hetzelfde moment.</p>
+            <p>De drie procedures <code>three()</code>, <code>two()</code> en <code>one()</code> uit de vorige oefening zijn hier vervangen door die ene array: tien procedures overtikken zou hetzelfde patroon tien keer herhalen.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang van het eerste schuifregister
+const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
+const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
+
+// Volgorde van de segmenten: Q0=a, Q1=b, Q2=c, Q3=d, Q4=e, Q5=f, Q6=g, Q7=dp
+const bool cijferPatronen[10][8] = {
+  {1, 1, 1, 1, 1, 1, 0, 0}, // 0
+  {0, 1, 1, 0, 0, 0, 0, 0}, // 1
+  {1, 1, 0, 1, 1, 0, 1, 0}, // 2
+  {1, 1, 1, 1, 0, 0, 1, 0}, // 3
+  {0, 1, 1, 0, 0, 1, 1, 0}, // 4
+  {1, 0, 1, 1, 0, 1, 1, 0}, // 5
+  {1, 0, 1, 1, 1, 1, 1, 0}, // 6
+  {1, 1, 1, 0, 0, 0, 0, 0}, // 7
+  {1, 1, 1, 1, 1, 1, 1, 0}, // 8
+  {1, 1, 1, 1, 0, 1, 1, 0}  // 9
+};
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+}
+
+void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}
+
+// Schuift 8 bits naar buiten, maar latcht nog niet: zo kunnen we eerst
+// beide cijfers klaarzetten voor er iets zichtbaar wordt.
+void schuifCijfer(int cijfer)
+{
+  for (int i = 7; i >= 0; i--)
+  {
+    digitalWrite(pinDS, cijferPatronen[cijfer][i] ? HIGH : LOW);
+    risingEdge(pinSHCP);
+  }
+}
+
+void toonGetal(int getal)
+{
+  int tientallen = getal / 10;
+  int eenheden = getal % 10;
+
+  // Wat je eerst inschuift, schuift door naar het tweede register.
+  schuifCijfer(eenheden);
+  schuifCijfer(tientallen);
+
+  risingEdge(pinSTCP); // pas nu springen beide displays tegelijk om
+}
+
+void loop()
+{
+  for (int getal = 10; getal &gt;= 0; getal--)
+  {
+    toonGetal(getal);
+    delay(1000);
+  }
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo3);
+</script>
+</body>
+</html>

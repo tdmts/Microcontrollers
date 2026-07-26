@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>16-bit looplicht</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>16-bit looplicht</h1>
+    <p class="lead">Breid je <a href="Looplicht8Bit.html">8-bit looplicht</a> uit naar 16 bit met behulp van een extra schuifregister. Je Arduino gebruikt daarvoor geen enkele pin extra.</p>
+
+    <p>Plaats het tweede schuifregister in cascade, precies zoals bij <a href="Dubbel7SegmentDisplay.html">2x 7 segment display</a>: Q7S van het eerste register naar DS van het tweede, en SHCP en STCP van beide registers aan elkaar. Op de acht uitgangen van het tweede register hangen dan acht extra LEDs, elk met hun eigen voorschakelweerstand.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Hoeveel moet je eigenlijk aanpassen?</div>
+        <p>Als je je 8-bit looplicht netjes met een lus hebt geschreven, is dit een heel korte oefening. Kijk eens waar het getal 8 in je code staat, en vraag je af of je het overal door een constante kan vervangen. Lukt dat, dan is je programma meteen ook klaar voor 24 of 32 bit.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Q7S van het eerste schuifregister is verbonden met DS van het tweede</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> SHCP en STCP van beide schuifregisters zijn doorverbonden</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt nog altijd maar drie pinnen van de Arduino</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het licht loopt vloeiend over alle 16 LEDs en begint daarna opnieuw</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt altijd precies één LED tegelijk, ook op de overgang tussen de twee registers</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het aantal bits staat op één plaats als constante in je code</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>Dit is exact dezelfde code als bij het 8-bit looplicht, met één verschil: <code>aantalLeds</code> staat nu op 16. Omdat de twee registers samen één lang schuifregister van 16 bits vormen, hoeft je programma niet te weten dat er twee IC's hangen. Je schuift gewoon 16 bits in plaats van 8 en latcht één keer.</p>
+            <p>De <code>delay()</code> gaat wel omlaag: met een seconde per stap zou één ronde 16 seconden duren en dat leest niet meer als een looplicht.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang van het eerste schuifregister
+const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
+const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
+
+// Twee schuifregisters in cascade vormen samen één register van 16 bits.
+const int aantalLeds = 16;
+const int stapTijd = 150; // ms per stap
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+}
+
+void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}
+
+void schuifBit(bool waarde)
+{
+  digitalWrite(pinDS, waarde ? HIGH : LOW);
+  risingEdge(pinSHCP);
+}
+
+void loop()
+{
+  for (int j = 1; j &lt;= aantalLeds; j++)
+  {
+    // De nullen boven de brandende LED
+    for (int i = aantalLeds; i &gt; j; i--)
+    {
+      schuifBit(false);
+    }
+
+    // De brandende LED zelf
+    schuifBit(true);
+
+    // En de nullen eronder
+    for (int i = 1; i &lt; j; i++)
+    {
+      schuifBit(false);
+    }
+
+    risingEdge(pinSTCP); // alle 16 LEDs tegelijk bijwerken
+    delay(stapTijd);
+  }
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo3);
+</script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Werking van het schuifregister</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+    <style>
+        /* Styling voor de interactieve 74HC595-simulatie verderop op deze pagina. */
+        .sr-sim {
+            border: 1px solid #ccc;
+            border-radius: .5rem;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .sr-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .sr-control {
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+        }
+
+        .sr-control-label {
+            font-weight: bold;
+            min-width: 3.5rem;
+        }
+
+        .sr-value {
+            width: 2.2rem;
+            text-align: center;
+            font-family: monospace;
+            font-size: 1rem;
+            padding: .2rem;
+            border: 1px solid #999;
+            border-radius: .25rem;
+            background: #f7f7f7;
+        }
+
+        .sr-btn {
+            padding: .25rem .6rem;
+            border: 1px solid #999;
+            border-radius: .25rem;
+            background: #eee;
+            cursor: pointer;
+        }
+
+        .sr-btn:hover {
+            background: #ddd;
+        }
+
+        .sr-labels,
+        .sr-register {
+            display: grid;
+            grid-template-columns: 9rem 1fr;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: .4rem;
+            min-width: 30rem;
+        }
+
+        .sr-register-label {
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .sr-bits {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: .3rem;
+        }
+
+        .sr-q {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .sr-bit {
+            text-align: center;
+            font-family: monospace;
+            font-size: 1.1rem;
+            padding: .4rem 0;
+            border: 1px solid #999;
+            border-radius: .25rem;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Werking van een 74HC595 schuifregister</h1>
+    <p class="lead">Met een 74HC595 stuur je acht uitgangen aan terwijl je maar drie pinnen van je Arduino opoffert. Je schuift de bits er één voor één in, en zet ze daarna in één keer op de uitgang.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/74hc595-pinout.png" alt="Pinout van de 74HC595 met Q0 tot Q7, DS, OE, STCP, SHCP, MR en Q7S" width="243" height="303">
+        </figure>
+    </div>
+
+    <h2 id="de-vier-ingangssignalen">De vier ingangssignalen</h2>
+    <p>De vier ingangssignalen bepalen samen wat er met de data gebeurt:</p>
+    <ul>
+        <li><strong>DS</strong>: het seriële data-ingangssignaal dat in het schuifregister geschoven wordt.</li>
+        <li><strong>SHCP</strong> (op sommige schema's SHCLK): bij een stijgende flank (0 naar 1) wordt de waarde van DS in het schuifregister geschoven. Alle bits schuiven één plaats op en de laatste bit verlaat het register via Q7 en daarna via Q7S (voor een eventuele cascadeschakeling).</li>
+        <li><strong>STCP</strong> (op sommige schema's STCLK): bij een stijgende flank worden de waarden uit het schuifregister gekopieerd naar het storage register.</li>
+        <li><strong>/OE</strong>: bepaalt de output stage. Bij een 0 (actief) is de inhoud van het storage register zichtbaar op de uitgang; bij een 1 worden de uitgangen in tristate gezet en zijn ze als het ware afgeschakeld.</li>
+    </ul>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Opmerking</div>
+        <p>Het schuifregister en het storage register staan los van elkaar. Zolang je enkel op SHCP klokt, verandert er niets aan de uitgangen: je bent dan achter de schermen aan het opbouwen wat er straks moet komen te staan. Pas bij een stijgende flank op STCP springt alles tegelijk zichtbaar op de uitgang. Dat is precies waarom je geen tussenliggende rommel ziet flikkeren.</p>
+    </div>
+
+    <h2 id="probeer-het-zelf">Probeer het zelf</h2>
+    <p>In onderstaande interactieve simulatie kan je de werking van het 74HC595 schuifregister zelf uitproberen. Klik op de knoppen om een signaal om te schakelen, en kijk wat er in de drie registers gebeurt. Bij het opstarten is de inhoud van de registers nog onbekend, vandaar de X'en.</p>
+
+    <div class="sr-sim">
+        <div class="sr-controls">
+            <div class="sr-control"><span class="sr-control-label">DS</span> <input id="ds" class="sr-value" size="1" type="text" value="0" readonly> <button class="sr-btn" type="button" onclick="toggleDS();">Toggle DS</button></div>
+            <div class="sr-control"><span class="sr-control-label">SHCP</span> <input id="shclk" class="sr-value" size="1" type="text" value="0" readonly> <button class="sr-btn" type="button" onclick="toggleSH();">Toggle SHCP</button></div>
+            <div class="sr-control"><span class="sr-control-label">STCP</span> <input id="stclk" class="sr-value" size="1" type="text" value="0" readonly> <button class="sr-btn" type="button" onclick="toggleST();">Toggle STCP</button></div>
+            <div class="sr-control"><span class="sr-control-label">/OE</span> <input id="oe" class="sr-value" size="1" type="text" value="1" readonly> <button class="sr-btn" type="button" onclick="toggleOE();">Toggle OE</button></div>
+        </div>
+
+        <div class="sr-labels"><span class="sr-register-label"></span>
+            <div class="sr-bits">
+                <div class="sr-q">Q0</div>
+                <div class="sr-q">Q1</div>
+                <div class="sr-q">Q2</div>
+                <div class="sr-q">Q3</div>
+                <div class="sr-q">Q4</div>
+                <div class="sr-q">Q5</div>
+                <div class="sr-q">Q6</div>
+                <div class="sr-q">Q7</div>
+            </div>
+        </div>
+
+        <div class="sr-register"><span class="sr-register-label">Schuifregister</span>
+            <div class="sr-bits">
+                <div class="sr-bit" id="s7">X</div>
+                <div class="sr-bit" id="s6">X</div>
+                <div class="sr-bit" id="s5">X</div>
+                <div class="sr-bit" id="s4">X</div>
+                <div class="sr-bit" id="s3">X</div>
+                <div class="sr-bit" id="s2">X</div>
+                <div class="sr-bit" id="s1">X</div>
+                <div class="sr-bit" id="s0">X</div>
+            </div>
+        </div>
+
+        <div class="sr-register"><span class="sr-register-label">Storage register</span>
+            <div class="sr-bits">
+                <div class="sr-bit" id="t7">X</div>
+                <div class="sr-bit" id="t6">X</div>
+                <div class="sr-bit" id="t5">X</div>
+                <div class="sr-bit" id="t4">X</div>
+                <div class="sr-bit" id="t3">X</div>
+                <div class="sr-bit" id="t2">X</div>
+                <div class="sr-bit" id="t1">X</div>
+                <div class="sr-bit" id="t0">X</div>
+            </div>
+        </div>
+
+        <div class="sr-register"><span class="sr-register-label">Output stage</span>
+            <div class="sr-bits">
+                <div class="sr-bit" id="o7">X</div>
+                <div class="sr-bit" id="o6">X</div>
+                <div class="sr-bit" id="o5">X</div>
+                <div class="sr-bit" id="o4">X</div>
+                <div class="sr-bit" id="o3">X</div>
+                <div class="sr-bit" id="o2">X</div>
+                <div class="sr-bit" id="o1">X</div>
+                <div class="sr-bit" id="o0">X</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Zet eerst /OE op 0</div>
+        <p>Bij het opstarten staat /OE op 1, en dus staan de uitgangen in tristate. Je ziet dan wel het schuifregister en het storage register vullen, maar de output stage blijft op X staan. Schakel /OE één keer om naar 0 en de uitgangen volgen het storage register.</p>
+    </div>
+
+    <h2 id="een-byte-naar-buiten-schuiven">Een byte naar buiten schuiven</h2>
+    <p>Als je met de simulatie speelt, merk je de volgorde: de bit die je er als <strong>laatste</strong> inschuift, komt op <strong>Q0</strong> terecht. Wil je dus een bepaald patroon op de uitgangen, dan begin je bij Q7 en eindig je bij Q0. Daarna geef je één stijgende flank op STCP om het hele patroon in één keer zichtbaar te maken.</p>
+
+    <p>Je stuurt SHCP en STCP aan met gewone digitale uitgangen. Omdat de 74HC595 enkel op een <strong>stijgende flank</strong> reageert en <code>digitalWrite()</code> alleen vaste toestanden kent, schrijf je daar zelf een klein functietje voor:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}</code></pre>
+
+    <h2 id="datasheet">Datasheet</h2>
+    <p>De volledige datasheet van de 74HC595 kan je hier downloaden: <a href="../../datasheets/74hc595.pdf" target="_blank" rel="noopener">74HC595 / 74HCT595 (NXP, rev. 6)</a>. Drie hoofdstukken heb je in dit labo het vaakst nodig:</p>
+    <ul>
+        <li><em>Pinning information</em>: welke poot van de IC welk signaal is.</li>
+        <li><em>Functional description</em>: waarom SHCP en STCP enkel op een stijgende flank reageren.</li>
+        <li><em>Limiting values</em>: hoeveel stroom je door de uitgangen mag trekken, wat je nodig hebt om je voorschakelweerstanden te berekenen.</li>
+    </ul>
+</div>
+
+<script>
+    function srEl(id)
+    {
+        return document.getElementById(id);
+    }
+
+    function toggleDS()
+    {
+        var ds = srEl('ds');
+        ds.value = (ds.value === '1') ? '0' : '1';
+    }
+
+    function toggleSH()
+    {
+        var sh = srEl('shclk');
+        if (sh.value === '0')
+        {
+            // Enkel de stijgende flank 0 -> 1 schuift, net als bij de echte IC.
+            sh.value = '1';
+            schuif();
+        }
+        else
+        {
+            sh.value = '0';
+        }
+    }
+
+    function toggleST()
+    {
+        var st = srEl('stclk');
+        if (st.value === '0')
+        {
+            st.value = '1';
+            opslaan();
+        }
+        else
+        {
+            st.value = '0';
+        }
+    }
+
+    function toggleOE()
+    {
+        var oe = srEl('oe');
+        oe.value = (oe.value === '0') ? '1' : '0';
+        uitvoer();
+    }
+
+    function schuif()
+    {
+        for (var i = 0; i < 7; i++)
+        {
+            srEl('s' + i).innerHTML = srEl('s' + (i + 1)).innerHTML;
+        }
+        srEl('s7').innerHTML = srEl('ds').value;
+    }
+
+    function opslaan()
+    {
+        for (var i = 0; i < 8; i++)
+        {
+            srEl('t' + i).innerHTML = srEl('s' + i).innerHTML;
+        }
+        uitvoer();
+    }
+
+    function uitvoer()
+    {
+        // /OE is actief laag: enkel bij 0 zijn de uitgangen zichtbaar.
+        var zichtbaar = srEl('oe').value === '0';
+        for (var i = 0; i < 8; i++)
+        {
+            srEl('o' + i).innerHTML = zichtbaar ? srEl('t' + i).innerHTML : 'X';
+        }
+    }
+</script>
+<script src="../../back-link.js"></script>
+</body>
+</html>

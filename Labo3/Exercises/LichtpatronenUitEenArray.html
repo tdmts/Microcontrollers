@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lichtpatronen uit een array</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Lichtpatronen uit een array</h1>
+    <p class="lead">Maak een universeel programma waarbij de ledbar op het schuifregister een sequentie van <strong>drie patronen</strong> doorloopt die gedefinieerd zijn in een array.</p>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/ot8G_n7FqcI" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="wat-moet-je-programma-kunnen">Wat moet je programma kunnen?</h2>
+    <ul>
+        <li>De patronen moeten kunnen worden aangepast door <strong>enkel de inhoud van de array</strong> te wijzigen. Verwerking van de patronen in de array moet automatisch gebeuren.</li>
+        <li>De snelheid waarmee de patronen na elkaar op de ledbar verschijnen moet kunnen worden ingesteld met een potentiometer.</li>
+    </ul>
+
+    <p>De bedrading blijft dezelfde als in de vorige oefening: DS op pin 2, STCP op pin 3, SHCP op pin 4 en de loper van de potentiometer op A0.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Universeel betekent: geen vaste getallen</div>
+        <p>Als je een vierde patroon toevoegt aan de array, of je ledbar uitbreidt naar 16 LEDs, mag je verder niets aan je code hoeven te veranderen. Het aantal rijen en kolommen moet je programma dus zelf uit de array afleiden, niet als 3 en 8 ingetikt staan.</p>
+    </div>
+
+    <h2 id="multidimensionele-array">Multidimensionele array</h2>
+    <p>De meest elegante manier is om te werken met een multidimensionele array. Bekijk eens de voorbeeldcode.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int mdArray[3][2] = {
+  {1, 2},
+  {5, 9},
+  {0, 0}
+};
+
+int waardeX = mdArray[0][0]; // 1
+int waardeY = mdArray[1][0]; // 5
+int waardeZ = mdArray[1][1]; // 9</code></pre>
+
+    <p>In de array kan je dus het patroon (LOW, HIGH, ... LOW, LOW) opslaan.</p>
+
+    <p>En je kan zo'n array ook overlopen met een <strong>geneste lus</strong>. Het aantal rijen en kolommen bereken je met <code>sizeof</code>, zodat je die getallen nergens zelf moet intikken:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int mdArray[3][2] = {
+  {1, 2},
+  {5, 9},
+  {0, 0}
+};
+
+void setup()
+{
+  Serial.begin(9600);
+
+  // Totale grootte van de array gedeeld door de grootte van één rij
+  int aantalRijen = sizeof(mdArray) / sizeof(mdArray[0]);
+  // Grootte van één rij gedeeld door de grootte van één element
+  int aantalKolommen = sizeof(mdArray[0]) / sizeof(mdArray[0][0]);
+
+  for (int i = 0; i &lt; aantalRijen; i++)
+  {
+    for (int j = 0; j &lt; aantalKolommen; j++)
+    {
+      Serial.print("Element op [");
+      Serial.print(i);
+      Serial.print("][");
+      Serial.print(j);
+      Serial.print("] = ");
+      Serial.println(mdArray[i][j]);
+    }
+  }
+}
+
+void loop()
+{
+
+}</code></pre>
+
+    <div class="info-box tip">
+        <div class="info-title tip">De snelheid instellen</div>
+        <p>De potentiometer geeft je een waarde van 0 tot 1023, maar een wachttijd van 0 ms is niet bruikbaar. Herschaal die waarde naar een zinvol bereik met <a href="../../Labo2/Reference/map.html">map()</a>, bijvoorbeeld van 50 tot 1000 ms.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De drie patronen staan in een multidimensionele array</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De ledbar doorloopt de patronen continu in de volgorde van de array</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een patroon aanpassen lukt door enkel de array te wijzigen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een vierde patroon toevoegen werkt zonder verdere aanpassingen aan je code</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het aantal rijen en kolommen wordt met sizeof uit de array afgeleid</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De potentiometer regelt de snelheid van de sequentie</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De hele opdracht draait rond die twee <code>sizeof</code>-berekeningen. Zodra <code>aantalPatronen</code> en <code>aantalLeds</code> uit de array zelf komen, hoef je enkel nog de array aan te passen om iets anders te zien. Voeg je een rij toe, dan loopt de sequentie vanzelf één patroon langer.</p>
+            <p>De potentiometer lees je uit vlak voor elke <code>delay()</code>, niet één keer per volledige ronde. Zo reageert de snelheid meteen als je aan de knop draait in plaats van pas na drie patronen.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
+const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
+const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
+const int pinPot = A0; // Loper van de potentiometer
+
+// Pas enkel deze array aan om andere patronen te tonen.
+// Elke rij is één patroon, van Q0 (links) tot Q7 (rechts).
+const bool patronen[3][8] = {
+  {1, 0, 0, 0, 0, 0, 0, 1},
+  {0, 1, 1, 0, 0, 1, 1, 0},
+  {0, 0, 0, 1, 1, 0, 0, 0}
+};
+
+// Afgeleid uit de array zelf, dus je moet hier niets aanpassen
+const int aantalPatronen = sizeof(patronen) / sizeof(patronen[0]);
+const int aantalLeds = sizeof(patronen[0]) / sizeof(patronen[0][0]);
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+}
+
+void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}
+
+// De laatst verschoven bit komt op Q0, dus we lopen het patroon
+// van achter naar voor door.
+void toonPatroon(const bool patroon[])
+{
+  for (int i = aantalLeds - 1; i &gt;= 0; i--)
+  {
+    digitalWrite(pinDS, patroon[i] ? HIGH : LOW);
+    risingEdge(pinSHCP);
+  }
+
+  risingEdge(pinSTCP); // hele ledbar in één keer bijwerken
+}
+
+void loop()
+{
+  for (int p = 0; p &lt; aantalPatronen; p++)
+  {
+    toonPatroon(patronen[p]);
+
+    // Herschaal de stand van de potentiometer naar een wachttijd in ms
+    int wachttijd = map(analogRead(pinPot), 0, 1023, 50, 1000);
+    delay(wachttijd);
+  }
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo3);
+</script>
+</body>
+</html>

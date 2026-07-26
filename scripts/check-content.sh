@@ -11,9 +11,10 @@
 #   1. Local links and assets resolve (and are tracked by git, exact case).
 #   2. Manifest <-> filesystem consistency (exercises.js, reference.js).
 #   3. Page wiring (Orion CDN, checklist/solution/dashboard/hub script sets).
-#   4. Asset hygiene (no Brightspace hotlinks, no remote images, YouTube
-#      embeds carry referrerpolicy).
+#   4. Asset hygiene (no Brightspace hotlinks, no remote images, no remote
+#      documents, YouTube embeds carry referrerpolicy).
 #   5. Code style (Allman braces, no em-dashes).
+#   6. Exercise names say what the student builds, not "Gevorderde oefening 2".
 #
 # Placeholder assets named "TODO-*" are reported as warnings, never errors,
 # so planned-but-missing artwork does not block a commit.
@@ -700,6 +701,12 @@ while IFS= read -r hit; do
   [ -n "$hit" ] && err "$hit  <- remote image, download it into img/"
 done < <(grep -nE '<img[^>]+src="https?://' "${checked[@]}" 2>/dev/null)
 
+# Documents rot the same way images do: the vendor moves the PDF and the link
+# dies mid-semester. Self-host them in datasheets/ instead.
+while IFS= read -r hit; do
+  [ -n "$hit" ] && err "$hit  <- remote document, download it into datasheets/"
+done < <(grep -nE 'href="https?://[^"]+\.(pdf|zip|docx?|pptx?|xlsx?)"' "${checked[@]}" 2>/dev/null)
+
 while IFS= read -r hit; do
   [ -n "$hit" ] && err "$hit  <- YouTube embed without referrerpolicy (error 153)"
 done < <(grep -nE 'youtube(-nocookie)?\.com/embed' "${checked[@]}" 2>/dev/null | grep -v 'referrerpolicy')
@@ -723,6 +730,27 @@ done < <(grep -nE '&mdash;|—' "${files[@]}" 2>/dev/null)
 take; v="$TAKEN"
 [ -n "$v" ] && style_errs+="Em-dash(es) - replace with a comma, colon, period, or 'en'/'maar':"$'\n'"$v"
 
+# --------------------------------------------------------- 6. exercise names
+
+# "Gevorderde oefening 2" tells a student nothing about what they are about to
+# build, reads as a placeholder, and stops meaning anything the moment the
+# ordering changes. Name an exercise after the thing it makes. A label without a
+# number ("Begeleide oefening") is fine: that describes the format, not a slot.
+naming_errs=""
+NAME_RE='(gevorderde|basis|extra|bonus|laatste)?[[:space:]]*oefening[[:space:]]*[0-9]'
+
+while IFS= read -r hit; do
+  [ -n "$hit" ] && err "$hit"
+done < <(grep -niE "name: '[^']*$NAME_RE" exercises.js 2>/dev/null)
+take; v="$TAKEN"
+[ -n "$v" ] && naming_errs+="Generic exercise name in exercises.js - name it after what the student builds:"$'\n'"$v"
+
+while IFS= read -r hit; do
+  [ -n "$hit" ] && err "$hit"
+done < <(grep -niE "<(h1|title)>[^<]*$NAME_RE" "${checked[@]}" 2>/dev/null)
+take; v="$TAKEN"
+[ -n "$v" ] && naming_errs+="Generic page title - the <h1> and <title> should say what the exercise builds:"$'\n'"$v"
+
 # ----------------------------------------------------------- reporting
 
 report=""
@@ -731,6 +759,7 @@ report=""
 [ -n "$wiring_errs" ]   && report+="Page wiring:"$'\n'"$wiring_errs"
 [ -n "$asset_errs" ]    && report+="Asset hygiene:"$'\n'"$asset_errs"
 [ -n "$style_errs" ]    && report+="$style_errs"
+[ -n "$naming_errs" ]   && report+="$naming_errs"
 
 if [ -n "$FIXED" ]; then
   printf 'Fixed automatically (review with "git diff"):\n%s' "$FIXED"

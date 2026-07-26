@@ -141,10 +141,18 @@ commentaarblok. Alle afbeeldingen uit het vak komen meteen in `img/` terecht en 
 `/content/enforced/...`-paden worden vervangen door `../../img/...`, dus die huisregel is al in orde.
 `--dry-run` toont enkel wat er zou gebeuren.
 
+Datasheets krijgen dezelfde behandeling naar `datasheets/`, of ze nu als apart topic in de
+modulestructuur hangen of vanuit een pagina gelinkt worden. Ze worden genoemd naar hun titel in
+Brightspace (`74hc-hct595-datasheet.pdf`), zonder het nummer dat D2L eraan plakt. Hernoem gerust
+korter. Lesslides (`.pptx`) blijven bewust op Brightspace staan, en alles boven 25 MB wordt
+overgeslagen met een melding. Importeer je een labo twee keer, dan wordt een datasheet die er al
+staat herkend aan zijn inhoud en niet nog eens gekopieerd, ook niet als jij hem intussen hernoemd
+hebt.
+
 Wat het script niet doet: er een echte pagina van maken. Elk bestand in `_incoming/` moet je nog
 omzetten naar de Orion-opmaak en in `exercises.js` of `reference.js` zetten. `_incoming/WORKLIST.md`
-is je takenlijst. Vergeet `git add img/` niet, het controlescript aanvaardt enkel afbeeldingen die
-in git zitten.
+is je takenlijst, met onderaan een lijstje van de datasheets die erbij gekomen zijn. Vergeet
+`git add img/ datasheets/` niet, het controlescript aanvaardt enkel bestanden die in git zitten.
 
 ## Huisregels
 
@@ -156,7 +164,23 @@ Deze worden automatisch afgedwongen:
 - **Afbeeldingen zelf hosten** in de gedeelde map `img/`, met een beschrijvende bestandsnaam.
   Nooit rechtstreeks linken naar een externe site of naar Brightspace-content
   (`/content/enforced/...`): die paden breken elk academiejaar.
+- **Documenten zelf hosten** in de gedeelde map `datasheets/`, ook met een beschrijvende
+  bestandsnaam (`74hc595.pdf`, niet `74HC_HCT595-datasheet.9581058.pdf`). Zelfde reden als bij
+  afbeeldingen: een link naar de site van de fabrikant sterft midden in het semester. Geldt voor
+  `.pdf`, `.zip`, `.docx`, `.pptx` en `.xlsx`. Lesslides horen hier **niet** thuis, die blijven op
+  Brightspace staan. Zet de datasheets van een labo ook in een categorie **Datasheets** in
+  `reference.js`, dan staan ze op de referentiepagina van dat labo. Zo'n `href` wijst uit de
+  labomap weg (`../../datasheets/74hc595.pdf`), dat mag hier. Meer moet je niet doen: de
+  referentiepagina ziet zelf dat het om een document gaat en opent het in een nieuw tabblad, want
+  in het Orion-kader zelf zou een PDF veel te smal openen.
 - **YouTube-embeds** hebben `referrerpolicy` nodig, anders krijg je error 153.
+- **Noem een oefening naar wat de student maakt**, niet "Gevorderde oefening 2" of "Oefening 1".
+  Zo'n naam zegt niets over de opdracht en klopt niet meer zodra je de volgorde wijzigt. Dus
+  "Ledbar met potentiometer" in plaats van "Gevorderde oefening 1". Dit geldt zowel voor `name` in
+  `exercises.js` als voor de `<h1>` en `<title>` van de pagina, en die drie horen hetzelfde te zijn.
+  Een naam zonder nummer mag wel, die beschrijft de vorm en niet een plaats in een rij: "Begeleide
+  oefening" in labo 0 blijft dus staan. Is een oefening moeilijker dan de rest? Dat druk je uit met
+  `difficulty: 3`, niet met het woord "gevorderde" in de titel.
 
 Deze niet, maar hou ze toch aan:
 

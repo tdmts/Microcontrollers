@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>1x 7 segment display</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>1x 7 segment display</h1>
+    <p class="lead">Stuur een 7 segment display aan met een 74HC595 schuifregister. Je begint met één segment en werkt zo toe naar een aftelling van 3 naar 1.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Lees eerst hoe het schuifregister werkt</div>
+        <p>De vier ingangssignalen DS, SHCP, STCP en /OE en de volgorde waarin de bits naar buiten geschoven worden, staan uitgelegd in <a href="../Reference/Schuifregister.html">Werking van het schuifregister</a>. Daar staat ook een simulatie waarmee je het zelf kan uitproberen voor je begint te solderen of te bedraden.</p>
+    </div>
+
+    <h2 id="stap-1-7-segment-display">Stap 1: 7 segment display</h2>
+    <p>Het schema (in stap 2) gaat er vanuit dat je werkt met een <strong>common cathode 7 segment display</strong>. Om te weten te komen welk type display jij hebt (common anode of common cathode) maak je eerst een schakeling waarbij je één segment probeert te doen oplichten. In TinkerCAD kan je het zelf instellen.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/7segment-pinout-common-cathode.webp" alt="Pinout van een common cathode 7 segment display met de segmenten A tot G en de decimale punt" width="300" height="300">
+        </figure>
+    </div>
+
+    <p>Bij een <strong>common cathode</strong> display zitten alle kathodes aan elkaar en gaan ze naar de massa. Een segment licht dan op als je er een <strong>hoog</strong> niveau op zet. Bij een <strong>common anode</strong> display is het net omgekeerd: de gemeenschappelijke pin gaat naar de +5 V en een segment licht op bij een <strong>laag</strong> niveau.</p>
+
+    <h2 id="stap-2-schema">Stap 2: schema</h2>
+
+    <h3>Voorschakelweerstanden</h3>
+    <p>In de <a href="../../datasheets/74hc595.pdf" target="_blank" rel="noopener">datasheet</a> kan je onder <em>Limiting values</em> lezen dat de output current op pin Q0 tot en met Q7 maximum 35 mA bedraagt. Maar de supply current (of de ground current) is maximum 70 mA.</p>
+    <p>Dit betekent dat de IC maximum 70 mA kan sourcen of sinken over alle uitgangspinnen samen.</p>
+    <p>Gezien we 7 segmenten (tegelijk) aansturen betekent dit dat we op iedere pin maximum 10 mA mogen sourcen of sinken.</p>
+    <p>Bereken hoeveel de voorschakelweerstand moet bedragen als je weet dat de voedingsspanning 5 V bedraagt, de doorlaatspanning van een rode LED 1.8 V is en de stroom 10 mA mag bedragen.</p>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: berekening voorschakelweerstand</button>
+        <div class="spoiler-content solution-content">
+            <p>R = U / I</p>
+            <p>R = (5 V - 1.8 V) / 0.01 A</p>
+            <p>R = 320 ohm</p>
+            <p>De eerstvolgende weerstand in de E12-reeks is 330 ohm. Wij spelen op veilig en hebben gekozen voor 470 ohm.</p>
+        </div>
+    </div>
+
+    <h3>Aansluitschema</h3>
+    <p>Sluit je schakeling aan zoals hieronder. Het schuifregister hangt aan drie digitale pinnen van je Arduino, en die drie pinnen gebruik je in heel labo 3 opnieuw.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/schuifregister-7segment-schema.png" alt="Breadboardschema met een Arduino UNO, een 74HC595 en een 7 segment display met zeven voorschakelweerstanden">
+        </figure>
+    </div>
+
+    <h2 id="stap-3-code">Stap 3: code</h2>
+
+    <h3>Definiëren van I/O</h3>
+    <p>Begin altijd eerst met het definiëren van pinnummers als constanten. Het is ook altijd een goed idee om er commentaar bij te schrijven zodat je weet wat de pinnen eigenlijk betekenen. Als je later je programma bekijkt of moet debuggen weet je onmiddellijk welke pin wat doet.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
+const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
+const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+}
+
+void loop()
+{
+
+}</code></pre>
+
+    <h3>Stijgende flank?</h3>
+    <p>De ingangen SHCP en STCP reageren volgens de datasheet enkel op een stijgende flank. Dit kan je nalezen in de <a href="../../datasheets/74hc595.pdf" target="_blank" rel="noopener">functional description</a>.</p>
+    <p>Tot nu toe hebben we enkel <code>digitalWrite(pinNummer, HIGH)</code> en <code>digitalWrite(pinNummer, LOW)</code> gebruikt. Dat zijn echter twee <strong>vaste toestanden</strong> en deze keer willen we een <strong>flank</strong>.</p>
+    <p>Om dat te simuleren bouwen we <strong>zelf een functie risingEdge</strong>. Bekijk de code eens en vraag uitleg in het labo als je dit niet meteen snapt.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}</code></pre>
+
+    <p>De functie mag je bijvoorbeeld onder <code>loop()</code> schrijven.</p>
+
+    <h3>Eén segment</h3>
+    <p>Voor we beginnen met het programmeren van de cijfers gaan we eerst eens proberen om segment A aan te sturen. Bij een common cathode display moeten we de toestanden uit onderstaande tabel op de uitgangen krijgen.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Q0</th>
+                    <th scope="col">Q1</th>
+                    <th scope="col">Q2</th>
+                    <th scope="col">Q3</th>
+                    <th scope="col">Q4</th>
+                    <th scope="col">Q5</th>
+                    <th scope="col">Q6</th>
+                    <th scope="col">Q7</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Omdat de bit die je als laatste inschuift op Q0 terechtkomt, begin je bij Q7 en eindig je bij Q0. Hiervoor moeten we:</p>
+
+    <ol>
+        <li>Q7: de ingang DS op <strong>0</strong> zetten en een stijgende flank triggeren op SHCP</li>
+        <li>Q6: de ingang DS op <strong>0</strong> zetten en een stijgende flank triggeren op SHCP</li>
+        <li>Q5: de ingang DS op <strong>0</strong> zetten en een stijgende flank triggeren op SHCP</li>
+        <li>Q4: de ingang DS op <strong>0</strong> zetten en een stijgende flank triggeren op SHCP</li>
+        <li>Q3: de ingang DS op <strong>0</strong> zetten en een stijgende flank triggeren op SHCP</li>
+        <li>Q2: de ingang DS op <strong>0</strong> zetten en een stijgende flank triggeren op SHCP</li>
+        <li>Q1: de ingang DS op <strong>0</strong> zetten en een stijgende flank triggeren op SHCP</li>
+        <li>Q0: de ingang DS op <strong>1</strong> zetten en een stijgende flank triggeren op SHCP</li>
+        <li>een stijgende flank triggeren op <strong>STCP</strong> (inhoud schuifregister naar storage register)</li>
+    </ol>
+
+    <p>In code ziet dit er zo uit:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
+const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
+const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+}
+
+void loop()
+{
+  a();
+}
+
+void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}
+
+void a()
+{
+  digitalWrite(pinDS, LOW);
+  risingEdge(pinSHCP);
+
+  digitalWrite(pinDS, LOW);
+  risingEdge(pinSHCP);
+
+  digitalWrite(pinDS, LOW);
+  risingEdge(pinSHCP);
+
+  digitalWrite(pinDS, LOW);
+  risingEdge(pinSHCP);
+
+  digitalWrite(pinDS, LOW);
+  risingEdge(pinSHCP);
+
+  digitalWrite(pinDS, LOW);
+  risingEdge(pinSHCP);
+
+  digitalWrite(pinDS, LOW);
+  risingEdge(pinSHCP);
+
+  digitalWrite(pinDS, HIGH);
+  risingEdge(pinSHCP);
+
+  risingEdge(pinSTCP);
+}</code></pre>
+
+    <h2 id="aftellen-van-3-naar-1">Aftellen van 3 naar 1</h2>
+    <p>Nu je één segment kan aansturen met <code>a()</code>, maak je er nog drie procedures bij: <code>three()</code>, <code>two()</code> en <code>one()</code>. Daarin doe je telkens de juiste segmenten oplichten, met een pauze van 1 seconde ertussen. De bedoeling is dat je aftelt van 3 naar 1.</p>
+
+    <p>Welke segmenten je per cijfer nodig hebt, lees je af uit dit overzicht:</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/7segment-cijferpatronen.png" alt="De segmentpatronen voor de cijfers 0 tot en met 9 op een 7 segment display" width="686" height="361">
+        </figure>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je weet of jouw display common cathode of common anode is</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De voorschakelweerstand is berekend en in elke segmentlijn geplaatst</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Segment A licht op met de procedure a()</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De procedures three(), two() en one() tonen elk het juiste cijfer</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het display telt af van 3 naar 1 met 1 seconde tussen elk cijfer</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De pinnummers staan bovenaan als constanten met commentaar erbij</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <div class="info-box warning">
+                <div class="info-title warning">Let op: pas aan op basis van je eigen display</div>
+                <p>Deze oplossing gaat uit van een <strong>common cathode</strong> display, waarbij een 1 een segment doet oplichten. Heb jij een common anode display, dan draai je de waarden in de patronen om (of je keert <code>HIGH</code> en <code>LOW</code> om in <code>toonPatroon()</code>).</p>
+            </div>
+
+            <p>De opdracht vraagt drie procedures <code>three()</code>, <code>two()</code> en <code>one()</code>, maar je wil niet drie keer acht regels <code>digitalWrite</code> overtikken. Daarom zet je het patroon van elk cijfer in een array en schrijf je één keer een functie <code>toonPatroon()</code> die zo'n array naar buiten schuift. De drie procedures blijven dan één regel lang.</p>
+            <p>Let op de volgorde in <code>toonPatroon()</code>: de laatst verschoven bit belandt op Q0, dus loop je de array van achter naar voor door. Pas helemaal op het einde geef je één stijgende flank op STCP, zodat het hele cijfer in één keer verschijnt.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
+const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
+const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
+
+// Volgorde van de segmenten: Q0=a, Q1=b, Q2=c, Q3=d, Q4=e, Q5=f, Q6=g, Q7=dp
+const bool patroonDrie[8] = {1, 1, 1, 1, 0, 0, 1, 0}; // a b c d g
+const bool patroonTwee[8] = {1, 1, 0, 1, 1, 0, 1, 0}; // a b d e g
+const bool patroonEen[8] = {0, 1, 1, 0, 0, 0, 0, 0};  // b c
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+}
+
+void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}
+
+// Schuift 8 bits naar buiten. De laatst verschoven bit komt op Q0 terecht,
+// dus we lopen de array van achter (Q7) naar voor (Q0) door.
+void toonPatroon(const bool patroon[])
+{
+  for (int i = 7; i >= 0; i--)
+  {
+    digitalWrite(pinDS, patroon[i] ? HIGH : LOW);
+    risingEdge(pinSHCP);
+  }
+
+  risingEdge(pinSTCP); // pas nu wordt het cijfer zichtbaar
+}
+
+void three()
+{
+  toonPatroon(patroonDrie);
+}
+
+void two()
+{
+  toonPatroon(patroonTwee);
+}
+
+void one()
+{
+  toonPatroon(patroonEen);
+}
+
+void loop()
+{
+  three();
+  delay(1000);
+
+  two();
+  delay(1000);
+
+  one();
+  delay(1000);
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo3);
+</script>
+</body>
+</html>

@@ -56,6 +56,31 @@ window.LAB_REFERENCE = {
                     { id: 'analogwrite', name: 'analogWrite()', href: 'analogWrite.html', blurb: 'Met PWM een pin een waarde tussen volledig uit en volledig aan geven, bijvoorbeeld om een led te dimmen.' },
                     { id: 'map', name: 'map()', href: 'map.html', blurb: 'Een waarde uit een bereik herschalen naar een ander bereik.' }
                 ]
+            },
+            {
+                name: 'Datasheets',
+                topics: [
+                    { id: 'datasheettmp36', name: 'TMP35 / TMP36 / TMP37', href: '../../datasheets/tmp35-36-37.pdf', blurb: 'De datasheet van de temperatuursensor. Hierin vind je de schaalfactor van 10 mV per graad en de 750 mV bij 25 graden waarmee je de spanning omrekent.' },
+                    { id: 'datasheetldr', name: 'LDR 3190', href: '../../datasheets/ldr-3190.pdf', blurb: 'De datasheet van de lichtgevoelige weerstand, met de weerstandswaarde bij verschillende lichtsterktes.' }
+                ]
+            }
+        ]
+    },
+    labo3: {
+        labId: 'labo3',
+        labTitle: 'Labo 3',
+        categories: [
+            {
+                name: 'Schuifregisters',
+                topics: [
+                    { id: 'schuifregister', name: 'Werking van het schuifregister', href: 'Schuifregister.html', blurb: 'Hoe de 74HC595 met vier ingangssignalen acht uitgangen aanstuurt, met een interactieve simulatie om zelf uit te proberen.' }
+                ]
+            },
+            {
+                name: 'Datasheets',
+                topics: [
+                    { id: 'datasheet74hc595', name: '74HC595 / 74HCT595', href: '../../datasheets/74hc595.pdf', blurb: 'De volledige datasheet van het schuifregister. Kijk vooral naar pinning information, functional description en limiting values.' }
+                ]
             }
         ]
     }

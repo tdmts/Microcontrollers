@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ledbar met potentiometer</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Ledbar met potentiometer</h1>
+    <p class="lead">Maak een schakeling waarbij de stand van een potentiometer op een analoge ingang wordt gelezen, en geef afhankelijk van de waarde een patroon weer op een schuifregister-ledbar.</p>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/Vxb97cekKtQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="wat-moet-er-branden">Wat moet er branden?</h2>
+    <p>Hoe verder je de potentiometer opendraait, hoe meer LEDs er oplichten:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Waarde van analogRead()</th>
+                    <th scope="col">Aantal LEDs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>0 - 127</td><td>1 LED</td></tr>
+                <tr><td>128 - 255</td><td>2 LED</td></tr>
+                <tr><td>256 - 383</td><td>3 LED</td></tr>
+                <tr><td>384 - 511</td><td>4 LED</td></tr>
+                <tr><td>512 - 639</td><td>5 LED</td></tr>
+                <tr><td>640 - 767</td><td>6 LED</td></tr>
+                <tr><td>768 - 895</td><td>7 LED</td></tr>
+                <tr><td>896 - 1023</td><td>8 LED</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Maak ook dit programma zo kort en efficiënt mogelijk.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Acht even brede stapjes</div>
+        <p>Kijk eens goed naar de tabel: elk bereik is precies even breed. Dat betekent dat je die hele tabel niet met acht <code>if</code>-testen hoeft na te bouwen. Eén berekening volstaat. Twijfel je over het uitlezen van de potentiometer, kijk dan even bij <a href="../../Labo2/Reference/analogRead.html">analogRead()</a>.</p>
+    </div>
+
+    <p>De bedrading van het schuifregister blijft dezelfde als in de vorige oefeningen: DS op pin 2, STCP op pin 3 en SHCP op pin 4. De potentiometer komt op een analoge ingang, met de loper naar A0 en de twee buitenste aansluitingen naar de +5 V en de massa.</p>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De potentiometer wordt uitgelezen met analogRead()</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Helemaal dichtgedraaid brandt er 1 LED, helemaal opengedraaid branden er 8</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Alle acht de overgangen kloppen met de tabel</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LEDs vormen een balk vanaf Q0, er zitten geen gaten tussen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt geen acht if-testen maar één berekening</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De acht bereiken zijn elk 128 breed, dus een gehele deling door 128 geeft je meteen een getal van 0 tot 7. Tel er 1 bij op en je hebt het aantal brandende LEDs. Dat is de hele tabel in één regel.</p>
+            <p>Daarna schuif je acht bits naar buiten. Omdat de laatst verschoven bit op Q0 belandt, tel je af van 8 naar 1 en schuif je een 1 zodra het nummer van de LED kleiner of gelijk is aan het gevraagde aantal.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
+const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
+const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
+const int pinPot = A0; // Loper van de potentiometer
+
+const int aantalLeds = 8;
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+}
+
+void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}
+
+void loop()
+{
+  // 0..1023 gedeeld door 128 geeft 0..7, dus +1 geeft 1 t.e.m. 8 LEDs
+  int aantalAan = analogRead(pinPot) / 128 + 1;
+
+  // De laatst verschoven bit komt op Q0, dus we tellen af van Q7 naar Q0
+  for (int led = aantalLeds; led &gt;= 1; led--)
+  {
+    digitalWrite(pinDS, led &lt;= aantalAan ? HIGH : LOW);
+    risingEdge(pinSHCP);
+  }
+
+  risingEdge(pinSTCP); // hele balk in één keer bijwerken
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo3);
+</script>
+</body>
+</html>

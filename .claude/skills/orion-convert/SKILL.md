@@ -101,6 +101,13 @@ Two kinds of page live under `LaboN/`, and they differ:
     category (`{ id, name, href, blurb }`; `id` lowercase-no-spaces, `href`
     basename matching the filename, `blurb` a one-line summary). Create the
     `laboN` block if it doesn't exist yet.
+  - **A datasheet belongs on the hub too.** If the lab has one in `datasheets/`,
+    list it in a category named `Datasheets` with an `href` that reaches out of
+    the lab folder (`../../datasheets/74hc595.pdf`) and a `blurb` naming the
+    chapters that matter for this lab. See labo 2 and labo 3 in
+    [`reference.js`](../../../reference.js). The manifest entry is all it needs:
+    `reference-dashboard.js` recognises a document `href` and opens it in a new
+    tab by itself, so don't hand-write a `target` anywhere.
   - **The reference hub is named `reference.html`** (never `index.html`) and calls
     `initReferenceHub('laboN')`. Mirror an existing hub such as
     [`Labo0/Reference/reference.html`](../../../Labo0/Reference/reference.html) —
@@ -272,12 +279,31 @@ itself. So treat the checklist and the QR widget as two separate things:
     |---|---|
     | `id` | lowercase, no spaces, unique within the lab |
     | `order` | next unused number, scoped to that lab |
-    | `name` | matches the `<h1>` |
+    | `name` | matches the `<h1>`, and says what the student builds (see below) |
     | `href` | `https://tdmts.github.io/Microcontrollers/LaboN/Exercises/{file}` |
     | `difficulty` | 1, 2 or 3 |
     | `time` | rough estimate, e.g. `'~20 min'` |
     | `blurb` | one sentence for the dashboard card |
     | `checklistDriven` | `true` for this pattern |
+
+    **Do not carry a generic source title through.** Brightspace names most
+    exercises "labo 5: basis oefening 3" or "gevorderde oefening 1"; there are
+    over thirty such topics still to import. That is a slot number, not a name:
+    it tells a student nothing, and it goes stale the moment `order` changes.
+    Name the exercise after the thing it makes, and use the same string for the
+    `<h1>`, the `<title>`, the `name`, and as the basis for the filename and
+    `id`:
+
+    | source title | use instead |
+    |---|---|
+    | labo 3: gevorderde oefening 1 | Ledbar met potentiometer |
+    | labo 3: gevorderde oefening 2 | Lichtpatronen uit een array |
+    | labo 2: gevorderde oefening 2 | Thermometer op 7-segment display |
+
+    "Gevorderd" is expressed by `difficulty: 3`, never in the title. A label
+    with no number is fine when it describes the *format* rather than a slot
+    ("Begeleide oefening"). `check-content.sh` rule 6 blocks the generic form,
+    so getting this wrong fails the check rather than reaching a student.
 
     `checklist-sync.js` matches the current page to a manifest entry by
     comparing filenames, so the `href`'s basename must match the output

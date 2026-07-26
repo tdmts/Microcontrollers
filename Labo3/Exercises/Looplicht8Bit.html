@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>8-bit looplicht</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>8-bit looplicht</h1>
+    <p class="lead">Maak een schakeling waarbij met een schuifregister een 8-bit looplicht gemaakt wordt. Je zet eerst een korte versie in elkaar en vervangt die daarna door een lus.</p>
+
+    <h2 id="schema">Schema</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/schuifregister-looplicht-schema.png" alt="Breadboardschema met een Arduino UNO, een 74HC595 en acht LEDs met voorschakelweerstanden">
+        </figure>
+    </div>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: hoe zijn de LEDs geschakeld?</button>
+        <div class="spoiler-content solution-content">
+            <p>Actief hoog. De uitgangen van het schuifregister sourcen de stroom, dus een LED licht op bij een <strong>1</strong> op de bijhorende uitgang.</p>
+        </div>
+    </div>
+
+    <p>Het schuifregister hangt aan dezelfde drie pinnen als in de vorige oefeningen: DS op pin 2, STCP op pin 3 en SHCP op pin 4. Alleen wat er aan de uitgangen hangt verandert: acht LEDs in plaats van een 7 segment display.</p>
+
+    <h2 id="stap-1-schuiven">Stap 1: schuiven</h2>
+    <p>Begin met een mini versie van het looplicht waarbij je drie LEDs afwisselend laat branden. Schrijf het dus eerst gewoon uit als een sequentie, zonder lus. Zo zie je precies welke stappen je telkens herhaalt.</p>
+
+    <h2 id="stap-2-schuiven-met-een-lus">Stap 2: schuiven met een lus</h2>
+    <p>Breid nu jouw mini versie uit en probeer te werken met een <strong>lus</strong> om alle LEDs aan te sturen.</p>
+    <p>Als je een sequentie (opeenvolging van instructies) wil omzetten naar een iteratie (lus) dan moet je eerst kijken naar:</p>
+    <ol>
+        <li>hoeveel keer je de lus moet uitvoeren?</li>
+        <li>wat is gemeenschappelijk?</li>
+    </ol>
+
+    <p><strong>Probeer dit eens zelf uit. Als je niet tot de oplossing komt kan je de hint bekijken.</strong></p>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint</button>
+        <div class="spoiler-content solution-content">
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../../img/schuifregister-looplicht-lus-hint.png" alt="Hint: per stap van het looplicht het aantal LOW-bits voor en na de HIGH-bit, met de bijhorende geneste lussen">
+                </figure>
+            </div>
+            <p>Per stap schuif je altijd precies 8 bits naar buiten: eerst een aantal nullen, dan één enkele 1, dan de resterende nullen. Alleen de verdeling tussen die twee groepen nullen verschuift telkens één plaats.</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke LED heeft een eigen voorschakelweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt altijd precies één LED tegelijk</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het licht loopt van Q0 tot Q7 en begint daarna opnieuw</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je stuurt de LEDs aan met een lus, niet met acht uitgeschreven blokken</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Per stap schuif je exact 8 bits naar buiten en latch je één keer</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De buitenste lus telt af welke LED aan de beurt is. De twee binnenste lussen schuiven de nullen naar buiten: eerst die vóór de brandende LED, dan die erna. Samen zijn dat altijd 7 nullen en 1 één, dus precies 8 bits.</p>
+            <p>Omdat de laatst verschoven bit op Q0 belandt, staat de eerste binnenlus voor de hoge uitgangen (Q7 naar beneden) en de tweede voor de lage. Op het einde van elke stap één stijgende flank op STCP, en dan pas de <code>delay()</code>.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
+const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
+const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
+
+const int aantalLeds = 8;
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+}
+
+void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}
+
+void schuifBit(bool waarde)
+{
+  digitalWrite(pinDS, waarde ? HIGH : LOW);
+  risingEdge(pinSHCP);
+}
+
+void loop()
+{
+  for (int j = 1; j &lt;= aantalLeds; j++)
+  {
+    // De nullen boven de brandende LED
+    for (int i = aantalLeds; i &gt; j; i--)
+    {
+      schuifBit(false);
+    }
+
+    // De brandende LED zelf
+    schuifBit(true);
+
+    // En de nullen eronder
+    for (int i = 1; i &lt; j; i++)
+    {
+      schuifBit(false);
+    }
+
+    risingEdge(pinSTCP); // alle 8 LEDs tegelijk bijwerken
+    delay(1000);
+  }
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo3);
+</script>
+</body>
+</html>
