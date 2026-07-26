@@ -29,12 +29,40 @@
 #   bash scripts/check-content.sh --hook   # hook mode: errors to stderr,
 #                                          # exit 2 on errors (blocks Stop),
 #                                          # silent + 0 when clean.
+#   bash scripts/check-content.sh --fix    # repair the mechanical violations
+#                                          # first, then report the rest.
+#                                          # Wants a clean tree so "git diff"
+#                                          # shows exactly what it changed;
+#                                          # add --force to override. Cannot
+#                                          # be combined with --hook.
+#
+# What --fix repairs: em-dashes, K&R braces that end a line, a missing
+# referrerpolicy, an init call naming the wrong lab, a manifest href with the
+# wrong casing, and assets that exist but were never staged. What it leaves
+# alone: anything needing words (a missing blurb) or a decision (which lab an
+# orphan page belongs to, what to call a downloaded image).
 set -uo pipefail
 
 cd "$(dirname "$0")/.." || exit 2
 
 HOOK_MODE=0
-[ "${1:-}" = "--hook" ] && HOOK_MODE=1
+FIX_MODE=0
+FORCE=0
+for arg in "$@"; do
+  case "$arg" in
+    --hook)  HOOK_MODE=1 ;;
+    --fix)   FIX_MODE=1 ;;
+    --force) FORCE=1 ;;
+    *) echo "check-content: unknown option '$arg'" >&2; exit 2 ;;
+  esac
+done
+
+# Never repair from the hook: that would rewrite files at session end without
+# anyone looking at the diff.
+if [ "$FIX_MODE" -eq 1 ] && [ "$HOOK_MODE" -eq 1 ]; then
+  echo "check-content: --fix cannot be combined with --hook" >&2
+  exit 2
+fi
 
 # Pages that deliberately break the rules below:
 #   template.html     - the styleguide reference. Links a LOCAL orion.css and a
@@ -141,6 +169,149 @@ mark() {
     [ -n "$p" ] && _arr["$p"]=1
   done < <(grep -lE "$2" "${checked[@]}" 2>/dev/null)
 }
+
+# ------------------------------------------------------------ fix mode
+#
+# Repairs only the violations with exactly one correct answer. Anything
+# needing a human sentence (a missing blurb) or a judgement call (which page
+# an orphan belongs to, what an image should be called) is left to the report
+# below. Runs before the checks, so the report shows what is still wrong.
+
+FIXED=""
+fixed() { FIXED+="  $1"$'\n'; }
+
+# Run a rewrite over one file and record it only if the file actually changed.
+rewrite() {
+  local f="$1" label="$2"; shift 2
+  local tmp
+  tmp="$(mktemp)" || return 0
+  cp "$f" "$tmp"
+  "$@" "$f"
+  cmp -s "$tmp" "$f" || fixed "$f: $label"
+  rm -f "$tmp"
+}
+
+do_fix() {
+  local f hit call want have mf href target new_href key
+
+  # Em-dash to comma. The check bans them outright, and a comma is the
+  # substitution that always reads correctly in Dutch; a colon or "en"/"maar"
+  # may read better, which is why the diff is meant to be reviewed.
+  while IFS= read -r f; do
+    # [ \t] rather than \s again: a greedy \s* would swallow the line break
+    # when an em-dash sits at the end of a line and join the paragraph.
+    [ -n "$f" ] && rewrite "$f" "em-dash -> comma" \
+      perl -pi -e 's/[ \t]*(?:&mdash;|—)[ \t]*/, /g'
+  done < <(grep -lE '&mdash;|—' "${checked[@]}" 2>/dev/null)
+
+  # K&R to Allman, but only where the brace ends the line. A collapsed body
+  # like "if (x) { doe(); }" needs a human to decide where the lines break.
+  while IFS= read -r f; do
+    # Trailing whitespace is matched as [ \t] rather than \s: a greedy \s*$
+    # eats the newline itself, which glues the following statement onto the
+    # new brace line. The \r is captured and re-emitted on both lines, since
+    # a Windows working copy has CRLF endings and dropping one would leave
+    # the file mixed.
+    [ -n "$f" ] && rewrite "$f" "Allman braces" \
+      perl -pi -e 's/^([ \t]*)(\S.*?)[ \t]*\{[ \t]*(\r?)$/$1$2$3\n$1\{$3/ if /(\)|\belse\b|\bdo\b)[ \t]*\{[ \t]*\r?$/'
+  done < <(grep -lE '\) ?\{|\belse ?\{|\bdo ?\{' "${checked[@]}" 2>/dev/null)
+
+  # referrerpolicy on YouTube embeds that lack it.
+  while IFS= read -r f; do
+    [ -n "$f" ] && rewrite "$f" "referrerpolicy on YouTube embed" \
+      perl -pi -e 'if (m{youtube(?:-nocookie)?\.com/embed} && !/referrerpolicy/) { s/\s*allowfullscreen/ referrerpolicy="strict-origin-when-cross-origin" allowfullscreen/ or s{></iframe>}{ referrerpolicy="strict-origin-when-cross-origin"></iframe>} }'
+  done < <(grep -lE 'youtube(-nocookie)?\.com/embed' "${checked[@]}" 2>/dev/null)
+
+  # An init call naming a different lab than the folder it sits in.
+  while IFS= read -r hit; do
+    [ -z "$hit" ] && continue
+    f="${hit%%:*}"; call="${hit#*:}"
+    [[ "$f" =~ ^Labo([0-9]+)/ ]] || continue
+    want="labo${BASH_REMATCH[1]}"
+    [[ "$call" =~ (labo[0-9]+) ]] || continue
+    have="${BASH_REMATCH[1]}"
+    [ "$have" = "$want" ] && continue
+    rewrite "$f" "init call -> $want" \
+      sed -i "s/LAB_EXERCISES\.$have/LAB_EXERCISES.$want/g; s/initReferenceHub('$have')/initReferenceHub('$want')/g; s/initReferenceHub(\"$have\")/initReferenceHub(\"$want\")/g"
+  done < <(grep -oHE "init(ChecklistSync|Dashboard)\(LAB_EXERCISES\.labo[0-9]+\)|initReferenceHub\([\"']labo[0-9]+[\"']\)" "${checked[@]}" 2>/dev/null)
+
+  # A manifest href whose casing does not match the file on disk.
+  for mf in exercises.js reference.js; do
+    [ -f "$mf" ] || continue
+    while IFS= read -r href; do
+      [ -z "$href" ] && continue
+      href="${href#*\'}"; href="${href%\'}"
+      case "$href" in
+        "$PAGES_BASE"*) target="${href#"$PAGES_BASE"}" ;;
+        http*) continue ;;
+        *) [ "$mf" = "reference.js" ] || continue
+           # A reference href is a bare filename, so find which lab owns it.
+           # Matched through the tracked-path map rather than with -e, which
+           # would be case-blind on Windows and case-strict on the CI runner.
+           target=""
+           for key in "${!TRACKED_LC[@]}"; do
+             case "$key" in
+               labo*/reference/"${href,,}") target="${TRACKED_LC[$key]}"; break ;;
+             esac
+           done
+           [ -n "$target" ] || continue ;;
+      esac
+      classify_target "$target"
+      case "$CT" in
+        case:*)
+          if [ "$mf" = "exercises.js" ]; then
+            new_href="$PAGES_BASE${CT#case:}"
+          else
+            new_href="${CT##*/}"
+          fi
+          rewrite "$mf" "href case -> ${CT#case:}" sed -i "s|$href|$new_href|g"
+          ;;
+      esac
+    done < <(grep -oE "href: '[^']+'" "$mf" 2>/dev/null)
+  done
+
+  # Assets a page references that exist on disk but were never staged.
+  local -a to_stage=()
+  while IFS= read -r hit; do
+    [ -z "$hit" ] && continue
+    f="${hit%%:*}"; href="${hit#*:}"
+    href="${href#*\"}"; href="${href%\"}"
+    case "$href" in
+      http:*|https:*|//*|'#'*|mailto:*|tel:*|data:*|javascript:*) continue ;;
+    esac
+    href="${href%%#*}"; href="${href%%\?*}"
+    [ -z "$href" ] && continue
+    if [[ "$f" == */* ]]; then target="${f%/*}"; else target="."; fi
+    norm_path "$target/$href"
+    classify_target "$NP"
+    [ "$CT" = "untracked" ] && to_stage+=("$NP")
+  done < <(grep -oHE '(href|src)="[^"]*"' "${checked[@]}" 2>/dev/null)
+  if [ "${#to_stage[@]}" -gt 0 ] && [ "$HAVE_GIT" -eq 1 ]; then
+    git add -- "${to_stage[@]}" 2>/dev/null && for target in "${to_stage[@]}"; do
+      fixed "$target: staged (was untracked)"
+    done
+  fi
+}
+
+if [ "$FIX_MODE" -eq 1 ]; then
+  # --fix rewrites files in place. A clean tree keeps "git diff" a readable
+  # record of exactly what it changed.
+  # Untracked files do not count as dirty: staging them is one of the repairs.
+  if [ "$HAVE_GIT" -eq 1 ] && [ "$FORCE" -eq 0 ] && [ -n "$(git status --porcelain --untracked-files=no)" ]; then
+    echo "check-content: --fix rewrites files, so it wants a clean tree to keep 'git diff' reviewable." >&2
+    echo "               Commit or stash your changes first, or re-run with --force." >&2
+    exit 2
+  fi
+  do_fix
+  # Staging changed what git tracks, so rebuild the lookup before checking.
+  if [ "$HAVE_GIT" -eq 1 ]; then
+    TRACKED=(); TRACKED_LC=()
+    while IFS= read -r p; do
+      TRACKED["$p"]=1
+      TRACKED_LC["${p,,}"]="$p"
+    done < <(git ls-files)
+  fi
+fi
 
 # ------------------------------------- 1. local links and assets resolve
 
@@ -424,7 +595,12 @@ report=""
 [ -n "$asset_errs" ]    && report+="Asset hygiene:"$'\n'"$asset_errs"
 [ -n "$style_errs" ]    && report+="$style_errs"
 
+if [ -n "$FIXED" ]; then
+  printf 'Fixed automatically (review with "git diff"):\n%s' "$FIXED"
+fi
+
 if [ -n "$report" ]; then
+  [ -n "$FIXED" ] && printf '\nStill needs a human:\n'
   printf '%s' "$report" >&2
   [ "$HOOK_MODE" -eq 1 ] && exit 2
   [ -n "$warnings" ] && printf 'Pending placeholders (not blocking):\n%s' "$warnings" >&2

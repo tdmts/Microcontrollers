@@ -56,6 +56,14 @@ local `orion.css` and uses placehold.co demo images; the Orion wrapper is not an
 Section 5 still applies to them, because their code samples set the house style for everything
 copied out of them.
 
+`bash scripts/check-content.sh --fix` repairs the mechanical violations first and then reports the
+rest: em-dashes, K&R braces that end a line, a missing `referrerpolicy`, an init call naming the
+wrong lab, a manifest `href` with the wrong casing, and assets that exist but were never staged.
+It deliberately does *not* touch anything needing words (a missing `blurb`) or a decision (which lab
+an orphan page belongs to, what to name a downloaded image). It wants a clean tree so `git diff`
+shows exactly what it changed (`--force` overrides), and it refuses to combine with `--hook`, since
+rewriting files at session end without anyone reading the diff is exactly the wrong moment.
+
 The same script runs in CI ([`.github/workflows/check-content.yml`](.github/workflows/check-content.yml))
 on every push and pull request, so it also covers edits made outside a Claude Code session (this repo
 has a second author). [`CONTRIBUTING.md`](CONTRIBUTING.md) is the human-facing version of these
