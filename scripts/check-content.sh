@@ -580,6 +580,33 @@ audit_notes=""
 note() { audit_notes+="  $1"$'\n'; }
 
 if [ "$AUDIT" -eq 1 ]; then
+  # A page can record that a deviation is deliberate:
+  #     <!-- audit-skip: oplossing -->
+  #     <!-- audit-skip: lead, figure -->
+  # The deviation is then listed as skipped rather than as a finding, so the
+  # decision lives in the file that deviates and the audit output can reach
+  # zero. An audit nobody can silence is an audit nobody reads.
+  VALID_SKIPS=" lead figure indienen oplossing code-class checklist-driven "
+  declare -A SKIP=()
+  skip_notes=""
+  while IFS= read -r hit; do
+    [ -z "$hit" ] && continue
+    f="${hit%%:*}"; body="${hit#*:}"
+    body="${body#*audit-skip:}"; body="${body%%-->*}"; body="${body//,/ }"
+    for rule in $body; do
+      if [[ "$VALID_SKIPS" == *" $rule "* ]]; then
+        SKIP["$f:$rule"]=1
+        skip_notes+="  $f ($rule)"$'\n'
+      else
+        # A typo here would silently disable nothing, which is exactly the
+        # kind of quiet no-op this whole script exists to prevent.
+        note "$f: unknown audit-skip rule '$rule' (valid:$VALID_SKIPS)"
+      fi
+    done
+  done < <(grep -oHE '<!--[[:space:]]*audit-skip:[^>]*-->' "${checked[@]}" 2>/dev/null)
+
+  skipped() { [ -n "${SKIP[$1:$2]:-}" ]; }
+
   declare -A HAS_LEAD=() HAS_INDIENEN=() HAS_OPLOSSING=()
   mark HAS_LEAD      'class="lead"'
   mark HAS_INDIENEN  '<h2[^>]*id="indienen"'
@@ -590,6 +617,7 @@ if [ "$AUDIT" -eq 1 ]; then
   while IFS= read -r hit; do
     [ -z "$hit" ] && continue
     f="${hit%%:*}"; cls="${hit#*:}"
+    skipped "$f" code-class && continue
     cls="${cls#class=\"}"; cls="${cls%\"}"
     case "$cls" in
       *language-cpp*) ;;
@@ -608,7 +636,8 @@ if [ "$AUDIT" -eq 1 ]; then
     [ "$base" = "dashboard.html" ] && continue
     [ "$base" = "reference.html" ] && continue
 
-    [ -n "${HAS_LEAD[$f]:-}" ] || note "$f: no <p class=\"lead\"> under the <h1>"
+    [ -n "${HAS_LEAD[$f]:-}" ] || skipped "$f" lead \
+      || note "$f: no <p class=\"lead\"> under the <h1>"
 
     # Heuristic: more <img> than <figure> means at least one bare image.
     # Images inside a table cell are excluded, since a comparison table puts
@@ -617,16 +646,20 @@ if [ "$AUDIT" -eq 1 ]; then
     imgs=$(grep -c '<img' "$f" 2>/dev/null || true)
     cells=$(grep -cE '<t[dh][ >].*<img' "$f" 2>/dev/null || true)
     figs=$(grep -c '<figure' "$f" 2>/dev/null || true)
-    [ "$(( imgs - cells ))" -gt "$figs" ] \
+    [ "$(( imgs - cells ))" -gt "$figs" ] && ! skipped "$f" figure \
       && note "$f: $(( imgs - cells )) <img> outside a table but only $figs <figure> (images belong in a figure wrapper)"
 
     case "$f" in
       Labo*/Exercises/*)
-        [ -n "${HAS_INDIENEN[$f]:-}" ]  || note "$f: no <h2 id=\"indienen\"> section"
-        [ -n "${HAS_OPLOSSING[$f]:-}" ] || note "$f: no <h2 id=\"oplossing\"> section"
+        [ -n "${HAS_INDIENEN[$f]:-}" ]  || skipped "$f" indienen \
+          || note "$f: no <h2 id=\"indienen\"> section"
+        [ -n "${HAS_OPLOSSING[$f]:-}" ] || skipped "$f" oplossing \
+          || note "$f: no <h2 id=\"oplossing\"> section"
         # The manifest flag and the page's own markup must tell the same story:
         # a mismatch means the dashboard reads progress the page never writes.
-        if [ -n "${DRIVEN[$f]:-}" ]; then
+        if skipped "$f" checklist-driven; then
+          :
+        elif [ -n "${DRIVEN[$f]:-}" ]; then
           [ -n "${HAS_CHECKLIST[$f]:-}" ] || note "$f: manifest says checklistDriven but the page has no .checklist"
           [ -n "${HAS_SYNC[$f]:-}" ]      || note "$f: manifest says checklistDriven but the page never loads checklist-sync.js"
         elif [ -n "${MANIFEST_PAGES[$f]:-}" ] && [ -n "${HAS_CHECKLIST[$f]:-}" ]; then
@@ -686,6 +719,10 @@ fi
 # Advisory: printed to stdout and never allowed to affect the exit code.
 if [ -n "$audit_notes" ]; then
   printf 'Style audit (advisory, does not fail):\n%s\n' "$audit_notes"
+fi
+# Deliberate deviations stay visible, just not as findings.
+if [ -n "${skip_notes:-}" ]; then
+  printf 'Deviations recorded in the page itself (audit-skip):\n%s\n' "$skip_notes"
 fi
 
 if [ -n "$report" ]; then

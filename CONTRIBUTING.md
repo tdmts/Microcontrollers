@@ -56,6 +56,17 @@ Dit laat zien waar een pagina wel werkt maar er anders uitziet dan de rest: een 
 `indienen`- of `oplossing`-sectie. **Dit blokkeert nooit iets**, het draait niet in CI, en je mag het
 gerust negeren. Handig als je eens wil opruimen.
 
+Wijkt een pagina bewust af? Zet dat dan in de pagina zelf, met een korte uitleg ernaast:
+
+```html
+<!-- audit-skip: oplossing -->
+```
+
+Geldige regels: `lead`, `figure`, `indienen`, `oplossing`, `code-class`, `checklist-driven`
+(meerdere mag, gescheiden door komma's). De afwijking blijft zichtbaar in de output, maar telt niet
+meer mee als opmerking. Gebruik dit enkel wanneer het soort pagina echt anders is, niet om iets stil
+te maken dat je nog moet opkuisen.
+
 ## Een oefening toevoegen
 
 1. **Kopieer een bestaande oefening** als vertrekpunt, bijvoorbeeld

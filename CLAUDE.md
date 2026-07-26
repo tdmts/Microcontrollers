@@ -63,6 +63,15 @@ belong in a `figure` (table cells excluded), exercise pages need `indienen` and 
 and a manifest `checklistDriven` flag must agree with the page's own markup. **It never affects the
 exit code** and never runs in CI or the hook, so a stylistic deviation cannot block anyone.
 
+A page can record that a deviation is deliberate with `<!-- audit-skip: oplossing -->` (comma-separate
+several; valid rules are `lead`, `figure`, `indienen`, `oplossing`, `code-class`,
+`checklist-driven`). Skipped deviations are still listed, under "Deviations recorded in the page
+itself", just not as findings, and an unrecognised rule name is reported rather than silently
+ignoring nothing. Put the reason in a comment next to the marker: see
+[`Labo0/Exercises/BegeleideOefening.html`](Labo0/Exercises/BegeleideOefening.html), a guided
+walkthrough whose solutions sit inline per step, so a closing Oplossing section would duplicate them.
+Reach for this only when the page type genuinely differs, not to quiet a page you haven't fixed yet.
+
 `bash scripts/check-content.sh --fix` repairs the mechanical violations first and then reports the
 rest: em-dashes, K&R braces that end a line, a missing `referrerpolicy`, an init call naming the
 wrong lab, a manifest `href` with the wrong casing, and assets that exist but were never staged.
