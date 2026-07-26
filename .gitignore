@@ -1,1 +1,5 @@
 .claude/settings.local.json
+
+# Raw Brightspace topics staged by scripts/import-brightspace.py, converted per
+# page with orion-convert. Never published; the converted page under LaboN/ is.
+_incoming/

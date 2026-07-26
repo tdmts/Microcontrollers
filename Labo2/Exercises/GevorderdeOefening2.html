@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gevorderde oefening 2: temperatuur op het 7-segment display</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Gevorderde oefening 2: temperatuur op het 7-segment display</h1>
+    <p class="lead">Zoals de vorige oefening, maar deze keer maak je de temperatuur zichtbaar op het dubbele 7-segment display.</p>
+
+    <p>We gaan ervan uit dat je altijd temperaturen meet tussen -9 °C en 99 °C. Je hebt dus twee posities nodig: bij een negatieve temperatuur toont de linkse een minteken en de rechtse het cijfer.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Bouw verder op wat je al hebt</div>
+        <p>Het multiplexen van het dubbele display heb je al gedaan in <a href="../../Labo1/Exercises/Dubbel7SegmentMetTeller.html">Dubbel 7-segment met teller</a> uit labo 1. Neem die aanpak over en vervang de teller door je temperatuurmeting.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De temperatuur wordt uitgelezen met de TMP36 en omgerekend naar °C</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Beide cijfers van het display worden gemultiplext, zonder zichtbaar flikkeren</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een temperatuur van 0 tot 99 °C wordt correct getoond</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een negatieve temperatuur toont een minteken op de linkse positie</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De meting blokkeert het multiplexen niet, er wordt geen lange <code>delay()</code> gebruikt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                De valkuil hier is timing. Het display moet blijven multiplexen, dus je
+                mag niet met een <code>delay(500)</code> op je meting gaan wachten. Je
+                gebruikt dezelfde <code>millis()</code>-aanpak als bij
+                <a href="NachtlampMetTijd.html">Nachtlamp met tijd</a>: het display
+                wordt continu ververst, en ongeveer twee keer per seconde meet je
+                tussendoor even de temperatuur.
+            </p>
+            <p>
+                Voor het minteken breid je de tabel met cijferpatronen uit met een elfde
+                patroon, waarbij enkel segment g brandt. Zo kan je met dezelfde functie
+                <code>toonPatroon()</code> zowel een cijfer als een minteken tonen.
+            </p>
+            <pre class="code-wrapper language-cpp linenumbers show-language">
+const int sensorPin = A0;
+
+// Placeholder-pinnen: vervang door de pinnen uit jouw eigen schema
+const int segPins[] = {2, 3, 4, 5, 6, 7, 8}; // a,b,c,d,e,f,g
+const int pinDigitSelect = 10;
+
+// Pas aan op basis van je display: HIGH voor common cathode, LOW voor common anode
+const bool SEGMENT_AAN = HIGH;
+// Pas aan: welke stand van pin10 activeert het linkse display?
+const bool DIGIT_LINKS = HIGH;
+
+const int MINTEKEN = 10; // index van het extra patroon hieronder
+
+// Patronen 0-9, plus het minteken. Volgorde a,b,c,d,e,f,g. 1 = segment aan.
+const bool patronen[11][7] = {
+  {1,1,1,1,1,1,0}, // 0
+  {0,1,1,0,0,0,0}, // 1
+  {1,1,0,1,1,0,1}, // 2
+  {1,1,1,1,0,0,1}, // 3
+  {0,1,1,0,0,1,1}, // 4
+  {1,0,1,1,0,1,1}, // 5
+  {1,0,1,1,1,1,1}, // 6
+  {1,1,1,0,0,0,0}, // 7
+  {1,1,1,1,1,1,1}, // 8
+  {1,1,1,1,0,1,1}, // 9
+  {0,0,0,0,0,0,1}, // minteken: enkel segment g
+};
+
+int temperatuur = 0;
+unsigned long vorigeMeting = 0;
+
+void setup()
+{
+  for (int i = 0; i &lt; 7; i++)
+  {
+    pinMode(segPins[i], OUTPUT);
+  }
+  pinMode(pinDigitSelect, OUTPUT);
+  Serial.begin(9600);
+}
+
+int leesTemperatuur()
+{
+  int value = analogRead(sensorPin);        // 0..1023
+  double spanning = value * 5.0 / 1023.0;   // omrekenen naar volt
+
+  // 0,75 V komt overeen met 25 graden, en elke graad erbij is 0,01 V erbij
+  double graden = (spanning - 0.75) / 0.01 + 25.0;
+
+  return (int)graden;
+}
+
+void toonPatroon(int index)
+{
+  for (int i = 0; i &lt; 7; i++)
+  {
+    bool segmentAan = patronen[index][i];
+    digitalWrite(segPins[i], segmentAan ? SEGMENT_AAN : !SEGMENT_AAN);
+  }
+}
+
+void multiplexStap(int links, int rechts)
+{
+  // Even kort het linkse cijfer tonen...
+  digitalWrite(pinDigitSelect, DIGIT_LINKS);
+  toonPatroon(links);
+  delay(5);
+
+  // ...en dan kort het rechtse. Snel afwisselen = geen flikkering zichtbaar.
+  digitalWrite(pinDigitSelect, !DIGIT_LINKS);
+  toonPatroon(rechts);
+  delay(5);
+}
+
+void loop()
+{
+  int links;
+  int rechts;
+
+  if (temperatuur &lt; 0) // -9 tot -1: minteken links, het cijfer rechts
+  {
+    links = MINTEKEN;
+    rechts = -temperatuur;
+  }
+  else // 0 tot 99: gewoon tientallen en eenheden
+  {
+    links = temperatuur / 10;
+    rechts = temperatuur % 10;
+  }
+
+  multiplexStap(links, rechts);
+
+  // Twee keer per seconde meten, zonder het multiplexen te blokkeren
+  if (millis() - vorigeMeting &gt;= 500)
+  {
+    vorigeMeting = millis();
+    temperatuur = leesTemperatuur();
+    Serial.println(temperatuur);
+  }
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo2);
+</script>
+</body>
+</html>

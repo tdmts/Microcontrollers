@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Temperatuursensor LM35</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Temperatuursensor LM35</h1>
+    <p class="lead">Doe hetzelfde als bij de TMP36, maar nu met de LM35 uit je starterkit.</p>
+
+    <p>In je Arduino starterkit vind je een LM35. Dat is, net als de <a href="TemperatuursensorTMP36.html">TMP36</a>, een temperatuursensor. Maak nu zelf een programma waarbij je de temperatuur zichtbaar maakt in de seriële monitor.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Kijk goed naar de datasheet</div>
+        <p>De LM35 lijkt op de TMP36, maar hij rekent niet hetzelfde om. Zoek in de datasheet op welke spanning bij 0 °C op de uitgang staat, en hoeveel de spanning per graad toeneemt. Neem de formule van de TMP36 dus niet zomaar over.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De sensorwaarde wordt ingelezen met <code>analogRead()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De gelezen waarde (0-1023) wordt eerst omgerekend naar een spanning</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De omrekening naar °C klopt met de datasheet van de LM35, niet met die van de TMP36</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het resultaat staat in een <code>float</code> of <code>double</code>, niet in een <code>int</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De temperatuur verschijnt in de seriële monitor en klopt ongeveer met de kamertemperatuur</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                De LM35 is eenvoudiger dan de TMP36: bij 0 °C staat er 0 V op de
+                uitgang, en per graad komt er 10 mV bij. Je moet er dus niets van
+                aftrekken en niets bij optellen, enkel delen door 0,01.
+            </p>
+            <p>
+                Precies daarom kan de LM35 geen temperaturen onder nul meten zonder
+                extra schakeling: dat zou een negatieve spanning vragen, en die kan je
+                Arduino niet inlezen.
+            </p>
+            <pre class="code-wrapper language-cpp linenumbers show-language">
+const int sensorPin = A0;
+
+void setup()
+{
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int value = analogRead(sensorPin);        // 0..1023
+  double spanning = value * 5.0 / 1023.0;   // omrekenen naar volt
+
+  // de LM35 geeft 10 mV per graad, en 0 V bij 0 graden
+  double temperatuur = spanning / 0.01;
+
+  Serial.print(temperatuur);
+  Serial.println(" graden C");
+
+  delay(500);
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo2);
+</script>
+</body>
+</html>

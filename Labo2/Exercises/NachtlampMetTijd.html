@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nachtlamp met tijd</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Nachtlamp met tijd</h1>
+    <p class="lead">Maak een nachtlamp die de LED inschakelt zodra het donker wordt, maar ze na 10 seconden weer uitschakelt.</p>
+
+    <p>De nachtlamp gaat automatisch uit wanneer het opnieuw licht wordt. Je bouwt verder op de LDR-schakeling uit <a href="LdrLichtmeting.html">LDR: lichtmeting</a>.</p>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/FrOHe_1ObMQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Tip: gebruik geen delay()</div>
+        <p>Je zou je er makkelijk vanaf kunnen maken met <code>delay(10000)</code>, maar daarmee blokkeer je je hele programma: tijdens die 10 seconden kan je niets meer inlezen. Vraag gerust uitleg tijdens het labo als dat nog niet duidelijk is.</p>
+    </div>
+
+    <h2 id="non-blocking-timer">Non-blocking timer</h2>
+    <p>Met <code>millis()</code> vraag je op hoeveel milliseconden je Arduino al aan het werk is. Door dat te vergelijken met een eerder bewaard tijdstip laat je tijd verstrijken zonder je programma stil te leggen:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language">
+unsigned long previousMillis;
+const unsigned long interval = 10000; // 10 seconden
+
+void setup()
+{
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  unsigned long currentMillis = millis(); // huidige tijd
+
+  if (currentMillis - previousMillis &gt;= interval)
+  {
+    // voer acties uit die elk interval uitgevoerd moeten worden
+
+    previousMillis = currentMillis; // onthoud wanneer het interval verstreek
+  }
+  else
+  {
+    // voer acties uit die sowieso uitgevoerd moeten worden
+  }
+}
+    </pre>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De lichtsterkte wordt ingelezen met <code>analogRead()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LED gaat aan zodra het donkerder wordt dan een gekozen drempelwaarde</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LED gaat na 10 seconden vanzelf terug uit</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LED gaat ook uit zodra het opnieuw licht wordt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er wordt geen <code>delay()</code> gebruikt om de 10 seconden af te tellen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                Je houdt met een <code>bool</code> bij of de lamp brandt, en met een
+                <code>unsigned long</code> wanneer ze precies is aangegaan. Zodra het
+                donker wordt en de lamp nog niet brandt, schakel je ze in en noteer je
+                het tijdstip. In elke doorloop van <code>loop()</code> controleer je
+                daarna twee dingen: of de 10 seconden om zijn, en of het intussen
+                weer licht is geworden.
+            </p>
+            <p>
+                De variabele <code>lampAanSinds</code> is een <code>unsigned long</code>
+                omdat <code>millis()</code> dat ook is. Zet je die in een gewone
+                <code>int</code>, dan loopt hij na iets meer dan 32 seconden over en
+                klopt je timing niet meer.
+            </p>
+            <pre class="code-wrapper language-cpp linenumbers show-language">
+const int ldrPin = A0; // midden van de spanningsdeler op A0
+const int ledPin = 3;  // led, zelfde pin als in de vorige oefening
+
+const int drempel = 400;                  // onder deze waarde noemen we het donker
+const unsigned long brandduur = 10000;    // 10 seconden
+
+bool lampBrandt = false;
+unsigned long lampAanSinds = 0;
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int licht = analogRead(ldrPin);
+  unsigned long nu = millis();
+
+  if (!lampBrandt &amp;&amp; licht &lt; drempel) // het wordt donker: lamp aan
+  {
+    digitalWrite(ledPin, HIGH);
+    lampBrandt = true;
+    lampAanSinds = nu;
+  }
+  else if (lampBrandt)
+  {
+    bool tijdOm = (nu - lampAanSinds) &gt;= brandduur;
+    bool weerLicht = licht &gt;= drempel;
+
+    if (tijdOm || weerLicht) // uit na 10 seconden, of zodra het licht wordt
+    {
+      digitalWrite(ledPin, LOW);
+      lampBrandt = false;
+    }
+  }
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo2);
+</script>
+</body>
+</html>

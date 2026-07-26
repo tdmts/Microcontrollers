@@ -35,6 +35,8 @@ in order:
    under its own lab folder, and has a unique `id` and `order`; every entry carries every field the
    engines read (`name`, `difficulty`, `time`, `blurb` for exercises, `name` + `blurb` for reference
    topics, all non-empty, since a missing field renders a blank card rather than an error);
+   `difficulty` is 1, 2 or 3, because `dashboard.js` maps `DIFFICULTY_LABELS` for those three only and
+   any other value leaves the label empty, which drops the entire pepper badge from the card;
    every page under `LaboN/Exercises/` or `LaboN/Reference/` is listed in the matching manifest (an
    unlisted page earns no XP and is unreachable). This is the rule that otherwise fails *silently*:
    a mismatched basename makes checklist sync no-op with no error anywhere.
@@ -60,7 +62,9 @@ copied out of them.
 proper stays out of: every code block must be `code-wrapper language-cpp linenumbers show-language`
 (uniform everywhere, sketch or theory snippet alike), every content page needs a `lead`, images
 belong in a `figure` (table cells excluded), exercise pages need `indienen` and `oplossing` sections,
-and a manifest `checklistDriven` flag must agree with the page's own markup. **It never affects the
+the `indienen` section must be the standard `<p>Sla je oefening op.</p>` and nothing else (a hosted
+page is not the dropbox, so anything about handing in belongs in Brightspace; imported content drags
+that wording along), and a manifest `checklistDriven` flag must agree with the page's own markup. **It never affects the
 exit code** and never runs in CI or the hook, so a stylistic deviation cannot block anyone.
 
 A page can record that a deviation is deliberate with `<!-- audit-skip: oplossing -->` (comma-separate
@@ -158,6 +162,30 @@ An exercise page whose lab has a `laboN` key in `exercises.js` gets a **live** c
 for the canonical example. Every new exercise must also get a matching entry in `exercises.js`.
 
 ## Authoring conventions
+
+### Bulk import from Brightspace
+
+Moving a whole course over one topic at a time, by hand, is not the intended workflow.
+[`scripts/import-brightspace.py`](scripts/import-brightspace.py) takes a Brightspace course export
+zip (Course Admin → Import/Export/Copy Components → *Export Components*, course files included) and
+stages every content topic as raw HTML in `_incoming/` (gitignored), one file per topic, numbered in
+course order, with the module, title, order and original path in an `imported-from-brightspace`
+header comment. It also copies every referenced course image into `img/` and rewrites the
+`/content/enforced/...` srcs to `../../img/...`, deduplicating against images already in the repo, so
+the hotlink rule is satisfied before conversion even starts. `--dry-run` reports without writing;
+`--img-dir`/`--img-prefix` override the destinations.
+
+It reads the package's `imsmanifest.xml` for the module tree and ordering, falling back to a plain
+scan for `.html` entries if there is none. Image refs it cannot find in the package (a genuinely
+external hotlink, a dead link that was already broken in Brightspace) are left untouched and listed,
+both on stdout and in the page header, for `check-content.sh` to catch later.
+
+Staging is all it does: **`_incoming/` is never published.** Each staged file still goes through
+orion-convert to become a real page under `LaboN/`, gets its `exercises.js` / `reference.js` entry,
+and the images need `git add` before the check accepts them. `_incoming/WORKLIST.md` is the
+per-topic to-do list for that pass. Python rather than bash because it parses zip and XML; it is an
+authoring tool, never part of CI or the hook, so the fork-free constraint on `check-content.sh`
+does not apply to it.
 
 Use the **orion-convert** skill (`.claude/skills/orion-convert/`) when turning raw content into a lab
 page — it encodes the full component-mapping rules, the checklist/QR conventions, heading-id

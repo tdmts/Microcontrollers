@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dimmer met schakelaar</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Dimmer met schakelaar</h1>
+    <p class="lead">Voeg een schakelaar toe aan je dimmer, zodat je de gedimde LED ook aan en uit kan zetten.</p>
+
+    <p>Je vertrekt van de schakeling uit <a href="LedDimmenMetPotentiometer.html">LED dimmen met potentiometer</a>. De potentiometer blijft de helderheid regelen, maar er komt een drukknop of schakelaar bij die de LED volledig in- en uitschakelt.</p>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/wSlA5F9njbA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Tip</div>
+        <p>Lees de schakelaar in met <code>digitalRead()</code>. Gebruik <code>INPUT_PULLUP</code> zodat je geen externe weerstand nodig hebt: de ingang is dan <code>HIGH</code> in rust en <code>LOW</code> wanneer je de knop indrukt.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De potentiometer wordt ingelezen met <code>analogRead()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De schakelaar wordt ingelezen met <code>digitalRead()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De schakelaar heeft een pull-up of pull-down, of gebruikt <code>INPUT_PULLUP</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Staat de schakelaar uit, dan is de LED volledig gedoofd</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Staat de schakelaar aan, dan regelt de potentiometer de helderheid</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                De dimmer zelf blijft ongewijzigd: je leest de potentiometer in met
+                <code>analogRead()</code> en herschaalt die waarde met <code>map()</code>
+                naar 0 tot 255. Nieuw is dat je eerst de schakelaar uitleest. Staat die
+                niet ingedrukt, dan schrijf je gewoon 0 naar de LED in plaats van de
+                berekende helderheid.
+            </p>
+            <p>
+                Met <code>INPUT_PULLUP</code> is de ingang <code>LOW</code> wanneer de knop
+                ingedrukt is. Daarom controleer je op <code>LOW</code> en niet op
+                <code>HIGH</code>.
+            </p>
+            <pre class="code-wrapper language-cpp linenumbers show-language">
+const int potPin = A0;    // potentiometer op analoge ingang A0
+const int ledPin = 3;     // led op een PWM-pin (~)
+const int knopPin = 2;    // schakelaar op digitale pin 2
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  pinMode(knopPin, INPUT_PULLUP); // interne pull-up, knop schakelt naar massa
+}
+
+void loop()
+{
+  int potWaarde = analogRead(potPin);               // 0..1023
+  int helderheid = map(potWaarde, 0, 1023, 0, 255); // herschaal naar 0..255
+
+  if (digitalRead(knopPin) == LOW) // ingedrukt: led volgt de potentiometer
+  {
+    analogWrite(ledPin, helderheid);
+  }
+  else // niet ingedrukt: led uit
+  {
+    analogWrite(ledPin, 0);
+  }
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo2);
+</script>
+</body>
+</html>

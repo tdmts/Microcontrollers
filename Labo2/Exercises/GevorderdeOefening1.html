@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gevorderde oefening 1: temperatuur met RGB-LED</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Gevorderde oefening 1: temperatuur met RGB-LED</h1>
+    <p class="lead">Lees de temperatuur uit met de TMP36GT9Z, stuur ze naar de PC, en duid met een RGB-LED aan of ze te hoog, goed of te laag is.</p>
+
+    <p>Je kan de datasheet van de sensor onderaan terugvinden, of opzoeken via Google. Gebruik de RGB-LED om de toestand aan te duiden:</p>
+
+    <ul>
+        <li><strong>Rood</strong>: temperatuur is te hoog (hoger dan 30 °C)</li>
+        <li><strong>Groen</strong>: temperatuur is OK (vanaf 20 °C tot en met 30 °C)</li>
+        <li><strong>Blauw</strong>: temperatuur is te laag (lager dan 20 °C)</li>
+    </ul>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/QsZVFXSMjqA" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Bouw verder op wat je al hebt</div>
+        <p>Het uitlezen en omrekenen van de sensor is hetzelfde als bij <a href="TemperatuursensorTMP36.html">Temperatuursensor TMP36</a>, en de RGB-LED stuur je aan zoals in <a href="../../Labo1/Exercises/RGBLed.html">RGB-LED</a> uit labo 1. Het nieuwe stuk is enkel de koppeling tussen de twee.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De temperatuur wordt uitgelezen met de TMP36 en omgerekend naar °C</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De temperatuur wordt naar de PC gestuurd en is zichtbaar in de seriële monitor</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Boven 30 °C brandt de RGB-LED rood</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Tussen 20 °C en 30 °C brandt de RGB-LED groen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Onder 20 °C brandt de RGB-LED blauw</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt altijd precies één kleur, de vorige kleur blijft niet mee branden</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                Het valt uiteen in drie stukjes: uitlezen en omrekenen, beslissen welke
+                kleur erbij hoort, en die kleur tonen. Door het tonen in een eigen
+                functie <code>toonKleur()</code> te zetten, schakel je altijd eerst alle
+                drie de kleuren uit voor je er één aanzet. Zo kan er nooit een oude
+                kleur blijven meebranden.
+            </p>
+            <p>
+                Let op de volgorde van je <code>if</code>-testen. Omdat je na de eerste
+                test die klopt stopt, hoef je in de tweede test niet nog eens te
+                controleren of de temperatuur onder de 30 zit: dat weet je dan al.
+            </p>
+            <pre class="code-wrapper language-cpp linenumbers show-language">
+const int sensorPin = A0;
+
+const int roodPin = 3;
+const int groenPin = 4;
+const int blauwPin = 5;
+
+const double teHoog = 30.0;
+const double teLaag = 20.0;
+
+void setup()
+{
+  pinMode(roodPin, OUTPUT);
+  pinMode(groenPin, OUTPUT);
+  pinMode(blauwPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void toonKleur(bool rood, bool groen, bool blauw)
+{
+  digitalWrite(roodPin, rood);
+  digitalWrite(groenPin, groen);
+  digitalWrite(blauwPin, blauw);
+}
+
+double leesTemperatuur()
+{
+  int value = analogRead(sensorPin);        // 0..1023
+  double spanning = value * 5.0 / 1023.0;   // omrekenen naar volt
+
+  // 0,75 V komt overeen met 25 graden, en elke graad erbij is 0,01 V erbij
+  return (spanning - 0.75) / 0.01 + 25.0;
+}
+
+void loop()
+{
+  double temperatuur = leesTemperatuur();
+
+  Serial.print(temperatuur);
+  Serial.println(" graden C");
+
+  if (temperatuur &gt; teHoog)
+  {
+    toonKleur(true, false, false);  // rood
+  }
+  else if (temperatuur &gt;= teLaag)
+  {
+    toonKleur(false, true, false);  // groen
+  }
+  else
+  {
+    toonKleur(false, false, true);  // blauw
+  }
+
+  delay(500);
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo2);
+</script>
+</body>
+</html>

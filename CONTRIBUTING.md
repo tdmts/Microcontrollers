@@ -56,6 +56,17 @@ Dit laat zien waar een pagina wel werkt maar er anders uitziet dan de rest: een 
 `indienen`- of `oplossing`-sectie. **Dit blokkeert nooit iets**, het draait niet in CI, en je mag het
 gerust negeren. Handig als je eens wil opruimen.
 
+Eén daarvan verdient wat uitleg: de **Indienen-sectie is vaste tekst**, exact deze twee regels:
+
+```html
+<h2 id="indienen">Indienen</h2>
+<p>Sla je oefening op.</p>
+```
+
+Studenten dienen in via Brightspace, niet via deze pagina's. Alles wat de oorspronkelijke tekst
+zegt over indienen ("dien in op deze opdracht", "sla op als .ino of .txt") laat je dus weg. Dat
+soort zinnen sluipt vanzelf mee binnen wanneer je content uit Brightspace overneemt.
+
 Wijkt een pagina bewust af? Zet dat dan in de pagina zelf, met een korte uitleg ernaast:
 
 ```html
@@ -80,7 +91,7 @@ te maken dat je nog moet opkuisen.
    | `order` | volgorde op het dashboard. Uniek binnen het labo. De volgorde in de array doet er niet toe. |
    | `name` | titel op de dashboardkaart |
    | `href` | volledige `https://tdmts.github.io/Microcontrollers/...` URL. De bestandsnaam moet exact overeenkomen met je HTML-bestand, ook qua hoofdletters. |
-   | `difficulty` | 1, 2 of 3 |
+   | `difficulty` | 1, 2 of 3. Enkel die drie: bij een andere waarde verdwijnen de pepertjes volledig van de kaart, zonder foutmelding. Het script controleert dit. |
    | `time` | ruwe schatting, bijvoorbeeld `'~20 min'` |
    | `blurb` | een zin die op de kaart komt |
    | `checklistDriven` | `true` als de pagina een checklist heeft (zie hieronder) |
@@ -114,6 +125,27 @@ een `reference.html`, en **een `laboN`-blok in `exercises.js` en/of `reference.j
 blok niet: zonder blok rendert het dashboard een lege pagina zonder enige foutmelding. Het script
 controleert dit.
 
+## Veel pagina's tegelijk uit Brightspace halen
+
+Kopieer niet elke oefening apart over. Exporteer het vak in één keer: Course Admin →
+Import/Export/Copy Components → *Export Components*, met "include course files" aangevinkt. Draai
+daarna op de zip die je downloadt:
+
+```
+python scripts/import-brightspace.py export.zip
+```
+
+Dat zet elk topic als ruwe HTML in `_incoming/` (staat in `.gitignore`, wordt dus nooit
+gepubliceerd), genummerd in de volgorde van het vak, met de module en de titel bovenaan in een
+commentaarblok. Alle afbeeldingen uit het vak komen meteen in `img/` terecht en de
+`/content/enforced/...`-paden worden vervangen door `../../img/...`, dus die huisregel is al in orde.
+`--dry-run` toont enkel wat er zou gebeuren.
+
+Wat het script niet doet: er een echte pagina van maken. Elk bestand in `_incoming/` moet je nog
+omzetten naar de Orion-opmaak en in `exercises.js` of `reference.js` zetten. `_incoming/WORKLIST.md`
+is je takenlijst. Vergeet `git add img/` niet, het controlescript aanvaardt enkel afbeeldingen die
+in git zitten.
+
 ## Huisregels
 
 Deze worden automatisch afgedwongen:
@@ -130,6 +162,10 @@ Deze niet, maar hou ze toch aan:
 
 - **Schrijf in het Nederlands, in de je-vorm**, warm en niet formeel.
 - **Volledige sketches** in de oplossing, geen fragmenten.
+- **Pinnummers van laag naar hoog.** Een gewone digitale uitgang begint bij 2, iets met
+  `analogWrite()` bij de laagste PWM-pin, dus **3** (PWM op UNO en Leonardo: 3, 5, 6, 9, 10, 11).
+  Bouwen opeenvolgende oefeningen op dezelfde schakeling verder, hou een component dan op dezelfde
+  pin: een student mag geen draad moeten verleggen die de opgave niet vraagt.
 - Hints in een uitklapbaar blok, zodat wie het zelf wil proberen niet meteen het antwoord ziet.
 - Enkel echt kritische waarschuwingen als waarschuwing markeren, anders vervlakt het effect.
 

@@ -31,6 +31,15 @@ part of "done" for this skill.
 If none of these is clearly what the user gave you, ask them to paste the
 content or point at a file before proceeding.
 
+**If the source is a whole Brightspace course rather than one page, don't make
+the user paste it topic by topic.** Ask for a course export zip (Course Admin →
+Import/Export/Copy Components → Export Components, with course files included)
+and run `python scripts/import-brightspace.py <export.zip>` on it. That stages
+every topic as raw HTML in `_incoming/`, with the module, title and order in a
+header comment, and self-hosts the course images into `img/` with the
+`/content/enforced/` srcs already rewritten. Then run this skill per staged
+file, working down `_incoming/WORKLIST.md`.
+
 ## Process
 
 1. **Read the source.** If it's a file path, read it. If it's inline text,
@@ -188,10 +197,24 @@ file ever uploaded to Orion), not the actual assignment dropbox. Source content 
 submission language that was only accurate in its original context (e.g.
 "Dien je oefening in op deze opdracht. Bij het indienen krijg je onmiddellijk
 de oplossing te zien.") — implying you submit *here* and get an *immediate
-solution reveal*. Drop sentences making that specific claim entirely; don't
-reword or relocate them. Keep unrelated prep instructions from the same
-section (e.g. "sla je oefening op als .ino of .txt bestand") since those
-aren't submission claims, just advice.
+solution reveal*.
+
+**The Indienen section is fixed boilerplate, not something you compose from the
+source.** It is exactly these two lines, and every exercise page in the repo
+uses them verbatim:
+
+```html
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+```
+
+Drop everything else the source says about submitting. That includes the
+file-format advice ("sla je oefening op in een .ino of een tekstbestand
+(.txt)"), which reads like harmless prep advice but belongs to the Brightspace
+dropbox rather than the hosted page. Rewording it per page is drift: check
+[`Labo2/Exercises/LedDimmen.html`](../../../Labo2/Exercises/LedDimmen.html)
+and match it character for character. The evaluation checklist follows directly
+after this block.
 
 ## Checklist / QR block
 
@@ -358,8 +381,16 @@ inline example must all follow the same style so pages read as one system:
   `LED_PIN`). `ALL_CAPS` stays for symbolic hardware constants
   (`SEGMENT_AAN`, `KORT`, `DIGIT_TIENTALLEN`); don't rewrite those (renaming
   `SEGMENT_AAN` would even collide with the local `segmentAan` variable).
-- **`const int` for pins and fixed values** (`const int ledPin = 9;`), not
+- **`const int` for pins and fixed values** (`const int ledPin = 3;`), not
   `#define` and not `const byte`. Type-safe and debuggable.
+- **Assign pins from the lowest usable number up.** A plain digital output
+  starts at 2, and anything needing `analogWrite()` starts at the lowest PWM
+  pin, which is **3** on the UNO and Leonardo (PWM: 3, 5, 6, 9, 10, 11). Don't
+  reach for a higher pin just because a datasheet or tutorial used one.
+  Consecutive exercises in a lab usually build on the same breadboard, so keep
+  a component on the same pin across a chain of exercises unless the exercise
+  genuinely rewires it: a student following labo 2 from the dimmer to the
+  nachtlamp should never have to move a wire the text didn't ask them to move.
 - **Allman braces**: the opening `{` of `setup()`, `loop()`, `if`, `for`,
   `while`, etc. goes on its **own line**, aligned with the statement. This
   includes short bodies (no `if (x) { ... }` on one line). Data initializers

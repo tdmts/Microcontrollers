@@ -49,11 +49,11 @@
                 waarde tussen 0 en 1023 oplevert. <code>analogWrite()</code> verwacht
                 echter een waarde tussen 0 en 255, dus herschaal je de gelezen waarde
                 met <code>map()</code> voor je ze naar de led stuurt. De led moet op een
-                PWM-pin hangen (aangeduid met een <code>~</code>, bijvoorbeeld pin 9).
+                PWM-pin hangen (aangeduid met een <code>~</code>, bijvoorbeeld pin 3).
             </p>
             <pre class="code-wrapper language-cpp linenumbers show-language">
 const int potPin = A0; // potentiometer op analoge ingang A0
-const int ledPin = 9;  // led op een PWM-pin (~)
+const int ledPin = 3;  // led op een PWM-pin (~)
 
 void setup()
 {

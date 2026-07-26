@@ -96,13 +96,13 @@
         <div class="spoiler-content solution-content">
             <p>
                 De led hangt op een PWM-pin (aangeduid met een <code>~</code>,
-                bijvoorbeeld pin 9). Met een <code>for</code>-lus laat je de helderheid
+                bijvoorbeeld pin 3). Met een <code>for</code>-lus laat je de helderheid
                 stap voor stap oplopen van 0 naar 255 en daarna weer terug naar 0. Elke
                 stap zet je met <code>analogWrite()</code> op de pin, met telkens een
                 korte <code>delay()</code> zodat het dimmen zichtbaar traag verloopt.
             </p>
             <pre class="code-wrapper language-cpp linenumbers show-language">
-const int ledPin = 9; // led op een PWM-pin (~)
+const int ledPin = 3; // led op een PWM-pin (~)
 
 void setup()
 {

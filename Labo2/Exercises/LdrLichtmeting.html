@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LDR: lichtmeting</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>LDR: lichtmeting</h1>
+    <p class="lead">Gebruik een LDR in serie met een weerstand om licht te meten, en laat de LED feller branden naarmate het donkerder wordt.</p>
+
+    <p>Een LDR (Light Dependent Resistor) is een weerstand waarvan de waarde afhangt van hoeveel licht erop valt. Door hem in serie te zetten met een vaste weerstand maak je een spanningsdeler, en die spanning kan je inlezen met <code>analogRead()</code>.</p>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/Ss98BftXzhc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <h2 id="vragen">Vragen</h2>
+    <p>Bekijk eerst de datasheet van de LDR en beantwoord onderstaande vragen.</p>
+
+    <div class="spoiler-container">
+        <div class="basic">
+            Welke weerstandswaarde heeft de LDR bij volledige verduistering?
+        </div>
+        <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
+        <div class="hidden">
+            <p>1 MOhm.</p>
+        </div>
+    </div>
+
+    <div class="spoiler-container">
+        <div class="basic">
+            Welke weerstandswaarde heeft de LDR bij schemerdonker?
+        </div>
+        <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
+        <div class="hidden">
+            <p>9 kOhm.</p>
+        </div>
+    </div>
+
+    <div class="spoiler-container">
+        <div class="basic">
+            Welke weerstandswaarde heeft de LDR bij 10000 lux, dus bij daglicht?
+        </div>
+        <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
+        <div class="hidden">
+            <p>100 Ohm. Je leest dat af op de grafiek uit de datasheet:</p>
+            <figure class="figure w-100 text-center figure-zoom">
+                <img src="../../img/ldr-weerstand-vs-lux.png" alt="Grafiek uit de datasheet: weerstand van de LDR in kOhm tegenover de lichtsterkte in lux, dalend van 1000 kOhm bij 0,1 lux tot ongeveer 0,1 kOhm bij 10000 lux" width="385" height="257">
+            </figure>
+        </div>
+    </div>
+
+    <div class="spoiler-container">
+        <div class="basic">
+            Welke weerstandswaarde neem je best voor de vaste weerstand R2, zodat je het grootste bereik aan waarden krijgt over U2? Kies uit 1 Ohm, 2 kOhm of 10 kOhm.
+        </div>
+        <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
+        <div class="hidden">
+            <p>2 kOhm. Je vertrekt van het schema van de spanningsdeler:</p>
+            <figure class="figure w-100 text-center figure-zoom">
+                <img src="../../img/spanningsdeler-schema.png" alt="Schema van een spanningsdeler met R1 en R2 in serie over de spanning U, met de deelspanningen U1 over R1 en U2 over R2" width="186" height="246">
+            </figure>
+            <p>en van de formule van de spanningsdeler:</p>
+            <figure class="figure w-100 text-center figure-zoom">
+                <img src="../../img/spanningsdeler-formule.png" alt="Formule U2 is gelijk aan U maal R2 gedeeld door R1 plus R2" width="195" height="72">
+            </figure>
+            <p>Vul je die formule in voor de drie mogelijkheden, met de LDR die tussen 400 Ohm en 9000 Ohm varieert, dan zie je dat 2 kOhm veruit het grootste verschil tussen de minimum- en maximumspanning oplevert:</p>
+            <figure class="figure w-100 text-center figure-zoom">
+                <img src="../../img/ldr-keuze-vaste-weerstand.png" alt="Tabel met voor R1 gelijk aan 1, 2000 en 10000 Ohm de berekende minimum- en maximumspanning over U2 en het verschil, met het grootste verschil van 3,26 V bij 2000 Ohm" width="507" height="95">
+            </figure>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LDR staat in serie met een vaste weerstand als spanningsdeler</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het midden van de spanningsdeler is aangesloten op een analoge ingang</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De lichtwaarde wordt ingelezen met <code>analogRead()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LED hangt op een PWM-pin en wordt aangestuurd met <code>analogWrite()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Hoe donkerder het wordt, hoe feller de LED brandt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>
+                De spanningsdeler levert een waarde tussen 0 en 1023. Je wil de LED
+                feller laten branden naarmate het donkerder wordt, dus je moet de
+                meting <em>omkeren</em>. Dat doe je door bij <code>map()</code> het
+                uitvoerbereik om te draaien: 0 wordt 255 en 1023 wordt 0.
+            </p>
+            <p>
+                Welke kant je op moet keren hangt af van hoe je de LDR en de vaste
+                weerstand aansluit. Meet gerust eerst even af wat je binnenkrijgt in
+                het donker en in het licht, en draai de <code>map()</code> om als het
+                de verkeerde richting uitgaat.
+            </p>
+            <pre class="code-wrapper language-cpp linenumbers show-language">
+const int ldrPin = A0; // midden van de spanningsdeler op A0
+const int ledPin = 3;  // led op een PWM-pin (~)
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int licht = analogRead(ldrPin); // 0..1023, hoger = meer licht
+
+  // omgekeerd: veel licht geeft een lage helderheid, weinig licht een hoge
+  int helderheid = map(licht, 0, 1023, 255, 0);
+  analogWrite(ledPin, helderheid);
+
+  Serial.print("licht: ");
+  Serial.print(licht);
+  Serial.print("  helderheid: ");
+  Serial.println(helderheid);
+
+  delay(100);
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo2);
+</script>
+</body>
+</html>

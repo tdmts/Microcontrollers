@@ -400,6 +400,15 @@ if [ -f exercises.js ]; then
     [ -n "${seen_id[$lab/$id]:-}" ] && err "exercises.js: $lab has duplicate id '$id'"
     seen_id["$lab/$id"]=1
     require_fields "$line" "$EX_FIELDS" "exercises.js: $lab/$id"
+    # dashboard.js maps DIFFICULTY_LABELS for 1..3 only. Any other value leaves
+    # diffLabel empty, and the card then drops the whole pepper badge instead of
+    # erroring: the same silent-blank-card failure as a missing field.
+    if [[ "$line" =~ difficulty:[[:space:]]*([0-9]+) ]]; then
+      diff_val="${BASH_REMATCH[1]}"
+      if [ "$diff_val" -lt 1 ] || [ "$diff_val" -gt 3 ]; then
+        err "exercises.js: $lab/$id has difficulty $diff_val (dashboard.js renders 1-3; anything else hides the badge)"
+      fi
+    fi
     if [ -z "$order" ]; then
       err "exercises.js: $lab/$id has no order (the dashboard sorts on it)"
     else
@@ -607,10 +616,16 @@ if [ "$AUDIT" -eq 1 ]; then
 
   skipped() { [ -n "${SKIP[$1:$2]:-}" ]; }
 
-  declare -A HAS_LEAD=() HAS_INDIENEN=() HAS_OPLOSSING=()
+  declare -A HAS_LEAD=() HAS_INDIENEN=() HAS_OPLOSSING=() HAS_STD_INDIENEN=()
   mark HAS_LEAD      'class="lead"'
   mark HAS_INDIENEN  '<h2[^>]*id="indienen"'
   mark HAS_OPLOSSING '<h2[^>]*id="oplossing"'
+  # The Indienen block is fixed boilerplate. A hosted page is not the dropbox,
+  # so the only thing it can honestly tell a student is to save their work;
+  # anything about handing in belongs to the Brightspace assignment. Imported
+  # content carries that wording over, and per-page rewordings of one sentence
+  # are pure drift.
+  mark HAS_STD_INDIENEN '<p>Sla je oefening op\.</p>'
 
   # Every code block is language-cpp with line numbers and the language badge,
   # everywhere, so blocks read the same on a theory page and in a solution.
@@ -651,8 +666,13 @@ if [ "$AUDIT" -eq 1 ]; then
 
     case "$f" in
       Labo*/Exercises/*)
-        [ -n "${HAS_INDIENEN[$f]:-}" ]  || skipped "$f" indienen \
-          || note "$f: no <h2 id=\"indienen\"> section"
+        if skipped "$f" indienen; then
+          :
+        elif [ -z "${HAS_INDIENEN[$f]:-}" ]; then
+          note "$f: no <h2 id=\"indienen\"> section"
+        elif [ -z "${HAS_STD_INDIENEN[$f]:-}" ]; then
+          note "$f: Indienen section is not the standard '<p>Sla je oefening op.</p>'"
+        fi
         [ -n "${HAS_OPLOSSING[$f]:-}" ] || skipped "$f" oplossing \
           || note "$f: no <h2 id=\"oplossing\"> section"
         # The manifest flag and the page's own markup must tell the same story:
