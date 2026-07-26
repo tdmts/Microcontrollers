@@ -13,7 +13,7 @@
     <h1>2x 7 segment display</h1>
     <p class="lead">Plaats twee 74HC595 schuifregisters in cascade en stuur er twee 7 segment displays mee aan. Je telt af van 10 naar 0, zonder ook maar één extra pin van je Arduino te gebruiken.</p>
 
-    <p>Maar wat als je bijvoorbeeld meerdere 7 segment displays wil aansturen? Je kan de 74595 <strong>in cascade</strong> plaatsen. Op deze <a href="https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut" target="_blank" rel="noopener">pagina</a> kan je daar meer over lezen.</p>
+    <p>Maar wat als je bijvoorbeeld meerdere 7 segment displays wil aansturen? Je kan de 74595 <strong>in cascade</strong> plaatsen. De werking van het register zelf, en waarom je in dit labo alles met de hand naar buiten schuift, staat op <a href="../Reference/Schuifregister.html">Werking van het schuifregister</a>. Wil je er ook de Arduino-documentatie bij, dan vind je die op <a href="https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut" target="_blank" rel="noopener">de ShiftOut-pagina</a>; die gebruikt wel de ingebouwde functie <code>shiftOut()</code>, die wij hier bewust niet gebruiken.</p>
 
     <p><strong>TLDR:</strong> verbind Q7S van de eerste 74595 met DS van de tweede. SHCP en STCP mag je gewoon doorverbinden met elkaar.</p>
 

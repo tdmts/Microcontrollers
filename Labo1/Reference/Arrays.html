@@ -132,6 +132,18 @@ const int tabel[3][2] = {
         <p>Bij een gewone array mag je de haakjes leeg laten (<code>int lijst[] = {...}</code>), want de compiler telt zelf. Bij twee dimensies moet minstens het aantal kolommen erin staan, anders weet hij niet waar een rij ophoudt. Schrijf ze in de praktijk gewoon allebei, dan lees je meteen hoe groot de tabel is.</p>
     </div>
 
+    <h2 id="rijen-en-kolommen-tellen">Rijen en kolommen laten berekenen</h2>
+
+    <p>Dezelfde <code>sizeof</code>-truc werkt ook bij twee dimensies, je moet ze alleen twee keer toepassen:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>// De hele tabel gedeeld door één rij geeft het aantal rijen
+const int aantalRijen = sizeof(tabel) / sizeof(tabel[0]);
+
+// Eén rij gedeeld door één element geeft het aantal kolommen
+const int aantalKolommen = sizeof(tabel[0]) / sizeof(tabel[0][0]);</code></pre>
+
+    <p><code>tabel[0]</code> is de eerste rij, en die is zelf een gewone array. Daarom werkt de bekende deling er ook op. Doe je dit, dan blijft je programma kloppen wanneer je later een rij toevoegt of de tabel breder maakt, zonder dat je ergens een getal moet aanpassen.</p>
+
     <h2 id="een-rij-uit-een-tabel-gebruiken">Een rij uit de tabel gebruiken</h2>
 
     <p>De gebruikelijke vorm is een lus over de kolommen, waarbij de rij bepaalt welk geval je behandelt:</p>

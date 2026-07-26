@@ -200,6 +200,13 @@
   digitalWrite(pinNummer, HIGH);
 }</code></pre>
 
+    <div class="info-box remark">
+        <div class="info-title remark">En dan vind je <code>shiftOut()</code>, en vraag je je af waarom je dit allemaal zelf doet</div>
+        <p>Terecht. Arduino heeft een ingebouwde functie <code>shiftOut()</code> die precies dit doet: acht bits na elkaar naar buiten klokken, in &eacute;&eacute;n regel. Zoek je online naar de 74HC595, dan is dat zowat het eerste wat je tegenkomt, en ook de Arduino-pagina over cascade gebruikt ze.</p>
+        <p>In dit labo schrijf je het toch zelf uit, en dat is met opzet. Door per bit zelf DS te zetten en zelf op SHCP te klokken, zie je wat er bij elke flank gebeurt en waarom de laatst ingeschoven bit op Q0 belandt. Dat inzicht heb je nodig zodra er iets niet werkt, of zodra je twee registers in cascade zet en moet uitzoeken welk cijfer waar terechtkomt. <code>shiftOut()</code> verbergt precies dat.</p>
+        <p>Heb je het eenmaal met de hand gedaan, gebruik dan gerust de ingebouwde functie in je eigen projecten. Voor de oefeningen van dit labo houden we het bij de uitgeschreven versie.</p>
+    </div>
+
     <h2 id="datasheet">Datasheet</h2>
     <p>De volledige datasheet van de 74HC595 kan je hier downloaden: <a href="../../datasheets/74hc595.pdf" target="_blank" rel="noopener">74HC595 / 74HCT595 (NXP, rev. 6)</a>. Drie hoofdstukken heb je in dit labo het vaakst nodig:</p>
     <ul>

@@ -35,55 +35,9 @@
     </div>
 
     <h2 id="multidimensionele-array">Multidimensionele array</h2>
-    <p>De meest elegante manier is om te werken met een multidimensionele array. Bekijk eens de voorbeeldcode.</p>
+    <p>De meest elegante manier is om te werken met een <a href="../../Labo1/Reference/Arrays.html">multidimensionele array</a>: één rij per patroon, één kolom per LED. Op die pagina staat ook hoe je met <code>sizeof</code> het aantal rijen en kolommen uit de array zelf afleidt, en dat heb je hier nodig om aan de eis hierboven te voldoen.</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int mdArray[3][2] = {
-  {1, 2},
-  {5, 9},
-  {0, 0}
-};
-
-int waardeX = mdArray[0][0]; // 1
-int waardeY = mdArray[1][0]; // 5
-int waardeZ = mdArray[1][1]; // 9</code></pre>
-
-    <p>In de array kan je dus het patroon (LOW, HIGH, ... LOW, LOW) opslaan.</p>
-
-    <p>En je kan zo'n array ook overlopen met een <strong>geneste lus</strong>. Het aantal rijen en kolommen bereken je met <code>sizeof</code>, zodat je die getallen nergens zelf moet intikken:</p>
-
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int mdArray[3][2] = {
-  {1, 2},
-  {5, 9},
-  {0, 0}
-};
-
-void setup()
-{
-  Serial.begin(9600);
-
-  // Totale grootte van de array gedeeld door de grootte van één rij
-  int aantalRijen = sizeof(mdArray) / sizeof(mdArray[0]);
-  // Grootte van één rij gedeeld door de grootte van één element
-  int aantalKolommen = sizeof(mdArray[0]) / sizeof(mdArray[0][0]);
-
-  for (int i = 0; i &lt; aantalRijen; i++)
-  {
-    for (int j = 0; j &lt; aantalKolommen; j++)
-    {
-      Serial.print("Element op [");
-      Serial.print(i);
-      Serial.print("][");
-      Serial.print(j);
-      Serial.print("] = ");
-      Serial.println(mdArray[i][j]);
-    }
-  }
-}
-
-void loop()
-{
-
-}</code></pre>
+    <p>Kort samengevat: je slaat per rij het patroon op (1 voor een brandende LED, 0 voor een gedoofde), je berekent <code>aantalPatronen</code> en <code>aantalLeds</code> met <code>sizeof</code>, en je doorloopt het geheel met een geneste lus.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">De snelheid instellen</div>
