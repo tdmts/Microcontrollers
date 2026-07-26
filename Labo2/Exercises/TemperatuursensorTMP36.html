@@ -13,7 +13,7 @@
     <h1>Temperatuursensor TMP36</h1>
     <p class="lead">Lees de TMP36 uit en toon de temperatuur in de seriële monitor.</p>
 
-    <p>In TinkerCAD vind je een simulatie van de TMP36 temperatuursensor. Bekijk eerst de datasheet en beantwoord onderstaande vragen. De antwoorden staan er voor de volledigheid bij, maar probeer ze eerst zelf op te zoeken.</p>
+    <p>In TinkerCAD vind je een simulatie van de TMP36 temperatuursensor. Bekijk eerst de <a href="../../datasheets/tmp35-36-37.pdf" target="_blank" rel="noopener">datasheet van de TMP35 / TMP36 / TMP37</a> en beantwoord onderstaande vragen. De antwoorden staan er voor de volledigheid bij, maar probeer ze eerst zelf op te zoeken.</p>
 
     <h2 id="vragen">Vragen</h2>
 
@@ -51,27 +51,35 @@
     <p>Zoek in de datasheet de grafiek "Output Voltage vs. Temperature". Die toont de verhouding van de spanning tegenover de temperatuur. Ze is <strong>lineair</strong>, waardoor je heel makkelijk van een gegeven spanning naar een temperatuur kan rekenen.</p>
 
     <figure class="figure w-100 text-center figure-zoom">
-        <img src="../../img/tmp36-uitgangsspanning-vs-temperatuur.png" alt="Grafiek uit de datasheet met de uitgangsspanning tegenover de temperatuur voor de TMP35, TMP36 en TMP37, met een pijl die aangeeft dat 1,2 V bij de TMP36 overeenkomt met ongeveer 75 graden Celsius" width="428" height="350">
+        <img src="../../img/tmp36-uitgangsspanning-vs-temperatuur.png" alt="Grafiek uit de datasheet met de uitgangsspanning tegenover de temperatuur voor de TMP35, TMP36 en TMP37" width="428" height="350">
     </figure>
 
-    <p>Dat omrekenen kan bijvoorbeeld met <code>map()</code>, waarbij je de minimum- en maximumspanning en de minimum- en maximumtemperatuur uit de grafiek haalt:</p>
+    <p>Uit die grafiek en uit je antwoorden hierboven haal je twee gegevens: bij <strong>25 &deg;C</strong> staat er <strong>0,75 V</strong> op de uitgang, en elke graad erbij levert <strong>0,01 V</strong> extra. Daarmee kan je op twee manieren naar een temperatuur rekenen, en het loont om ze allebei even te bekijken.</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language">
-long result = map(value, fromLow, fromHigh, toLow, toHigh);
-    </pre>
+    <h3>Manier 1: met <code>map()</code></h3>
 
-    <ul>
-        <li><strong>value</strong>: de waarde die je wil omzetten, dus de spanning, bijvoorbeeld 1,2 V</li>
-        <li><strong>fromLow</strong>: ondergrens van het invoerbereik, 0,75 V</li>
-        <li><strong>fromHigh</strong>: bovengrens van het invoerbereik, 1 V</li>
-        <li><strong>toLow</strong>: ondergrens van het uitvoerbereik, 25</li>
-        <li><strong>toHigh</strong>: bovengrens van het uitvoerbereik, 50</li>
-    </ul>
+    <p>Je kent <a href="../Reference/map.html"><code>map()</code></a> al van de dimmer: je herschaalt een waarde van het ene bereik naar het andere. Neem je 0,75 V tot 1 V als invoerbereik, dan hoort daar 25 &deg;C tot 50 &deg;C bij:</p>
 
-    <div class="info-box tip">
-        <div class="info-title tip">Let op: map() rekent met gehele getallen</div>
-        <p>De <code>map()</code>-functie verwacht al haar parameters als <code>long</code>, en dat zijn gehele getallen. Je kommagetallen worden dus afgekapt.</p>
-        <p>Een mogelijke oplossing is om alle waarden met een factor te vermenigvuldigen, bijvoorbeeld 100. Dan wordt 1,2 V dus 120, 0,75 V wordt 75, 1 V wordt 100, en de temperaturen worden 2500 en 5000. De uitkomst is nu ook een factor 100 te groot, dus daar deel je op het einde terug door. Merk op dat een hogere factor, bijvoorbeeld 1000, ook de nauwkeurigheid van je meting verhoogt.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>long temperatuur = map(spanning, 0.75, 1.0, 25, 50);</code></pre>
+
+    <div class="info-box warning">
+        <div class="info-title warning">En daar loopt het meteen mis</div>
+        <p><code>map()</code> werkt met <code>long</code>, en dat zijn <strong>gehele</strong> getallen. Je 0,75 wordt dus 0 en je 1,0 wordt 1, nog voor er iets berekend is. De uitkomst is onbruikbaar.</p>
+        <p>Je kan dat omzeilen door alles met een factor te vermenigvuldigen, bijvoorbeeld 100: dan wordt 0,75 V een 75, 1 V een 100, en de temperaturen 2500 en 5000. De uitkomst is dan ook honderd keer te groot, dus daar deel je op het einde terug door. Het werkt, maar je code staat vol met factoren die niets met temperatuur te maken hebben.</p>
+    </div>
+
+    <h3>Manier 2: rechtstreeks rekenen</h3>
+
+    <p>De twee gegevens uit de datasheet kan je ook gewoon als formule opschrijven. Trek de 0,75 V af, deel door 0,01 V per graad, en tel de 25 &deg;C er weer bij:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>double temperatuur = (spanning - 0.75) / 0.01 + 25.0;</code></pre>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: welke van de twee neem je hier best?</button>
+        <div class="spoiler-content solution-content">
+            <p><strong>Manier 2.</strong> Ze is korter, ze rekent met <code>double</code> en heeft dus geen last van afkapping, en je leest de twee getallen uit de datasheet er rechtstreeks in terug. Bij manier 1 moet je factoren invoeren die je daarna weer wegdeelt, en dat is precies het soort code waar later fouten in sluipen.</p>
+            <p>Dat betekent niet dat <code>map()</code> slecht is. Bij de dimmer was het net de juiste keuze: daar ging het om twee bereiken van gehele getallen (0-1023 naar 0-255) en was er niets om af te kappen. <strong>De vuistregel is dus: <code>map()</code> voor gehele bereiken, een eigen formule zodra er kommagetallen in het spel zijn.</strong></p>
+        </div>
     </div>
 
     <h2 id="opgave">Opgave</h2>

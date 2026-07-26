@@ -13,7 +13,16 @@
     <h1>LDR: lichtmeting</h1>
     <p class="lead">Gebruik een LDR in serie met een weerstand om licht te meten, en laat de LED feller branden naarmate het donkerder wordt.</p>
 
-    <p>Een LDR (Light Dependent Resistor) is een weerstand waarvan de waarde afhangt van hoeveel licht erop valt. Door hem in serie te zetten met een vaste weerstand maak je een spanningsdeler, en die spanning kan je inlezen met <code>analogRead()</code>.</p>
+    <p>Een LDR (Light Dependent Resistor) is een weerstand waarvan de waarde afhangt van hoeveel licht erop valt. Je Arduino kan geen weerstand meten, alleen spanning, dus zet je de LDR in serie met een vaste weerstand tot een <a href="../Reference/Spanningsdeler.html">spanningsdeler</a>. Het punt tussen de twee lees je in met <a href="../Reference/analogRead.html">analogRead()</a>. Om de gemeten waarde daarna om te keren naar een helderheid gebruik je <a href="../Reference/map.html">map()</a> met een omgedraaid uitvoerbereik, zoals bij de vorige oefeningen.</p>
+
+    <!-- TODO: teken het aansluitschema van de LDR-spanningsdeler (LDR van +5V naar het
+         middenpunt, vaste weerstand van 2k van het middenpunt naar GND, middenpunt naar
+         A0) plus de led op een PWM-pin -->
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-ldr-spanningsdeler-schema.png" class="img-fluid" alt="TODO: aansluitschema van de LDR met de vaste weerstand als spanningsdeler naar analoge ingang A0, en de led op een PWM-pin">
+        </figure>
+    </div>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">
@@ -22,7 +31,7 @@
     </div>
 
     <h2 id="vragen">Vragen</h2>
-    <p>Bekijk eerst de datasheet van de LDR en beantwoord onderstaande vragen.</p>
+    <p>Bekijk eerst de <a href="../../datasheets/ldr-3190.pdf" target="_blank" rel="noopener">datasheet van de LDR</a> en beantwoord onderstaande vragen.</p>
 
     <div class="spoiler-container">
         <div class="basic">

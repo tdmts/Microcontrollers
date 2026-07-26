@@ -27,7 +27,7 @@
     </div>
 
     <h2 id="non-blocking-timer">Non-blocking timer</h2>
-    <p>Met <code>millis()</code> vraag je op hoeveel milliseconden je Arduino al aan het werk is. Door dat te vergelijken met een eerder bewaard tijdstip laat je tijd verstrijken zonder je programma stil te leggen:</p>
+    <p>Met <code>millis()</code> vraag je op hoeveel milliseconden je Arduino al aan het werk is. Je kwam die aanpak al tegen bij <a href="../../Labo0/Reference/Debouncen.html">Debouncen</a> in labo 0 en bij het multiplexen in labo 1. Door de huidige tijd te vergelijken met een eerder bewaard tijdstip laat je tijd verstrijken zonder je programma stil te leggen:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language">
 unsigned long previousMillis;

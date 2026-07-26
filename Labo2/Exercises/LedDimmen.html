@@ -13,7 +13,15 @@
     <h1>LED dimmen</h1>
     <p class="lead">Maak een programma waarbij een LED langzaam van gedoofd naar volle sterkte gaat, en terug naar gedoofd.</p>
 
-    <p>Gebruik de <code>analogWrite()</code> instructie om een analoge waarde op de pin te zetten.</p>
+    <p>Gebruik de <code>analogWrite()</code> instructie om een analoge waarde op de pin te zetten. Wat er dan echt op die pin gebeurt, welke pinnen het kunnen en waarom de waarde deze keer tussen 0 en 255 ligt in plaats van 0 en 1023, staat op <a href="../Reference/analogWrite.html">analogWrite()</a>.</p>
+
+    <!-- TODO: teken het aansluitschema van de led op een PWM-pin (anode via 220 ohm naar
+         pin 3, kathode naar GND), met de ~ bij de pin duidelijk zichtbaar -->
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-led-op-pwm-pin-schema.png" class="img-fluid" alt="TODO: aansluitschema van een led met voorschakelweerstand op PWM-pin 3">
+        </figure>
+    </div>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">

@@ -74,13 +74,15 @@ window.LAB_REFERENCE = {
                 topics: [
                     { id: 'analogread', name: 'analogRead()', href: 'analogRead.html', blurb: 'Analoge spanningen inlezen op de analoge pinnen en omzetten naar een waarde tussen 0 en 1023.' },
                     { id: 'analogwrite', name: 'analogWrite()', href: 'analogWrite.html', blurb: 'Met PWM een pin een waarde tussen volledig uit en volledig aan geven, bijvoorbeeld om een led te dimmen.' },
-                    { id: 'map', name: 'map()', href: 'map.html', blurb: 'Een waarde uit een bereik herschalen naar een ander bereik.' }
+                    { id: 'map', name: 'map()', href: 'map.html', blurb: 'Een waarde uit een bereik herschalen naar een ander bereik.' },
+                    { id: 'spanningsdeler', name: 'De spanningsdeler', href: 'Spanningsdeler.html', blurb: 'Waarom je een weerstandssensor altijd met een tweede weerstand uitleest, de formule erachter, en hoe je die vaste weerstand kiest.' }
                 ]
             },
             {
                 name: 'Datasheets',
                 topics: [
                     { id: 'datasheettmp36', name: 'TMP35 / TMP36 / TMP37', href: '../../datasheets/tmp35-36-37.pdf', blurb: 'De datasheet van de temperatuursensor. Hierin vind je de schaalfactor van 10 mV per graad en de 750 mV bij 25 graden waarmee je de spanning omrekent.' },
+                    { id: 'datasheetlm35', name: 'LM35', href: '../../datasheets/lm35.pdf', blurb: 'De datasheet van de temperatuursensor uit je starterkit. Hierin vind je dat de uitgang 0 V geeft bij 0 graden en 10 mV per graad stijgt, anders dan bij de TMP36.' },
                     { id: 'datasheetldr', name: 'LDR 3190', href: '../../datasheets/ldr-3190.pdf', blurb: 'De datasheet van de lichtgevoelige weerstand, met de weerstandswaarde bij verschillende lichtsterktes.' }
                 ]
             }
