@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Een getal doorsturen naar een tweede Arduino</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Een getal doorsturen naar een tweede Arduino</h1>
+    <p class="lead">Leg twee Arduino's aan elkaar en laat de ene elke seconde het getal 100 naar de andere sturen. Aan de overkant lees je het weer uit en toon je het in de seri&euml;le monitor.</p>
+
+    <p>In de vorige oefening zat jij aan het andere eind van de lijn. Nu wordt dat een tweede Arduino. Er verandert voor je programma verrassend weinig: het kanaal is hetzelfde, alleen de gesprekspartner is anders. Lees <a href="../Reference/SerieelKanaal.html">Het seri&euml;le kanaal</a> voor je de draden legt, want de bedrading luistert nauw.</p>
+
+    <p>Deze oefening werk je uit in TinkerCAD. Sleep gewoon een tweede Arduino UNO op je werkblad.</p>
+
+    <h2 id="het-schema">Het schema</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/twee-arduinos-serieel-verbonden.png" class="img-fluid" alt="Twee Arduino UNO's in TinkerCAD, verbonden met een groene draad van pin 1 links naar pin 0 rechts, een gele draad van pin 0 links naar pin 1 rechts, en een zwarte draad tussen de twee GND-pinnen">
+            <figcaption>Drie draden volstaan: Tx naar Rx, Rx naar Tx, en de twee massa's aan elkaar.</figcaption>
+        </figure>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Wat waar aan hangt</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Arduino 1</th>
+                    <th scope="col">Arduino 2</th>
+                    <th scope="col">Waarvoor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>pin 1 (Tx)</td>
+                    <td>pin 0 (Rx)</td>
+                    <td>Wat Arduino 1 zendt, ontvangt Arduino 2</td>
+                </tr>
+                <tr>
+                    <td>pin 0 (Rx)</td>
+                    <td>pin 1 (Tx)</td>
+                    <td>En omgekeerd</td>
+                </tr>
+                <tr>
+                    <td>GND</td>
+                    <td>GND</td>
+                    <td>De gemeenschappelijke massa</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Kruisen, niet recht doorverbinden</div>
+        <p>Tx naar Tx en Rx naar Rx lijkt het meest logische, maar dan zitten twee zenders naar elkaar te roepen en luistert er niemand. Wat de ene zendt moet de andere ontvangen, dus de draden gaan gekruist.</p>
+    </div>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <p>Je schrijft twee programma's, &eacute;&eacute;n voor elke Arduino.</p>
+
+    <ol>
+        <li><strong>Arduino 1 (de zender)</strong> stuurt elke seconde het getal 100 door met <code>Serial.println()</code>. Meer moet die niet doen.</li>
+        <li><strong>Arduino 2 (de ontvanger)</strong> kijkt of er iets binnengekomen is, leest een volledige lijn en toont die in zijn eigen seri&euml;le monitor.</li>
+        <li>Zet beide programma's aan het werk en open de seri&euml;le monitor van <strong>Arduino 2</strong>. Je zou daar elke seconde een 100 moeten zien verschijnen.</li>
+    </ol>
+
+    <h2 id="kijk-eens-wat-er-echt-binnenkomt">Kijk eens wat er echt binnenkomt</h2>
+
+    <p>Als dat werkt, doe dan nog &eacute;&eacute;n proef. Vervang bij de ontvanger de twee regels die de lijn lezen door dit:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int teken = Serial.read();
+Serial.println(teken);</code></pre>
+
+    <p>Nu leest Arduino 2 geen lijn meer, maar &eacute;&eacute;n byte per keer. Je zal geen 100 zien staan. In de plaats komen er vijf getallen voorbij. Zoek ze op in de tabel op <a href="../Reference/TekensEnGetallen.html">Tekens en getallen</a> en je begrijpt meteen wat er echt over die draad gaat, en waarom die laatste twee er ook bij horen.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Je ziet je eigen boodschap ook</div>
+        <p>Alles wat Arduino 2 naar zijn monitor schrijft, gaat langs diezelfde Tx-draad ook naar Arduino 1. Die doet er niets mee, dus dat stoort niet. Het is wel handig om te weten: het is niet omdat iets in een monitor staat, dat het daar alleen naartoe ging.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Tx van de ene gaat naar Rx van de andere, in beide richtingen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De twee GND-pinnen hangen aan elkaar</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Beide programma's staan op dezelfde baudrate</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> In de monitor van Arduino 2 verschijnt elke seconde een 100</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De zender gebruikt <code>println()</code> en niet <code>print()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je hebt met <code>Serial.read()</code> gezien welke vijf bytes er echt binnenkomen, en je kan ze verklaren</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De zender is bijna te kort om een programma te noemen. Dat is ook het punt: zenden is het gemakkelijke deel, ontvangen is waar het werk zit.</p>
+
+            <p><strong>Arduino 1, de zender:</strong></p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
+{
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  Serial.println(100); // gaat naar Arduino 2 en naar je eigen monitor
+  delay(1000);
+}</code></pre>
+
+            <p><strong>Arduino 2, de ontvanger:</strong></p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
+{
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  if (Serial.available() &gt; 0)
+  {
+    String regel = Serial.readStringUntil('\n');
+    regel.trim();
+
+    Serial.println(regel);
+  }
+}</code></pre>
+
+            <p>De vijf bytes uit de proef zijn <strong>49 48 48 13 10</strong>. De eerste drie zijn de tekens <code>'1'</code>, <code>'0'</code> en <code>'0'</code>, want een getal gaat als tekst over de lijn. De laatste twee zijn de <code>'\r'</code> en de <code>'\n'</code> die <code>println()</code> er zelf achter zet. Precies die twee laten de ontvanger weten waar je boodschap ophoudt.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo6);
+</script>
+</body>
+</html>

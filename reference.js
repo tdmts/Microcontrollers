@@ -161,5 +161,31 @@ window.LAB_REFERENCE = {
                 ]
             }
         ]
+    },
+    labo6: {
+        labId: 'labo6',
+        labTitle: 'Labo 6',
+        categories: [
+            {
+                name: 'De seriële verbinding',
+                topics: [
+                    { id: 'serieelkanaal', name: 'Het seriële kanaal', href: 'SerieelKanaal.html', blurb: 'De drie draden tussen twee Arduino\'s, waarom Tx en Rx gekruist moeten, dat het pin 0 en 1 zijn, en waarom die op echte hardware met je USB-kabel vechten.' }
+                ]
+            },
+            {
+                name: 'Gegevens over de lijn',
+                topics: [
+                    { id: 'tekensengetallen', name: 'Tekens en getallen', href: 'TekensEnGetallen.html', blurb: 'Waarom het getal 100 als drie tekens over de draad gaat, wat ASCII daarmee te maken heeft, en welke twee tekens println() er zelf achter zet.' },
+                    { id: 'boodschappenlezen', name: 'Boodschappen lezen', href: 'BoodschappenLezen.html', blurb: 'De ontvangstbuffer, available() en read(), en hoe je met readStringUntil() een volledige boodschap tegelijk ophaalt.' },
+                    { id: 'strings', name: 'Werken met een String', href: 'Strings.html', blurb: 'Tekst in een variabele: trim, indexOf, substring, toInt en toFloat, en het volledige recept om een boodschap van de vorm SLEUTEL:WAARDE uit elkaar te halen.' }
+                ]
+            },
+            {
+                name: 'Downloads',
+                topics: [
+                    { id: 'csharpproject', name: 'Serieel communiceren (C#-project)', href: '../../datasheets/serieel-communiceren-csharp.zip', blurb: 'Het Visual Studio-project waarmee je vanaf je pc met de Arduino praat. Je hebt het nodig voor de laatste oefening. Er zit een gebouwde versie in bin\\Debug.' }
+                ]
+            }
+        ]
     }
 };

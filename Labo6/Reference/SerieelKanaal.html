@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Het seri&euml;le kanaal</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Het seri&euml;le kanaal</h1>
+    <p class="lead">Serieel betekent: achter elkaar. De bits van je boodschap gaan &eacute;&eacute;n voor &eacute;&eacute;n over &eacute;&eacute;n draad, in plaats van allemaal tegelijk over acht draden. Dat is traag, maar je hebt er bijna geen draden voor nodig, en daarom zit het op zowat elk apparaat.</p>
+
+    <p>Je gebruikt dit kanaal al sinds labo 0. Telkens je <code>Serial.println()</code> schreef om te <a href="../../Labo0/Reference/Debuggen.html">debuggen</a>, ging die tekst serieel over de USB-kabel naar je pc. Wat je toen niet zag: aan de andere kant van dat kanaal moet geen pc zitten. Er kan evengoed een tweede Arduino hangen.</p>
+
+    <h2 id="drie-draden">Drie draden volstaan</h2>
+
+    <p>Om twee Arduino's met elkaar te laten praten heb je drie verbindingen nodig.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De drie draden van een seri&euml;le verbinding</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Draad</th>
+                    <th scope="col">Waarvoor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Tx</strong> (transmit)</td>
+                    <td>Hierlangs <em>zendt</em> de Arduino. Alles wat je met <code>Serial.print()</code> schrijft, komt hier buiten.</td>
+                </tr>
+                <tr>
+                    <td><strong>Rx</strong> (receive)</td>
+                    <td>Hierlangs <em>ontvangt</em> de Arduino. Alles wat hier binnenkomt, kan je met <code>Serial.read()</code> ophalen.</td>
+                </tr>
+                <tr>
+                    <td><strong>GND</strong></td>
+                    <td>De gemeenschappelijke massa. Zonder die draad heeft "hoog" bij de ene Arduino geen betekenis voor de andere.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 id="tx-en-rx-kruisen">Tx en Rx moeten gekruist</h2>
+
+    <p>Wat de ene zendt, moet de andere ontvangen. De Tx van Arduino 1 gaat dus naar de Rx van Arduino 2, en de Tx van Arduino 2 naar de Rx van Arduino 1. Verbind je Tx met Tx, dan zitten twee zenders tegen elkaar te roepen en luistert er niemand.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/twee-arduinos-serieel-verbonden.png" class="img-fluid" alt="Twee Arduino UNO's in TinkerCAD, verbonden met een groene draad van pin 1 links naar pin 0 rechts, een gele draad van pin 0 links naar pin 1 rechts, en een zwarte draad tussen de twee GND-pinnen">
+            <figcaption>De groene draad gaat van Tx naar Rx, de gele van Rx naar Tx. De zwarte draad onderaan is de gemeenschappelijke massa.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="rx-en-tx-zijn-pin-0-en-1">Rx en Tx zijn pin 0 en pin 1</h2>
+
+    <p>Op de Arduino UNO zijn Rx en Tx geen aparte connectoren: het zijn gewoon de eerste twee digitale pinnen. Kijk maar naar het opschrift op de print, daar staat <strong>RX&larr;0</strong> en <strong>TX&rarr;1</strong>.</p>
+
+    <p>Dat is meteen de reden waarom je die twee pinnen in alle vorige labo's nooit gebruikt hebt voor een led of een knop. Ze zijn bezet.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Op echte hardware vecht pin 0 en 1 met je USB-kabel</div>
+        <p>De USB-poort waarlangs je een programma uploadt, hangt op precies dezelfde Rx en Tx. Op een echt bord betekent dat: zolang er draden op pin 0 en 1 zitten, mislukt het uploaden. Trek die twee draden er dus even uit, upload je programma, en steek ze daarna terug.</p>
+        <p>In TinkerCAD heb je daar geen last van, want daar is er geen echte USB-kabel. Onthoud het toch, want de dag dat je dit op een echt bord bouwt, kost het je anders een uur zoeken.</p>
+    </div>
+
+    <h2 id="dezelfde-baudrate">Beide kanten moeten even snel praten</h2>
+
+    <p>De baudrate is het aantal bits per seconde dat over de lijn gaat. Bij <code>Serial.begin(9600)</code> zijn dat er 9600. Er loopt geen kloksignaal mee over de draad, dus de ontvanger weet niet uit zichzelf hoe snel de bits binnenkomen: hij gaat er gewoon van uit dat het aan het afgesproken tempo gebeurt.</p>
+
+    <p>Staan de twee kanten niet op dezelfde baudrate, dan meet de ontvanger op de verkeerde momenten en krijg je onleesbare tekens. Precies hetzelfde als wanneer je seri&euml;le monitor op een andere snelheid staat dan je <code>Serial.begin()</code>.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
+{
+  Serial.begin(9600); // exact dezelfde waarde in beide programma's
+}</code></pre>
+
+    <div class="info-box tip">
+        <div class="info-title tip">E&eacute;n kanaal, twee luisteraars</div>
+        <p>De seri&euml;le monitor hangt aan diezelfde Tx-lijn. Alles wat je naar de andere Arduino stuurt, zie je dus ook in je eigen monitor verschijnen. Dat is geen fout, dat is handig: zo zie je precies wat er de deur uit gaat.</p>
+    </div>
+</div>
+
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+</body>
+</html>

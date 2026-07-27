@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Drie getallen doorsturen en optellen</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Drie getallen doorsturen en optellen</h1>
+    <p class="lead">Arduino 1 verzint drie willekeurige getallen en stuurt ze door. Arduino 2 leest ze in, telt ze op, en toont de drie getallen met hun som in de seri&euml;le monitor.</p>
+
+    <p>Tot nu toe stond er altijd maar &eacute;&eacute;n soort waarde op de lijn. Zodra er meerdere waarden achter elkaar komen, duikt er een nieuw probleem op: de ontvanger moet weten welke van de drie hij aan het lezen is. Deze oefening laat je dat probleem zelf tegenkomen. In de volgende lossen we het op.</p>
+
+    <p>Deze oefening werk je uit in TinkerCAD. Je hebt alleen de drie seri&euml;le draden nodig, verder geen componenten.</p>
+
+    <h2 id="het-schema">Het schema</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/twee-arduinos-serieel-verbonden.png" class="img-fluid" alt="Twee Arduino UNO's in TinkerCAD, verbonden met een groene draad van pin 1 links naar pin 0 rechts, een gele draad van pin 0 links naar pin 1 rechts, en een zwarte draad tussen de twee GND-pinnen">
+            <figcaption>Dezelfde drie draden als in de vorige oefeningen.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <ol>
+        <li><strong>Arduino 1</strong> maakt drie willekeurige getallen met <code>random()</code>, elk tussen 0 en 999, en stuurt ze door. Daarna wacht hij een paar seconden en begint opnieuw.</li>
+        <li><strong>Arduino 2</strong> leest drie getallen in, telt ze op, en schrijft de drie getallen en hun som naar zijn seri&euml;le monitor.</li>
+    </ol>
+
+    <p>Stuur elk getal op zijn eigen lijn, dus met een aparte <code>Serial.println()</code>. Zet je ze achter elkaar met <code>print()</code>, dan komt er aan de overkant <code>123456789</code> binnen en is er geen manier meer om te weten waar het ene getal ophoudt en het volgende begint.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">random() begint elke keer op dezelfde plaats</div>
+        <p><code>random()</code> is niet echt willekeurig: het rekent een reeks uit die altijd dezelfde is als je op hetzelfde punt begint. Na elke reset krijg je dus exact dezelfde drie getallen. Met <code>randomSeed()</code> in je <code>setup()</code> geef je die reeks een ander vertrekpunt. De klassieke truc is <code>randomSeed(analogRead(A5))</code> met een pin waar niets aan hangt, want die pikt ruis op.</p>
+        <p>In TinkerCAD levert zo'n losse pin soms wel elke keer dezelfde waarde op, en dan blijft je reeks toch hetzelfde. Dat is geen fout in je programma, en voor deze oefening maakt het niets uit.</p>
+    </div>
+
+    <div class="info-box remark">
+        <div class="info-title remark">random(0, 1000) geeft geen 1000</div>
+        <p>De bovengrens die je meegeeft doet zelf niet mee. <code>random(0, 1000)</code> geeft je dus een getal van 0 tot en met 999. Wil je 1000 er wel bij, dan schrijf je <code>random(0, 1001)</code>.</p>
+    </div>
+
+    <h2 id="haal-het-uit-de-pas">Haal het bewust uit de pas</h2>
+
+    <p>Als je programma werkt, doe dan nog deze proef. Laat de twee borden lopen en druk halverwege een reeks op de <strong>resetknop van Arduino 2</strong>, of start alleen de ontvanger opnieuw op.</p>
+
+    <p>Kijk daarna goed naar wat er in de monitor verschijnt. De kans is groot dat de som niet meer klopt met de getallen die de zender verstuurt, en dat het zo blijft. De ontvanger telt gewoon verder in de veronderstelling dat het volgende getal het eerste van een nieuwe reeks is, terwijl hij eigenlijk in het midden ingestapt is. Hij merkt daar zelf niets van.</p>
+
+    <p>Dat is precies het probleem waar de volgende oefening een antwoord op geeft.</p>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> In de monitor van Arduino 2 staan telkens drie getallen met hun som</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De som klopt met de drie getallen die erboven staan</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elk getal gaat op zijn eigen lijn over de draad</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De getallen liggen tussen 0 en 999</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je hebt <code>randomSeed()</code> gebruikt en weet waarvoor het dient</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je hebt de ontvanger halverwege een reeks gereset en gezien dat de som daarna niet meer klopt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>Bij de ontvanger staat het lezen van &eacute;&eacute;n getal in een aparte functie. Zo blijft de <code>loop()</code> leesbaar: er staat letterlijk "lees a, lees b, lees c". Zonder die functie zou je driemaal hetzelfde blok code onder elkaar hebben staan.</p>
+
+            <p>Die functie blijft wachten tot er iets binnenkomt. Dat mag hier, want de ontvanger heeft toch niets anders te doen.</p>
+
+            <p><strong>Arduino 1, de zender:</strong></p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
+{
+  Serial.begin(9600);
+
+  randomSeed(analogRead(A5)); // A5 hangt nergens aan en pikt ruis op
+}
+
+void loop()
+{
+  Serial.println(random(0, 1000));
+  Serial.println(random(0, 1000));
+  Serial.println(random(0, 1000));
+
+  delay(3000);
+}</code></pre>
+
+            <p><strong>Arduino 2, de ontvanger:</strong></p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
+{
+  Serial.begin(9600);
+}
+
+int leesGetal()
+{
+  while (Serial.available() == 0)
+  {
+    // wacht tot er een boodschap binnenkomt
+  }
+
+  String regel = Serial.readStringUntil('\n');
+  regel.trim();
+
+  return regel.toInt();
+}
+
+void loop()
+{
+  int a = leesGetal();
+  int b = leesGetal();
+  int c = leesGetal();
+
+  Serial.print(a);
+  Serial.print(" + ");
+  Serial.print(b);
+  Serial.print(" + ");
+  Serial.print(c);
+  Serial.print(" = ");
+  Serial.println(a + b + c);
+}</code></pre>
+
+            <p>En dat is meteen de zwakke plek. Nergens in dit programma staat welk getal het eerste van een reeks is. De ontvanger neemt gewoon aan dat het volgende dat binnenkomt de <code>a</code> is. Stap hij op het verkeerde moment in, dan schuift alles &eacute;&eacute;n plaats op en blijft dat zo, want er is niets dat hem ooit weer op het juiste spoor zet.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo6);
+</script>
+</body>
+</html>

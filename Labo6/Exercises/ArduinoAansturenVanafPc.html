@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>De Arduino aansturen vanaf je pc</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>De Arduino aansturen vanaf je pc</h1>
+    <p class="lead">Een programma op je computer zet een LED op je Arduino aan en uit, en vraagt er een sensorwaarde aan op. Niet via de seri&euml;le monitor, maar via een venster met knoppen dat je zelf kan aanpassen.</p>
+
+    <p>De seri&euml;le monitor is uiteindelijk ook maar een programma dat de COM-poort openzet. Er is niets dat je tegenhoudt om dat zelf te doen. In deze oefening krijg je een klein C#-programma dat precies dat doet, en schrijf je de Arduino-kant erbij.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Deze oefening doe je op echte hardware</div>
+        <p>TinkerCAD heeft geen COM-poort, dus een programma op je pc kan er niet mee praten. Voor deze ene oefening heb je dus een echte Arduino aan een echte USB-kabel nodig. Het C#-programma draait op Windows.</p>
+    </div>
+
+    <h2 id="het-schema">Het schema</h2>
+
+    <p>Er is maar &eacute;&eacute;n Arduino nodig, en er komt geen enkele draad op pin 0 of pin 1. De verbinding met je pc loopt gewoon over de USB-kabel, en die hangt intern al aan Rx en Tx.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Wat waar aan hangt</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Arduino</th>
+                    <th scope="col">Waarvoor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>pin 3</td>
+                    <td>Een LED, via een weerstand van 220 &Omega;</td>
+                </tr>
+                <tr>
+                    <td>A0</td>
+                    <td>Een sensor naar keuze: een potentiometer, een LDR of een TMP36</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 id="het-programma-op-je-pc">Het programma op je pc</h2>
+
+    <p>Download het project via <a href="../Reference/reference.html">de referentiepagina van dit labo</a>, onder Downloads, en pak het uit. Je kan het openen in Visual Studio, maar er staat ook een gebouwde versie klaar in <code>bin\Debug</code> als je alleen wil zien wat het doet.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/serieel-communiceren-csharp-app.png" class="img-fluid" alt="Het venster van het C#-programma met knoppen Connect, Disconnect, LED Aan, LED Uit en Ontvangen">
+            <figcaption>Verbinden, de LED schakelen, en een waarde opvragen.</figcaption>
+        </figure>
+    </div>
+
+    <p>Bekijk de code in <code>Form1.cs</code>. Ze is korter dan je verwacht. De kern is dit:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>serialPort.PortName = "COMX"; // veranderen naar jouw poortnummer
+serialPort.BaudRate = 9600;   // moet overeenkomen met je Serial.begin()
+serialPort.Open();
+
+serialPort.WriteLine("LED:1"); // zenden
+string antwoord = serialPort.ReadLine(); // ontvangen</code></pre>
+
+    <p>Dat zijn precies dezelfde begrippen als op de Arduino: een poort openen, een baudrate afspreken, lijnen zenden en lijnen lezen. Het programma spreekt ook dezelfde taal als je twee Arduino's in de vorige oefeningen, namelijk <code>SLEUTEL:WAARDE</code>.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Wat de knoppen versturen</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Knop</th>
+                    <th scope="col">Stuurt</th>
+                    <th scope="col">Verwacht terug</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>LED Aan</td>
+                    <td><code>LED:1</code></td>
+                    <td>niets</td>
+                </tr>
+                <tr>
+                    <td>LED Uit</td>
+                    <td><code>LED:0</code></td>
+                    <td>niets</td>
+                </tr>
+                <tr>
+                    <td>Ontvangen</td>
+                    <td><code>SENSOR:?</code></td>
+                    <td>&eacute;&eacute;n lijn, bijvoorbeeld <code>SENSOR:512</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Twee programma's kunnen niet samen aan dezelfde poort</div>
+        <p>Staat de seri&euml;le monitor van de Arduino IDE open, dan is de COM-poort bezet en krijgt het C#-programma ze niet open. Sluit de monitor voor je op Connect klikt. En sluit het C#-programma weer af voor je een nieuwe sketch uploadt, want ook het uploaden heeft die poort nodig.</p>
+    </div>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Welke COM-poort is het?</div>
+        <p>Dat staat in de Arduino IDE bij <strong>Tools</strong> en dan <strong>Port</strong>. Vul dat nummer in de plaats van <code>COMX</code> in.</p>
+    </div>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <p>Schrijf de sketch die aan de andere kant van die lijn zit:</p>
+
+    <ol>
+        <li>Bij <code>LED:1</code> gaat de LED aan, bij <code>LED:0</code> gaat ze uit.</li>
+        <li>Bij <code>SENSOR:?</code> lees je je sensor uit en stuur je het antwoord terug in dezelfde vorm, dus <code>SENSOR:</code> gevolgd door de waarde.</li>
+    </ol>
+
+    <p>Het uitpluizen van de boodschap is exact hetzelfde als in de twee vorige oefeningen. Dat is ook het punt: het maakt je Arduino niet uit of er een tweede Arduino aan de lijn hangt of een pc.</p>
+
+    <p>Wil je verder gaan: breid het uit met een tweede LED, of laat de Arduino uit zichzelf elke seconde een <code>SENSOR:</code>-boodschap sturen in plaats van te wachten tot er gevraagd wordt. In het C#-programma kan je daarvoor een <code>Timer</code> gebruiken.</p>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het C#-programma verbindt met de juiste COM-poort en baudrate</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De knop LED Aan doet de LED branden, LED Uit doet ze doven</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De knop Ontvangen toont een waarde die verandert als je aan je sensor komt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je Arduino zet zijn antwoord op &eacute;&eacute;n lijn, afgesloten met een <code>println()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je sketch gebruikt dezelfde SLEUTEL:WAARDE-vorm als de vorige oefeningen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De seri&euml;le monitor is gesloten terwijl het C#-programma verbonden is</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>Vergelijk deze sketch eens met die van oefening 6. Het geraamte is identiek: lijn lezen, trimmen, splitsen op de dubbelepunt, en dan een <code>if</code> per sleutel. Alleen wat er in die <code>if</code>-blokken gebeurt is anders.</p>
+
+            <p>Het antwoord op <code>SENSOR:?</code> staat bewust op &eacute;&eacute;n lijn: een <code>print()</code> voor de sleutel en een <code>println()</code> voor de waarde, die de lijn afsluit. Aan de pc-kant staat een <code>ReadLine()</code>, en die wacht tot er een volledig afgesloten lijn is. Zet je daar per ongeluk twee <code>println()</code>'s, dan leest de pc alleen het eerste stuk.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 3;
+const int sensorPin = A0;
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  if (Serial.available() &gt; 0)
+  {
+    String regel = Serial.readStringUntil('\n');
+    regel.trim();
+
+    int scheiding = regel.indexOf(':');
+
+    if (scheiding &gt; 0)
+    {
+      String sleutel = regel.substring(0, scheiding);
+      String waarde = regel.substring(scheiding + 1);
+
+      if (sleutel == "LED")
+      {
+        if (waarde == "1")
+        {
+          digitalWrite(ledPin, HIGH);
+        }
+        else
+        {
+          digitalWrite(ledPin, LOW);
+        }
+      }
+      else if (sleutel == "SENSOR")
+      {
+        Serial.print("SENSOR:");
+        Serial.println(analogRead(sensorPin)); // in een keer, dus een volledige lijn
+      }
+    }
+  }
+}</code></pre>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Twee details in het C#-programma die het waard zijn</div>
+                <p><code>serialPort.DtrEnable = false;</code> houdt tegen dat je Arduino opnieuw opstart op het moment dat je verbinding maakt. Standaard doet hij dat wel, want dat is precies hoe het uploaden werkt. Zonder die regel begint je sketch dus telkens opnieuw als je op Connect klikt.</p>
+                <p><code>serialPort.NewLine = "\r\n";</code> zorgt ervoor dat C# een lijn op dezelfde manier afsluit als <code>Serial.println()</code> dat doet. Vergeet je dat, dan blijft er een onzichtbare <code>\r</code> aan het antwoord plakken en staat er rommel op je scherm.</p>
+                <p><code>serialPort.ReadTimeout = 2000;</code> is je vangnet. Antwoordt je Arduino niet, bijvoorbeeld omdat je sketch de sleutel <code>SENSOR</code> nog niet kent, dan blijft <code>ReadLine()</code> anders eindeloos wachten en hangt het venster vast.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo6);
+</script>
+</body>
+</html>

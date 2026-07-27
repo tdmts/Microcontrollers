@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Een drukknop hier, een LED daar</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Een drukknop hier, een LED daar</h1>
+    <p class="lead">De drukknop zit op Arduino 1, de LED op Arduino 2, en er loopt geen enkele draad tussen de knop en de LED. Alleen de seri&euml;le lijn.</p>
+
+    <p>Tot nu toe stuurde je gegevens door om ze te t&oacute;nen. Hier stuur je een <em>opdracht</em>: de ene Arduino zegt de andere wat die moet doen. Dat is precies wat serieel communiceren in de praktijk zo bruikbaar maakt.</p>
+
+    <p>Deze oefening werk je uit in TinkerCAD. Vertrek van de bedrading uit de vorige oefening.</p>
+
+    <h2 id="het-schema">Het schema</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-drukknop-hier-led-daar-schema.png" class="img-fluid" alt="TODO: schema met twee Arduino's serieel verbonden, een drukknop op pin 2 van de eerste en een LED met voorschakelweerstand op pin 3 van de tweede">
+        </figure>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Wat er bij komt bovenop de seri&euml;le verbinding</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Bord</th>
+                    <th scope="col">Aansluiting</th>
+                    <th scope="col">Waarvoor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Arduino 1</td>
+                    <td>pin 2</td>
+                    <td>De drukknop, met <code>INPUT_PULLUP</code></td>
+                </tr>
+                <tr>
+                    <td>Arduino 2</td>
+                    <td>pin 3</td>
+                    <td>De LED, via een weerstand van 220 &Omega;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>De drie draden van de seri&euml;le verbinding blijven liggen waar ze liggen. Op de knop gebruik je de interne pull-up, dus je hebt geen aparte weerstand nodig. Herlees zo nodig <a href="../../Labo0/Reference/PullUpPullDown.html">Pull up en pull down weerstanden</a>.</p>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <ol>
+        <li><strong>Arduino 1</strong> leest de knop uit en stuurt een <code>1</code> als ze ingedrukt wordt, en een <code>0</code> als ze weer losgelaten wordt.</li>
+        <li><strong>Arduino 2</strong> leest die lijn en schakelt de LED.</li>
+    </ol>
+
+    <p>Er zit een addertje onder het gras. Stuur je bij elke ronde van de <code>loop()</code> de stand van de knop door, dan gaan er duizenden boodschappen per seconde over de lijn, terwijl er hoogstens een paar keer per seconde iets ver&aacute;ndert. Stuur dus alleen iets d&oacute;&oacute;r wanneer de knop van stand verandert. Daarvoor moet je onthouden wat de vorige stand was.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">De lijn is niet oneindig snel</div>
+        <p>Bij 9600 baud passen er ongeveer 960 tekens per seconde over de draad. Een <code>loop()</code> draait duizenden keren per seconde. Blijf je maar zenden, dan loopt de ontvangstbuffer van 64 bytes over en gaan er boodschappen verloren, terwijl je LED een halve seconde achterloopt op je vinger. Zenden bij verandering lost dat allebei op.</p>
+    </div>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Dendering</div>
+        <p>Een mechanische knop maakt bij het indrukken een paar keer heel snel contact en verbreekt het weer. Zonder ontdendering stuur je dus vier of vijf boodschappen bij &eacute;&eacute;n druk. Een korte <code>delay()</code> nadat je een verandering opgemerkt hebt volstaat hier. Zie <a href="../../Labo0/Reference/Debouncen.html">Debouncen</a>.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Druk je op de knop van Arduino 1, dan gaat de LED van Arduino 2 aan</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Laat je los, dan gaat ze weer uit</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er gaat alleen een boodschap over de lijn wanneer de knop van stand verandert</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> E&eacute;n druk geeft ook maar &eacute;&eacute;n boodschap, dus je knop is ontdenderd</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De knop staat op <code>INPUT_PULLUP</code> en je code houdt er rekening mee dat ingedrukt LOW is</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De pinnummers staan als const int bovenaan en niet als losse getallen in de loop</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De truc zit in <code>vorigeStand</code>. Die onthoudt tussen twee rondes van de <code>loop()</code> door wat de knop de vorige keer deed. Pas als de huidige stand daarvan verschilt, is er iets gebeurd dat de moeite is om door te sturen.</p>
+
+            <p><strong>Arduino 1, met de drukknop:</strong></p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+
+int vorigeStand = HIGH; // niet ingedrukt, door de pull-up
+
+void setup()
+{
+  pinMode(knopPin, INPUT_PULLUP);
+
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int stand = digitalRead(knopPin);
+
+  if (stand != vorigeStand)
+  {
+    if (stand == LOW) // ingedrukt
+    {
+      Serial.println(1);
+    }
+    else
+    {
+      Serial.println(0);
+    }
+
+    vorigeStand = stand;
+
+    delay(50); // laat de dendering uitsterven
+  }
+}</code></pre>
+
+            <p><strong>Arduino 2, met de LED:</strong></p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 3;
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  if (Serial.available() &gt; 0)
+  {
+    String regel = Serial.readStringUntil('\n');
+    regel.trim();
+
+    if (regel == "1")
+    {
+      digitalWrite(ledPin, HIGH);
+    }
+    else if (regel == "0")
+    {
+      digitalWrite(ledPin, LOW);
+    }
+  }
+}</code></pre>
+
+            <p>Merk op dat het programma van Arduino 2 bijna letterlijk dat van de eerste oefening is. Voor de ontvanger maakt het niets uit of die <code>1</code> door jou getypt is of door een andere Arduino gestuurd. Dat is de kracht van een afspraak over wat er op de lijn staat.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo6);
+</script>
+</body>
+</html>

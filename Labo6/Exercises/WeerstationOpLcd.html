@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Weerstation op het LCD</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Weerstation op het LCD</h1>
+    <p class="lead">Dezelfde drie boodschappen als in de vorige oefening, maar nu verschijnen ze op een LCD in plaats van in de seri&euml;le monitor. Bovenaan staat waarover het gaat, onderaan de waarde.</p>
+
+    <p>Je hebt nu alles wat je nodig hebt. Het uitpluizen van de boodschappen ken je uit de vorige oefening, en het LCD ken je uit <a href="../../Labo4/Exercises/TekstOpI2CLcd.html">Tekst op een I&sup2;C LCD display</a>. Wat overblijft is de twee samenbrengen, en nadenken over wat er op zo'n schermpje van twee regels past.</p>
+
+    <p>Deze oefening werk je uit in TinkerCAD.</p>
+
+    <h2 id="het-schema">Het schema</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-weerstation-lcd-schema.png" class="img-fluid" alt="TODO: schema met twee Arduino's serieel verbonden, een potentiometer op A0 van de eerste, en een I2C LCD op A4 en A5 van de tweede">
+        </figure>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Wat er bij komt bovenop de seri&euml;le verbinding</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Bord</th>
+                    <th scope="col">Aansluiting</th>
+                    <th scope="col">Waarvoor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Arduino 1</td>
+                    <td>A0</td>
+                    <td>De potentiometer die voor de drie sensoren speelt</td>
+                </tr>
+                <tr>
+                    <td>Arduino 2</td>
+                    <td>A4 (SDA) en A5 (SCL)</td>
+                    <td>De I&sup2;C-bus naar het LCD</td>
+                </tr>
+                <tr>
+                    <td>Arduino 2</td>
+                    <td>5 V en GND</td>
+                    <td>De voeding van het LCD</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Zet het type en het adres goed</div>
+        <p>Selecteer het LCD in TinkerCAD en zet <strong>Type</strong> op PCF8574-based met <strong>Address</strong> op 32, dat is 0x20. In je sketch gebruik je de bibliotheek <code>LiquidCrystal_I2C</code>, niet <code>Adafruit_LiquidCrystal</code>. Dit staat allemaal uitgelegd op de pagina van labo 4.</p>
+    </div>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <p><strong>Arduino 1</strong> verandert niet. Je mag de zender uit de vorige oefening letterlijk overnemen.</p>
+
+    <p><strong>Arduino 2</strong> leest de boodschappen zoals daarnet, maar zet het resultaat op het LCD:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Wat er op het scherm komt</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Bij deze boodschap</th>
+                    <th scope="col">Bovenste regel</th>
+                    <th scope="col">Onderste regel</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>TEMP:20.5</code></td>
+                    <td><code>Temperatuur</code></td>
+                    <td><code>20.5 C</code></td>
+                </tr>
+                <tr>
+                    <td><code>WIND:124</code></td>
+                    <td><code>Windrichting</code></td>
+                    <td><code>124 graden</code></td>
+                </tr>
+                <tr>
+                    <td><code>HUMIDITY:55</code></td>
+                    <td><code>Rel. vochtigheid</code></td>
+                    <td><code>55 %</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Elke keer dat er een nieuwe boodschap binnenkomt, vervang je wat er op het scherm staat.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Een LCD wist zichzelf niet</div>
+        <p>Schrijf je <code>Rel. vochtigheid</code> over <code>Windrichting</code> heen, dan blijven de letters die uitsteken gewoon staan en lees je iets als <code>Rel. vochtighed</code>. Roep dus <code>lcd.clear()</code> aan voor je nieuwe tekst zet, of vul je regels aan met spaties tot precies 16 tekens.</p>
+        <p>Reken trouwens even na: <code>Rel. vochtigheid</code> is exact 16 tekens lang. Meer past er niet op een regel.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Bij elke nieuwe boodschap verandert wat er op het LCD staat</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Bovenaan staat waarover het gaat, onderaan de waarde met haar eenheid</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er blijven geen letters van een vorige boodschap staan</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De temperatuur toont een cijfer na de komma</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt <code>LiquidCrystal_I2C</code> en niet <code>Adafruit_LiquidCrystal</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het adres in je sketch komt overeen met het adres dat je in TinkerCAD ingesteld hebt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een lijn zonder dubbelepunt of met een onbekende sleutel laat je programma niet ontsporen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>Het uitpluizen van de lijn is woord voor woord hetzelfde als in de vorige oefening. Alleen wat er met het resultaat gebeurt, is anders. Daarom staat het tonen in een aparte functie <code>toon()</code>: die krijgt een titel en een waarde, en zet die op de twee regels. Zo staat de <code>lcd.clear()</code> op &eacute;&eacute;n plaats in plaats van drie keer, en kan je hem dus ook maar &eacute;&eacute;n keer vergeten.</p>
+
+            <p><strong>Arduino 1</strong> is de zender uit de vorige oefening, ongewijzigd.</p>
+
+            <p><strong>Arduino 2, met het LCD:</strong></p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+const int adresLcd = 0x20;
+const int aantalKolommen = 16;
+const int aantalRijen = 2;
+
+LiquidCrystal_I2C lcd(adresLcd, aantalKolommen, aantalRijen);
+
+void setup()
+{
+  Serial.begin(9600);
+
+  lcd.init();
+  lcd.backlight();
+
+  lcd.setCursor(0, 0);
+  lcd.print("Weerstation");
+  lcd.setCursor(0, 1);
+  lcd.print("Wachten...");
+}
+
+void toon(String titel, String waarde)
+{
+  lcd.clear(); // anders blijven letters van de vorige boodschap staan
+
+  lcd.setCursor(0, 0);
+  lcd.print(titel);
+
+  lcd.setCursor(0, 1);
+  lcd.print(waarde);
+}
+
+void loop()
+{
+  if (Serial.available() &gt; 0)
+  {
+    String regel = Serial.readStringUntil('\n');
+    regel.trim();
+
+    int scheiding = regel.indexOf(':');
+
+    if (scheiding &gt; 0)
+    {
+      String sleutel = regel.substring(0, scheiding);
+      String waarde = regel.substring(scheiding + 1);
+
+      if (sleutel == "TEMP")
+      {
+        toon("Temperatuur", waarde + " C");
+      }
+      else if (sleutel == "WIND")
+      {
+        toon("Windrichting", waarde + " graden");
+      }
+      else if (sleutel == "HUMIDITY")
+      {
+        toon("Rel. vochtigheid", waarde + " %");
+      }
+      else
+      {
+        toon("Onbekend", sleutel);
+      }
+    }
+  }
+}</code></pre>
+
+            <p>Merk op dat de waarde hier nooit omgezet wordt naar een getal. Dat hoeft ook niet: op een scherm zet je tekst, en de zender heeft er al tekst van gemaakt. <code>waarde + " C"</code> plakt gewoon de eenheid erachter. Zou je iets met die waarde moeten <em>rekenen</em>, bijvoorbeeld een alarm bij meer dan 30 graden, dan heb je <code>toFloat()</code> w&eacute;l nodig.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo6);
+</script>
+</body>
+</html>

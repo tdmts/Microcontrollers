@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Boodschappen lezen</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Boodschappen lezen</h1>
+    <p class="lead">Tot nu toe ging je seri&euml;le verkeer maar &eacute;&eacute;n richting uit: van de Arduino naar jouw scherm. Hier draait dat om. Je leert hoe je binnenkomende gegevens opvangt, en waarom je ze altijd per lijn leest.</p>
+
+    <h2 id="de-ontvangstbuffer">De ontvangstbuffer</h2>
+
+    <p>Binnenkomende bytes blijven niet hangen tot jij er tijd voor hebt: ze worden automatisch opgeslagen in een stukje geheugen dat de <strong>buffer</strong> heet, 64 bytes groot. Jouw programma haalt ze daar op wanneer het uitkomt.</p>
+
+    <p>Dat betekent twee dingen. Je moet <em>niet</em> exact op het juiste moment staan te kijken, want de bytes wachten op je. Maar je mag ook niet te lang wegblijven, want als er meer dan 64 bytes binnenkomen voor je iets ophaalt, valt het oudste eruit en ben je het kwijt.</p>
+
+    <h2 id="is-er-iets">Is er al iets binnen?</h2>
+
+    <p><code>Serial.available()</code> geeft je het aantal bytes dat op dit moment in de buffer klaarstaat. Is dat 0, dan is er niets binnengekomen en heeft lezen geen zin.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
+{
+  if (Serial.available() &gt; 0)
+  {
+    // pas hier is er echt iets te lezen
+  }
+}</code></pre>
+
+    <h2 id="een-byte-tegelijk">E&eacute;n byte tegelijk met read()</h2>
+
+    <p><code>Serial.read()</code> haalt precies &eacute;&eacute;n byte uit de buffer en verwijdert die daar. Je krijgt de <em>waarde</em> van dat teken terug, dus een getal tussen 0 en 255. Is de buffer leeg, dan krijg je -1.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
+{
+  if (Serial.available() &gt; 0)
+  {
+    int teken = Serial.read();
+    Serial.println(teken); // stuurde de andere kant "100", dan zie je 49, dan 48, dan 48
+  }
+}</code></pre>
+
+    <p>Dat is nuttig om te begrijpen wat er echt over de lijn gaat, maar je wil zelden zo werken. Je moet dan zelf de tekens opvangen, bijhouden en weer tot een getal samenstellen. Zie <a href="TekensEnGetallen.html">Tekens en getallen</a> voor waarom 49 daar staat.</p>
+
+    <h2 id="een-lijn-tegelijk">Een lijn tegelijk met readStringUntil()</h2>
+
+    <p>Veel handiger: laat de Arduino zelf tekens verzamelen tot hij het einde van de lijn tegenkomt. Dat doet <code>Serial.readStringUntil('\n')</code>. Je krijgt alles wat er v&oacute;&oacute;r de <code>'\n'</code> stond terug als <a href="Strings.html">String</a>.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
+{
+  if (Serial.available() &gt; 0)
+  {
+    String regel = Serial.readStringUntil('\n');
+    regel.trim(); // haalt de \r en eventuele spaties weg
+
+    Serial.println(regel);
+  }
+}</code></pre>
+
+    <p>De <code>trim()</code> is geen overbodige luxe. De zender schrijft <code>println()</code> en zet er dus <code>'\r'</code> &eacute;n <code>'\n'</code> achter. <code>readStringUntil()</code> stopt bij de <code>'\n'</code>, dus die <code>'\r'</code> zit nog aan je tekst geplakt. Vergeet je de <code>trim()</code>, dan is <code>regel</code> gelijk aan <code>"LED:1\r"</code> in plaats van <code>"LED:1"</code>, en dan klopt je vergelijking niet meer.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Gebruik altijd het teken '\n', nooit "\r\n"</div>
+        <p><code>readStringUntil()</code> wil <strong>&eacute;&eacute;n</strong> teken, tussen enkele aanhalingstekens. Schrijf je <code>readStringUntil('\r\n')</code> met twee tekens ertussen, dan geeft de compiler een waarschuwing en doet je programma iets wat je niet bedoelde. Neem de <code>'\n'</code> en ruim de rest op met <code>trim()</code>.</p>
+    </div>
+
+    <h2 id="hoelang-wacht-hij">Hoelang wacht readStringUntil?</h2>
+
+    <p>Als de <code>'\n'</code> nooit komt, blijft <code>readStringUntil()</code> wachten, standaard &eacute;&eacute;n seconde. Zolang staat je <code>loop()</code> stil. Zolang de zender netjes <code>println()</code> gebruikt merk je daar niets van, want de <code>'\n'</code> komt altijd. Wil je die wachttijd korter, dan zet je in je <code>setup()</code>:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Serial.setTimeout(100); // wacht hoogstens 100 ms op het einde van een lijn</code></pre>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Samengevat</div>
+        <ul>
+            <li><code>Serial.available()</code> om te kijken <em>of</em> er iets is.</li>
+            <li><code>Serial.readStringUntil('\n')</code> plus <code>trim()</code> om een volledige boodschap op te halen.</li>
+            <li><code>Serial.read()</code> alleen als je echt teken per teken wil kijken.</li>
+        </ul>
+    </div>
+</div>
+
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+</body>
+</html>

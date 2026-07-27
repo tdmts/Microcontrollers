@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LED schakelen vanuit de seri&euml;le monitor</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>LED schakelen vanuit de seri&euml;le monitor</h1>
+    <p class="lead">Typ een <code>1</code> in de seri&euml;le monitor en de LED gaat aan. Typ een <code>0</code> en ze gaat weer uit. Voor het eerst stuur jij iets n&aacute;&aacute;r de Arduino in plaats van omgekeerd.</p>
+
+    <p>Sinds labo 0 gebruik je <code>Serial.println()</code> om te zien wat je programma doet. Dat verkeer ging altijd maar &eacute;&eacute;n kant op. Het seri&euml;le kanaal werkt echter in twee richtingen, en in dit labo ga je die tweede richting gebruiken. Lees eerst <a href="../Reference/BoodschappenLezen.html">Boodschappen lezen</a>, daar staat het gereedschap dat je nodig hebt.</p>
+
+    <p>Deze oefening werk je uit in TinkerCAD. Je hebt maar &eacute;&eacute;n Arduino nodig.</p>
+
+    <h2 id="het-schema">Het schema</h2>
+
+    <p>Niets nieuws: &eacute;&eacute;n LED met een voorschakelweerstand, precies zoals in labo 0.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Wat waar aan hangt</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Arduino</th>
+                    <th scope="col">Waarvoor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>pin 3</td>
+                    <td>De anode van de LED, via een weerstand van 220 &Omega;</td>
+                </tr>
+                <tr>
+                    <td>GND</td>
+                    <td>De kathode van de LED</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <p>Lees in je <code>loop()</code> een volledige lijn uit de seri&euml;le monitor met <code>Serial.readStringUntil('\n')</code> en vergelijk ze met <code>"1"</code> en <code>"0"</code>. Bij een <code>1</code> gaat de LED aan, bij een <code>0</code> uit.</p>
+
+    <p>Stuur bij elke opdracht ook een bevestiging terug, zodat je in de monitor ziet dat je boodschap aangekomen is. En bedenk wat er moet gebeuren als iemand iets anders typt dan een 1 of een 0: laat je programma dat gewoon zeggen in plaats van het te negeren.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Vergeet de trim() niet</div>
+        <p>Wat je typt komt binnen met een regeleinde erachter. Zonder <code>regel.trim()</code> vergelijk je dus <code>"1\r"</code> met <code>"1"</code>, en dat is niet gelijk. Je programma lijkt dan gewoon niet te werken, zonder ook maar &eacute;&eacute;n foutmelding.</p>
+    </div>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Een klein moment geduld is normaal</div>
+        <p>Stuurt de monitor geen regeleinde mee, dan wacht <code>readStringUntil()</code> nog even af of er nog iets komt. Standaard is dat &eacute;&eacute;n seconde. Daarna krijg je je tekst gewoon binnen. Zie je dus een korte vertraging tussen je Enter en de LED, dan is dat dit en niet een fout in je programma. Met <code>Serial.setTimeout(100)</code> in je <code>setup()</code> maak je dat wachten korter.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Typ je een 1 in de seri&euml;le monitor, dan gaat de LED aan</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Typ je een 0, dan gaat ze weer uit</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je programma bevestigt in de monitor wat het gedaan heeft</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Typ je iets anders, dan zegt je programma dat het dat niet begrijpt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je roept <code>trim()</code> op voor je de lijn vergelijkt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De seri&euml;le monitor staat op dezelfde snelheid als je <code>Serial.begin()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het pinnummer staat als const int bovenaan en niet als los getal in de loop</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De <code>if (Serial.available() &gt; 0)</code> houdt de rest tegen zolang er niets binnengekomen is. Zonder die regel zou je programma bij elke ronde van de <code>loop()</code> proberen te lezen en telkens een seconde blijven wachten.</p>
+            <p>De <code>else</code> onderaan is geen versiering. Een programma dat zwijgt als het je niet begrijpt, laat je zoeken naar een fout die er niet is.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 3;
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+
+  Serial.begin(9600);
+  Serial.println("Typ 1 om de LED aan te zetten, 0 om ze uit te zetten.");
+}
+
+void loop()
+{
+  if (Serial.available() &gt; 0)
+  {
+    String regel = Serial.readStringUntil('\n');
+    regel.trim();
+
+    if (regel == "1")
+    {
+      digitalWrite(ledPin, HIGH);
+      Serial.println("LED aan");
+    }
+    else if (regel == "0")
+    {
+      digitalWrite(ledPin, LOW);
+      Serial.println("LED uit");
+    }
+    else
+    {
+      Serial.print("Ik versta '");
+      Serial.print(regel);
+      Serial.println("' niet. Typ 1 of 0.");
+    }
+  }
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo6);
+</script>
+</body>
+</html>
