@@ -19,11 +19,12 @@ bewijs dat er echt iets zit, geen ruis.
 | [labo4.md](labo4.md) | 5 oefeningen, 3 referentiepagina's | 7 | 0 |
 | [labo5.md](labo5.md) | 10 oefeningen (nu 9), 5 referentiepagina's | 13 | 1 |
 | [labo6.md](labo6.md) | 6 oefeningen (nu 8), 1 referentiepagina (nu 4) | 13 | 1 |
+| [labo7.md](labo7.md) | 5 oefeningen (nu 8), 1 referentiepagina (nu 5), + de handout van week 10 | 10 | 1 |
 
 ## Wat er nog openstaat
 
-**Dertien tekeningen of foto's.** Die kan niemand anders maken dan jij, want er is hardware
-of een screenshot voor nodig. Ze staan alle dertien als `TODO-`bestandsnaam in de pagina's,
+**Veertien tekeningen of foto's.** Die kan niemand anders maken dan jij, want er is hardware
+of een screenshot voor nodig. Ze staan alle veertien als `TODO-`bestandsnaam in de pagina's,
 dus `scripts/check-content.sh` blijft ze bij elke run melden als niet-blokkerende
 waarschuwing. Verdwijnt zo'n regel uit de uitvoer, dan is die tekening er.
 
@@ -42,6 +43,7 @@ waarschuwing. Verdwijnt zo'n regel uit de uitvoer, dan is die tekening er.
 | 6 | Twee borden met drukknop links en LED rechts | L6-11 |
 | 6 | Twee borden met potentiometer links en LED op een PWM-pin rechts | L6-11 |
 | 6 | Twee borden met potentiometer links en I²C-LCD rechts | L6-11 |
+| 7 | Twee borden met looplicht links en noodstopknop rechts | L7-10 |
 
 **Eén uitgestelde beslissing.** L1-07: de twee dubbel-displayoefeningen van labo 1 tonen
 het pinout van het TinkerCAD-sjabloon niet, waardoor hun oplossingen deels uit placeholders
@@ -49,7 +51,7 @@ bestaan. Bewust uitgesteld, niet verworpen.
 
 ## Het patroon dat in elk labo terugkwam
 
-Vijf van de zeven labo's hadden dezelfde zwaarste bevinding: **theorie die bestaat maar
+Vijf van de acht labo's hadden dezelfde zwaarste bevinding: **theorie die bestaat maar
 onbereikbaar is**, en **oefeningen die meer dan één nieuw ding tegelijk binnenbrengen**.
 
 - Labo 2 was het scherpst: nul van de tien oefeningen linkte naar een referentiepagina,
@@ -70,9 +72,9 @@ student aan de slag gaat. Bij een volgende ronde is de nuttigste vraag per oefen
 *wat is hier het ene nieuwe ding, en staat de uitleg ervoor op een plek waar de student ze
 vindt zonder de oplossing open te klappen?*
 
-## Wat labo 5 en labo 6 daar apart in maakt
+## Wat labo 5, 6 en 7 daar apart in maakt
 
-Dit zijn de twee labo's waar de review **echte technische fouten** vond in plaats van
+Dit zijn de drie labo's waar de review **echte technische fouten** vond in plaats van
 didactische onhandigheden.
 
 In [labo 5](labo5.md): een servo die volgens de tekst op een `~`-pin moest (L5-01), een
@@ -95,3 +97,16 @@ Labo 6 voegde daar een derde vraag aan toe die de moeite is om te herhalen: *kan
 opgave zelf oplossen met de techniek die de hint aanraadt?* Bij L6-02 stond het antwoord
 pas vast na het narekenen van wat `Serial.find()` met de datastroom doet, en dat is niet
 iets wat je ziet door de opgave te lezen.
+
+[Labo 7](labo7.md) trok die lijn door naar zijn uiterste. Daar draagt de opgave iets op
+dat het bord doet **vastlopen** (L7-01: de PCF8574 uitlezen in een ISR, met `void loop()`
+uitdrukkelijk leeg), en dat is met geen enkele hoeveelheid lezen te zien: het antwoord
+stond in de broncode van de `Wire`-bibliotheek. Daarnaast sprak een rekenvoorbeeld labo 5
+tegen met een factor 5 (L7-03), en ontbrak een heel onderwerp dat de eerste oefening al
+onbruikbaar maakt op echte hardware (L7-02: dendering).
+
+Dat laatste levert een vierde vraag op, en het is de gemeenste van de vier: *werkt dit ook
+buiten TinkerCAD?* De simulator vlakt precies die dingen af waar dit labo over gaat. Hij
+simuleert geen contactdender, dus L7-02 is er onzichtbaar. Een student die alles in de
+simulator afwerkt, komt met werkende code op het labo en ziet ze daar stukgaan. Bij een
+volgend labo dat dicht bij de hardware zit, is dat de eerste vraag om te stellen.

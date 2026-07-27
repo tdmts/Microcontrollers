@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Noodstop op je looplicht</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Noodstop op je looplicht</h1>
+    <p class="lead">Het looplicht uit labo 1 krijgt een noodknop. Die moet werken op het moment dat je drukt, niet wanneer het je programma uitkomt. Dit is de oefening waarin de kernles van dit labo op zijn plaats valt.</p>
+
+    <p>Haal je <a href="../../Labo1/Exercises/Looplicht.html">Looplicht</a> uit labo 1 erbij. De bedrading blijft exact dezelfde: vier LEDs volgens <strong>sinking</strong> op de pinnen 3 tot en met 6. Je voegt er &eacute;&eacute;n drukknop aan toe.</p>
+
+    <h2 id="wat-je-nodig-hebt">Wat je nodig hebt</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De aansluitingen</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Pin</th>
+                    <th scope="col">Waarop</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>pin 2</td>
+                    <td><strong>Nieuw:</strong> de noodstopknop naar de massa, met <code>INPUT_PULLUP</code></td>
+                </tr>
+                <tr>
+                    <td>pin 3 t.e.m. 6</td>
+                    <td>De vier LEDs van je looplicht, sinking, elk met een weerstand van 220 &Omega;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Sinking, dus omgekeerd</div>
+        <p>Net als in labo 1 hangen je LEDs met de kathode aan de pin en met de anode aan de plus. Een LED brandt dus bij <code>LOW</code> en dooft bij <code>HIGH</code>. Dat blijft in deze oefening zo, ook in je ISR: alles uitzetten betekent hier alles op <code>HIGH</code>.</p>
+        <p>Twijfel je? Herlees <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
+    </div>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <ol>
+        <li>Je looplicht loopt zoals in labo 1: de LEDs branden om beurt, met een <code>delay()</code> ertussen.</li>
+        <li>Een druk op de noodstop dooft <strong>alle</strong> LEDs, op het moment zelf.</li>
+        <li>Daarna blijft alles uit. Het looplicht mag niet vanzelf weer beginnen lopen. Alleen de resetknop van je Arduino start het opnieuw.</li>
+    </ol>
+
+    <h2 id="de-vraag">Denk hier eerst over na</h2>
+
+    <p>Je ISR zou er zo kunnen uitzien:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void noodstopIngedrukt()
+{
+  noodstop = true;   // en de loop lost het verder wel op
+}</code></pre>
+
+    <p>Netjes kort, precies zoals het hoort. Maar er is een probleem.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Hoe lang duurt het voor je LEDs doven met deze ISR?</div>
+        <p>Je <code>loop()</code> zit op het moment van de druk midden in een <code>delay(250)</code>. Pas als die afgelopen is, kijkt hij weer naar je vlag. In het slechtste geval brandt je LED dus nog een kwart seconde na de noodstop.</p>
+        <p>Voor een looplichtje maakt dat niets uit. Voor een machine met een noodstop wel: een kwart seconde is een halve meter transportband. Een noodstop die "straks" stopt, is geen noodstop.</p>
+    </div>
+
+    <p>Zet de LEDs dus <strong>in de ISR zelf</strong> uit. Dat mag hier: <code>digitalWrite()</code> is een paar microseconden werk en heeft geen enkele andere interrupt nodig om af te raken. Het is precies het soort dringend werk waarvoor een ISR bedoeld is.</p>
+
+    <p>De vlag heb je nog altijd nodig, maar voor iets anders: om te verhinderen dat je <code>loop()</code> straks, wanneer zijn <code>delay()</code> eindelijk afgelopen is, doodleuk de volgende LED aansteekt.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">De ISR doet het dringende werk, de vlag doet het beleid</div>
+        <p>Dit zinnetje uit <a href="../Reference/PollenEnInterrupts.html">Van pollen naar interrupts</a> is de hele les van dit labo, en hier zie je waarom je ze allebei nodig hebt. De ISR zorgt dat het n&uacute; stopt. De vlag zorgt dat het gest&oacute;pt bl&iacute;jft.</p>
+    </div>
+
+    <h2 id="uitproberen">Wat je moet zien</h2>
+
+    <p>Druk op de noodstop terwijl er een LED brandt. Die LED moet <em>meteen</em> doven, zonder merkbare vertraging, ook al zit je programma nog midden in zijn <code>delay()</code>. Daarna blijft het donker.</p>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het looplicht loopt zoals in labo 1</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LEDs doven op het moment dat je drukt, niet pas na de <code>delay()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Na de noodstop blijft alles uit tot je op reset drukt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je ISR zet de LEDs zelf uit en zet daarnaast de vlag</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je ISR bevat geen <code>delay()</code> en geen <code>Serial</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je vlag is <code>volatile</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je code houdt er rekening mee dat sinking omgekeerd werkt: <code>HIGH</code> is uit</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De noodstopknop zit op pin 2 of pin 3</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De LEDs zitten hier in een array, zodat je ze in de ISR met &eacute;&eacute;n lusje allemaal tegelijk kan doven. Zie <a href="../../Labo1/Reference/Arrays.html">Arrays</a> als dat wat weggezakt is.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int leds[] = {3, 4, 5, 6};
+const int aantalLeds = 4;
+
+const int noodstopPin = 2;
+const int stapDuur = 250;
+
+volatile bool noodstop = false;
+
+void noodstopIngedrukt()
+{
+  // Meteen alles uit. Wachten tot de loop() dat doet zou tot een kwart
+  // seconde duren, want die zit op dit moment vast in een delay().
+  // Sinking: HIGH is uit.
+  for (int i = 0; i &lt; aantalLeds; i++)
+  {
+    digitalWrite(leds[i], HIGH);
+  }
+
+  noodstop = true; // en dit verhindert dat de loop straks verder loopt
+}
+
+void setup()
+{
+  for (int i = 0; i &lt; aantalLeds; i++)
+  {
+    pinMode(leds[i], OUTPUT);
+    digitalWrite(leds[i], HIGH); // sinking: begin met alles uit
+  }
+
+  pinMode(noodstopPin, INPUT_PULLUP);
+
+  attachInterrupt(digitalPinToInterrupt(noodstopPin), noodstopIngedrukt, FALLING);
+}
+
+void loop()
+{
+  for (int i = 0; i &lt; aantalLeds; i++)
+  {
+    if (noodstop == true)
+    {
+      return; // niets meer aansteken zolang de noodstop actief is
+    }
+
+    digitalWrite(leds[i], LOW);  // aan
+    delay(stapDuur);
+    digitalWrite(leds[i], HIGH); // uit
+  }
+}</code></pre>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Volg eens stap voor stap wat er gebeurt bij een druk</div>
+                <ol>
+                    <li>Je <code>loop()</code> zit in <code>delay(250)</code>, met LED 2 aan.</li>
+                    <li>Je drukt. De ISR gaat af, dooft alle vier de LEDs en zet <code>noodstop</code> op <code>true</code>. Dat duurt een paar microseconden.</li>
+                    <li>De <code>delay()</code> telt gewoon verder af alsof er niets gebeurd is, en loopt af.</li>
+                    <li><code>digitalWrite(leds[i], HIGH)</code> zet een LED uit die al uit is. Onschuldig.</li>
+                    <li>De lus gaat naar de volgende LED, ziet de vlag staan, en stapt met <code>return</code> uit de <code>loop()</code>.</li>
+                    <li>Vanaf nu wordt <code>loop()</code> nog duizenden keren per seconde opgeroepen, maar hij stapt er telkens meteen weer uit. Er gaat nooit nog een LED aan.</li>
+                </ol>
+                <p>Merk op dat stap 4 iets doms doet, en dat dat niet erg is. Een noodstop hoeft niet elegant te zijn, hij moet werken.</p>
+            </div>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Waarom noodstop geen noInterrupts() nodig heeft</div>
+                <p><code>noodstop</code> is een <code>bool</code>, dus &eacute;&eacute;n byte. Die haalt de processor met &eacute;&eacute;n instructie op, en een instructie kan niet halverwege onderbroken worden. Je leest hem dus altijd volledig of helemaal niet.</p>
+                <p>Bij de teller uit de vorige oefening lag dat anders, want die was vier bytes groot. Zie <a href="../Reference/VolatileEnVlaggen.html">volatile en de vlagvariabele</a>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo7);
+</script>
+</body>
+</html>

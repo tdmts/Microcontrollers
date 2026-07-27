@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Een LED die aangaat zonder loop</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Een LED die aangaat zonder loop</h1>
+    <p class="lead">Je eerste interrupt, en meteen het bewijs dat hij werkt: je <code>loop()</code> blijft helemaal leeg, en toch reageert je LED op de knop.</p>
+
+    <p>Zes labo's lang stond alles wat er moest gebeuren in je <code>loop()</code>. Deze keer laat je die met opzet leeg. Werkt je programma toch, dan weet je zeker dat de interrupt het werk gedaan heeft, want er is niets anders dat het gedaan k&aacute;n hebben.</p>
+
+    <p>Deze oefening werk je uit in TinkerCAD.</p>
+
+    <h2 id="wat-je-nodig-hebt">Wat je nodig hebt</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De aansluitingen</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Pin</th>
+                    <th scope="col">Waarop</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>pin 2</td>
+                    <td>Een drukknop naar de massa, met <code>INPUT_PULLUP</code></td>
+                </tr>
+                <tr>
+                    <td>pin 8</td>
+                    <td>Een LED, via een weerstand van 220 &Omega; naar de massa</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="info-box warning">
+        <div class="info-title warning">De knop m&oacute;&eacute;t op pin 2 of pin 3</div>
+        <p>Op een Arduino UNO kunnen maar twee pinnen een interrupt opwekken. Zet je je knop ergens anders, dan compileert alles netjes en gebeurt er nooit iets. Zie <a href="../Reference/Interruptpinnen.html">attachInterrupt en de interruptpinnen</a>.</p>
+    </div>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <ol>
+        <li>Schrijf een functie die de LED aanzet. Ze is <code>void</code> en heeft geen parameters.</li>
+        <li>Koppel die functie in je <code>setup()</code> aan pin 2 met <code>attachInterrupt()</code>, en laat hem afgaan op de dalende flank.</li>
+        <li>Laat je <code>loop()</code> volledig leeg. Er mag geen enkele regel in staan.</li>
+    </ol>
+
+    <p>Denk aan de volgorde in je <code>setup()</code>: eerst <code>pinMode()</code>, dan pas <code>attachInterrupt()</code>.</p>
+
+    <h2 id="wat-je-zal-zien">Wat je zal zien</h2>
+
+    <p>Bij het opstarten gebeurt er niets. Druk je op de knop, dan gaat de LED aan. En dan blijft hij aan.</p>
+
+    <p>Dat is geen fout, dat is precies wat je geschreven hebt: er staat nergens iets dat de LED weer uitzet. Druk je nog eens, dan gaat je ISR opnieuw af, maar je ziet er niets van omdat de LED al brandt. Wil je opnieuw beginnen, druk dan op de resetknop van je Arduino.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Probeer dit eens, het is de hele les van deze oefening</div>
+        <p>Zet als proef een <code>delay(5000)</code> in je <code>loop()</code>. Je programma zit nu vijf seconden per keer niets te doen.</p>
+        <p>Druk nu op de knop. De LED gaat nog altijd meteen aan, ook al zit je <code>loop()</code> midden in die vijf seconden vast. Precies dat kon je met <code>digitalRead()</code> nooit voor elkaar krijgen.</p>
+        <p>Haal die <code>delay()</code> daarna weer weg voor je indient.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je <code>loop()</code> is helemaal leeg</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een druk op de knop doet de LED branden</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je knop zit op pin 2 of pin 3, want geen enkele andere pin kan dit</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt <code>digitalPinToInterrupt()</code> en geen ruw interruptnummer</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je ISR is <code>void</code> en heeft niets tussen de haakjes staan</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> In <code>attachInterrupt()</code> staat de naam van je functie z&oacute;nder haakjes erachter</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De <code>pinMode()</code> van je knop staat v&oacute;&oacute;r de <code>attachInterrupt()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De pinnummers staan als const int bovenaan en niet als losse getallen in je code</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>Merk op hoe weinig code dit is. De hele werking zit in die ene regel <code>attachInterrupt()</code>.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;  // enkel pin 2 en pin 3 kunnen dit op een UNO
+const int ledPin = 8;
+
+// De interrupt service routine. Altijd void, altijd zonder parameters.
+void ledAan()
+{
+  digitalWrite(ledPin, HIGH);
+}
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+
+  // Eerst de pin instellen, pas daarna de interrupt aanzetten. Doe je het
+  // omgekeerd, dan maak je met het inschakelen van de pull-up zelf een
+  // flank op die pin, en gaat je ISR meteen bij het opstarten al af.
+  pinMode(knopPin, INPUT_PULLUP);
+
+  attachInterrupt(digitalPinToInterrupt(knopPin), ledAan, FALLING);
+}
+
+void loop()
+{
+  // Met opzet leeg. Al het werk gebeurt in de ISR.
+}</code></pre>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Waarom FALLING en niet RISING?</div>
+                <p>Met <code>INPUT_PULLUP</code> staat de pin hoog zolang je niets doet. Druk je, dan verbindt de knop hem met de massa en gaat hij naar laag. De flank op het moment van indrukken is dus een d&aacute;lende flank.</p>
+                <p>Schrijf je <code>RISING</code>, dan gaat je LED pas branden op het moment dat je de knop weer <em>loslaat</em>. Probeer het gerust eens, het maakt het verschil meteen duidelijk.</p>
+            </div>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Er staan geen haakjes achter ledAan</div>
+                <p>In <code>attachInterrupt(digitalPinToInterrupt(knopPin), ledAan, FALLING)</code> staat <code>ledAan</code> zonder haakjes. Je roept de functie hier niet op: je geeft door <em>welke</em> functie er later opgeroepen moet worden.</p>
+                <p>Schrijf je <code>ledAan()</code> met haakjes, dan probeert de compiler het resultaat van de functie door te geven. Die geeft niets terug, dus krijg je een foutmelding. Dat is er dan nog eentje die je zelf kan oplossen.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo7);
+</script>
+</body>
+</html>

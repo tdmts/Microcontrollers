@@ -187,5 +187,32 @@ window.LAB_REFERENCE = {
                 ]
             }
         ]
+    },
+    labo7: {
+        labId: 'labo7',
+        labTitle: 'Labo 7',
+        categories: [
+            {
+                name: 'Onderbreken in plaats van wachten',
+                topics: [
+                    { id: 'polleneninterrupts', name: 'Van pollen naar interrupts', href: 'PollenEnInterrupts.html', blurb: 'Waarom een knop uitlezen in je loop je knop doet missen zodra er ook maar iets anders moet gebeuren, en wat een interrupt daar precies aan verandert.' },
+                    { id: 'interruptpinnen', name: 'attachInterrupt en de interruptpinnen', href: 'Interruptpinnen.html', blurb: 'Alleen pin 2 en pin 3 van je UNO kunnen dit. Hoe je een functie aan een pin koppelt, en wat het verschil is tussen RISING, FALLING en CHANGE.' }
+                ]
+            },
+            {
+                name: 'Werken met een ISR',
+                topics: [
+                    { id: 'interruptserviceroutine', name: 'De regels van een ISR', href: 'InterruptServiceRoutine.html', blurb: 'Wat je wel en niet mag doen in een interruptroutine. Waarom delay() blijft hangen, Wire je bord ophangt en Serial alles vertraagt.' },
+                    { id: 'volatileenvlaggen', name: 'volatile en de vlagvariabele', href: 'VolatileEnVlaggen.html', blurb: 'Hoe je gegevens uit je ISR naar je loop krijgt zonder ze onderweg kwijt te spelen. Het vlagpatroon, en waarom een getal van vier bytes extra bescherming nodig heeft.' },
+                    { id: 'denderenbijeeninterrupt', name: 'Denderen bij een interrupt', href: 'DenderenBijEenInterrupt.html', blurb: 'Eén druk op de knop roept je ISR tien keer op. Hoe je dat met een vergrendeling opvangt, en waarom je het in TinkerCAD niet ziet gebeuren.' }
+                ]
+            },
+            {
+                name: 'Datasheets',
+                topics: [
+                    { id: 'datasheetpcf8574', name: 'PCF8574', href: '../../datasheets/datasheet-pcf8574.pdf', blurb: 'De datasheet van de I/O-expander. Kijk hier naar de /INT-pin: hij is een open-collectoruitgang, en dat bepaalt hoe je hem aansluit.' }
+                ]
+            }
+        ]
     }
 };

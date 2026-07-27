@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Van pollen naar interrupts</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Van pollen naar interrupts</h1>
+    <p class="lead">Zes labo's lang heb je je knoppen uitgelezen door er in je <code>loop()</code> naar te k&iacute;jken. Dat werkt prima zolang je programma verder niets te doen heeft. Hier zie je waar die manier van werken stukloopt, en wat een interrupt daaraan verandert.</p>
+
+    <h2 id="pollen">Pollen: telkens opnieuw gaan kijken</h2>
+
+    <p>Een knop uitlezen doe je met <code>digitalRead()</code>. Die functie vertelt je hoe de pin er op dat <em>ene moment</em> bij ligt. Wil je weten of er ondertussen op de knop gedrukt is, dan moet je dus blijven kijken, ronde na ronde.</p>
+
+    <p>Die manier van werken heeft een naam: <strong>pollen</strong>. Je vraagt herhaaldelijk "en nu? en nu? en nu?".</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 8;
+
+void setup()
+{
+  pinMode(knopPin, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop()
+{
+  if (digitalRead(knopPin) == LOW) // ingedrukt
+  {
+    digitalWrite(ledPin, HIGH);
+  }
+}</code></pre>
+
+    <p>Deze <code>loop()</code> draait duizenden keren per seconde. Je kan de knop onmogelijk zo kort indrukken dat hij hem mist. Zolang dit het enige is wat je programma doet, is pollen perfect in orde.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/knop-met-externe-pullup-schema.png" class="img-fluid" alt="Schema van een drukknop met een externe pull-upweerstand van 10 kilo-ohm naar +5V en een serieweerstand van 100 ohm naar de ingangspin">
+            <figcaption class="figure-caption">Een drukknop met een externe pull-upweerstand. Gebruik je <code>INPUT_PULLUP</code>, dan zit die weerstand al in de chip en heb je hem niet nodig.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="waar-het-misgaat">Waar het misgaat</h2>
+
+    <p>Nu zet je er &eacute;&eacute;n regel bij. Eentje maar.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 8;
+
+void setup()
+{
+  pinMode(knopPin, INPUT_PULLUP);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop()
+{
+  if (digitalRead(knopPin) == LOW)
+  {
+    digitalWrite(ledPin, HIGH);
+  }
+
+  delay(1000); // hier gebeurt iets anders, wat dan ook
+}</code></pre>
+
+    <p>Vanaf nu wordt je knop nog maar <strong>&eacute;&eacute;n keer per seconde</strong> bekeken. Druk je de knop in en laat je hem los terwijl die <code>delay()</code> loopt, dan heeft je programma er nooit iets van gemerkt. De druk is gewoon weg.</p>
+
+    <p>En dat is niet iets wat je met een korte <code>delay()</code> oplost. Elke seconde die je programma ergens anders mee bezig is, is een seconde waarin het blind is voor je knop.</p>
+
+    <h2 id="de-noodstop">Een noodstop die niet stopt</h2>
+
+    <p>Kijk eens naar dit programma. Twee LEDs wisselen elkaar af, met tien seconden ertussen. Op pin 2 zit een noodstop: druk je die in, dan moeten alle LEDs doven en blijven ze uit.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin1 = 3;
+const int ledPin2 = 4;
+
+bool noodstop = false;
+int teller = 0;
+
+void setup()
+{
+  pinMode(knopPin, INPUT_PULLUP);
+  pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+}
+
+void loop()
+{
+  if (digitalRead(knopPin) == LOW) // noodstop ingedrukt
+  {
+    noodstop = true;
+  }
+
+  if (noodstop == true)
+  {
+    digitalWrite(ledPin1, LOW);
+    digitalWrite(ledPin2, LOW);
+  }
+  else
+  {
+    if (teller % 2 == 0)
+    {
+      digitalWrite(ledPin1, HIGH);
+      digitalWrite(ledPin2, LOW);
+    }
+    else
+    {
+      digitalWrite(ledPin1, LOW);
+      digitalWrite(ledPin2, HIGH);
+    }
+
+    delay(10000);
+    teller++;
+  }
+}</code></pre>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Hoe lang moet je die noodstop ingedrukt houden voor de LEDs doven?</div>
+        <p>Denk er even over na voor je verder leest. Het antwoord is niet "een fractie van een seconde".</p>
+        <p>De <code>loop()</code> zit in <code>delay(10000)</code>. Pas als die tien seconden om zijn, kijkt het programma weer naar de knop. Laat je de noodstop v&oacute;&oacute;r dat moment los, dan is er niets gebeurd. Je moet hem dus in het slechtste geval <strong>tien seconden lang ingedrukt houden</strong>.</p>
+        <p>Dat is geen noodstop. Dat is een suggestie.</p>
+    </div>
+
+    <h2 id="wat-is-een-interrupt">Wat een interrupt daaraan verandert</h2>
+
+    <p>Het probleem is niet dat je code fout is. Het probleem is dat je programma zelf moet gaan kijken. Zolang het ergens anders mee bezig is, kan het dat niet.</p>
+
+    <p>Een <strong>interrupt</strong> draait dat om. Je vraagt niet meer of er iets gebeurd is: je laat je <em>roepen</em> wanneer het gebeurt.</p>
+
+    <p>In de chip zit hardware die een paar pinnen in de gaten houdt, helemaal los van je programma. Ziet die hardware op zo'n pin de spanning veranderen, dan onthoudt ze dat meteen, en zodra de lopende instructie klaar is wordt je programma <strong>onderbroken</strong>. Niet afgewerkt, niet netjes afgerond: middenin gepauzeerd.</p>
+
+    <p>De controller springt dan naar een functie die jij geschreven hebt. Die functie heet de <strong>interrupt service routine</strong>, kortweg de <strong>ISR</strong>. Zodra ze klaar is, gaat je programma verder waar het gebleven was, alsof er niets gebeurd is. Zat je in een <code>delay()</code>, dan telt die gewoon verder af.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Een interrupt is geen "heel snel pollen"</div>
+        <p>Het verschil is belangrijker dan het lijkt. Bij pollen kan je een korte druk missen omdat je op het verkeerde moment keek. Bij een interrupt is dat onmogelijk: de flank wordt in hardware <strong>vastgehouden</strong>, ook als je programma net iets anders aan het doen was. Zelfs een druk van een duizendste van een seconde raakt niet verloren.</p>
+    </div>
+
+    <p>Hetzelfde noodstopprogramma, nu met een interrupt. Er veranderen maar twee dingen, en ze zijn allebei gemarkeerd:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin1 = 3;
+const int ledPin2 = 4;
+
+volatile bool noodstop = false; // 1: volatile, want de ISR verandert dit
+int teller = 0;
+
+// De interrupt service routine. Kort, en meer niet.
+void noodstopIngedrukt()
+{
+  digitalWrite(ledPin1, LOW);
+  digitalWrite(ledPin2, LOW);
+
+  noodstop = true;
+}
+
+void setup()
+{
+  pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+  pinMode(knopPin, INPUT_PULLUP);
+
+  // 2: koppel de functie aan de pin
+  attachInterrupt(digitalPinToInterrupt(knopPin), noodstopIngedrukt, FALLING);
+}
+
+void loop()
+{
+  if (noodstop == true)
+  {
+    digitalWrite(ledPin1, LOW);
+    digitalWrite(ledPin2, LOW);
+  }
+  else
+  {
+    if (teller % 2 == 0)
+    {
+      digitalWrite(ledPin1, HIGH);
+      digitalWrite(ledPin2, LOW);
+    }
+    else
+    {
+      digitalWrite(ledPin1, LOW);
+      digitalWrite(ledPin2, HIGH);
+    }
+
+    delay(10000);
+    teller++;
+  }
+}</code></pre>
+
+    <p>Merk op dat de <code>loop()</code> nu <em>niet meer naar de knop kijkt</em>. Die regel is verdwenen. En toch doven de LEDs op het moment dat je drukt, ook al zit de <code>loop()</code> nog acht seconden vast in zijn <code>delay()</code>.</p>
+
+    <h2 id="het-belangrijkste-idee">Het belangrijkste idee van dit labo</h2>
+
+    <p>Kijk goed naar wat er in die ISR staat, en vooral naar wat er niet in staat.</p>
+
+    <p>De ISR doet het <strong>dringende werk aan de hardware</strong>: de LEDs uit. Dat moet nu gebeuren, en het duurt maar een paar microseconden. Daarnaast zet ze een <strong>vlag</strong>: <code>noodstop = true</code>. Die vlag is er voor de <code>loop()</code>, zodat die weet dat hij de LEDs niet opnieuw mag aansteken zodra zijn <code>delay()</code> afgelopen is.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Onthou dit ene zinnetje</div>
+        <p><strong>De ISR doet het dringende werk, de vlag doet het beleid.</strong></p>
+        <p>Alles wat echt niet kan wachten en in een oogwenk klaar is, zet je in de ISR. Alles wat mag wachten tot je <code>loop()</code> weer aan de beurt is, laat je aan de <code>loop()</code> over. Bijna elke fout die je dit labo maakt, komt erop neer dat je te v&eacute;&eacute;l in de ISR gestopt hebt.</p>
+    </div>
+
+    <h2 id="en-nu">En nu?</h2>
+
+    <ul>
+        <li><a href="Interruptpinnen.html">attachInterrupt en de interruptpinnen</a> voor de twee regels uit het voorbeeld, en waarom je niet zomaar eender welke pin mag nemen.</li>
+        <li><a href="InterruptServiceRoutine.html">De regels van een ISR</a> voor wat er wel en niet in zo'n functie mag.</li>
+        <li><a href="VolatileEnVlaggen.html">volatile en de vlagvariabele</a> voor dat woordje <code>volatile</code> en het vlagpatroon.</li>
+    </ul>
+</div>
+
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+</body>
+</html>

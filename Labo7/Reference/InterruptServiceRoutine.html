@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>De regels van een ISR</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>De regels van een ISR</h1>
+    <p class="lead">Een interrupt service routine is een gewone functie die je zelf schrijft, maar er gelden strengere regels dan je gewoon bent. Overtreed je ze, dan krijg je zelden een foutmelding: je krijgt een programma dat vastloopt of vreemd doet.</p>
+
+    <h2 id="hoe-ze-eruitziet">Hoe een ISR eruitziet</h2>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void noodstopIngedrukt()
+{
+  digitalWrite(ledPin, LOW);
+
+  noodstop = true;
+}</code></pre>
+
+    <p>Twee dingen liggen vast:</p>
+
+    <ul>
+        <li>Ze is altijd <code>void</code>. Een ISR kan niets teruggeven, want er is niemand die op een antwoord zit te wachten. Er is geen enkele regel in je programma die haar oproept.</li>
+        <li>Ze heeft <strong>geen parameters</strong>. Tussen de haakjes staat niets. Om dezelfde reden: er is niemand om iets mee te geven.</li>
+    </ul>
+
+    <p>De naam mag je zelf kiezen. Kies er een die zegt wat er gebeurd is, niet wat de functie doet: <code>noodstopIngedrukt</code>, <code>knopVeranderd</code>, <code>expanderMelddeIets</code>.</p>
+
+    <h2 id="zo-kort-mogelijk">Regel &eacute;&eacute;n: zo kort mogelijk</h2>
+
+    <p>Terwijl je ISR draait, ligt de rest van je programma stil. Niet alleen je <code>loop()</code>: <strong>alle andere interrupts staan ook uit</strong>. De chip zet ze automatisch uit zodra hij in een ISR springt, en pas weer aan als je eruit komt.</p>
+
+    <p>Dat is meteen de reden achter alle regels hieronder. Alles wat lang duurt in een ISR, houdt de hele controller tegen. En alles wat in een ISR op een <em>andere</em> interrupt zit te wachten, wacht voor eeuwig.</p>
+
+    <h2 id="geen-delay">Geen delay()</h2>
+
+    <p><code>delay()</code> werkt niet in een ISR, en dat op de vervelendst mogelijke manier:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void knopIngedrukt()
+{
+  digitalWrite(ledPin, HIGH);
+  delay(500);              // FOUT: je programma komt hier nooit meer uit
+  digitalWrite(ledPin, LOW);
+}</code></pre>
+
+    <p><code>delay()</code> telt de tijd af met behulp van een timer die zelf een interrupt gebruikt. Die interrupt staat uit terwijl jouw ISR draait, dus de tijd staat stil, dus <code>delay()</code> is nooit klaar. Je bord hangt, en alleen de resetknop helpt nog.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Waarom een korte delay wel lijkt te werken</div>
+        <p>Test je met <code>delay(1)</code>, dan komt je programma er wel uit en denk je dat het meevalt. Dat is toeval: voor heel korte wachttijden kan de chip het nog net zonder die timer af. Vanaf een paar milliseconden hangt het gegarandeerd. Doe het gewoon niet.</p>
+        <p>Moet je echt heel even wachten in een ISR, dan bestaat <code>delayMicroseconds()</code>, want die telt gewoon instructies. Maar als je in een ISR aan het wachten bent, klopt je ontwerp meestal niet.</p>
+    </div>
+
+    <h2 id="geen-wire">Geen Wire, dus geen I&sup2;C</h2>
+
+    <p>Dit is de gemeenste van allemaal, en je botst er in dit labo op zodra je met de PCF8574 werkt.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void expanderMelddeIets()
+{
+  Wire.requestFrom(adresExpander, 1); // FOUT: je bord hangt hier vast
+  byte knoppen = Wire.read();
+}</code></pre>
+
+    <p>De I&sup2;C-hardware in de chip werkt byte per byte, en gebruikt <strong>zelf een interrupt</strong> om na elke byte verder te gaan. <code>Wire.requestFrom()</code> zet de boel in gang en blijft dan wachten tot die interrupt het werk afgemaakt heeft.</p>
+
+    <p>Maar je zit in een ISR. De interrupts staan uit. Die hulp komt dus nooit, en <code>Wire.requestFrom()</code> blijft eeuwig wachten. Je bord is dood tot je op reset drukt. Er is geen foutmelding, geen timeout, niets.</p>
+
+    <p>Hetzelfde geldt voor <code>Wire.beginTransmission()</code> en <code>Wire.endTransmission()</code>. Kortom: <strong>geen enkele I&sup2;C-opdracht in een ISR</strong>.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Nee, je lost dit niet op met interrupts() bovenaan je ISR</div>
+        <p>Vroeg of laat bedenkt iemand: als het probleem is dat de interrupts uitstaan, zet ik ze toch gewoon weer aan met <code>interrupts()</code> als eerste regel van mijn ISR?</p>
+        <p>Dat werkt. En daarom is het gevaarlijk. Zodra de interrupts weer aanstaan, mag je knop je ISR opnieuw onderbreken, terwijl de eerste nog bezig is. Een denderende knop doet dat tientallen keren na elkaar, en elke onderbreking legt een nieuwe laag op de stapel. Je Arduino heeft 2 kB geheugen. Die stapel loopt over, je variabelen worden overschreven en je programma doet vanaf dan volstrekt willekeurige dingen. Dat is oneindig veel moeilijker te vinden dan een bord dat gewoon hangt.</p>
+        <p>De oplossing is niet de interrupts aanzetten. De oplossing is het werk uit de ISR halen: zie <a href="VolatileEnVlaggen.html">het vlagpatroon</a>.</p>
+    </div>
+
+    <h2 id="geen-serial">Geen Serial.print()</h2>
+
+    <p>Printen vanuit een ISR is verboden, maar om een ander soort reden dan <code>Wire</code>. Je bord hangt er niet van, en dat maakt het net verraderlijk: je probeert het, het lijkt te werken, en je gelooft de waarschuwing niet meer.</p>
+
+    <p>Wat er wel gebeurt: bij 9600 baud duurt &eacute;&eacute;n teken ruim een milliseconde. Normaal geeft je Arduino de tekens stukje bij beetje weg terwijl je programma verder loopt. In een ISR kan dat niet, dus zit je ISR ineens tientallen milliseconden vast te schrijven. Al die tijd staat alles stil: je mist andere knopdrukken, je klok loopt achter, en een I&sup2;C-overdracht die elders bezig was gaat stuk.</p>
+
+    <p>En omgekeerd heeft <code>Serial.available()</code> in een ISR al helemaal geen zin: binnenkomende tekens worden zelf met een interrupt opgevangen, dus terwijl jouw ISR draait kan er onmogelijk iets nieuws binnenkomen.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Wire hangt, Serial vertraagt</div>
+        <p>Twee verschillende gevolgen, dezelfde regel: <strong>doe geen in- of uitvoer in een ISR</strong>. Zet een vlag, en laat je <code>loop()</code> het printen doen.</p>
+    </div>
+
+    <h2 id="millis">millis() staat stil, maar je mag hem wel lezen</h2>
+
+    <p>De klok van <code>millis()</code> wordt zelf bijgewerkt door een interrupt. Die staat uit tijdens je ISR, dus <strong>de tijd loopt niet verder</strong> zolang je erin zit. Roep je <code>millis()</code> twee keer op in dezelfde ISR, dan krijg je twee keer hetzelfde getal.</p>
+
+    <p>Maar: je mag hem wel degelijk <em>lezen</em>. Je krijgt de waarde van vlak voor de onderbreking, en bij de volgende keer dat je ISR afgaat staat de klok gewoon weer verder, want tussendoor heeft je <code>loop()</code> gedraaid. Voor iets als "is het al 200 ms geleden?" is dat ruim nauwkeurig genoeg, en daar maak je in <a href="DenderenBijEenInterrupt.html">Denderen bij een interrupt</a> gebruik van.</p>
+
+    <h2 id="wat-mag-wel">Wat mag dan w&eacute;l?</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Toegelaten in een ISR</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Wat</th>
+                    <th scope="col">Waarom het mag</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Een <code>volatile</code> variabele veranderen</td>
+                    <td>Een paar instructies, klaar. Dit is de kern van het vlagpatroon.</td>
+                </tr>
+                <tr>
+                    <td><code>digitalWrite()</code> en <code>digitalRead()</code></td>
+                    <td>Die praten rechtstreeks met de pin en hebben geen andere interrupt nodig. Een paar microseconden werk.</td>
+                </tr>
+                <tr>
+                    <td><code>millis()</code> lezen</td>
+                    <td>Levert een geldige waarde op, ook al loopt de klok even niet verder.</td>
+                </tr>
+                <tr>
+                    <td>Rekenen met gewone variabelen</td>
+                    <td>Mag, zolang het kort is. Een <code>for</code>-lus van vijf rondes is prima, een lus van duizend niet.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 id="samengevat">Samengevat</h2>
+
+    <div class="info-box tip">
+        <div class="info-title tip">De regels op een rijtje</div>
+        <ul>
+            <li>Altijd <code>void</code>, altijd zonder parameters.</li>
+            <li>Zo kort mogelijk. Idealiter merkt niemand dat je programma onderbroken werd.</li>
+            <li>Geen <code>delay()</code>, geen <code>Wire</code>, geen <code>Serial</code>.</li>
+            <li><code>digitalWrite()</code> mag, en is vaak precies wat je nodig hebt.</li>
+            <li>Alles wat je met de buitenwereld deelt, is <code>volatile</code>.</li>
+            <li>Moet er meer gebeuren dan dat? Zet een vlag en laat je <code>loop()</code> het afmaken.</li>
+        </ul>
+    </div>
+</div>
+
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+</body>
+</html>

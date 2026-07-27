@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>volatile en de vlagvariabele</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>volatile en de vlagvariabele</h1>
+    <p class="lead">Je ISR moet kort blijven, maar er moet w&eacute;l iets gebeuren. De oplossing is dat je ISR alleen een boodschap achterlaat en je <code>loop()</code> het echte werk doet. Hier lees je hoe je die boodschap doorgeeft zonder ze onderweg kwijt te spelen.</p>
+
+    <h2 id="waarom-volatile">Waarom volatile</h2>
+
+    <p>Een variabele die je zowel in je ISR als in je <code>loop()</code> gebruikt, moet <code>volatile</code> zijn:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>volatile bool knopGedrukt = false;</code></pre>
+
+    <p>Waarom? Omdat de compiler slim is, en die slimheid hier tegen je werkt.</p>
+
+    <p>Wanneer de compiler ziet dat je in je <code>loop()</code> steeds opnieuw dezelfde variabele uitleest, denkt hij: die verandert hier toch nergens, ik hou hem gewoon even bij in de processor zelf, dat is sneller dan hem telkens uit het geheugen te halen. Vaak is dat precies de juiste beslissing.</p>
+
+    <p>Maar jouw variabele verandert wel degelijk: in je ISR. En die ISR staat nergens in je <code>loop()</code>, dus de compiler ziet het verband niet. Het gevolg is een <code>loop()</code> die eeuwig naar een verouderde kopie zit te kijken en nooit merkt dat de knop ingedrukt is.</p>
+
+    <p><code>volatile</code> is jouw manier om te zeggen: <em>ga er niet van uit dat je weet wanneer dit verandert, haal hem elke keer opnieuw op</em>.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Je krijgt hier geen waarschuwing over</div>
+        <p>Vergeet je <code>volatile</code>, dan compileert alles netjes. Erger nog: het werkt vaak ook gewoon, tot je iets kleins verandert en de compiler ineens besluit om w&eacute;l een kopie bij te houden. Dan lijkt het alsof een onschuldige aanpassing je programma gesloopt heeft.</p>
+        <p>Regel: elke variabele die je in een ISR aanraakt, krijgt <code>volatile</code>. Zonder uitzondering.</p>
+    </div>
+
+    <h2 id="het-vlagpatroon">Het vlagpatroon</h2>
+
+    <p>Dit is het belangrijkste patroon van het hele labo, en je gaat het in bijna elke oefening gebruiken.</p>
+
+    <p>Het idee: je ISR doet niets anders dan een <code>bool</code> op <code>true</code> zetten. Zo'n variabele heet een <strong>vlag</strong>. Je <code>loop()</code> kijkt of die vlag omhoog staat, doet dan het echte werk, en zet ze weer omlaag.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 8;
+
+volatile bool knopGedrukt = false;
+
+bool ledBrandt = false;
+
+// De ISR: zo kort als het maar kan
+void knopISR()
+{
+  knopGedrukt = true;
+}
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  pinMode(knopPin, INPUT_PULLUP);
+
+  Serial.begin(9600);
+
+  attachInterrupt(digitalPinToInterrupt(knopPin), knopISR, FALLING);
+}
+
+void loop()
+{
+  if (knopGedrukt == true)
+  {
+    knopGedrukt = false; // eerst de vlag neerhalen
+
+    ledBrandt = !ledBrandt;
+    digitalWrite(ledPin, ledBrandt);
+
+    Serial.println("Er is gedrukt"); // dit mag hier wel, in de ISR niet
+  }
+}</code></pre>
+
+    <p>Kijk wat je hiermee wint. Het printen, dat in een ISR verboden is, staat nu in de <code>loop()</code> en mag dus. Hetzelfde geldt voor een <code>Wire</code>-opdracht, een <code>delay()</code>, of eender wat dat te lang duurt. Je ISR blijft &eacute;&eacute;n regel.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Haal de vlag neer v&oacute;&oacute;r je aan het werk gaat</div>
+        <p>Zet <code>knopGedrukt = false;</code> bovenaan, niet onderaan. Doe je het op het einde, dan wis je ook een druk die net tijdens je werk binnenkwam, en die druk is dan voorgoed weg.</p>
+        <p>Zet je ze bovenaan en komt er tijdens je werk een nieuwe druk binnen, dan zet de ISR de vlag gewoon opnieuw en handel je die de volgende ronde af. In het slechtste geval doe je &eacute;&eacute;n keer overbodig werk. Dat is een pak beter dan iets missen.</p>
+    </div>
+
+    <h2 id="grote-getallen">Een getal van vier bytes heeft meer nodig</h2>
+
+    <p>Bij een <code>bool</code> of een <code>byte</code> hoef je verder niets te doen. De processor haalt zo'n waarde met &eacute;&eacute;n instructie uit het geheugen, en een instructie kan niet halverwege onderbroken worden.</p>
+
+    <p>Bij een <code>int</code> (twee bytes) of een <code>long</code> (vier bytes) ligt dat anders. Die haalt de processor stuk voor stuk op, en tussen die stukjes door kan je ISR toeslaan.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Een getal dat nooit bestaan heeft</div>
+        <p>Stel: je teller staat op 255 en je ISR telt hem op naar 256. In het geheugen zijn dat twee bytes.</p>
+        <ol>
+            <li>Je <code>loop()</code> leest de onderste byte: 255.</li>
+            <li>De ISR slaat toe en telt op. De onderste byte wordt 0, de bovenste wordt 1.</li>
+            <li>Je <code>loop()</code> leest de bovenste byte: 1.</li>
+        </ol>
+        <p>Je <code>loop()</code> plakt die twee samen tot <strong>511</strong>. Niet 255, niet 256, maar een getal dat op geen enkel moment in je programma bestaan heeft. En het gebeurt maar zelden, dus je vindt het pas na een halve dag zoeken.</p>
+    </div>
+
+    <p>De oplossing is de interrupts heel eventjes uitzetten terwijl je het getal ophaalt:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+
+volatile unsigned long aantalDrukken = 0;
+
+unsigned long vorigAantal = 0;
+
+void knopISR()
+{
+  aantalDrukken++;
+}
+
+void setup()
+{
+  pinMode(knopPin, INPUT_PULLUP);
+
+  Serial.begin(9600);
+
+  attachInterrupt(digitalPinToInterrupt(knopPin), knopISR, FALLING);
+}
+
+void loop()
+{
+  noInterrupts();                        // even niet storen
+  unsigned long aantal = aantalDrukken;  // vier bytes in een keer overnemen
+  interrupts();                          // en meteen weer aan
+
+  if (aantal != vorigAantal)
+  {
+    vorigAantal = aantal;
+
+    Serial.println(aantal);
+  }
+}</code></pre>
+
+    <p>Je maakt dus razendsnel een <strong>kopie</strong>, en werkt daarna verder met die kopie. Tussen <code>noInterrupts()</code> en <code>interrupts()</code> staan zo weinig mogelijk regels: zet je er je <code>Serial.println()</code> ook nog tussen, dan heb je precies het probleem gemaakt dat je wou vermijden.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Raak je zo geen drukken kwijt?</div>
+        <p>Nee. Drukt iemand op de knop terwijl de interrupts uitstaan, dan onthoudt de hardware dat. Zodra <code>interrupts()</code> uitgevoerd is, gaat je ISR alsnog af. Je verliest hoogstens een paar microseconden.</p>
+    </div>
+
+    <h2 id="wie-schrijft-wat">E&eacute;n vuistregel om alles simpel te houden</h2>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Alleen de ISR schrijft, de loop leest</div>
+        <p>Zorg dat je gedeelde variabelen maar op &eacute;&eacute;n plaats aangepast worden. De ISR telt op, de <code>loop()</code> kijkt alleen. Ga je in je <code>loop()</code> ook <code>aantalDrukken++</code> schrijven, dan heb je hetzelfde probleem opnieuw, want optellen is stiekem drie stappen: ophalen, plus &eacute;&eacute;n, terugzetten. En daar kan de ISR net zo goed tussen springen.</p>
+        <p>De enige uitzondering is een vlag die je in de <code>loop()</code> neerhaalt. Dat is &eacute;&eacute;n byte, dus &eacute;&eacute;n instructie, en dus veilig.</p>
+    </div>
+
+    <h2 id="en-nu">En nu?</h2>
+
+    <ul>
+        <li><a href="DenderenBijEenInterrupt.html">Denderen bij een interrupt</a>: waarom je teller sneller loopt dan je drukt.</li>
+        <li><a href="InterruptServiceRoutine.html">De regels van een ISR</a>: wat je uit die ISR moet houden.</li>
+    </ul>
+</div>
+
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+</body>
+</html>

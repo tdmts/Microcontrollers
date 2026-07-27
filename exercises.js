@@ -95,5 +95,19 @@ window.LAB_EXERCISES = {
             { id: 'weerstationoplcd', order: 7, name: 'Weerstation op het LCD', href: 'https://tdmts.github.io/Microcontrollers/Labo6/Exercises/WeerstationOpLcd.html', checklistDriven: true, difficulty: 3, time: '~45 min', blurb: 'Breng het LCD uit labo 4 samen met je seriële weerstation, en zorg dat er geen letters van de vorige boodschap blijven staan.' },
             { id: 'arduinovanafpc', order: 8, name: 'De Arduino aansturen vanaf je pc', href: 'https://tdmts.github.io/Microcontrollers/Labo6/Exercises/ArduinoAansturenVanafPc.html', checklistDriven: true, difficulty: 3, time: '~60 min', blurb: 'Op echte hardware: een C#-programma op je pc schakelt je LED en vraagt je sensorwaarde op, in dezelfde taal als je twee Arduino\'s onderling spreken.' }
         ]
+    },
+    labo7: {
+        labId: 'labo7',
+        labTitle: 'Labo 7',
+        exercises: [
+            { id: 'ledaanmetinterrupt', order: 1, name: 'Een LED die aangaat zonder loop', href: 'https://tdmts.github.io/Microcontrollers/Labo7/Exercises/LedAanMetEenInterrupt.html', checklistDriven: true, difficulty: 1, time: '~20 min', blurb: 'Je eerste interrupt: je loop blijft helemaal leeg en toch reageert je LED op de knop. Vanaf nu wacht je niet meer, je wordt geroepen.' },
+            { id: 'drukkentellen', order: 2, name: 'Drukken tellen zonder dender', href: 'https://tdmts.github.io/Microcontrollers/Labo7/Exercises/DrukkenTellenZonderDender.html', checklistDriven: true, difficulty: 2, time: '~30 min', blurb: 'Eén druk die als zeven telt, en de vergrendeling die dat oplost. Ontdek meteen waarom je nooit iets print vanuit een ISR.' },
+            { id: 'looplichtmetnoodstop', order: 3, name: 'Noodstop op je looplicht', href: 'https://tdmts.github.io/Microcontrollers/Labo7/Exercises/LooplichtMetNoodstop.html', checklistDriven: true, difficulty: 2, time: '~30 min', blurb: 'Het looplicht uit labo 1 krijgt een noodknop die dwars door een delay heen snijdt. De les van dit labo in één sketch.' },
+            { id: 'motormetnoodstop', order: 4, name: 'Motor met een echte noodstop', href: 'https://tdmts.github.io/Microcontrollers/Labo7/Exercises/MotorMetNoodstop.html', checklistDriven: true, difficulty: 2, time: '~35 min', blurb: 'Je transistorschakeling uit labo 5, tien seconden draaitijd, en een noodstop die niet mag wachten tot de delay voorbij is.' },
+            { id: 'knoppenoppcf8574', order: 5, name: 'De PCF8574 laat van zich horen', href: 'https://tdmts.github.io/Microcontrollers/Labo7/Exercises/KnoppenOpDePCF8574.html', checklistDriven: true, difficulty: 2, time: '~35 min', blurb: 'De /INT-pin van je I/O-expander wekt de Arduino, en je leert waarom je in een ISR geen enkele I&sup2;C-opdracht mag geven.' },
+            { id: 'vierknoppentweeleds', order: 6, name: 'Vier knoppen, twee LEDs', href: 'https://tdmts.github.io/Microcontrollers/Labo7/Exercises/VierKnoppenTweeLeds.html', checklistDriven: true, difficulty: 2, time: '~30 min', blurb: 'Eén byte binnen, vier knoppen eruit. Maskeren en flanken detecteren, want de expander meldt ook het loslaten.' },
+            { id: 'ledsopdeexpander', order: 7, name: 'LEDs op de expander zelf', href: 'https://tdmts.github.io/Microcontrollers/Labo7/Exercises/LedsOpDeExpander.html', checklistDriven: true, difficulty: 3, time: '~40 min', blurb: 'Vier knoppen en vier LEDs op één chip, actief laag geschakeld, en een valstrik waardoor je knoppen voorgoed ingedrukt lijken.' },
+            { id: 'noodstopoverserieel', order: 8, name: 'Noodstop over de seri&euml;le lijn', href: 'https://tdmts.github.io/Microcontrollers/Labo7/Exercises/NoodstopOverDeSerieleLijn.html', checklistDriven: true, difficulty: 3, time: '~40 min', blurb: 'De noodknop zit op de ene Arduino, de machine op de andere. Je ontdekt dat een interrupt niets oplost zolang de ontvanger in een delay zit.' }
+        ]
     }
 };

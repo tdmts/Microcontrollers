@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>De PCF8574 laat van zich horen</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>De PCF8574 laat van zich horen</h1>
+    <p class="lead">In labo 4 moest je je I/O-expander telkens opnieuw vragen of er al iets gebeurd was. Vanaf nu belt hij jou op. En je botst meteen op de scherpste regel van dit labo.</p>
+
+    <p>De PCF8574 heeft een pin die je in labo 4 niet gebruikt hebt: <strong>/INT</strong>. Zodra er op een van de acht I/O-lijnen iets verandert, trekt de chip die pin laag. Hang je hem aan een interruptpin van je Arduino, dan hoef je nooit meer uit jezelf te gaan kijken.</p>
+
+    <p>Deze oefening werk je uit in TinkerCAD.</p>
+
+    <h2 id="de-int-pin">De /INT-pin</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/pcf8574-int-pin-datasheet.png" class="img-fluid" alt="Uittreksel uit de datasheet van de PCF8574 met de pinout en de pinfunctietabel, waarin de INT-pin aangeduid staat als interrupt output die via een pull-upweerstand aan Vcc moet">
+            <figcaption class="figure-caption">Uit de <a href="../../datasheets/datasheet-pcf8574.pdf">datasheet</a>: /INT is pin 13, en er staat bij dat hij een pull-upweerstand nodig heeft.</figcaption>
+        </figure>
+    </div>
+
+    <p>Dat zinnetje in de datasheet is belangrijk. /INT is een <strong>open-collectoruitgang</strong>: de chip kan die pin wel naar de massa trekken, maar niet naar de plus duwen. Zonder pull-up zweeft hij dus, en meet je willekeurige rommel.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Je hebt die weerstand niet nodig</div>
+        <p>Zet de pin van je Arduino gewoon op <code>INPUT_PULLUP</code>. Dan zit de pull-up al in je Arduino en heb je aan de bedrading niets extra's.</p>
+        <p>Het streepje voor de naam, /INT, betekent trouwens <strong>actief laag</strong>: de melding is dat de pin naar 0 gaat, niet naar 1. Je interrupt gaat dus af op <code>FALLING</code>.</p>
+    </div>
+
+    <h2 id="het-schema">Het schema</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/pcf8574-vier-knoppen-een-led-schema.png" class="img-fluid" alt="Breadboardschema met een Arduino UNO, een PCF8574 met vier drukknoppen op P0 tot P3, de INT-pin naar pin 2 van de Arduino en een LED met voorschakelweerstand">
+            <figcaption class="figure-caption">Vier drukknoppen op P0 tot P3, en de /INT-pin naar pin 2 van je Arduino.</figcaption>
+        </figure>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De aansluitingen</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Waar</th>
+                    <th scope="col">Waarop</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>SDA (A4) en SCL (A5)</td>
+                    <td>De I&sup2;C-bus naar de PCF8574, net als in labo 4</td>
+                </tr>
+                <tr>
+                    <td>P0 t.e.m. P3 van de expander</td>
+                    <td>Vier drukknoppen naar de massa</td>
+                </tr>
+                <tr>
+                    <td>/INT van de expander (pin 13)</td>
+                    <td>Pin 2 van je Arduino, met <code>INPUT_PULLUP</code></td>
+                </tr>
+                <tr>
+                    <td>Pin 4 van je Arduino</td>
+                    <td>Een LED, via een weerstand van 220 &Omega;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Het adres van je expander vind je met de scanner uit <a href="../../Labo4/Reference/I2CAdres.html">Het I&sup2;C adres vinden</a>. Ga er niet vanuit dat het hetzelfde is als bij je buur: het hangt af van hoe A0, A1 en A2 aangesloten zijn, en van welke versie van de chip je hebt.</p>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <p>Eenvoudige opdracht: <strong>elke druk op eender welke van de vier knoppen schakelt de LED om</strong>. Brandt hij, dan gaat hij uit, en omgekeerd.</p>
+
+    <p>Maar er zitten drie valkuilen in, en ze zijn alle drie het soort waar je een halve avond op kan zoeken.</p>
+
+    <h2 id="valkuil-1">Valkuil 1: je mag de expander niet uitlezen in je ISR</h2>
+
+    <p>De opdracht zoals hij in het oude cursusmateriaal staat, luidt: lees in je ISR de knoppen uit, en houd je <code>loop()</code> volledig leeg. Dat kan niet. Probeer je het, dan hangt je bord vast en helpt alleen de resetknop nog.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Waarom een Wire-opdracht in een ISR je bord ophangt</div>
+        <p>De I&sup2;C-hardware in je chip werkt byte per byte, en gebruikt <strong>zelf een interrupt</strong> om na elke byte verder te gaan. <code>Wire.requestFrom()</code> zet de overdracht in gang en blijft dan wachten tot die klaar is.</p>
+        <p>Maar in een ISR staan alle interrupts uit. Die hulp komt dus nooit, en <code>Wire.requestFrom()</code> blijft eeuwig wachten. Geen foutmelding, geen timeout: gewoon een dood bord.</p>
+        <p>En nee, je lost dit niet op door <code>interrupts()</code> bovenaan je ISR te zetten. Zie <a href="../Reference/InterruptServiceRoutine.html">De regels van een ISR</a> voor waarom dat nog erger is.</p>
+    </div>
+
+    <p>De oplossing is het <a href="../Reference/VolatileEnVlaggen.html">vlagpatroon</a>: je ISR zet alleen een <code>volatile bool</code> op <code>true</code>, en je <code>loop()</code> doet het I&sup2;C-werk. Je <code>loop()</code> blijft dus niet leeg, maar hij wordt wel heel kort.</p>
+
+    <h2 id="valkuil-2">Valkuil 2: /INT blijft laag tot je leest</h2>
+
+    <p>De expander laat /INT pas weer los wanneer jij hem uitleest. Doe je dat niet, dan blijft die pin laag hangen, komt er nooit meer een dalende flank, en gaat je interrupt precies &eacute;&eacute;n keer af in de hele levensduur van je programma.</p>
+
+    <p>Dat heeft ook een gevolg voor je <code>setup()</code>: lees de expander daar &eacute;&eacute;n keer uit <strong>voordat</strong> je <code>attachInterrupt()</code> oproept. Bij het opstarten staat /INT vaak al laag, en dan wacht je anders op een flank die al gepasseerd is.</p>
+
+    <h2 id="valkuil-3">Valkuil 3: /INT meldt ook het loslaten</h2>
+
+    <p>De expander meldt <em>elke</em> verandering, dus zowel het indrukken als het loslaten van een knop. Laat je je LED bij elke melding omschakelen, dan schakelt hij twee keer per druk om en lijkt hij dood.</p>
+
+    <p>Je moet dus zelf uitzoeken welke bits van 1 naar 0 gegaan zijn. Dat idioom ken je al uit <a href="../../Labo4/Exercises/TellerMetI2CDrukknoppen.html">Teller met I&sup2;C-drukknoppen</a>:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte netIngedrukt = ~knoppen &amp; vorigeKnoppen;</code></pre>
+
+    <p>Herlees zo nodig <a href="../../Labo4/Reference/Bits.html">Bits</a>.</p>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke druk op elk van de vier knoppen schakelt de LED om</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Twee keer drukken brengt de LED terug in zijn oorspronkelijke toestand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je blijft na tien drukken nog altijd werken, dus /INT blijft niet hangen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je ISR bevat geen enkele <code>Wire</code>-opdracht, alleen het zetten van de vlag</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je schrijft <code>0xFF</code> naar de expander in je <code>setup()</code>, anders lees je de knoppen niet</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je leest de expander &eacute;&eacute;n keer uit v&oacute;&oacute;r je <code>attachInterrupt()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je haalt de vlag neer v&oacute;&oacute;r je begint te lezen, niet erna</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je reageert alleen op bits die van 1 naar 0 gingen, niet op het loslaten</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De /INT-pin staat op <code>INPUT_PULLUP</code> en je interrupt staat op <code>FALLING</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De twee hulpfuncties <code>schrijfExpander()</code> en <code>leesExpander()</code> komen letterlijk uit labo 4. Alles wat nieuw is, zit in de ISR van &eacute;&eacute;n regel en in de eerste regels van de <code>loop()</code>.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
+
+const int adresExpander = 0x38; // controleer met de I2C scanner
+const int intPin = 2;
+const int ledPin = 4;
+
+volatile bool expanderVeranderd = false;
+
+byte vorigeKnoppen = 0xFF;
+bool ledBrandt = false;
+
+// De hele ISR. Meer mag er niet in: een Wire-opdracht zou hier voor eeuwig
+// blijven wachten, want de I2C-hardware heeft zelf een interrupt nodig om
+// klaar te raken, en die staat uit zolang we hier zitten.
+void expanderVeranderde()
+{
+  expanderVeranderd = true;
+}
+
+void schrijfExpander(byte waarde)
+{
+  Wire.beginTransmission(adresExpander);
+  Wire.write(waarde);
+  Wire.endTransmission();
+}
+
+byte leesExpander()
+{
+  Wire.requestFrom(adresExpander, 1);
+
+  if (Wire.available())
+  {
+    return Wire.read();
+  }
+
+  return 0xFF; // niets ontvangen: doe alsof geen enkele knop ingedrukt is
+}
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+
+  // /INT kan alleen laag trekken, dus het hoge niveau moet van onze pull-up komen
+  pinMode(intPin, INPUT_PULLUP);
+
+  Wire.begin();
+
+  schrijfExpander(0xFF); // alle pinnen hoog, anders lees je de knoppen niet
+
+  // Een keer lezen wist een /INT die al actief was. Sla je dit over, dan
+  // staat de lijn misschien al laag en komt er nooit een dalende flank.
+  vorigeKnoppen = leesExpander();
+
+  attachInterrupt(digitalPinToInterrupt(intPin), expanderVeranderde, FALLING);
+}
+
+void loop()
+{
+  if (expanderVeranderd == false)
+  {
+    return; // niets te doen
+  }
+
+  // Eerst de vlag neerhalen, dan pas lezen. Verandert er iets tijdens het
+  // lezen, dan zet de nieuwe /INT de vlag gewoon opnieuw en missen we niets.
+  expanderVeranderd = false;
+
+  byte knoppen = leesExpander();
+
+  // /INT meldt ook het loslaten. Alleen een bit dat van 1 naar 0 ging hoort
+  // bij een knop die net ingedrukt werd.
+  byte netIngedrukt = ~knoppen &amp; vorigeKnoppen &amp; B00001111;
+  vorigeKnoppen = knoppen;
+
+  if (netIngedrukt != 0)
+  {
+    ledBrandt = !ledBrandt;
+    digitalWrite(ledPin, ledBrandt);
+
+    delay(20); // even de dendering laten uitsterven
+
+    // Dat gestuiter heeft ondertussen nieuwe meldingen opgeleverd. Opruimen,
+    // anders schakelt de LED zo dadelijk nog een paar keer om.
+    expanderVeranderd = false;
+    vorigeKnoppen = leesExpander();
+  }
+}</code></pre>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Waarom &amp; B00001111 erachter staat</div>
+                <p>Alleen P0 tot P3 hebben een knop. P4 tot P7 hangen nergens aan en kunnen dus van alles teruggeven. Met dat masker gooi je de bovenste vier bits weg en kijk je alleen naar de vier die er echt toe doen.</p>
+                <p>Laat je het weg, dan schakelt je LED misschien om door een zwevende pin waar je nooit aan geraakt hebt.</p>
+            </div>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Hier mag de delay() wel</div>
+                <p>Bovenaan de <code>loop()</code> staat een <code>delay(20)</code>, terwijl je net geleerd hebt dat <code>delay()</code> in een ISR verboden is. Dat klopt allebei: die <code>delay()</code> staat in je <code>loop()</code>, niet in je ISR.</p>
+                <p>Dat is precies wat het vlagpatroon je oplevert. Alles wat in een ISR niet mag, mag hier wel, omdat je het uit de ISR gehaald hebt.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo7);
+</script>
+</body>
+</html>

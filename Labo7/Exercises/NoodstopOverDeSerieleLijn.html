@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Noodstop over de seri&euml;le lijn</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Noodstop over de seri&euml;le lijn</h1>
+    <p class="lead">De machine staat op de ene Arduino, de noodknop op de andere. Alles wat je dit labo geleerd hebt komt hier samen, en je ontdekt de grens ervan: een interrupt bij de zender helpt niets zolang de ontvanger vastzit.</p>
+
+    <p>Dit is de laatste oefening van het labo. Je brengt de seri&euml;le verbinding uit labo 6 samen met de interrupts van dit labo.</p>
+
+    <p>Deze oefening werk je uit in TinkerCAD, met twee Arduino's.</p>
+
+    <h2 id="het-schema">Het schema</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-noodstop-over-serieel-schema.png" class="img-fluid" alt="TODO: schema met twee Arduino's serieel verbonden, vier LEDs volgens sinking op de pinnen 3 tot en met 6 van de eerste, en een noodstopknop op pin 2 van de tweede">
+        </figure>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De aansluitingen</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Bord</th>
+                    <th scope="col">Aansluiting</th>
+                    <th scope="col">Waarvoor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Arduino 1 (de machine)</td>
+                    <td>pin 3 t.e.m. 6</td>
+                    <td>Vier LEDs volgens sinking, zoals in je looplicht</td>
+                </tr>
+                <tr>
+                    <td>Arduino 2 (de bedieningspost)</td>
+                    <td>pin 2</td>
+                    <td>De noodstopknop, met <code>INPUT_PULLUP</code></td>
+                </tr>
+                <tr>
+                    <td>Tussen beide</td>
+                    <td>Tx naar Rx, Rx naar Tx, GND naar GND</td>
+                    <td>De seri&euml;le verbinding uit labo 6</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Pin 0 en pin 1 zijn ook je USB-kabel</div>
+        <p>Net als in labo 6: op een echt bord vechten de kruisdraden met je USB-verbinding. Maak ze los voor je uploadt en hang ze er daarna weer aan. In TinkerCAD merk je daar niets van. Zie <a href="../../Labo6/Reference/SerieelKanaal.html">Het seri&euml;le kanaal</a>.</p>
+    </div>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <ol>
+        <li><strong>Arduino 1</strong> laat een looplicht lopen over zijn vier LEDs.</li>
+        <li><strong>Arduino 2</strong> heeft een noodstopknop op een interrupt. Wordt die ingedrukt, dan stuurt hij <code>STOP</code> over de lijn.</li>
+        <li><strong>Arduino 1</strong> ontvangt dat, dooft alle LEDs, en blijft gestopt.</li>
+    </ol>
+
+    <h2 id="valkuil-1">De eerste valkuil: niet zenden vanuit je ISR</h2>
+
+    <p>Het lijkt logisch om die <code>Serial.println("STOP")</code> gewoon in je ISR te zetten. Dan gebeurt het meteen, en dat wil je toch bij een noodstop?</p>
+
+    <p>Doe het niet. Bij 9600 baud duurt &eacute;&eacute;n teken ruim een milliseconde. Vijf tekens plus de regelovergang is dus al gauw zeven milliseconden waarin je ISR niets anders doet dan wachten, en waarin je hele controller stilligt. Zie <a href="../Reference/InterruptServiceRoutine.html">De regels van een ISR</a>.</p>
+
+    <p>Je ISR zet dus een vlag, en je <code>loop()</code> verstuurt. Precies zoals bij de expander.</p>
+
+    <h2 id="valkuil-2">De tweede valkuil: en dan komt hij toch te laat aan</h2>
+
+    <p>Bouw eerst de voor de hand liggende versie. Arduino 1 draait het looplicht dat je in <a href="LooplichtMetNoodstop.html">Noodstop op je looplicht</a> geschreven hebt, met zijn <code>delay(250)</code>, en kijkt bovenaan zijn <code>loop()</code> of er iets binnengekomen is.</p>
+
+    <p>Druk nu op de noodstop en let goed op wanneer de LEDs doven.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Je interrupt heeft je hier niets opgeleverd</div>
+        <p>Arduino 2 reageert inderdaad meteen: zijn ISR gaat af binnen enkele microseconden en het bericht staat op de lijn voor je vinger van de knop is.</p>
+        <p>Maar Arduino 1 zit in <code>delay(250)</code>. Het bericht wacht netjes in zijn ontvangstbuffer, en pas wanneer die <code>delay()</code> afgelopen is kijkt hij ernaar. Je noodstop is dus nog altijd tot een kwart seconde te laat, ook al is de knop zelf perfect.</p>
+        <p>Een interrupt versnelt alleen het bord waar hij op staat. Zit de ontvanger vast, dan sta je nergens.</p>
+    </div>
+
+    <p>Arduino 1 moet dus zijn <code>delay()</code> opgeven. In plaats van te w&aacute;chten tot het tijd is voor de volgende LED, blijft hij rondjes draaien en <strong>kijkt</strong> hij telkens of het al tijd is.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Wachten zonder delay</div>
+        <p>Het recept: onthou met <code>millis()</code> wanneer je iets voor het laatst gedaan hebt, en doe het opnieuw zodra er genoeg tijd verstreken is.</p>
+        <pre class="code-wrapper language-cpp linenumbers show-language"><code>unsigned long vorigeStap = 0;
+const unsigned long stapDuur = 250;
+
+void loop()
+{
+  // hier draait je loop duizenden keren per seconde door
+
+  if (millis() - vorigeStap &gt;= stapDuur)
+  {
+    vorigeStap = millis();
+
+    // en dit gebeurt maar vier keer per seconde
+  }
+}</code></pre>
+        <p>Je <code>loop()</code> blijft nu volledig vrij. Alles wat je er verder in zet, wordt duizenden keren per seconde bekeken in plaats van vier keer.</p>
+        <p>Je kent dit patroon al uit <a href="../../Labo4/Exercises/TellerMetI2CDrukknoppen.html">Teller met I&sup2;C-drukknoppen</a>, waar je teller op dezelfde manier op tijd liep zonder de knoppen doof te maken.</p>
+    </div>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Kon Arduino 1 dan zelf geen interrupt gebruiken?</div>
+        <p>Voor de seri&euml;le lijn heeft hij er al eentje, alleen niet eentje van jou. Binnenkomende tekens worden door de hardware zelf met een interrupt opgevangen en in de buffer gezet, ook terwijl je in een <code>delay()</code> zit. Daarom raakt je bericht nooit verloren.</p>
+        <p>Maar die interrupt zet het alleen kl&aacute;&aacute;r. Wat er m&eacute;&eacute; moet gebeuren, blijft aan jouw <code>loop()</code>, en die moet er dus tijd voor h&eacute;bben.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het looplicht van Arduino 1 loopt vlot</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een druk op de noodstop van Arduino 2 dooft de LEDs zonder merkbare vertraging</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Daarna blijft alles uit tot je Arduino 1 reset</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De ISR van Arduino 2 bevat geen enkele <code>Serial</code>-opdracht</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Arduino 1 gebruikt nergens nog een <code>delay()</code> in zijn looplicht</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Arduino 1 leest per lijn, met <code>readStringUntil('\n')</code> en <code>trim()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er gaat alleen een boodschap over de lijn wanneer er echt gedrukt wordt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> E&eacute;n druk geeft ook maar &eacute;&eacute;n boodschap, dus je knop is ontdenderd</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Beide borden delen een gemeenschappelijke massa</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Arduino 1, de machine met het looplicht:</strong></p>
+
+            <p>Geen enkele <code>delay()</code> meer. De <code>loop()</code> draait vrij rond en doet twee dingen: kijken of er post is, en kijken of het tijd is voor de volgende LED.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int leds[] = {3, 4, 5, 6};
+const int aantalLeds = 4;
+
+const unsigned long stapDuur = 250;
+
+unsigned long vorigeStap = 0;
+int huidigeLed = 0;
+bool gestopt = false;
+
+void allesUit()
+{
+  for (int i = 0; i &lt; aantalLeds; i++)
+  {
+    digitalWrite(leds[i], HIGH); // sinking: HIGH is uit
+  }
+}
+
+void setup()
+{
+  for (int i = 0; i &lt; aantalLeds; i++)
+  {
+    pinMode(leds[i], OUTPUT);
+  }
+
+  allesUit();
+
+  Serial.begin(9600);
+
+  // Komt er ooit een halve lijn binnen, dan blijven we hier hoogstens 50 ms
+  // op de rest wachten in plaats van een volledige seconde.
+  Serial.setTimeout(50);
+}
+
+void loop()
+{
+  if (Serial.available() &gt; 0)
+  {
+    String regel = Serial.readStringUntil('\n');
+    regel.trim();
+
+    if (regel == "STOP")
+    {
+      gestopt = true;
+      allesUit();
+    }
+  }
+
+  if (gestopt == true)
+  {
+    return; // het looplicht start niet meer opnieuw
+  }
+
+  if (millis() - vorigeStap &gt;= stapDuur)
+  {
+    vorigeStap = millis();
+
+    digitalWrite(leds[huidigeLed], HIGH); // de vorige uit
+
+    huidigeLed++;
+
+    if (huidigeLed &gt;= aantalLeds)
+    {
+      huidigeLed = 0;
+    }
+
+    digitalWrite(leds[huidigeLed], LOW); // de volgende aan
+  }
+}</code></pre>
+
+            <p><strong>Arduino 2, de bedieningspost met de noodstop:</strong></p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int noodstopPin = 2;
+
+volatile bool noodstopGedrukt = false;
+
+// Alleen een vlag zetten. Zenden duurt milliseconden, en dat hoort niet
+// in een ISR thuis.
+void noodstopISR()
+{
+  noodstopGedrukt = true;
+}
+
+void setup()
+{
+  pinMode(noodstopPin, INPUT_PULLUP);
+
+  Serial.begin(9600);
+
+  attachInterrupt(digitalPinToInterrupt(noodstopPin), noodstopISR, FALLING);
+}
+
+void loop()
+{
+  if (noodstopGedrukt == true)
+  {
+    noodstopGedrukt = false;
+
+    Serial.println("STOP");
+
+    delay(200);              // laat de dendering uitsterven
+    noodstopGedrukt = false; // die dendering heeft de vlag intussen opnieuw gezet
+  }
+}</code></pre>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Waarom de vlag twee keer neergehaald wordt</div>
+                <p>De eerste keer is de gewone regel: haal de vlag neer v&oacute;&oacute;r je aan het werk gaat, zodat je een druk die tijdens je werk binnenkomt niet kwijtspeelt.</p>
+                <p>Maar tijdens die <code>delay(200)</code> stuitert je knop, gaat je ISR nog een paar keer af, en staat de vlag er weer. Zonder die tweede regel stuur je dus alsnog vier keer <code>STOP</code>. Vandaar dat je hem nog eens neerhaalt, n&aacute; het stuiteren.</p>
+            </div>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Meet eens hoeveel je gewonnen hebt</div>
+                <p>Zet in de versie met <code>delay(250)</code> een teller die bijhoudt hoe vaak <code>loop()</code> per seconde draait. Je komt op 4 uit.</p>
+                <p>In deze versie kom je op tienduizenden uit. Dat is de winst: niet dat er sneller iets gebeurt, maar dat je programma tienduizenden keren per seconde <em>beschikbaar</em> is voor wat er ook binnenkomt. Een <code>delay()</code> geeft die beschikbaarheid weg, en dat merk je pas wanneer er iets dringends is.</p>
+            </div>
+
+            <div class="info-box tip">
+                <div class="info-title tip">Waar je dit labo op neerkomt</div>
+                <ul>
+                    <li>Een interrupt zorgt dat je een gebeurtenis nooit m&iacute;st.</li>
+                    <li>Het vlagpatroon zorgt dat je ISR kort blijft en je het echte werk toch gedaan krijgt.</li>
+                    <li>Maar een interrupt maakt een <code>loop()</code> die vaststaat niet sneller. Wil je dat je programma ook echt r&eacute;&aacute;geert, dan moet het beschikbaar zijn, en dus geen <code>delay()</code> gebruiken.</li>
+                </ul>
+                <p>Die drie samen zijn wat een programma van "het werkt meestal" naar "het werkt altijd op tijd" brengt.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo7);
+</script>
+</body>
+</html>

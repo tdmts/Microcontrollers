@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Drukken tellen zonder dender</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Drukken tellen zonder dender</h1>
+    <p class="lead">Je LED moet nu <em>omschakelen</em> bij elke druk, en je wil weten hoeveel keer er gedrukt is. Klinkt eenvoudig. Het is de oefening waarin je twee valkuilen tegenkomt die je de rest van dit labo blijven achtervolgen.</p>
+
+    <p>Vertrek van je vorige oefening. Dezelfde bedrading, alleen de code verandert.</p>
+
+    <h2 id="wat-je-nodig-hebt">Wat je nodig hebt</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De aansluitingen</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Pin</th>
+                    <th scope="col">Waarop</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>pin 2</td>
+                    <td>De drukknop, met <code>INPUT_PULLUP</code></td>
+                </tr>
+                <tr>
+                    <td>pin 8</td>
+                    <td>De LED, via een weerstand van 220 &Omega;</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <ol>
+        <li>Elke druk op de knop schakelt de LED om: brandt hij, dan gaat hij uit, en omgekeerd.</li>
+        <li>Je houdt bij hoeveel keer er gedrukt is.</li>
+        <li>Je <code>loop()</code> print dat aantal naar de seri&euml;le monitor, maar alleen wanneer het ver&aacute;nderd is.</li>
+    </ol>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Print niet vanuit je ISR</div>
+        <p>Het is verleidelijk om die <code>Serial.println()</code> gewoon in je ISR te zetten, want daar weet je toch dat er gedrukt is. Doe het niet. Printen duurt bij 9600 baud makkelijk tientallen milliseconden, en zolang je ISR bezig is staat je hele controller stil.</p>
+        <p>De teller ophogen doe je in de ISR, het printen in je <code>loop()</code>. Zie <a href="../Reference/InterruptServiceRoutine.html">De regels van een ISR</a>.</p>
+    </div>
+
+    <h2 id="probeer-eerst-de-simpele-versie">Probeer eerst de simpele versie</h2>
+
+    <p>Schrijf je programma eerst zonder je zorgen te maken over de details. Dus: ISR schakelt de LED om en telt op, <code>loop()</code> print. Upload het, en druk vijf keer.</p>
+
+    <p>Werk je op een echt bord, dan zie je waarschijnlijk iets als 3, 9, 14, 21. Werk je in TinkerCAD, dan zie je netjes 1, 2, 3, 4, 5.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Waarom TinkerCAD hier liegt</div>
+        <p>De drukknop in TinkerCAD is perfect: hij maakt precies &eacute;&eacute;n keer contact. Een echte knop is een stukje veerend metaal en stuitert bij het indrukken vijf tot twintig keer heen en weer. Elk van die stuiteringen is een dalende flank, en je interrupt mist er geen enkele.</p>
+        <p>Je moet die ontdendering dus schrijven, ook al zie je in de simulator het probleem niet. Anders ontdek je op het labo dat je teller nergens op slaat. Lees <a href="../Reference/DenderenBijEenInterrupt.html">Denderen bij een interrupt</a>.</p>
+    </div>
+
+    <h2 id="de-twee-dingen-die-je-moet-oplossen">De twee dingen die je moet oplossen</h2>
+
+    <ol>
+        <li><strong>De dendering.</strong> Onthou in je ISR wanneer je de vorige druk aanvaard hebt, en negeer alles wat binnen de 200 ms daarna nog binnenkomt.</li>
+        <li><strong>Het lezen van je teller.</strong> Je teller is een <code>unsigned long</code>, dus vier bytes. Je <code>loop()</code> kan die niet in &eacute;&eacute;n keer ophalen, en je ISR kan er middenin springen. Maak een kopie tussen <code>noInterrupts()</code> en <code>interrupts()</code>. Waarom dat nodig is, staat in <a href="../Reference/VolatileEnVlaggen.html">volatile en de vlagvariabele</a>.</li>
+    </ol>
+
+    <p>Vergeet niet dat alles wat je ISR aanraakt <code>volatile</code> moet zijn.</p>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke druk schakelt de LED om</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De seri&euml;le monitor telt met &eacute;&eacute;n tegelijk op, niet met sprongen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je ISR bevat geen enkele <code>Serial</code>-opdracht</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je ontdendert met een vergrendeling op basis van <code>millis()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Alle variabelen die je ISR aanraakt zijn <code>volatile</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je teller wordt gekopieerd tussen <code>noInterrupts()</code> en <code>interrupts()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er staat niets tussen die twee regels dat er niet echt moet staan</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je monitor wordt niet overspoeld: er verschijnt alleen een lijn als het aantal veranderd is</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>Twee dingen om op te letten. In de ISR staat een <code>return</code> die er meteen weer uitstapt zodra blijkt dat het gestuiter is: dat is de goedkoopste manier om een flank weg te gooien. En in de <code>loop()</code> staan precies twee regels tussen <code>noInterrupts()</code> en <code>interrupts()</code>, niet meer.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 8;
+
+const unsigned long denderTijd = 200; // zolang negeren we nieuwe flanken
+
+volatile bool ledBrandt = false;
+volatile unsigned long aantalDrukken = 0;
+volatile unsigned long laatsteDruk = 0;
+
+unsigned long vorigAantal = 0; // hier komt alleen de loop aan
+
+void knopIngedrukt()
+{
+  // millis() loopt niet verder zolang we in een ISR zitten, maar de waarde
+  // die we hier lezen is die van vlak voor de onderbreking. Voor 200 ms is
+  // dat nauwkeurig genoeg, en bij de volgende druk staat de klok weer verder.
+  unsigned long nu = millis();
+
+  if (nu - laatsteDruk &lt; denderTijd)
+  {
+    return; // dit is gestuiter, geen nieuwe druk
+  }
+
+  laatsteDruk = nu;
+
+  ledBrandt = !ledBrandt;
+  digitalWrite(ledPin, ledBrandt);
+
+  aantalDrukken++;
+}
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, LOW);
+
+  pinMode(knopPin, INPUT_PULLUP);
+
+  Serial.begin(9600);
+
+  attachInterrupt(digitalPinToInterrupt(knopPin), knopIngedrukt, FALLING);
+}
+
+void loop()
+{
+  // aantalDrukken is vier bytes groot. De processor haalt die stuk voor stuk
+  // op, en de ISR kan daar net tussen springen. Dan lees je een getal dat
+  // nooit bestaan heeft. Dus: heel even niet storen, kopie maken, klaar.
+  noInterrupts();
+  unsigned long aantal = aantalDrukken;
+  interrupts();
+
+  if (aantal != vorigAantal)
+  {
+    vorigAantal = aantal;
+
+    Serial.print("Aantal drukken: ");
+    Serial.println(aantal);
+  }
+}</code></pre>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Waarom laatsteDruk geen bescherming nodig heeft</div>
+                <p><code>laatsteDruk</code> is ook vier bytes groot, en toch staat er nergens een <code>noInterrupts()</code> omheen. Dat komt omdat alleen de ISR eraan komt, en een ISR kan zichzelf niet onderbreken: zolang ze draait, staan alle interrupts uit.</p>
+                <p>De vuistregel blijft: bescherming is nodig zodra je <code>loop()</code> &eacute;n je ISR allebei aan dezelfde variabele van meer dan &eacute;&eacute;n byte komen.</p>
+            </div>
+
+            <div class="info-box remark">
+                <div class="info-title remark">En als je nu 200 keer per seconde moet kunnen tellen?</div>
+                <p>Dan werkt deze vergrendeling niet meer, want ze gooit alles binnen 200 ms weg. Bij een toerenteller of een debietmeter, waar de pulsen van een sensor komen in plaats van van een vinger, laat je de ontdendering dus gewoon weg: elektronica stuitert niet.</p>
+                <p>Ontdenderen is er voor mechanische contacten. Weten w&aacute;&aacute;rom je iets doet, bepaalt of je het de volgende keer nog moet doen.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo7);
+</script>
+</body>
+</html>

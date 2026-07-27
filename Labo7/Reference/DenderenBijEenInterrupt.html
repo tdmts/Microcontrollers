@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Denderen bij een interrupt</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Denderen bij een interrupt</h1>
+    <p class="lead">Je bouwt een teller die optelt bij elke druk op de knop. Je drukt &eacute;&eacute;n keer, en de teller springt naar 6. Je code klopt nochtans. Wat er gebeurt is dendering, en bij een interrupt is ze veel vervelender dan bij pollen.</p>
+
+    <h2 id="wat-er-gebeurt">Wat er gebeurt</h2>
+
+    <p>Een drukknop is een stukje veerend metaal. Duw je erop, dan maakt hij niet netjes &eacute;&eacute;n keer contact: hij stuitert een paar keer heen en weer voor hij tot rust komt. Dat duurt maar een paar milliseconden, maar in die tijd gaat de spanning op je pin vijf tot twintig keer op en neer.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/debouncen-bouncing-signaal.gif" class="img-fluid" alt="Een oscilloscoopbeeld van een denderend knopsignaal: bij het indrukken springt de spanning meerdere keren heen en weer voor ze stabiel wordt">
+            <figcaption class="figure-caption">Wat je knop echt doet bij &eacute;&eacute;n druk. Elke dalende flank in dat rommeltje is er een waar je interrupt op afgaat.</figcaption>
+        </figure>
+    </div>
+
+    <p>Je kent dit al uit <a href="../../Labo0/Reference/Debouncen.html">Debouncen</a>. Bij pollen viel het nog mee: je <code>loop()</code> kijkt maar af en toe, en met een korte <code>delay()</code> na een verandering was je ervan af.</p>
+
+    <p>Bij een interrupt ligt dat anders. De hardware mist geen enkele flank, dat is nu net waar je hem voor gekozen hebt. Elk van die stuiteringen is een dalende flank, en dus gaat je ISR er <strong>allemaal</strong> een keer voor af.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Herken je dit?</div>
+        <ul>
+            <li>Je teller springt met sprongen van 3 tot 10 tegelijk.</li>
+            <li>Je LED die moet omschakelen, doet soms wel en soms niets. (Logisch: bij een even aantal flanken sta je weer waar je begon.)</li>
+            <li>Je stuurt &eacute;&eacute;n boodschap over de seri&euml;le lijn en er komen er zeven aan.</li>
+        </ul>
+        <p>Dat is dendering. Je code is niet fout, je knop is gewoon geen ideale schakelaar.</p>
+    </div>
+
+    <h2 id="de-vergrendeling">De oplossing: een vergrendeling</h2>
+
+    <p>Je kan het stuiteren niet tegenhouden, maar je kan het wel negeren. Het idee: onthoud wanneer je de vorige druk aanvaard hebt, en negeer alles wat binnen de volgende 200 milliseconden nog binnenkomt.</p>
+
+    <p>Een mens kan onmogelijk vijf keer per seconde bewust drukken, dus je verliest niets. Het gestuiter is na een paar milliseconden voorbij, dus je vangt alles op.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 8;
+
+const unsigned long denderTijd = 200; // zolang negeren we nieuwe flanken
+
+volatile bool ledBrandt = false;
+volatile unsigned long laatsteDruk = 0;
+
+void knopIngedrukt()
+{
+  unsigned long nu = millis();
+
+  if (nu - laatsteDruk &lt; denderTijd)
+  {
+    return; // dit is gestuiter, geen nieuwe druk
+  }
+
+  laatsteDruk = nu;
+
+  ledBrandt = !ledBrandt;
+  digitalWrite(ledPin, ledBrandt);
+}
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  pinMode(knopPin, INPUT_PULLUP);
+
+  attachInterrupt(digitalPinToInterrupt(knopPin), knopIngedrukt, FALLING);
+}
+
+void loop()
+{
+}</code></pre>
+
+    <p>De <code>return</code> stapt meteen uit de ISR. Dat is precies wat je wil: de goedkoopst mogelijke manier om een flank weg te gooien.</p>
+
+    <h2 id="millis-in-een-isr">Mag millis() dan wel in een ISR?</h2>
+
+    <p>Goeie vraag, want in <a href="InterruptServiceRoutine.html">De regels van een ISR</a> staat dat de klok van <code>millis()</code> stilstaat zolang je in een ISR zit. Dat klopt ook.</p>
+
+    <p>Maar je hebt hier niet nodig dat de klok v&eacute;rder loopt. Je wil alleen weten hoe laat het was op het moment dat je onderbroken werd, en dat is precies wat je krijgt. Tussen twee knopdrukken in draait je <code>loop()</code>, dus tegen de tijd dat je ISR opnieuw afgaat staat de klok gewoon weer verder.</p>
+
+    <p>Voor een vergrendeling van 200 ms is dat ruim nauwkeurig genoeg. Je zou hem alleen niet moeten gebruiken om binnen &eacute;&eacute;n ISR een tijdsduur te meten, want daar staat hij inderdaad stil.</p>
+
+    <h2 id="waar-het-nog-misgaat">Waar deze oplossing nog tekortschiet</h2>
+
+    <p>Er is &eacute;&eacute;n geval waarin de vergrendeling het laat afweten: als je de knop <strong>lang ingedrukt houdt</strong>.</p>
+
+    <p>Ook bij het l&oacute;slaten stuitert een knop. Houd je hem een seconde vast, dan is de eerste flank van dat losgelaten-gestuiter meer dan 200 ms na je druk, en wordt hij dus aanvaard als een tweede druk. Je LED schakelt terug om.</p>
+
+    <p>In de praktijk valt dat vaak mee, omdat de meeste knoppen bij het loslaten veel minder stuiteren dan bij het indrukken. Merk je het toch, dan zijn er twee wegen:</p>
+
+    <ul>
+        <li>De vergrendeling langer maken, bijvoorbeeld 500 ms. Snel gefikst, maar dan reageert je knop trager.</li>
+        <li>De interrupt alleen gebruiken om je <code>loop()</code> wakker te maken, en de eigenlijke ontdendering met de toestandsmethode uit <a href="../../Labo0/Reference/Debouncen.html">Debouncen</a> in je <code>loop()</code> doen. Meer werk, maar volledig sluitend.</li>
+    </ul>
+
+    <div class="info-box remark">
+        <div class="info-title remark">In TinkerCAD zie je hier niets van</div>
+        <p>De drukknop in TinkerCAD is perfect: hij maakt precies &eacute;&eacute;n keer contact en stuitert nooit. Je vergrendeling lijkt daar dus overbodige code die niets doet.</p>
+        <p>Laat ze staan. Op een echt bord verdient ze zich meteen terug, en dat je het probleem in de simulator niet ziet, maakt het net gevaarlijker: je zou anders pas op het labo ontdekken dat je teller nergens op slaat.</p>
+    </div>
+
+    <h2 id="samengevat">Samengevat</h2>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Ontdenderen bij een interrupt</div>
+        <ul>
+            <li>Elke stuitering is een flank, en dus een oproep van je ISR.</li>
+            <li>Onthou met <code>millis()</code> wanneer je de vorige druk aanvaardde.</li>
+            <li>Komt er binnen de 200 ms een nieuwe, stap dan meteen uit de ISR met <code>return</code>.</li>
+            <li>Die tijdsvariabele is <code>volatile</code>, net als al de rest die je ISR aanraakt.</li>
+            <li>Test op echte hardware, niet alleen in TinkerCAD.</li>
+        </ul>
+    </div>
+</div>
+
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+</body>
+</html>
