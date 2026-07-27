@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quiz</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Quiz</h1>
+    <p class="lead">Theorievragen over de leerinhouden van labo 0, labo 1 en labo 2, zodat je weet of je klaar bent voor het theoriegedeelte.</p>
+
+    <div class="info-box">
+        <p>Tijdens het eerste evaluatiemoment is er ook een <strong>praktische test</strong>. Hoe die eruitziet, zie je op de <a href="Voorbeeldtest.html">voorbeeldtest</a>.</p>
+    </div>
+
+    <h2 id="vragen">Vragen</h2>
+
+    <h3 id="vraag-1">Vraag 1: wat drukt deze sketch af? (meerkeuze)</h3>
+
+    <p>Je leest een potentiometer uit en zet de waarde om naar een spanning. Op het moment van de meting geeft <code>analogRead()</code> de waarde <strong>614</strong> terug.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinPotentiometer = A0;
+
+void setup()
+{
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int value = analogRead(pinPotentiometer);
+  double voltage = value / 1023 * 5;
+  Serial.println(voltage);
+  delay(500);
+}</code></pre>
+
+    <p>Welke waarde verschijnt er in de seriële monitor?</p>
+
+    <ol type="a">
+        <li>3.00</li>
+        <li>0.00</li>
+        <li>614.00</li>
+        <li>2.50</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Antwoord: b) 0.00</strong></p>
+
+            <p>Zowel <code>value</code> als <code>1023</code> is een <code>int</code>, dus de Arduino maakt hier een <strong>gehele deling</strong>. 614 gedeeld door 1023 is 0 met rest, en die rest wordt weggegooid. Daarna wordt 0 nog eens maal 5 gedaan, wat 0 blijft. Dat het resultaat in een <code>double</code> terechtkomt, verandert daar niets aan: de deling is al gebeurd voor de toekenning.</p>
+
+            <p>Je lost het op door van minstens één van de twee getallen een kommagetal te maken:</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>double voltage = value / 1023.0 * 5;</code></pre>
+
+            <p>Dan krijg je 614 / 1023.0 = 0,6002 en maal 5 geeft ongeveer <strong>3,00 V</strong>, wat antwoord a) zou zijn geweest als de code juist stond.</p>
+
+            <p>Meer hierover: <a href="../Labo2/Reference/analogRead.html">analogRead()</a> en <a href="../Labo0/Reference/WiskundigeOperatoren.html">Wiskundige operatoren</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-2">Vraag 2: knoppen uitlezen (meerdere juiste antwoorden)</h3>
+
+    <p>Welke van onderstaande uitspraken over het uitlezen van een drukknop zijn <strong>juist</strong>? Er zijn er meerdere juist.</p>
+
+    <ol type="a">
+        <li>Een ingang zonder pull-up- of pull-downweerstand gedraagt zich als een antenne en leest willekeurig hoog of laag.</li>
+        <li>Met <code>INPUT_PULLUP</code> en een NO-knop naar de massa lees je <code>LOW</code> wanneer de knop ingedrukt is.</li>
+        <li>Je kan met <code>pinMode()</code> ook een ingebouwde pull-downweerstand inschakelen.</li>
+        <li>Bij een externe pull-downweerstand moet de andere kant van de NO-knop naar +5 V.</li>
+        <li>Een pull-upweerstand is typisch 220 &Omega;.</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Antwoord: a, b en d zijn juist. c en e zijn fout.</strong></p>
+
+            <ul>
+                <li><strong>a) juist.</strong> Aan een NO-knop in rust hangt er letterlijk een los stuk draad aan je ingang. Dat pikt storing uit de omgeving op, en dan zwabbert je ingang tussen hoog en laag zonder dat je iets aanraakt.</li>
+                <li><strong>b) juist.</strong> De interne pull-up trekt de ingang naar +5 V zolang je niets doet, dus in rust lees je <code>HIGH</code>. Druk je de knop in, dan verbind je de ingang rechtstreeks met de massa en lees je <code>LOW</code>. Zo'n ingang noemen we <strong>laag assertief</strong>: ingedrukt is 0.</li>
+                <li><strong>c) fout.</strong> De Arduino heeft alleen een ingebouwde pull-<em>up</em>. Wil je een pull-down, dan moet je die zelf op je breadboard zetten.</li>
+                <li><strong>d) juist.</strong> De pull-down houdt de ingang in rust op 0 V. Om er een 1 op te krijgen moet de knop de ingang met +5 V verbinden. Deze ingang is dus <strong>hoog assertief</strong>, net omgekeerd aan die van b.</li>
+                <li><strong>e) fout.</strong> 220 &Omega; is de voorschakelweerstand van een led. Een pull-up of pull-down is veel groter, meestal 1 k&Omega; tot 10 k&Omega;. Zet je er 220 &Omega; neer, dan loopt er bij een ingedrukte knop onnodig veel stroom van +5 V naar de massa.</li>
+            </ul>
+
+            <p>Meer hierover: <a href="../Labo0/Reference/PullUpPullDown.html">Pull up en pull down weerstanden</a> en <a href="../Labo0/Reference/pinMode.html">pinMode()</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-3">Vraag 3: multiplexing uitleggen (open vraag)</h3>
+
+    <p>Je toont een getal van 00 tot 99 op een dubbel 7-segment display.</p>
+
+    <ol>
+        <li>Leg uit waarom je de twee cijfers niet tegelijk kan tonen, en hoe multiplexing dat oplost.</li>
+        <li>Je wil je teller elke seconde ophogen en schrijft daarvoor <code>delay(1000)</code> in je <code>loop()</code>. Wat gaat er mis, en hoe los je het op?</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Deel 1</strong></p>
+
+            <p>Op een dubbel display zijn de zeven segmentaansluitingen van beide cijfers intern aan elkaar geknoopt: segment a van links en segment a van rechts hangen aan dezelfde pin. Dat spaart pinnen uit, maar het betekent ook dat een patroon dat je op de segmentpinnen zet, meteen naar <em>allebei</em> de cijfers gaat. Een 4 links en een 7 rechts tegelijk kan dus niet. Alleen de gemeenschappelijke pin van elk cijfer is apart uitgebracht, en daarmee kies je welk cijfer op dat moment stroom krijgt.</p>
+
+            <p>Multiplexing gebruikt dat: je zet het patroon van het linkse cijfer klaar, activeert alleen links, wacht heel even, zet dan het patroon van het rechtse cijfer klaar, activeert alleen rechts, wacht weer even, en begint opnieuw. Doe je dat traag, dan zie je de cijfers om beurten flikkeren. Doe je het snel genoeg, ongeveer vanaf 50 keer per seconde per cijfer, dan kan je oog de twee niet meer scheiden en zie je gewoon twee cijfers naast elkaar. Dat komt door de <strong>persistentie van het netvlies</strong>: je oog blijft een lichtpunt nog een fractie van een seconde zien nadat het al gedoofd is. Precies dezelfde truc als bij film.</p>
+
+            <p><strong>Deel 2</strong></p>
+
+            <p>Zolang je programma iets anders doet, staat er geen enkel cijfer aan. Met een <code>delay(1000)</code> in je loop blijft je display dus een volle seconde donker, en dan ziet de student een display dat kort oplicht en daarna uitgaat, niet een teller.</p>
+
+            <p>De oplossing is de tijd bijhouden in plaats van erop te wachten, met <code>millis()</code>. Je loop blijft dan gewoon doorlopen en multiplexen, en telkens je erlangs komt kijk je of er al genoeg tijd voorbij is:</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
+{
+  multiplexStap(teller / 10, teller % 10);
+
+  if (millis() - vorigeTick &gt;= 1000)
+  {
+    vorigeTick = millis();
+    teller = (teller + 1) % 100;
+  }
+}</code></pre>
+
+            <p>Meer hierover: <a href="../Labo1/Reference/Multiplexing.html">Multiplexing</a> en <a href="../Labo1/Reference/ZevenSegmentDisplay.html">Het 7-segment display</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-4">Vraag 4: de voorschakelweerstand berekenen (numeriek)</h3>
+
+    <p>Je sluit een led aan op een uitgang van 5 V. In de datasheet van die led vind je:</p>
+
+    <ul>
+        <li>V<sub>forward</sub> = 2,1 V</li>
+        <li>I<sub>forward</sub> = 15 mA</li>
+    </ul>
+
+    <p>Bereken:</p>
+
+    <ol>
+        <li>De theoretische waarde van de voorschakelweerstand, in ohm.</li>
+        <li>Welke weerstand je in de praktijk neemt, en waarom die kant op.</li>
+        <li>De stroom die er dan echt loopt, in milliampère.</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>1. Ongeveer 193 &Omega;</strong></p>
+
+            <p>De led neemt 2,1 V van de 5 V voor zijn rekening. Wat overblijft, staat over de weerstand. Reken met ampère, niet met milliampère: 15 mA is 0,015 A.</p>
+
+            <div class="math-tex">
+                $$ R = \frac{V_{CC} - V_{forward}}{I_{forward}} = \frac{5\,\text{V} - 2{,}1\,\text{V}}{0{,}015\,\text{A}} = \frac{2{,}9}{0{,}015} \approx 193{,}3\ \Omega $$
+            </div>
+
+            <p><strong>2. 220 &Omega;, dus naar boven afgerond</strong></p>
+
+            <p>193 &Omega; bestaat niet als losse weerstand in je kit. Je rondt altijd naar <strong>boven</strong> af: een grotere weerstand geeft minder stroom, dus een iets minder felle maar veilige led. Naar beneden afronden doet het omgekeerde, en dan trek je meer stroom dan de datasheet toelaat.</p>
+
+            <p><strong>3. Ongeveer 13,2 mA</strong></p>
+
+            <div class="math-tex">
+                $$ I = \frac{U}{R} = \frac{5\,\text{V} - 2{,}1\,\text{V}}{220\ \Omega} = \frac{2{,}9}{220} \approx 0{,}0132\ \text{A} = 13{,}2\ \text{mA} $$
+            </div>
+
+            <p>Dat is ruim onder de 20 mA die je per pin veilig aanhoudt, en genoeg om de led goed te zien branden. Deze controle achteraf is de moeite: zo weet je of je afronding klopt.</p>
+
+            <p>Meer hierover: <a href="../Labo0/Reference/WetVanOhm.html">De wet van Ohm</a> en <a href="../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-5">Vraag 5: zoek de twee fouten (code)</h3>
+
+    <p>Een student wil met een potentiometer de helderheid van een led regelen. De schakeling is correct gebouwd volgens de code, maar de led springt gewoon van uit naar volle sterkte in plaats van mooi te dimmen.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinPotentiometer = A0;
+const int pinLed = 7;
+
+void setup()
+{
+  pinMode(pinLed, OUTPUT);
+}
+
+void loop()
+{
+  int value = analogRead(pinPotentiometer);
+  analogWrite(pinLed, value);
+}</code></pre>
+
+    <p>Er zitten twee fouten in. Welke, en hoe los je ze op?</p>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Fout 1: pin 7 kan geen PWM</strong></p>
+
+            <p>Alleen de pinnen met een <strong>~</strong> ernaast kunnen PWM: op de Uno en de Leonardo zijn dat pin 3, 5, 6, 9, 10 en 11. Pin 7 zit daar niet bij. Roep je <code>analogWrite()</code> aan op een gewone digitale pin, dan gedraagt die zich als <code>digitalWrite()</code>: alleen volledig aan of volledig uit. Precies wat de student ziet.</p>
+
+            <p>Oplossing: verhuis de led naar een PWM-pin, bijvoorbeeld pin 3.</p>
+
+            <p><strong>Fout 2: de twee bereiken komen niet overeen</strong></p>
+
+            <p><code>analogRead()</code> geeft een waarde van <strong>0 tot 1023</strong> (10 bits), maar <code>analogWrite()</code> verwacht een waarde van <strong>0 tot 255</strong> (8 bits). De waarde wordt dus niet herschaald. Alles boven 255 loopt over en de dimming klopt niet.</p>
+
+            <p>Oplossing: herschaal met <code>map()</code>, of deel door 4 (1024 / 256 = 4).</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinPotentiometer = A0;
+const int pinLed = 3; // PWM-pin
+
+void setup()
+{
+  pinMode(pinLed, OUTPUT);
+}
+
+void loop()
+{
+  int value = analogRead(pinPotentiometer);
+  int brightness = map(value, 0, 1023, 0, 255);
+  analogWrite(pinLed, brightness);
+}</code></pre>
+
+            <p>Meer hierover: <a href="../Labo2/Reference/analogWrite.html">analogWrite()</a> en <a href="../Labo2/Reference/map.html">map()</a>.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../back-link.js"></script>
+<script src="../solution-reveal.js"></script>
+</body>
+</html>

@@ -19,6 +19,13 @@
    dashboard -- except reference.html itself, which links up to
    the lab dashboard like any other top-level page.
 
+   Pages inside a TestN/ folder are the exception to everything below:
+   they always link to that folder's overview.html (the test hub) and
+   ignore the referrer entirely, so the exit is the same wherever the
+   student came from. overview.html itself gets no link, the same way
+   dashboard.html doesn't -- it is the page pasted into Orion, so there
+   is nothing above it to go back to.
+
    "TERUG NAAR WAAR JE VANDAAN KWAM"
    ---------------------------------
    If the student arrived here by clicking a link on another page of this
@@ -48,9 +55,22 @@
     if (!heading) return;
 
     var referenceIndex = parts.findIndex(function (p) { return /^reference$/i.test(p); });
+    var testIndex = parts.findIndex(function (p) { return /^test\d+$/i.test(p); });
     var targetFile, targetLabel, anchorIndex;
+    // A TestN page always goes back to its own hub, never to "where you came
+    // from": these pages are read side by side before an exam, so the one
+    // predictable exit is worth more than retracing the click path.
+    var forceDefault = false;
 
-    if (referenceIndex !== -1 && currentFile !== 'reference.html') {
+    if (testIndex !== -1) {
+        if (currentFile === 'overview.html') return;
+        // anchorIndex points at the TestN/ segment itself, since overview.html
+        // (the hub) lives directly inside that folder.
+        targetFile = 'overview.html';
+        targetLabel = '← Terug naar overzicht';
+        anchorIndex = testIndex;
+        forceDefault = true;
+    } else if (referenceIndex !== -1 && currentFile !== 'reference.html') {
         // anchorIndex points at the Reference/ segment itself, since
         // reference.html (the hub) lives directly inside that folder.
         targetFile = 'reference.html';
@@ -75,7 +95,7 @@
 
     // Prefer "back to where you came from" when we can trust the referrer:
     // same origin, an actual .html page, and not the page we're already on.
-    var ref = referrerIfUsable();
+    var ref = forceDefault ? null : referrerIfUsable();
     if (ref) {
         if (ref.pathname === defaultHref.pathname) {
             // Came from the default target anyway -> keep its nicer label,

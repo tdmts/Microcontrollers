@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Voorbeeldtest 1</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Voorbeeldtest 1</h1>
+    <p class="lead">Dit is de opgave voor de praktische voorbeeldtest van het eerste evaluatiemoment. Zo weet je op voorhand hoe moeilijk de echte test wordt.</p>
+
+    <div class="info-box">
+        <p>Tijdens het eerste evaluatiemoment is er ook een <strong>theoretische test</strong>. Die gaat over de leerinhouden van labo 0, labo 1 en labo 2. Oefen daarop met de <a href="Quiz.html">quiz</a>.</p>
+    </div>
+
+    <h2 id="opgave">Opgave</h2>
+
+    <p>Sluit 2 leds, een potentiometer en een drukknop aan.</p>
+
+    <p>Gebruik deze pinnen, en wijk hier niet van af:</p>
+
+    <ul>
+        <li>De eerste led (links) op pin 3</li>
+        <li>De tweede led (rechts) op pin 5</li>
+        <li>De drukknop op pin 2</li>
+        <li>De potentiometer op pin A0</li>
+    </ul>
+
+    <h3>Situatie 1</h3>
+
+    <p>Met de potentiometer regel je de helderheid van de eerste led. De tweede led staat volledig uit.</p>
+
+    <ul>
+        <li>Potentiometer van 0% tot 10%: de eerste led staat volledig uit.</li>
+        <li>Potentiometer van 10% tot 90%: de helderheid van de eerste led wordt geregeld tussen 0 en 100%.</li>
+        <li>Potentiometer van 90% tot 100%: de eerste led staat volledig aan.</li>
+    </ul>
+
+    <h3>Situatie 2</h3>
+
+    <p>Door op de knop te drukken (pin 2 wordt HOOG) gaat de eerste led volledig uit. Nu regel je met de potentiometer de knippersnelheid van de tweede led.</p>
+
+    <ul>
+        <li>Potentiometer van 0% tot 100%: een knippercyclus duurt 1000ms (= 0%) tot 200ms (= 100%).</li>
+    </ul>
+
+    <p>Een cyclus is: de led gaat van uit naar aan en dan weer terug naar uit.</p>
+
+    <p>Als je opnieuw op de knop drukt kom je terug in situatie 1. De knop wisselt dus tussen situatie 1 en situatie 2.</p>
+
+    <h2 id="meebrengen">Wat je meebrengt</h2>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Belangrijk</div>
+        <p>Om je volledige punten te behalen moet je deze oefening fysiek maken, niet in TinkerCAD. Breng je Arduino starterkit mee.</p>
+    </div>
+
+    <p>Volgende componenten moeten zeker aanwezig zijn in de kit:</p>
+
+    <ul>
+        <li>Arduino + USB kabel + breadboard + jumper wires</li>
+        <li>Twee drukknoppen + pull up / pull down weerstanden</li>
+        <li>4 leds + voorschakelweerstanden</li>
+        <li>Potentiometer</li>
+    </ul>
+
+    <h2 id="oplossing-schema">Oplossing schema</h2>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../img/voorbeeldtest1-schema.png" alt="Aansluitschema met twee leds op pin 3 en 5, een drukknop op pin 2 en een potentiometer op A0" class="img-fluid">
+                </figure>
+            </div>
+        </div>
+    </div>
+
+    <h2 id="oplossing-code">Oplossing code</h2>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <pre class="code-wrapper language-cpp linenumbers show-language">
+const int pinButton = 2;
+const int pinLed1 = 3;
+const int pinLed2 = 5;
+const int pinPotentiometer = A0;
+
+bool situatie = false;
+
+void setup()
+{
+  pinMode(pinButton, INPUT);
+  pinMode(pinLed1, OUTPUT);
+  pinMode(pinLed2, OUTPUT);
+  pinMode(pinPotentiometer, INPUT);
+}
+
+void loop()
+{
+  // Knop uitlezen en situatie omwisselen
+  int status = digitalRead(pinButton);
+  if (status == HIGH)
+  {
+    situatie = !situatie; // ! = NOT = INVERTEREN
+    delay(100); // Even wachten om niet 2x een statusverandering te triggeren bij het te lang indrukken van de knop
+  }
+
+  if (situatie == false)
+  {
+    digitalWrite(pinLed2, LOW);
+
+    int potValue = analogRead(pinPotentiometer);
+    if (potValue &lt; 102) // 10%
+    {
+      digitalWrite(pinLed1, LOW);
+    }
+    else if (potValue &gt; 922) // 90%
+    {
+      digitalWrite(pinLed1, HIGH);
+    }
+    else
+    {
+      long ledValue = map(potValue, 102, 922, 0, 255);
+      analogWrite(pinLed1, ledValue);
+    }
+  }
+  else
+  {
+    digitalWrite(pinLed1, LOW);
+
+    int potValue = analogRead(pinPotentiometer);
+    long delayValue = map(potValue, 0, 1023, 1000, 200);
+
+    digitalWrite(pinLed2, HIGH);
+    delay(delayValue / 2);
+    digitalWrite(pinLed2, LOW);
+    delay(delayValue / 2);
+  }
+}
+            </pre>
+        </div>
+    </div>
+</div>
+
+<script src="../back-link.js"></script>
+<script src="../solution-reveal.js"></script>
+</body>
+</html>

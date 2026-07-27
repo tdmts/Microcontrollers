@@ -107,6 +107,14 @@ hook timeout, versus ~2s now.
 
 - `LaboN/Exercises/` — one HTML page per exercise, plus that lab's `dashboard.html` (progress/XP view).
 - `LaboN/Reference/` — theory pages, plus `reference.html` (the non-linear reference hub).
+- `TestN/` — evaluation-moment material, a different animal from a lab: a flat folder holding
+  `overview.html` (the hub, and the only page pasted into Orion for that test), `PraktischeInfo.html`
+  (timing, allowed resources), `Voorbeeldtest.html` (a practical practice test) and `Quiz.html`
+  (theory questions). **No manifest, no XP, no checklist sync** — the hub's three links are
+  hardcoded `<a href>`s. That is deliberate: `check-content.sh` scopes its manifest rules to
+  `labo[0-9]+` keys, so a `testN` block in `reference.js` would render fine but be validated by
+  nothing, whereas plain links in the HTML are covered by rule 1 (resolve, tracked, exact case).
+  Pages here are one level deep, so shared scripts are `../back-link.js`, not `../../`.
 - Repo-root shared JS/CSS — the **single source of truth**, referenced by every page via relative
   paths (`../../back-link.js` etc). Do not fork per-folder copies.
 - `img/` — the one shared image folder. Self-host images here (descriptive filenames), never hotlink
@@ -161,7 +169,9 @@ Engines (all IIFEs exposing one `window.*` init function):
 - [back-link.js](back-link.js) — self-running, no init. Injects a "← Terug naar ..." link above the
   `<h1>` and at the bottom. Targets the previous page (trusted same-origin `.html` referrer) when
   known, else the lab dashboard, else the reference hub for pages under `Reference/`. No-ops on
-  `dashboard.html`.
+  `dashboard.html`. A page under `TestN/` is the exception: it always targets that folder's
+  `overview.html` and ignores the referrer, so the exit is identical wherever the student came from,
+  and it no-ops on `overview.html` itself the same way it does on `dashboard.html`.
 - [solution-reveal.js](solution-reveal.js) — one-way "Toon oplossing" reveal for `.solution-container`.
 
 ## localStorage progress model (no backend)
