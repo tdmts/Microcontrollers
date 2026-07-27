@@ -17,11 +17,12 @@ bewijs dat er echt iets zit, geen ruis.
 | [labo2.md](labo2.md) | 10 oefeningen, 3 referentiepagina's | 7 | 1 |
 | [labo3.md](labo3.md) | 6 oefeningen, 1 referentiepagina | 4 | 1 |
 | [labo4.md](labo4.md) | 5 oefeningen, 3 referentiepagina's | 7 | 0 |
+| [labo5.md](labo5.md) | 10 oefeningen (nu 9), 5 referentiepagina's | 13 | 1 |
 
 ## Wat er nog openstaat
 
-**Negen tekeningen of foto's.** Die kan niemand anders maken dan jij, want er is hardware
-of een screenshot voor nodig. Ze staan alle negen als `TODO-`bestandsnaam in de pagina's,
+**Tien tekeningen of foto's.** Die kan niemand anders maken dan jij, want er is hardware
+of een screenshot voor nodig. Ze staan alle tien als `TODO-`bestandsnaam in de pagina's,
 dus `scripts/check-content.sh` blijft ze bij elke run melden als niet-blokkerende
 waarschuwing. Verdwijnt zo'n regel uit de uitvoer, dan is die tekening er.
 
@@ -36,6 +37,7 @@ waarschuwing. Verdwijnt zo'n regel uit de uitvoer, dan is die tekening er.
 | 2 | LDR-spanningsdeler met de LED | L2-05 |
 | 2 | TMP36 met RGB-LED | L2-05 |
 | 3 | Pinout of foto van de ledbar | L3-04 |
+| 5 | L293D met DC motor, herbedraad naar pin 3, 4 en 5 | L5-12 |
 
 **Eén uitgestelde beslissing.** L1-07: de twee dubbel-displayoefeningen van labo 1 tonen
 het pinout van het TinkerCAD-sjabloon niet, waardoor hun oplossingen deels uit placeholders
@@ -43,7 +45,7 @@ bestaan. Bewust uitgesteld, niet verworpen.
 
 ## Het patroon dat in elk labo terugkwam
 
-Drie van de vijf labo's hadden dezelfde zwaarste bevinding: **theorie die bestaat maar
+Vier van de zes labo's hadden dezelfde zwaarste bevinding: **theorie die bestaat maar
 onbereikbaar is**, en **oefeningen die meer dan één nieuw ding tegelijk binnenbrengen**.
 
 - Labo 2 was het scherpst: nul van de tien oefeningen linkte naar een referentiepagina,
@@ -52,9 +54,24 @@ onbereikbaar is**, en **oefeningen die meer dan één nieuw ding tegelijk binnen
   en die over multiplexing in een oplossingsspoiler.
 - `map()` in labo 2 en arrays in labo 1 werden allebei drie oefeningen eerder gebruikt dan
   uitgelegd. In labo 4 gold hetzelfde voor bitbewerkingen, die nergens in de cursus stonden.
+- In labo 5 werd half step als plaatje getoond en twee oefeningen later gevraagd, en
+  vroeg de gevorderde oefening om hysteresis en draadbreukbeveiliging, twee begrippen die
+  nergens in de cursus voorkomen.
 
 [Labo 3](labo3.md) is de tegenhanger en meteen het model: elke oefening voegt precies één
 ding toe, en `Enkel7SegmentDisplay.html` linkt zijn theorie en zijn datasheet voor de
 student aan de slag gaat. Bij een volgende ronde is de nuttigste vraag per oefening dus:
 *wat is hier het ene nieuwe ding, en staat de uitleg ervoor op een plek waar de student ze
 vindt zonder de oplossing open te klappen?*
+
+## Wat labo 5 daar apart in maakt
+
+[Labo 5](labo5.md) is het enige labo waar de review **echte technische fouten** vond in
+plaats van didactische onhandigheden: een servo die volgens de tekst op een `~`-pin moest
+(L5-01), een enable-pin waarop de gevraagde `analogWrite()` onmogelijk was (L5-02), en een
+stappenreeks die niet overeenkwam met de tekening erboven (L5-04). Alle drie leveren ze een
+student met correcte code een niet-werkende schakeling op.
+
+Die vinden vraagt iets anders dan de studentbril: je moet de code en de schema's naast de
+bewering leggen en narekenen. Bij een volgende import is dat een tweede vraag naast de
+bestaande: *klopt wat hier staat eigenlijk wel, en zegt de tekening hetzelfde als de tekst?*

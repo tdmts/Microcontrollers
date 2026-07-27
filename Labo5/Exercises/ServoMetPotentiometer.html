@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Servo besturen met een potentiometer</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Servo besturen met een potentiometer</h1>
+    <p class="lead">Sluit een potentiometer en een servomotor aan, en zorg dat de hoek van de servo meedraait met de knop. Draai je de potentiometer helemaal naar links, dan staat de as op 0 graden. Helemaal naar rechts is 180 graden.</p>
+
+    <p>Dit is je eerste motor in de cursus, en meteen de eenvoudigste. Een servo neemt een <strong>hoek</strong> aan die jij hem opgeeft, en de elektronica in de servo doet de rest. Hoe dat werkt, welke drie draden eraan zitten en waarom de bibliotheek de pulsen voor jou maakt, staat op <a href="../Reference/Servo.html">De servomotor</a>. Lees die pagina door voor je begint.</p>
+
+    <h2 id="het-schema">Het schema</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/servo-met-potentiometer-schema.png" alt="Breadboardschema met een Arduino UNO, een potentiometer op A0 en een servomotor waarvan de stuurdraad naar pin 9 gaat">
+        </figure>
+    </div>
+
+    <p>De potentiometer hangt als <a href="../../Labo2/Reference/Spanningsdeler.html">spanningsdeler</a> tussen 5 V en GND, met de loper op <strong>A0</strong>. De servo krijgt zijn voeding van de 5 V van de Arduino, en zijn stuurdraad gaat naar <strong>pin 9</strong>.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Waarom pin 9 en niet zomaar een andere?</div>
+        <p>Het mag eigenlijk elke digitale pin zijn: de Servo-bibliotheek maakt de pulsen zelf en heeft geen <code>~</code>-pin nodig. Pin 9 is gewoon de pin die op dit schema gebruikt wordt. Wel het omgekeerde onthouden: zodra er een servo actief is, werkt <code>analogWrite()</code> niet meer op pin 9 en pin 10.</p>
+    </div>
+
+    <h2 id="van-knop-naar-hoek">Van knop naar hoek</h2>
+
+    <p>Je leest de potentiometer uit met <a href="../../Labo2/Reference/analogRead.html">analogRead()</a>, en dat geeft je een getal tussen 0 en 1023. De servo wil een hoek tussen 0 en 180. Die twee bereiken passen niet op elkaar, dus moet je herschalen.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Maak het jezelf makkelijk</div>
+        <p>Daar heb je in labo 2 een functie voor gezien die precies dit doet: <a href="../../Labo2/Reference/map.html">map()</a>. Reken het niet met de hand uit.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De servo staat op 0 graden als de potentiometer helemaal naar de ene kant staat</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De servo staat op 180 graden als de potentiometer helemaal naar de andere kant staat</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De as volgt de knop vloeiend, zonder dat je hem eerst helemaal moet rondraaien</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt map() en geen zelfgemaakte deling</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De massa van de servo hangt aan de GND van de Arduino</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De hele oefening past in vier regels <code>loop()</code>: uitlezen, herschalen, schrijven, even wachten.</p>
+            <p>Die <code>delay(15)</code> op het einde is geen opvulling. Zonder pauze stuur je de servo honderden keren per seconde een nieuwe hoek, ook als je de knop niet aanraakt, en dan begint hij te trillen op de kleine schommelingen van de meting. Vijftien milliseconden is ongeveer de tijd die de as nodig heeft om één graad af te leggen.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Servo.h&gt;
+
+Servo mijnServo;
+
+const int servoPin = 9;
+const int potPin = A0;
+
+void setup()
+{
+  mijnServo.attach(servoPin);
+}
+
+void loop()
+{
+  int potWaarde = analogRead(potPin); // 0 tot 1023
+
+  // herschaal naar het bereik van de servo
+  int hoek = map(potWaarde, 0, 1023, 0, 180);
+
+  mijnServo.write(hoek);
+  delay(15); // geef de as de tijd om te volgen
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo5);
+</script>
+</body>
+</html>

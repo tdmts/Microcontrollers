@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Stappenmotor van richting doen keren met een drukknop</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Stappenmotor van richting doen keren met een drukknop</h1>
+    <p class="lead">Voeg een drukknop toe die de draairichting omkeert. Elke keer dat je hem indrukt draait de motor de andere kant op. De knop gedraagt zich dus als een <strong>eindeloopschakelaar</strong>: hij meldt niet "ga naar links", hij meldt "je bent aan het einde, keer om".</p>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/zjU1WTD8cVU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <p>Je vertrekt van je programma uit <a href="StappenmotorInHalfStep.html">Wisselen tussen full step en half step</a>. Er komt één drukknop bij, op een vrije pin.</p>
+
+    <h2 id="achteruit-door-de-tabel">Achteruit door de tabel</h2>
+
+    <p>De andere kant op draaien is niet moeilijker dan de stappentabel <strong>omgekeerd</strong> doorlopen. Waar je nu optelt, ga je aftrekken.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Pas op met de restoperator en negatieve getallen</div>
+        <p>Sta je op stap 0 en trek je er 1 af, dan kom je op -1 uit. In C++ geeft <code>-1 % 8</code> niet 7 maar -1, en dan lees je buiten je array. Wat daar staat weet niemand, en je programma doet vanaf dan onvoorspelbare dingen.</p>
+        <p>Tel er daarom eerst het aantal stappen bij op voor je de rest neemt: <code>(huidigeStap - stapGrootte + aantalStappen) % aantalStappen</code>. Nu blijft de teller altijd positief.</p>
+    </div>
+
+    <h2 id="een-drukknop-is-geen-schuifschakelaar">Een drukknop is geen schuifschakelaar</h2>
+
+    <p>Bij de schuifschakelaar van de vorige oefening las je gewoon de <em>stand</em> uit. Een drukknop werkt anders: je wil reageren op het <strong>moment</strong> dat hij ingedrukt wordt, niet op het feit dat hij ingedrukt <em>blijft</em>. Lees je alleen de stand uit, dan keert je motor om bij elke ronde van de <code>loop()</code> zolang je je vinger op de knop houdt. Bij een <code>loop()</code> die duizenden keren per seconde draait, staat de motor dan gewoon te trillen.</p>
+
+    <p>Je hebt dus twee dingen nodig die je allebei al kent:</p>
+
+    <ul>
+        <li><strong>Flankdetectie</strong>: onthoud de vorige stand van de knop en reageer alleen wanneer die van los naar ingedrukt gaat. Datzelfde deed je in labo 4 bij het inlezen van de drukknoppen.</li>
+        <li><strong><a href="../../Labo0/Reference/Debouncen.html">Debouncen</a></strong>: een mechanisch contact stuitert bij het sluiten, dus één druk levert een handvol flanken op. Zonder ontdendering keert je motor per druk een willekeurig aantal keren om, en dat ziet er precies uit als "hij doet soms niets".</li>
+    </ul>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Werkt het niet meteen? Bouw het in twee stappen</div>
+        <p>Vervang de drukknop eerst even door een schuifschakelaar, waarbij de ene stand links betekent en de andere rechts. Dan test je alleen of het achteruit doorlopen van je tabel klopt. Werkt dat, zet de drukknop er dan pas bij, zodat je zeker weet dat een probleem in de knop zit en niet in je richtinglogica.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Eén druk op de knop keert de richting precies één keer om</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De knop ingedrukt houden verandert niets: de motor blijft rustig doordraaien</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De LEDs blijven in de rondte gaan, alleen de andere kant op</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De stapteller wordt nooit negatief</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het wisselen tussen full step en half step werkt nog altijd, in beide richtingen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De drukknop is ontdenderd</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De richting zit in één variabele die 1 of -1 is. Bij een druk op de knop draai je gewoon het teken om met <code>richting = -richting</code>, en de rest van je programma merkt er niets van.</p>
+            <p>De knop wordt hier ontdenderd met <code>millis()</code>: een nieuwe flank telt pas mee als de vorige minstens 50 ms geleden is. Dat is dezelfde aanpak als in labo 0, en ze houdt de <code>loop()</code> vrij zodat de motor gewoon blijft draaien terwijl je wacht.</p>
+            <p>De knop hangt hier op <code>INPUT_PULLUP</code>, dus hij leest LOW wanneer je hem indrukt. Dan heb je geen aparte weerstand nodig.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int motorPinnen[] = {2, 3, 4, 5}; // 1A, 2A, 3A, 4A van de L293D
+const int modusPin = 6;                 // schuifschakelaar: full of half step
+const int knopPin = 7;                  // drukknop: keert de richting om
+const int potPin = A0;
+
+const int aantalStappen = 8;
+const unsigned long ontdenderTijd = 50; // ms
+
+// De half-steptabel. Stap 0, 2, 4 en 6 zijn samen de full-steptabel.
+const int halfStep[aantalStappen][4] = {
+  {1, 0, 0, 0}, // alleen spoel A
+  {1, 0, 1, 0}, // A en B samen
+  {0, 0, 1, 0}, // alleen spoel B
+  {0, 1, 1, 0}, // A en B samen
+  {0, 1, 0, 0}, // alleen spoel A
+  {0, 1, 0, 1}, // A en B samen
+  {0, 0, 0, 1}, // alleen spoel B
+  {1, 0, 0, 1}  // A en B samen
+};
+
+int huidigeStap = 0;
+int richting = 1; // 1 is vooruit, -1 is achteruit
+
+int vorigeKnopStand = HIGH;
+unsigned long laatsteFlank = 0;
+
+void zetStap(int stap)
+{
+  for (int pin = 0; pin &lt; 4; pin++)
+  {
+    digitalWrite(motorPinnen[pin], halfStep[stap][pin]);
+  }
+}
+
+void setup()
+{
+  for (int pin = 0; pin &lt; 4; pin++)
+  {
+    pinMode(motorPinnen[pin], OUTPUT);
+  }
+
+  pinMode(modusPin, INPUT);
+  pinMode(knopPin, INPUT_PULLUP); // knop leest LOW als je hem indrukt
+}
+
+void loop()
+{
+  int knopStand = digitalRead(knopPin);
+
+  // alleen reageren op de flank van los naar ingedrukt
+  if (knopStand == LOW &amp;&amp; vorigeKnopStand == HIGH)
+  {
+    if (millis() - laatsteFlank &gt; ontdenderTijd)
+    {
+      richting = -richting;
+      laatsteFlank = millis();
+    }
+  }
+
+  vorigeKnopStand = knopStand;
+
+  int potWaarde = analogRead(potPin);
+  int wachttijd = map(potWaarde, 0, 1023, 100, 2);
+
+  int stapGrootte = 1;
+
+  if (digitalRead(modusPin) == LOW)
+  {
+    stapGrootte = 2; // full step: de tussenstanden overslaan
+  }
+
+  zetStap(huidigeStap);
+  delay(wachttijd);
+
+  // + aantalStappen zodat de teller nooit negatief wordt
+  huidigeStap = (huidigeStap + richting * stapGrootte + aantalStappen) % aantalStappen;
+}</code></pre>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Die delay() is eigenlijk al te veel</div>
+                <p>Zolang de <code>delay()</code> loopt, leest je programma de knop niet. Zet je de motor traag, dan kan je een korte druk missen. Netter is het om ook de stappen op <code>millis()</code> te laten lopen in plaats van op <code>delay()</code>, precies zoals je bij de nachtlamp in labo 2 gedaan hebt. Probeer het eens.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo5);
+</script>
+</body>
+</html>

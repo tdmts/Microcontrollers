@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DC motor regelen met een transistor</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>DC motor regelen met een transistor</h1>
+    <p class="lead">Stuur een DC motor aan via een transistor, en regel zijn snelheid met een potentiometer. Van stilstand tot voluit, en alles ertussen. Onderweg reken je zelf uit welke basisweerstand je nodig hebt.</p>
+
+    <p>Een motor kan je niet rechtstreeks aan een uitgangspin hangen: hij trekt te veel stroom. Waarom dat zo is staat op <a href="../Reference/DCMotor.html">De DC motor</a>, en hoe je dat met een transistor oplost op <a href="../Reference/TransistorAlsSchakelaar.html">De transistor als schakelaar</a>. Die twee pagina's heb je hier allebei nodig, dus lees ze eerst.</p>
+
+    <p>Deze oefening werk je uit in TinkerCAD. De motor is daar de <strong>Hobby motorreductor</strong>, en de transistor de <strong>2N2222</strong> (een NPN).</p>
+
+    <h2 id="het-schema">Het schema</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/dc-motor-met-transistor-schema.png" alt="Breadboardschema met een potentiometer op A0, een NPN-transistor gestuurd vanaf pin 3, een DC motor op een aparte voeding en een vrijloopdiode over de motor">
+        </figure>
+    </div>
+
+    <p>De potentiometer zit op <strong>A0</strong>, de basis van de transistor hangt via de basisweerstand aan <strong>pin 3</strong>, en de motor krijgt zijn stroom uit een aparte voeding. Let op het vraagteken bij de basisweerstand: die waarde is precies wat je zelf moet uitrekenen.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">De diode over de motor hoort erbij</div>
+        <p>Je ziet op het schema een diode dwars over de motor staan, met de streep naar de plus. Dat is de <strong>vrijloopdiode</strong>, en die is niet optioneel. Een motor is een spoel, en die stuurt bij het uitschakelen een spanningspiek terug die je transistor kapotmaakt. Waarom precies, staat op <a href="../Reference/TransistorAlsSchakelaar.html">De transistor als schakelaar</a>. Teken ze mee, ook al doet TinkerCAD zonder die diode niet moeilijk.</p>
+    </div>
+
+    <h2 id="stappenplan">Stappenplan</h2>
+
+    <ol>
+        <li>
+            <p><strong>Meet hoeveel stroom je motor trekt.</strong> Hang de motor even rechtstreeks aan de voeding en meet de stroom. In TinkerCAD kan dat met een multimeter, of je leest de waarde gewoon af op de voeding zelf. Die stroom is je <strong>Ic</strong>, de collectorstroom die de transistor straks moet doorlaten.</p>
+        </li>
+        <li>
+            <p><strong>Zoek Vbe en hFE op in de datasheet.</strong> Beide staan in de <a href="../../datasheets/p2n2222a.pdf">datasheet van de transistor</a>. Vbe is de spanning over de basis-emitterjunctie, hFE de stroomversterkingsfactor.</p>
+        </li>
+        <li>
+            <p><strong>Neem marge op de hFE.</strong> Reken niet met de waarde uit de datasheet zelf. Deel ze flink door, zodat de transistor zeker <strong>voluit</strong> schakelt en de nodige collectorstroom hoe dan ook kan leveren. Op de referentiepagina staat uitgelegd waarom, en met welke factor.</p>
+        </li>
+        <li>
+            <p><strong>Bereken Rb.</strong> Eerst <code>Ib = Ic / hFE</code>, dan <code>Rb = (Vcc - Vbe) / Ib</code>. Rond af naar een weerstand die echt bestaat.</p>
+        </li>
+        <li>
+            <p><strong>Lees de potentiometer uit en stuur de motor.</strong> Herschaal de gelezen waarde zodat je de motor volledig kan doen stilstaan én voluit kan laten draaien, en zet die waarde met <code>analogWrite()</code> op de basis.</p>
+        </li>
+        <li>
+            <p><strong>Toon de spanning op de seriële monitor.</strong> Zet op de <a href="../../Labo0/Reference/Debuggen.html">seriële monitor</a> welke spanning je op pin 3 zet, en controleer met een multimeter of dat ongeveer klopt.</p>
+        </li>
+    </ol>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Welke spanning meet je eigenlijk?</div>
+        <p>Pin 3 staat bij <code>analogWrite()</code> nooit op een vaste tussenspanning: hij springt heen en weer tussen 0 V en 5 V. Wat je multimeter je toont is het <strong>gemiddelde</strong> daarvan, en dat is precies waar PWM op neerkomt. Zet je er 128 op, dan staat de pin ongeveer de helft van de tijd hoog en meet je ongeveer 2,5 V. Reken in je programma dus met datzelfde gemiddelde: <code>spanning = waarde * 5.0 / 255</code>.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je hebt de stroom door de motor zelf gemeten en niet gegokt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je basisweerstand is berekend, met marge op de hFE, en afgerond naar een bestaande waarde</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er staat een vrijloopdiode over de motor, met de streep naar de plus</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De motor staat helemaal stil in de ene uiterste stand van de potentiometer</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De motor draait voluit in de andere uiterste stand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De seriële monitor toont de spanning op pin 3, en die komt overeen met wat je meet</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De massa van de motorvoeding hangt aan de GND van de Arduino</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De berekening voor de motor van 80 mA uit de referentiepagina, stap voor stap:</p>
+            <ul>
+                <li><code>Ic</code> = 80 mA, gemeten.</li>
+                <li><code>hFE</code> = 200 volgens de datasheet, maar we rekenen met 40 om ruim in saturatie te zitten.</li>
+                <li><code>Ib</code> = 0,08 A / 40 = 2 mA.</li>
+                <li><code>Rb</code> = (5 V - 0,7 V) / 0,002 A = 2150 Ω, dus we nemen <strong>2,2 kΩ</strong>.</li>
+            </ul>
+            <p>Meet jouw motor een andere stroom, dan komt er een andere weerstand uit. Dat hoort zo.</p>
+            <p>In de code herschaal je de 0 tot 1023 van de potentiometer naar de 0 tot 255 van <code>analogWrite()</code>. De spanning die je afdrukt is het gemiddelde van het PWM-signaal, dus de ingestelde waarde gedeeld door 255 maal 5 V. Let op het punt in <code>5.0</code>: laat je dat weg, dan deelt de Arduino met gehele getallen en krijg je altijd 0 te zien.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int motorPin = 3; // via de basisweerstand naar de basis
+const int potPin = A0;
+
+void setup()
+{
+  pinMode(motorPin, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int potWaarde = analogRead(potPin); // 0 tot 1023
+
+  // herschaal naar het bereik van analogWrite()
+  int snelheid = map(potWaarde, 0, 1023, 0, 255);
+
+  analogWrite(motorPin, snelheid);
+
+  // de gemiddelde spanning die op pin 3 staat
+  float spanning = snelheid * 5.0 / 255;
+
+  Serial.print("Snelheid: ");
+  Serial.print(snelheid);
+  Serial.print("  Spanning: ");
+  Serial.print(spanning);
+  Serial.println(" V");
+
+  delay(200); // niet sneller afdrukken dan je kan lezen
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo5);
+</script>
+</body>
+</html>

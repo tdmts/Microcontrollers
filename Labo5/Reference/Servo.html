@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>De servomotor</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>De servomotor</h1>
+    <p class="lead">Een standaard servomotor is een <strong>positiemotor</strong>. Je zegt hem welke hoek je wil, en hij draait daarheen en houdt die stand vast. Het bereik is ongeveer 180 graden.</p>
+
+    <p>Dat is meteen het verschil met de andere motoren in dit labo. Bij een DC motor stuur je <em>hoe hard</em> hij draait, bij een stappenmotor stuur je <em>hoeveel stappen</em> hij zet. Bij een servo stuur je een <strong>hoek</strong>, en de elektronica in de servo zorgt er zelf voor dat de as daar terechtkomt en blijft.</p>
+
+    <h2 id="hoe-je-een-servo-aanstuurt">Hoe je een servo aanstuurt</h2>
+
+    <p>Een servo heeft drie draden: massa (meestal bruin of zwart), voeding (rood) en een <strong>stuurdraad</strong> (meestal oranje of geel). Over die stuurdraad stuur je pulsen, en de <strong>breedte van de puls</strong> bepaalt de hoek:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Pulsbreedte</th>
+                    <th>Hoek</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1 ms</td>
+                    <td>0 graden</td>
+                </tr>
+                <tr>
+                    <td>1,5 ms</td>
+                    <td>90 graden</td>
+                </tr>
+                <tr>
+                    <td>2 ms</td>
+                    <td>180 graden</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Die puls moet ongeveer <strong>50 keer per seconde</strong> herhaald worden. Zolang de pulsen blijven komen, houdt de servo zijn positie vast en verzet hij zich tegen een duwtje. Stoppen de pulsen, dan laat hij los en kan je de as met de hand ronddraaien.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Dit is niet hetzelfde als analogWrite()</div>
+        <p>Je hebt in <a href="../../Labo2/Reference/analogWrite.html">analogWrite()</a> ook met pulsen gewerkt, maar dat signaal is hier onbruikbaar. <code>analogWrite()</code> stuurt ongeveer <strong>490 keer per seconde</strong> een puls, en je stelt er de <em>verhouding</em> aan/uit mee in, niet de breedte in milliseconden. Een servo wil precies 50 pulsen per seconde van 1 tot 2 ms. Dat zijn twee verschillende signalen die allebei toevallig "PWM" heten.</p>
+    </div>
+
+    <h2 id="de-servo-bibliotheek">De Servo-bibliotheek</h2>
+
+    <p>Die pulsen zelf timen met <code>digitalWrite()</code> en <code>delayMicroseconds()</code> kan, maar dan is je programma de hele tijd bezig met tellen. Daarom gebruik je de <strong>Servo</strong>-bibliotheek. Hoe je een bibliotheek toevoegt lees je op <a href="../../Labo4/Reference/Bibliotheken.html">Bibliotheken gebruiken</a>.</p>
+
+    <p>De bibliotheek zet op de achtergrond een timer aan het werk, die de pulsen genereert terwijl jouw <code>loop()</code> gewoon doorloopt. Je hoeft dus nooit zelf een puls te tellen.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Een servo hoeft niet op een pin met een ~</div>
+        <p>Je zou het verwachten, maar het klopt niet. De Servo-bibliotheek maakt de pulsen zelf en werkt op <strong>elke digitale pin</strong> van de UNO. De <code>~</code>-pinnen zijn de pinnen waar <code>analogWrite()</code> op werkt, en dat is hier een ander signaal.</p>
+        <p>Het omgekeerde geldt wel: zodra je op een UNO ook maar één servo aankoppelt, gebruikt de bibliotheek de timer van pin 9 en pin 10. Op die twee pinnen werkt <code>analogWrite()</code> dan niet meer, ook al staat er een <code>~</code> bij. Heb je in dezelfde schakeling nog een LED te dimmen, kies daar dan pin 3, 5, 6 of 11 voor.</p>
+    </div>
+
+    <h2 id="de-functies">De functies</h2>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Functie</th>
+                    <th>Wat ze doet</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>attach(pin)</code></td>
+                    <td>Koppelt het servo-object aan een pin. Doe dit in de <code>setup()</code>.</td>
+                </tr>
+                <tr>
+                    <td><code>write(hoek)</code></td>
+                    <td>Stuurt de servo naar een hoek tussen 0 en 180.</td>
+                </tr>
+                <tr>
+                    <td><code>writeMicroseconds(us)</code></td>
+                    <td>Zelfde, maar je geeft de pulsbreedte rechtstreeks op: 1000 is 0 graden, 1500 is 90, 2000 is 180.</td>
+                </tr>
+                <tr>
+                    <td><code>read()</code></td>
+                    <td>Geeft de laatste hoek terug die je geschreven hebt.</td>
+                </tr>
+                <tr>
+                    <td><code>attached()</code></td>
+                    <td>Geeft terug of het object aan een pin gekoppeld is.</td>
+                </tr>
+                <tr>
+                    <td><code>detach()</code></td>
+                    <td>Laat de pin weer los. De pulsen stoppen en de servo laat zijn positie los.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 id="een-servo-naar-een-vaste-hoek-sturen">Een servo naar een vaste hoek sturen</h2>
+
+    <p>Bovenaan je programma voeg je de bibliotheek toe en maak je een servo-object. In de <code>setup()</code> koppel je dat object aan de pin waar de stuurdraad op zit.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Servo.h&gt;
+
+Servo mijnServo;
+
+const int servoPin = 9;
+
+void setup()
+{
+  mijnServo.attach(servoPin);
+}
+
+void loop()
+{
+  mijnServo.write(0);
+  delay(1000);
+
+  mijnServo.write(90);
+  delay(1000);
+
+  mijnServo.write(180);
+  delay(1000);
+}</code></pre>
+
+    <p>De servo springt hier van stand naar stand. Tussen de <code>write()</code> en de volgende moet je hem wel de tijd geven om er te geraken, en dat is waar de <code>delay()</code> voor dient. Zonder die wachttijd schrijf je een nieuwe hoek voor de as de vorige bereikt heeft.</p>
+
+    <h2 id="vloeiend-heen-en-weer">Vloeiend heen en weer (sweep)</h2>
+
+    <p>Wil je de as vloeiend zien bewegen in plaats van springen, stuur je hem in kleine stapjes van 1 graad met een korte pauze ertussen. Dat is precies wat een <code>for</code>-lus doet.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Servo.h&gt;
+
+Servo mijnServo;
+
+const int servoPin = 9;
+
+void setup()
+{
+  mijnServo.attach(servoPin);
+}
+
+void loop()
+{
+  // van 0 naar 180 graden
+  for (int hoek = 0; hoek &lt;= 180; hoek++)
+  {
+    mijnServo.write(hoek);
+    delay(15); // geef de as tijd om die ene graad af te leggen
+  }
+
+  // en terug
+  for (int hoek = 180; hoek &gt;= 0; hoek--)
+  {
+    mijnServo.write(hoek);
+    delay(15);
+  }
+}</code></pre>
+
+    <p>Met 15 ms per graad duurt een volledige sweep van 0 naar 180 ongeveer 180 x 15 ms = 2,7 seconden. Maak je die wachttijd kleiner, dan gaat de as sneller, tot je op een punt komt waar de servo het mechanisch niet meer volgt en de beweging weer schokkerig wordt.</p>
+
+    <h2 id="voeding">Voeding</h2>
+
+    <p>Een kleine hobbyservo kan je bij het uitproberen meestal rechtstreeks op de 5 V van de Arduino hangen. Zodra de servo iets moet trekken, of zodra er meerdere servo's aan hangen, trekt hij meer stroom dan de spanningsregelaar van de Arduino kan leveren. Je merkt dat doordat de Arduino spontaan herstart op het moment dat de servo begint te bewegen. Dan heb je een aparte voeding nodig.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/servo-schema-externe-voeding.png" alt="Breadboardschema met een Arduino UNO en een servomotor die gevoed wordt door een aparte voedingsbron, met de massa's doorverbonden">
+        </figure>
+    </div>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Twee voedingen? Verbind de massa's!</div>
+        <p>Voed je de servo apart, dan moet de <strong>min van die voeding aan de GND van de Arduino</strong>. Zonder die gemeenschappelijke massa heeft de servo geen referentie voor je stuursignaal: de puls die de Arduino stuurt betekent dan letterlijk niets voor de servo. Het gevolg is een servo die niet reageert of wild begint te schokken, terwijl je code perfect in orde is.</p>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+</body>
+</html>

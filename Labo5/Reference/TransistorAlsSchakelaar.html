@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>De transistor als schakelaar</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>De transistor als schakelaar</h1>
+    <p class="lead">Een <a href="DCMotor.html">DC motor</a> trekt meer stroom dan een pin van je Arduino mag leveren. Met een transistor los je dat op: een kleine stroom uit je pin schakelt een veel grotere stroom uit een aparte voeding.</p>
+
+    <p>Je gebruikt de transistor hier dus niet om een signaal te versterken, maar als een <strong>schakelaar die je met software bedient</strong>. Hij staat ofwel helemaal open, ofwel helemaal dicht, en niets ertussen.</p>
+
+    <h2 id="de-drie-aansluitingen">De drie aansluitingen</h2>
+
+    <p>Een NPN-transistor heeft drie pootjes. Stuur je een kleine stroom in de <strong>basis</strong>, dan laat hij een veel grotere stroom door tussen <strong>collector</strong> en <strong>emitter</strong>.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Aansluiting</th>
+                    <th>Waar ze naartoe gaat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>B</strong> (basis)</td>
+                    <td>Via een weerstand naar de uitgangspin van de Arduino</td>
+                </tr>
+                <tr>
+                    <td><strong>C</strong> (collector)</td>
+                    <td>Naar de motor</td>
+                </tr>
+                <tr>
+                    <td><strong>E</strong> (emitter)</td>
+                    <td>Naar GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>De motor hangt dus <strong>boven</strong> de transistor: van de plus van de voeding naar de collector. De transistor zit tussen de motor en de massa en laat de stroom er al dan niet door. In TinkerCAD is de <strong>2N2222</strong> gemodelleerd, en die gebruiken we hier.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/transistor-dc-motor-schema.png" alt="Breadboardschema met een Arduino UNO die via een basisweerstand een NPN-transistor stuurt, met daarboven een DC motor op een aparte voeding en een diode over de motor">
+        </figure>
+    </div>
+
+    <h2 id="de-vrijloopdiode">De vrijloopdiode</h2>
+
+    <p>Kijk op het schema hierboven eens naar het component dat over de motor heen staat, met het streepje naar de plus. Dat is een <strong>diode</strong>, en die staat daar niet toevallig.</p>
+
+    <p>Een motor is een spoel. Zolang er stroom door loopt zit er energie in het magnetisch veld, en een spoel laat zijn stroom niet zomaar ophouden. Schakelt de transistor uit, dan probeert de spoel die stroom te blijven duwen. Er is geen weg meer, dus de spanning over de spoel loopt op tot ze er wel eentje vindt: dwars door je transistor heen. Die spanningspiek is een veelvoud van je voedingsspanning en maakt een transistor stuk in een enkele schakeling.</p>
+
+    <p>De diode geeft die stroom een uitweg. In normale werking staat ze in sperrichting en doet ze niets. Op het moment dat je uitschakelt, staat ze in geleiding en laat ze de spoelstroom rustig rondlopen tot de energie op is. Vandaar de naam <strong>vrijloopdiode</strong>.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Altijd een diode over een motor of een relais</div>
+        <p>Dit geldt bij elke spoel die je schakelt: een motor, een relais, een elektromagneet. De diode staat <strong>omgekeerd</strong> over de spoel, dus met de streep aan de kant van de plus. Zet je ze per ongeluk andersom, dan sluit je je voeding kort.</p>
+        <p>In TinkerCAD kan je de diode weglaten en werkt alles gewoon door. Op een echt breadboard is dat het verschil tussen een schakeling die blijft werken en een transistor die na een minuut warm en dood is.</p>
+    </div>
+
+    <h2 id="de-basisweerstand-berekenen">De basisweerstand berekenen</h2>
+
+    <p>Tussen je Arduino-pin en de basis hoort een weerstand. Zonder die weerstand loopt er een ongelimiteerde stroom je basis in en gaat je pin, je transistor of allebei eraan. De vraag is dus: hoe groot moet ze zijn?</p>
+
+    <p>De formule is niets meer dan de <a href="../../Labo0/Reference/WetVanOhm.html">wet van Ohm</a> toegepast op de basiskring:</p>
+
+    <div class="math-tex">
+        $$ R_b = \frac{V_{cc} - V_{be}}{I_b} $$
+    </div>
+
+    <p>Je hebt dus drie dingen nodig. We werken het voorbeeld helemaal uit voor de motor van 80 mA uit <a href="DCMotor.html">De DC motor</a>.</p>
+
+    <h3>1. Vcc, de spanning op je pin</h3>
+
+    <p>Een uitgangspin van de UNO die hoog staat geeft 5 V. Dus <strong>Vcc = 5 V</strong>.</p>
+
+    <h3>2. Vbe, de spanning over de basis-emitterjunctie</h3>
+
+    <p>Die zoek je op in de <a href="../../datasheets/p2n2222a.pdf">datasheet</a>. Voor deze transistor is dat ongeveer <strong>0,7 V</strong>. Dat is trouwens geen toeval: bij zowat elke siliciumtransistor kom je op ongeveer 0,7 V uit.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/p2n2222a-datasheet-vbe.png" alt="Fragment uit de datasheet van de P2N2222A met de basis-emitter verzadigingsspanning">
+        </figure>
+    </div>
+
+    <h3>3. Ib, de stroom die je in de basis moet sturen</h3>
+
+    <p>Die volgt uit de stroom die de motor trekt, gedeeld door de stroomversterkingsfactor <strong>hFE</strong> van de transistor:</p>
+
+    <div class="math-tex">
+        $$ I_b = \frac{I_c}{h_{FE}} $$
+    </div>
+
+    <p><code>Ic</code> is de collectorstroom, en dat is gewoon de stroom door je motor: <strong>80 mA</strong>. De hFE zoek je weer op in de datasheet.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/p2n2222a-datasheet-hfe.png" alt="Fragment uit de datasheet van de P2N2222A met de tabel van de DC-stroomversterking hFE">
+        </figure>
+    </div>
+
+    <p>Daar lees je een hFE van ongeveer <strong>200</strong> af. En hier komt de stap die je niet mag overslaan.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Neem ruim marge op de hFE</div>
+        <p>Reken je met de hFE uit de datasheet, dan stuur je precies genoeg basisstroom om die 80 mA te halen <em>als alles meezit</em>. Dat is te krap. De hFE verschilt sterk van exemplaar tot exemplaar, zakt bij hogere stroom en verandert met de temperatuur. Bovendien wil je dat de transistor in <strong>saturatie</strong> gaat: helemaal open, zodat er zo weinig mogelijk spanning over hem staat en hij dus zo weinig mogelijk warmte maakt. Een transistor die maar half openstaat verstookt het verschil.</p>
+        <p>Deel de hFE daarom flink door. Hier delen we 200 door 5 en rekenen we verder met <strong>hFE = 40</strong>. Je stuurt dan vijf keer meer basisstroom dan strikt nodig, en dat is precies de bedoeling.</p>
+    </div>
+
+    <h3>De berekening</h3>
+
+    <p>Met hFE = 40 wordt de basisstroom:</p>
+
+    <div class="math-tex">
+        $$ I_b = \frac{0{,}08\ A}{40} = 0{,}002\ A = 2\ mA $$
+    </div>
+
+    <p>En daarmee de basisweerstand:</p>
+
+    <div class="math-tex">
+        $$ R_b = \frac{5\ V - 0{,}7\ V}{0{,}002\ A} = 2150\ \Omega $$
+    </div>
+
+    <p>Die waarde bestaat niet als standaardweerstand. Je kiest de dichtstbijzijnde die je hebt liggen, en dat is <strong>2,2 kΩ</strong>.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Naar boven of naar beneden afronden?</div>
+        <p>Je rondt hier naar boven af, van 2150 naar 2200 Ω, en dus stuur je een tikje minder basisstroom dan berekend. Dat mag, want in die 2 mA zat al een marge van factor 5. Zit je twijfelachtig dicht bij de grens, kies dan de kleinere weerstand: te veel basisstroom is zelden een probleem, te weinig wel.</p>
+    </div>
+
+    <h2 id="wat-de-transistor-niet-kan">Wat de transistor niet kan</h2>
+
+    <p>Met deze schakeling kan je de motor aan- en uitzetten, en met <code>analogWrite()</code> op de basis ook zijn snelheid regelen. Wat je er niet mee kan, is de motor de andere kant op laten draaien: daarvoor zou je de twee draden van plaats moeten wisselen, en één transistor doet dat niet. Daar heb je een <a href="HBrug.html">H-brug</a> voor nodig.</p>
+</div>
+
+<script src="../../back-link.js"></script>
+</body>
+</html>

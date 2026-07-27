@@ -133,5 +133,33 @@ window.LAB_REFERENCE = {
                 ]
             }
         ]
+    },
+    labo5: {
+        labId: 'labo5',
+        labTitle: 'Labo 5',
+        categories: [
+            {
+                name: 'Soorten motoren',
+                topics: [
+                    { id: 'servo', name: 'De servomotor', href: 'Servo.html', blurb: 'Een motor die een hoek aanneemt in plaats van rond te draaien, met de Servo-bibliotheek en de pulsen waar ze op draait.' },
+                    { id: 'dcmotor', name: 'De DC motor', href: 'DCMotor.html', blurb: 'De eenvoudigste motor die er is: spanning erop en hij draait. Waarom je hem nooit rechtstreeks aan een uitgangspin hangt.' },
+                    { id: 'stappenmotor', name: 'De stappenmotor', href: 'Stappenmotor.html', blurb: 'Een motor die je stap voor stap voortduwt en dus zijn positie kent, met de stappentabellen voor full step en half step.' }
+                ]
+            },
+            {
+                name: 'Een motor aansturen',
+                topics: [
+                    { id: 'transistor', name: 'De transistor als schakelaar', href: 'TransistorAlsSchakelaar.html', blurb: 'Een kleine stroom uit je pin die een grote stroom schakelt, hoe je de basisweerstand berekent, en waarom er een vrijloopdiode over de motor hoort.' },
+                    { id: 'hbrug', name: 'De H-brug', href: 'HBrug.html', blurb: 'Vier schakelaars rond een motor, waarmee je de stroomrichting kiest. De pinout van de L293D en hoe de L298N-module daarmee overeenkomt.' }
+                ]
+            },
+            {
+                name: 'Datasheets',
+                topics: [
+                    { id: 'datasheetp2n2222a', name: 'P2N2222A (2N2222)', href: '../../datasheets/p2n2222a.pdf', blurb: 'De datasheet van de NPN-transistor. Hierin vind je de Vbe en de hFE die je nodig hebt om je basisweerstand te berekenen.' },
+                    { id: 'datasheetl293d', name: 'L293D', href: '../../datasheets/l293d.pdf', blurb: 'De datasheet van de dubbele H-brug. Kijk vooral naar de pinout, de pinfuncties en hoeveel stroom één kanaal aankan.' }
+                ]
+            }
+        ]
     }
 };

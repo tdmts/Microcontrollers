@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wisselen tussen full step en half step</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Wisselen tussen full step en half step</h1>
+    <p class="lead">Breid je stappenmotor uit met een schuifschakelaar die kiest tussen <strong>full step</strong> en <strong>half step</strong>. In half step zet de motor twee keer zoveel stappen per omwenteling, en dus draait hij bij dezelfde wachttijd half zo snel.</p>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/FPZ_xWYnZgo" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <p>Aan je schakeling verandert er bijna niets: je hebt dezelfde vier LEDs en dezelfde L293D als in <a href="StappenmotorInFullStep.html">Stappenmotor laten draaien in full step</a>. Er komt alleen een schuifschakelaar bij. Het nieuwe zit helemaal in de stappentabel.</p>
+
+    <h2 id="wat-is-half-step">Wat is half step?</h2>
+
+    <p>Bij full step bekrachtig je telkens één spoel en trek je de rotor met een hele stap verder. Bekrachtig je er <strong>twee tegelijk</strong>, dan gaat de rotor er precies tussenin staan. Wissel je die twee soorten standen af, dan krijg je acht standen in plaats van vier.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/stappenmotor-half-step.png" alt="Acht tekeningen van de rotor, waarbij telkens afwisselend één spoel en twee spoelen samen bekrachtigd worden">
+        </figure>
+    </div>
+
+    <p>De volledige tabel met de acht stappen staat op <a href="../Reference/Stappenmotor.html#half-step">De stappenmotor</a>. Kijk vooral eens naar stap 1, 3, 5 en 7: dat zijn precies de vier stappen van full step. Half step is dus full step met er telkens eentje tussen.</p>
+
+    <p>Aan je LEDs zie je het verschil goed: bij half step brandt er afwisselend één LED en dan twee LEDs samen.</p>
+
+    <h2 id="de-schakelaar">De schakelaar</h2>
+
+    <p>Hang een schuifschakelaar aan een vrije digitale pin, bijvoorbeeld <strong>pin 6</strong>. Denk aan de <a href="../../Labo0/Reference/PullUpPullDown.html">pull-up of pull-down weerstand</a>: een ingang die nergens aan hangt zweeft, en dan leest je programma willekeurige waarden.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Een schuifschakelaar hoef je niet te debouncen</div>
+        <p><a href="../../Labo0/Reference/Debouncen.html">Contactdender</a> speelt hier geen rol, want je reageert niet op het <em>moment</em> van omschakelen maar op de <em>stand</em>. Lees de schakelaar gewoon elke ronde uit en gebruik die waarde. Bij de drukknop in de volgende oefening ligt dat anders.</p>
+    </div>
+
+    <h2 id="twee-tabellen-in-een-programma">Twee tabellen in één programma</h2>
+
+    <p>Je hebt nu twee stappentabellen die niet even lang zijn: vier rijen tegenover acht. Dat betekent dat je bij het wisselen ook moet oppassen dat je stapteller niet buiten zijn tabel wijst.</p>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: hoe hou je dat netjes uit elkaar?</button>
+        <div class="spoiler-content solution-content">
+            <p>Je kan met twee aparte arrays werken en met een <code>if</code> kiezen uit welke je leest. Dat werkt, maar dan staat die <code>if</code> overal.</p>
+            <p>Eenvoudiger: gebruik alleen de <strong>half-steptabel</strong> van acht rijen. Full step is diezelfde tabel, maar dan met stappen van twee in plaats van één. Zo heb je één tabel, en verandert de schakelaar enkel de grootte van je stap.</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> In de ene stand van de schakelaar draait de motor in full step, in de andere in half step</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> In half step brandt er afwisselend één LED en dan twee LEDs samen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> In beide standen blijven de LEDs in de rondte gaan, in dezelfde richting</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Bij dezelfde wachttijd draait de motor in half step ongeveer half zo snel</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je kan tijdens het draaien omschakelen zonder dat de motor blokkeert of terugspringt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De schakelaar heeft een pull-up of pull-down weerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>Er is maar één tabel nodig: die van half step, met acht rijen. De schakelaar bepaalt of je er met stappen van 1 doorheen gaat (half step) of met stappen van 2 (full step, want dan sla je de tussenstanden over).</p>
+            <p>Dat is meteen de reden waarom omschakelen tijdens het draaien geen probleem geeft: je blijft in dezelfde tabel en op dezelfde positie, je zet alleen grotere of kleinere sprongen. De <code>%</code> zorgt dat je altijd binnen de acht rijen blijft, ook als je er twee tegelijk opschuift.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int motorPinnen[] = {2, 3, 4, 5}; // 1A, 2A, 3A, 4A van de L293D
+const int modusPin = 6;                 // schuifschakelaar: full of half step
+const int potPin = A0;
+
+const int aantalStappen = 8;
+
+// De half-steptabel. Stap 0, 2, 4 en 6 zijn samen de full-steptabel.
+const int halfStep[aantalStappen][4] = {
+  {1, 0, 0, 0}, // alleen spoel A
+  {1, 0, 1, 0}, // A en B samen
+  {0, 0, 1, 0}, // alleen spoel B
+  {0, 1, 1, 0}, // A en B samen
+  {0, 1, 0, 0}, // alleen spoel A
+  {0, 1, 0, 1}, // A en B samen
+  {0, 0, 0, 1}, // alleen spoel B
+  {1, 0, 0, 1}  // A en B samen
+};
+
+int huidigeStap = 0;
+
+void zetStap(int stap)
+{
+  for (int pin = 0; pin &lt; 4; pin++)
+  {
+    digitalWrite(motorPinnen[pin], halfStep[stap][pin]);
+  }
+}
+
+void setup()
+{
+  for (int pin = 0; pin &lt; 4; pin++)
+  {
+    pinMode(motorPinnen[pin], OUTPUT);
+  }
+
+  pinMode(modusPin, INPUT);
+}
+
+void loop()
+{
+  int potWaarde = analogRead(potPin);
+  int wachttijd = map(potWaarde, 0, 1023, 100, 2);
+
+  // schakelaar hoog is half step, dus stappen van 1
+  // schakelaar laag is full step, dus de tussenstanden overslaan
+  int stapGrootte = 1;
+
+  if (digitalRead(modusPin) == LOW)
+  {
+    stapGrootte = 2;
+  }
+
+  zetStap(huidigeStap);
+  delay(wachttijd);
+
+  huidigeStap = (huidigeStap + stapGrootte) % aantalStappen;
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo5);
+</script>
+</body>
+</html>

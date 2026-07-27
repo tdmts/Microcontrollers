@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Automatisch rolluik met LDR en eindeloopschakelaars</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Automatisch rolluik met LDR en eindeloopschakelaars</h1>
+    <p class="lead">Bouw een rolluik dat vanzelf omlaag gaat als het donker wordt en weer omhoog als het licht wordt. Twee drukknoppen spelen de eindeloopschakelaars die melden dat het luik boven of onder is, en op een LCD lees je af wat de sturing denkt.</p>
+
+    <p>Dit is de eindoefening van het labo, en ze brengt bijna alles samen: een <a href="../../Labo2/Reference/Spanningsdeler.html">spanningsdeler</a> met een LDR uit labo 2, het <a href="../../Labo4/Exercises/TekstOpI2CLcd.html">I²C-display</a> uit labo 4, en de <a href="../Reference/HBrug.html">H-brug</a> uit dit labo. Twee dingen zijn nieuw, en die staan hieronder uitgelegd: <strong>hysteresis</strong> en <strong>draadbreukbeveiliging</strong>.</p>
+
+    <h2 id="wat-het-moet-doen">Wat het moet doen</h2>
+
+    <ul>
+        <li>Meet het omgevingslicht met een <strong>LDR</strong> in een spanningsdeler.</li>
+        <li>Toon op het <strong>LCD</strong> of het "donker" of "licht" is.</li>
+        <li>Wordt het donker, laat het rolluik dan <strong>traag omlaag</strong> gaan: de DC motor draait in wijzerzin tot knop 1 wordt ingedrukt.</li>
+        <li>Wordt het licht, laat het <strong>traag omhoog</strong> gaan: de motor draait in tegenwijzerzin tot knop 2 wordt ingedrukt.</li>
+        <li>Staat het luik al waar het moet zijn, dan gebeurt er niets.</li>
+    </ul>
+
+    <p>De twee knoppen zijn gesimuleerde <strong>eindeloopschakelaars</strong>: in een echt rolluik zit er zo eentje boven en eentje onder, en die vertellen de sturing dat het luik op het einde van zijn baan zit. Precies zoals de drukknop in de vorige oefening, waar een druk betekende "je bent aan het einde".</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Traag betekent hier PWM</div>
+        <p>"Traag omlaag" regel je met <code>analogWrite()</code> op de enable van je H-brug, precies zoals in <a href="SnelheidEnRichtingMetL293.html">Zacht omkeren met de L293D</a>. Een rolluik dat aan volle snelheid tegen zijn eindaanslag knalt, is een rolluik dat je één keer bouwt.</p>
+    </div>
+
+    <h2 id="hysteresis">Hysteresis: waarom één drempel niet volstaat</h2>
+
+    <p>Stel dat je zegt: onder de 500 is het donker, daarboven is het licht. Wat gebeurt er dan bij schemering, wanneer je meting rond die 500 blijft schommelen?</p>
+
+    <p>Je meet 499, dus donker, dus het luik gaat omlaag. Een lus later meet je 501, dus licht, dus het luik gaat omhoog. Dan weer 498. Je rolluik staat de hele avond op en neer te gaan tot er iets stukgaat. Een sensor die precies op de grens blijft hangen laat je sturing <strong>oscilleren</strong>.</p>
+
+    <p>De oplossing is om <strong>twee</strong> drempels te gebruiken in plaats van één, met een dode zone ertussen:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Meting</th>
+                    <th scope="col">Wat er gebeurt</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>onder de 450</td>
+                    <td>Het is donker geworden, luik omlaag</td>
+                </tr>
+                <tr>
+                    <td>tussen 450 en 550</td>
+                    <td>Verander niets, blijf doen wat je deed</td>
+                </tr>
+                <tr>
+                    <td>boven de 550</td>
+                    <td>Het is licht geworden, luik omhoog</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Het luik dat omlaag ging, blijft nu omlaag tot de meting écht boven de 550 komt. Kleine schommelingen rond de 500 halen die grens niet, en je sturing blijft rustig. Dat heet <strong>hysteresis</strong>: de drempel waarop je iets aanzet ligt niet op dezelfde plaats als de drempel waarop je het weer uitzet.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Je kent dit al van je thermostaat</div>
+        <p>Zet je die op 20 graden, dan slaat de verwarming aan bij 19,5 en pas weer af bij 20,5. Zonder die marge zou de brander elke minuut aan- en uitspringen. Exact hetzelfde principe, en exact dezelfde reden.</p>
+    </div>
+
+    <h2 id="draadbreukbeveiliging">Wat als een knop stukgaat?</h2>
+
+    <p>Denk nu na over het volgende. Je rolluik gaat omlaag en stopt wanneer knop 1 ingedrukt wordt. Wat gebeurt er als de draad naar die knop breekt, of als het contact vuil wordt en niet meer sluit?</p>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: wat gaat er dan mis?</button>
+        <div class="spoiler-content solution-content">
+            <p>De sturing krijgt nooit het signaal dat het luik beneden is, dus de motor blijft draaien. Het luik loopt tegen zijn aanslag, de motor blijft trekken en trekt daarbij zijn blokkeerstroom, en er begint iets te scheuren of te branden.</p>
+            <p>Het gevaarlijke zit hem hierin: een <strong>gebroken draad ziet er voor je programma precies hetzelfde uit als een knop die niet ingedrukt is</strong>. Je sturing heeft geen enkele manier om die twee uit elkaar te houden, en gaat dus vrolijk door.</p>
+        </div>
+    </div>
+
+    <p>De oplossing zit niet in je code maar in je bedrading. Sluit een eindeloopschakelaar aan als <strong>verbreekcontact</strong>: in rust is het contact <em>gesloten</em>, en het gaat <em>open</em> wanneer het luik erop duwt.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">Situatie</th>
+                    <th scope="col">Maakcontact (sluit bij bediening)</th>
+                    <th scope="col">Verbreekcontact (opent bij bediening)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Luik onderweg</td>
+                    <td>Geen signaal, motor draait door</td>
+                    <td>Signaal aanwezig, motor draait door</td>
+                </tr>
+                <tr>
+                    <td>Luik op het einde</td>
+                    <td>Signaal, motor stopt</td>
+                    <td>Signaal weg, motor stopt</td>
+                </tr>
+                <tr>
+                    <td><strong>Draad gebroken</strong></td>
+                    <td>Geen signaal, motor draait door: gevaarlijk</td>
+                    <td>Signaal weg, motor stopt: veilig</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Met een verbreekcontact leidt elke storing, of dat nu een gebroken draad, een losse connector of een kapotte schakelaar is, tot dezelfde toestand als "einde bereikt". De installatie valt dan stil in plaats van door te lopen. Dat principe heet <strong>draadbreukbeveiliging</strong>, en je vindt het terug in zowat elke veiligheidskring: noodstoppen, deurcontacten en beveiligingen zijn bijna altijd verbreekcontacten.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Dit keert je logica om</div>
+        <p>Werk je met verbreekcontacten, dan betekent een ingang die <strong>hoog</strong> staat "alles in orde, je mag doorlopen", en een ingang die <strong>laag</strong> valt "stop". Dat is het omgekeerde van wat je gewend bent van een drukknop. Zet in je commentaar duidelijk welke keuze je gemaakt hebt, anders zoek je het over een week zelf niet meer terug.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het LCD toont of het donker of licht is</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Bij donker gaat het luik omlaag en stopt het wanneer de onderste eindeloopschakelaar aanspreekt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Bij licht gaat het luik omhoog en stopt het wanneer de bovenste aanspreekt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De motor draait traag, met analogWrite() op de enable</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Staat het luik al in de juiste stand, dan draait de motor niet</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er zijn twee lichtdrempels, niet één, en bij halve duisternis blijft het luik rustig staan</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De eindeloopschakelaars zijn verbreekcontacten</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Trek je in de simulatie een draad van een eindeloopschakelaar los, dan stopt de motor</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De sturing houdt in <code>toestand</code> bij wat het luik aan het doen is. Dat is de kern: je beslist niet elke lus opnieuw vanaf nul, je hebt drie toestanden waar je tussen wisselt. Zo kan je hysteresis toepassen, want "blijf doen wat je deed" heeft alleen betekenis als je weet wát je deed.</p>
+            <p>De twee drempels doen de rest. Alleen onder <code>drempelDonker</code> of boven <code>drempelLicht</code> verandert er iets van toestand. In de zone ertussen blijft <code>toestand</code> onaangeroerd.</p>
+            <p>De eindeloopschakelaars zijn verbreekcontacten op <code>INPUT_PULLUP</code>, dus in rust lezen ze LOW omdat het gesloten contact ze aan de massa legt. Spreekt de schakelaar aan, of breekt de draad, dan trekt de pull-up de ingang HIGH en stopt de motor. Precies wat je wil.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+const int enablePin = 3; // 1,2EN van de L293D, PWM-pin
+const int in1Pin = 4;    // 1A
+const int in2Pin = 5;    // 2A
+
+const int ldrPin = A0;
+const int eindeOnderPin = 6; // verbreekcontact: LOW zolang alles in orde is
+const int eindeBovenPin = 7; // verbreekcontact
+
+const int adresLcd = 0x20;
+LiquidCrystal_I2C lcd(adresLcd, 16, 2);
+
+// Twee drempels, met een dode zone ertussen. Dat is de hysteresis.
+const int drempelDonker = 450;
+const int drempelLicht = 550;
+
+const int traagheid = 120; // PWM-waarde, ruim onder voluit
+
+// De drie toestanden waarin het rolluik kan zitten
+const int STIL = 0;
+const int OMLAAG = 1;
+const int OMHOOG = 2;
+
+// Wat de LDR ons vertelt
+const int DONKER = 0;
+const int LICHT = 1;
+
+int toestand = STIL;
+
+// Wat er nu op het scherm staat, zodat we niet elke ronde herschrijven.
+int getoondeToestand = -1;
+int getoondLicht = -1;
+
+void zetMotor(int richting)
+{
+  if (richting == OMLAAG)
+  {
+    digitalWrite(in1Pin, HIGH);
+    digitalWrite(in2Pin, LOW);
+    analogWrite(enablePin, traagheid);
+  }
+  else if (richting == OMHOOG)
+  {
+    digitalWrite(in1Pin, LOW);
+    digitalWrite(in2Pin, HIGH);
+    analogWrite(enablePin, traagheid);
+  }
+  else
+  {
+    analogWrite(enablePin, 0);
+  }
+}
+
+void setup()
+{
+  pinMode(enablePin, OUTPUT);
+  pinMode(in1Pin, OUTPUT);
+  pinMode(in2Pin, OUTPUT);
+
+  pinMode(eindeOnderPin, INPUT_PULLUP);
+  pinMode(eindeBovenPin, INPUT_PULLUP);
+
+  lcd.init();
+  lcd.backlight();
+}
+
+void loop()
+{
+  int licht = analogRead(ldrPin);
+  int lichtStatus = getoondLicht; // in de dode zone verandert er niets
+
+  // Alleen buiten de dode zone verandert er iets.
+  if (licht &lt; drempelDonker)
+  {
+    lichtStatus = DONKER;
+    toestand = OMLAAG;
+  }
+  else if (licht &gt; drempelLicht)
+  {
+    lichtStatus = LICHT;
+    toestand = OMHOOG;
+  }
+
+  // Een verbreekcontact leest HIGH zodra het aanspreekt of de draad breekt.
+  if (toestand == OMLAAG &amp;&amp; digitalRead(eindeOnderPin) == HIGH)
+  {
+    toestand = STIL;
+  }
+
+  if (toestand == OMHOOG &amp;&amp; digitalRead(eindeBovenPin) == HIGH)
+  {
+    toestand = STIL;
+  }
+
+  zetMotor(toestand);
+
+  // Alleen naar het scherm schrijven als er echt iets veranderd is.
+  if (lichtStatus != getoondLicht)
+  {
+    lcd.setCursor(0, 0);
+
+    if (lichtStatus == DONKER)
+    {
+      lcd.print("Het is donker  ");
+    }
+    else
+    {
+      lcd.print("Het is licht   ");
+    }
+
+    getoondLicht = lichtStatus;
+  }
+
+  if (toestand != getoondeToestand)
+  {
+    lcd.setCursor(0, 1);
+
+    if (toestand == OMLAAG)
+    {
+      lcd.print("Luik omlaag    ");
+    }
+    else if (toestand == OMHOOG)
+    {
+      lcd.print("Luik omhoog    ");
+    }
+    else
+    {
+      lcd.print("Luik staat stil");
+    }
+
+    getoondeToestand = toestand;
+  }
+
+  delay(100);
+}</code></pre>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Twee dingen aan het scherm</div>
+                <p><strong>De spaties achter de tekst.</strong> Een LCD wist zichzelf niet. Schrijf je "Het is licht" over "Het is donker" heen, dan blijft de r van donker staan en lees je "Het is lichtr". Door elke regel aan te vullen tot de volle breedte overschrijf je wat er stond.</p>
+                <p><strong>De twee variabelen <code>getoondLicht</code> en <code>getoondeToestand</code>.</strong> Die houden bij wat er al op het scherm staat, zodat je alleen schrijft als er echt iets verandert. Dat is dezelfde reden als in labo 4, waar de tekst in de <code>setup()</code> stond: een LCD dat je blijft herschrijven gaat flikkeren. Hier kan de tekst wel veranderen, dus verhuist de regel van "schrijf één keer" naar "schrijf alleen bij verandering".</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo5);
+</script>
+</body>
+</html>

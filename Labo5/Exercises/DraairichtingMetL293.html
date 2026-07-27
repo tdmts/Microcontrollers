@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Draairichting omkeren met de L293D</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Draairichting omkeren met de L293D</h1>
+    <p class="lead">Lees de potentiometer uit en stuur een L293D zodanig aan dat de motor naar links draait bij een waarde kleiner dan 512, en naar rechts vanaf 512. Eén knop, twee richtingen.</p>
+
+    <p>Met de transistor uit de vorige oefening kwam je niet verder dan aan en uit: die ene transistor laat de stroom maar op één manier door de motor. Om te keren moet je de twee draden kunnen omwisselen, en daar dient een <a href="../Reference/HBrug.html">H-brug</a> voor. Lees die pagina door voor je begint, want je hebt er de pinout van de L293D bij nodig.</p>
+
+    <p>Deze oefening werk je uit in TinkerCAD.</p>
+
+    <h2 id="het-schema">Het schema</h2>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-l293d-dc-motor-schema.png" alt="Breadboardschema met een Arduino UNO, een L293D, een DC motor tussen 1Y en 2Y, een potentiometer op A0 en een aparte voeding voor de motor">
+        </figure>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Wat waar aan hangt</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Arduino</th>
+                    <th scope="col">L293D</th>
+                    <th scope="col">Waarvoor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>pin 3</td>
+                    <td>1,2EN (pin 1)</td>
+                    <td>Zet de brug aan</td>
+                </tr>
+                <tr>
+                    <td>pin 4</td>
+                    <td>1A (pin 2)</td>
+                    <td rowspan="2">Samen bepalen ze de richting</td>
+                </tr>
+                <tr>
+                    <td>pin 5</td>
+                    <td>2A (pin 7)</td>
+                </tr>
+                <tr>
+                    <td>A0</td>
+                    <td>-</td>
+                    <td>De potentiometer</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>De motor hangt tussen <strong>1Y</strong> (pin 3 van het IC) en <strong>2Y</strong> (pin 6). Vcc1 krijgt 5 V voor de logica, Vcc2 de spanning voor de motor, en de vier massapinnen gaan allemaal naar GND.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Hang de enable op pin 3 en laat hem daar staan</div>
+        <p>Voor deze oefening volstaat een gewone <code>digitalWrite(HIGH)</code> op de enable, dus je zou er elke pin voor kunnen nemen. Pin 3 is er eentje met een <code>~</code>, en dat heb je in de volgende oefening nodig om er met <code>analogWrite()</code> de snelheid mee te regelen. Zet hem dus meteen goed, dan hoef je straks geen draad te verleggen.</p>
+    </div>
+
+    <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
+
+    <p>Lees de potentiometer uit en vergelijk de waarde met 512, de helft van het bereik. Onder die grens stuur je de ene richting, erboven de andere. Welke combinatie van 1A en 2A welke richting geeft, staat in de tabel op <a href="../Reference/HBrug.html">De H-brug</a>.</p>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De motor draait de ene kant op onder 512 en de andere kant op vanaf 512</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> 1A en 2A staan nooit allebei hoog of allebei laag terwijl de motor moet draaien</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De enable hangt op pin 3, een pin met een ~</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Vcc1 krijgt 5 V, Vcc2 de motorspanning, en alle vier de massapinnen hangen aan GND</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De massa van de motorvoeding hangt aan de GND van de Arduino</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De pinnummers staan als const int bovenaan en niet als losse getallen in de loop</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De enable gaat één keer hoog in de <code>setup()</code> en blijft daar. In de <code>loop()</code> hoef je dan alleen nog te kiezen welke van de twee ingangen hoog staat.</p>
+            <p>De grenswaarde 512 staat als constante bovenaan. Zo hoef je maar op één plaats te zoeken als je ze wil verleggen, en de <code>if</code> leest als een zin.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int enablePin = 3; // 1,2EN van de L293D
+const int in1Pin = 4;    // 1A
+const int in2Pin = 5;    // 2A
+
+const int potPin = A0;
+
+const int grens = 512;
+
+void setup()
+{
+  pinMode(enablePin, OUTPUT);
+  pinMode(in1Pin, OUTPUT);
+  pinMode(in2Pin, OUTPUT);
+
+  digitalWrite(enablePin, HIGH); // brug altijd actief
+}
+
+void loop()
+{
+  int potWaarde = analogRead(potPin);
+
+  if (potWaarde &lt; grens)
+  {
+    // naar links
+    digitalWrite(in1Pin, LOW);
+    digitalWrite(in2Pin, HIGH);
+  }
+  else
+  {
+    // naar rechts
+    digitalWrite(in1Pin, HIGH);
+    digitalWrite(in2Pin, LOW);
+  }
+}</code></pre>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo5);
+</script>
+</body>
+</html>
