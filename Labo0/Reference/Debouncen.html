@@ -11,17 +11,17 @@
 <body>
 <div class="container">
     <h1>Debouncen</h1>
-    <p class="lead">Een schakelaar is een mechanisch ding. Daardoor kan bij het sluiten van de verbinding een fenomeen optreden dat "bouncing" wordt genoemd. Op het moment dat het contact van de schakelaar verbinding maakt met het andere contact van de schakelaar, kan het gebeuren dat de contacten even op elkaar kaatsen, en er dus een opeenvolging van toestanden is waarbij de verbinding gemaakt en verbroken wordt.</p>
+    <p class="lead">Een schakelaar is een mechanisch ding. Daardoor kan bij het sluiten van de verbinding een fenomeen optreden dat contactdender heet (in het Engels "bouncing"). Op het moment dat het contact van de schakelaar verbinding maakt met het andere contact van de schakelaar, kan het gebeuren dat de contacten even denderen, en er dus een opeenvolging van toestanden is waarbij de verbinding gemaakt en verbroken wordt.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/debouncen-bouncing-signaal.gif" class="img-fluid" alt="Bouncing van een ingangssignaal">
-            <figcaption>Bouncing</figcaption>
+            <img src="../../img/debouncen-bouncing-signaal.gif" class="img-fluid" alt="Contactdender op een ingangssignaal">
+            <figcaption>Contactdender</figcaption>
         </figure>
     </div>
 
-    <p>Dit is een ongewenst fenomeen. We willen een perfecte overgang tussen het ene niveau en het andere niveau. Om dat te bereiken kun je het signaal "debouncen", met andere woorden het kaatsen van de contacten tegenwerken.</p>
-    <p>Het bouncen zelf gebeurt in een fractie van een seconde. De duur ervan zal altijd minder zijn dan een tiende van een seconde, meestal zelfs nog korter. Een mogelijke debounce-oplossing is dan ook om het ingangssignaal te "pollen" (= constant na elkaar uitlezen) en, zodra een ander niveau gedetecteerd is, een pauze in het pollen in te lassen van 100 ms. Na deze pauze is het bouncen zeker voorbij en kan de nu stabiele ingang gelezen worden. Dit heeft natuurlijk wel de beperking dat het signaal niet sneller dan binnen 100 ms mag wisselen.</p>
+    <p>Dit is een ongewenst fenomeen. We willen een perfecte overgang tussen het ene niveau en het andere niveau. Om dat te bereiken kun je het signaal "debouncen", met andere woorden het denderen van de contacten tegenwerken.</p>
+    <p>Het denderen zelf gebeurt in een fractie van een seconde. De duur ervan zal altijd minder zijn dan een tiende van een seconde, meestal zelfs nog korter. Een mogelijke debounce-oplossing is dan ook om het ingangssignaal te "pollen" (= constant na elkaar uitlezen) en, zodra een ander niveau gedetecteerd is, een pauze in het pollen in te lassen van 100 ms. Na deze pauze is het denderen zeker voorbij en kan de nu stabiele ingang gelezen worden. Dit heeft natuurlijk wel de beperking dat het signaal niet sneller dan binnen 100 ms mag wisselen.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
 

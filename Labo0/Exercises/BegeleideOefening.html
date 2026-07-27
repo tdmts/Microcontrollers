@@ -210,7 +210,7 @@ void loop()
     </div>
 
     <h3>Stap 11: Debouncing toevoegen</h3>
-    <p>Een mechanische knop "kaatst" bij het indrukken heel even, waardoor de Arduino snel na elkaar meerdere drukken kan zien. Dat heet contactdender. Je lost het hier eenvoudig op met een korte <a href="../Reference/Debouncen.html">debouncing</a>: zodra je gedetecteerd hebt dat de knop ingedrukt is, wacht je even tot dat kaatsen voorbij is. Zet de <code>delay</code> dus <strong>binnen</strong> de <code>if</code>, na wat je bij een druk wil doen.</p>
+    <p>Een mechanische knop dendert bij het indrukken heel even: de contacten maken en verbreken de verbinding een paar keer heel snel na elkaar voor ze stabiel blijven, waardoor de Arduino snel na elkaar meerdere drukken kan zien. Dat heet contactdender. Je lost het hier eenvoudig op met een korte <a href="../Reference/Debouncen.html">debouncing</a>: zodra je gedetecteerd hebt dat de knop ingedrukt is, wacht je even tot het denderen voorbij is. Zet de <code>delay</code> dus <strong>binnen</strong> de <code>if</code>, na wat je bij een druk wil doen.</p>
     <pre class="code-wrapper language-cpp linenumbers show-language">
 const int pinButton = 2;
 const int pinLED = 3;  // pinLED definiëren
@@ -232,7 +232,7 @@ void loop()
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
-    delay(100); // debouncing: wacht tot het kaatsen voorbij is
+    delay(100); // debouncing: wacht tot het denderen voorbij is
   }
   else
   {
@@ -264,7 +264,7 @@ void loop()
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     blink(); // verwijs naar de functie blink
-    delay(100); // debouncing: wacht tot het kaatsen voorbij is
+    delay(100); // debouncing: wacht tot het denderen voorbij is
   }
   else
   {
@@ -314,7 +314,7 @@ void loop()
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     blink(); // verwijs naar de functie blink
-    delay(100); // debouncing: wacht tot het kaatsen voorbij is
+    delay(100); // debouncing: wacht tot het denderen voorbij is
   }
   else
   {
@@ -357,7 +357,7 @@ void loop()
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     blink(4); // verwijs naar de functie blink
-    delay(100); // debouncing: wacht tot het kaatsen voorbij is
+    delay(100); // debouncing: wacht tot het denderen voorbij is
   }
   else
   {
@@ -400,7 +400,7 @@ void loop()
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     blink(4, 100); // verwijs naar de functie blink
-    delay(100); // debouncing: wacht tot het kaatsen voorbij is
+    delay(100); // debouncing: wacht tot het denderen voorbij is
   }
   else
   {

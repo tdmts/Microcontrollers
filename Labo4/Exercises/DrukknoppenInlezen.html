@@ -127,7 +127,7 @@ void loop()
 
         <div class="spoiler-content solution-content">
             <p>Het lezen zelf zit in <code>leesExpander()</code>: die vraagt één byte op en geeft ze terug. Krijgt hij niets, dan geeft hij 0xFF terug, wat er uitziet als 'geen enkele knop ingedrukt'. Zo hoeft de rest van het programma geen rekening te houden met een mislukte overdracht.</p>
-            <p>In de <code>loop()</code> vergelijken we elke knop met zijn vorige toestand en sturen we alleen iets naar de monitor als die verschilt. De <code>delay()</code> op het einde is meteen een eenvoudige ontdendering: een mechanische knop stuitert bij het indrukken een paar milliseconden.</p>
+            <p>In de <code>loop()</code> vergelijken we elke knop met zijn vorige toestand en sturen we alleen iets naar de monitor als die verschilt. De <code>delay()</code> op het einde is meteen een eenvoudige ontdendering: een mechanische knop dendert bij het indrukken een paar milliseconden.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
 
