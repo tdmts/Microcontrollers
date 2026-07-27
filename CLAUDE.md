@@ -78,6 +78,20 @@ page is not the dropbox, so anything about handing in belongs in Brightspace; im
 that wording along), and a manifest `checklistDriven` flag must agree with the page's own markup. **It never affects the
 exit code** and never runs in CI or the hook, so a stylistic deviation cannot block anyone.
 
+`bash scripts/check-content.sh --compile` adds rule 7, the one rule that does not read the HTML: it
+extracts every code block that is a whole program (has both `setup()` and `loop()`), undoes the HTML
+escaping, and hands each one to the real Arduino compiler with `--warnings all`. It **does** affect
+the exit code, because code that does not build is breakage rather than style. Warnings coming from
+inside a library are filtered out, so only findings about this repo's own code are reported; a
+missing library (`Servo.h`) is reported as a gap in *your* toolchain and does not fail. It needs
+`arduino-cli` plus the `arduino:avr` core, and says so and carries on when either is absent. It takes
+minutes rather than ~2s, so it is opt-in, refuses to combine with `--hook`, and never runs in CI:
+reach for it after an import, or whenever you touch a sketch. **The fork-free constraint below does
+not apply to this mode** &mdash; spawning a compiler per sketch is the entire job. A page whose code is
+deliberately wrong records that with `<!-- compile-skip: reason -->` (page-level, reason required
+next to it); [`Labo0/Reference/Iteraties.html`](Labo0/Reference/Iteraties.html) is the reason it
+exists, since two of its examples demonstrate a bug and the compiler warning is the lesson.
+
 A page can record that a deviation is deliberate with `<!-- audit-skip: oplossing -->` (comma-separate
 several; valid rules are `lead`, `figure`, `indienen`, `oplossing`, `code-class`,
 `checklist-driven`). Skipped deviations are still listed, under "Deviations recorded in the page

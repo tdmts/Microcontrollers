@@ -35,12 +35,21 @@
 void setup()
 {
   pinMode(pinAnalogIn, INPUT); // OPTIONEEL
+
+  Serial.begin(9600);
 }
 
 void loop()
 {
   int value = analogRead(pinAnalogIn); // Een geheel getal tussen 0 en 1023
   double voltage = value / 1023.0 * 5; // De overeenkomstige spanning tussen 0V en 5V
+
+  Serial.print(value);
+  Serial.print(" komt overeen met ");
+  Serial.print(voltage);
+  Serial.println(" V");
+
+  delay(500); // anders overspoel je de seriële monitor
 }</code></pre>
 
     <div class="accordion-container">

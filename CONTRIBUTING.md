@@ -79,6 +79,41 @@ Geldige regels: `lead`, `figure`, `indienen`, `oplossing`, `code-class`, `checkl
 meer mee als opmerking. Gebruik dit enkel wanneer het soort pagina echt anders is, niet om iets stil
 te maken dat je nog moet opkuisen.
 
+### Compileert de code op je pagina wel? (na een import)
+
+```bash
+bash scripts/check-content.sh --compile
+```
+
+Alle controles hierboven lezen je HTML. Geen enkele kan je zeggen of de code op de pagina eigenlijk
+wel bouwt. Deze wel: hij haalt elke volledige sketch van je pagina's (alles met een `setup()` én een
+`loop()`) en geeft ze aan de echte Arduino-compiler, met alle waarschuwingen aan.
+
+Je hebt er [arduino-cli](https://arduino.github.io/arduino-cli/) voor nodig, plus de board core:
+
+```bash
+arduino-cli core install arduino:avr
+```
+
+Ontbreekt een van de twee, dan zegt het script dat en gaat het gewoon verder. Ontbreekt een
+bibliotheek (`Servo.h`, `LiquidCrystal_I2C.h`), dan meldt het welke en telt die sketch niet mee als
+fout: dat ligt aan jouw computer, niet aan de pagina.
+
+**Dit duurt een paar minuten** in plaats van de twee seconden van de gewone controle, dus het draait
+niet in de Stop-hook en niet in CI. Draai het wanneer je code aangeraakt hebt, typisch na een import.
+Waarschuwingen uit een bibliotheek worden weggefilterd, je ziet alleen wat over jouw eigen code gaat.
+
+Staat er met opzet foute code op je pagina, bijvoorbeeld om te tonen wat er misgaat? Zet dat dan in
+de pagina zelf, met de reden ernaast:
+
+```html
+<!-- compile-skip: toont met opzet een oneindige lus -->
+```
+
+[Labo0/Reference/Iteraties.html](Labo0/Reference/Iteraties.html) is precies daarom gemarkeerd: twee
+voorbeelden daar bevatten met opzet een fout, dus de waarschuwing van de compiler ís de les. De
+markering geldt voor de hele pagina en blijft zichtbaar in de output.
+
 ## Een oefening toevoegen
 
 1. **Kopieer een bestaande oefening** als vertrekpunt, bijvoorbeeld

@@ -37,6 +37,15 @@
 #                                          # markup). Advisory: it never
 #                                          # changes the exit code, and it
 #                                          # cannot be combined with --hook.
+#   bash scripts/check-content.sh --compile
+#                                          # hand every complete sketch on the
+#                                          # pages to the real Arduino compiler
+#                                          # and report errors and warnings.
+#                                          # Needs arduino-cli plus the
+#                                          # arduino:avr core; says so and
+#                                          # carries on when they are missing.
+#                                          # Takes minutes, so it is opt-in and
+#                                          # cannot be combined with --hook.
 #   bash scripts/check-content.sh --fix    # repair the mechanical violations
 #                                          # first, then report the rest.
 #                                          # Wants a clean tree so "git diff"
@@ -57,18 +66,27 @@ HOOK_MODE=0
 FIX_MODE=0
 FORCE=0
 AUDIT=0
+COMPILE=0
 for arg in "$@"; do
   case "$arg" in
-    --hook)  HOOK_MODE=1 ;;
-    --fix)   FIX_MODE=1 ;;
-    --force) FORCE=1 ;;
-    --audit) AUDIT=1 ;;
+    --hook)    HOOK_MODE=1 ;;
+    --fix)     FIX_MODE=1 ;;
+    --force)   FORCE=1 ;;
+    --audit)   AUDIT=1 ;;
+    --compile) COMPILE=1 ;;
     *) echo "check-content: unknown option '$arg'" >&2; exit 2 ;;
   esac
 done
 
 if [ "$AUDIT" -eq 1 ] && [ "$HOOK_MODE" -eq 1 ]; then
   echo "check-content: --audit is advisory and cannot be combined with --hook" >&2
+  exit 2
+fi
+
+# Compiling every sketch takes minutes. Doing that at session end, on every
+# stop, would make the hook unusable.
+if [ "$COMPILE" -eq 1 ] && [ "$HOOK_MODE" -eq 1 ]; then
+  echo "check-content: --compile takes minutes and cannot be combined with --hook" >&2
   exit 2
 fi
 
@@ -788,6 +806,112 @@ done < <(grep -niE "<(h1|title)>[^<]*$NAME_RE" "${checked[@]}" 2>/dev/null)
 take; v="$TAKEN"
 [ -n "$v" ] && naming_errs+="Generic page title - the <h1> and <title> should say what the exercise builds:"$'\n'"$v"
 
+# ------------------------------------------- 7. sketches compile (--compile)
+#
+# Every rule above reads the HTML. None of them can tell you whether the code
+# on the page actually builds. This one hands each complete sketch to the real
+# Arduino compiler, which is the only thing that can say for certain.
+#
+# Opt-in, and deliberately so. It takes minutes rather than the ~2s the rest of
+# the script needs, and it wants arduino-cli plus a board core installed, which
+# the CI runner does not have. So it never runs from the Stop hook and never in
+# CI: you run it when you touch code, typically after an import.
+#
+# The fork-free rule that governs the rest of this script does not apply here.
+# This mode spawns a compiler per sketch by definition; that is the whole job.
+
+compile_errs=""
+compile_notes=""
+
+if [ "$COMPILE" -eq 1 ]; then
+  if ! command -v arduino-cli >/dev/null 2>&1; then
+    compile_notes+="  arduino-cli not found, so no sketch could be verified."$'\n'
+    compile_notes+="  Install it from https://arduino.github.io/arduino-cli/ and run:"$'\n'
+    compile_notes+="    arduino-cli core install arduino:avr"$'\n'
+  elif ! arduino-cli core list 2>/dev/null | grep -q '^arduino:avr'; then
+    compile_notes+="  The arduino:avr core is missing, so no sketch could be verified."$'\n'
+    compile_notes+="    arduino-cli core install arduino:avr"$'\n'
+  else
+    # A page can record that its code is meant to misbehave:
+    #     <!-- compile-skip: toont met opzet een oneindige lus -->
+    # Iteraties.html is the reason this exists: two of its examples are there
+    # precisely to show a bug, so the compiler warning is the lesson, not a
+    # defect. Skipped pages stay listed below, never silently ignored.
+    declare -A CSKIP=()
+    while IFS= read -r hit; do
+      [ -z "$hit" ] && continue
+      f="${hit%%:*}"; why="${hit#*compile-skip:}"; why="${why%%-->*}"
+      CSKIP["$f"]=1
+      compile_notes+="  $f (skipped:${why%"${why##*[![:space:]]}"})"$'\n'
+    done < <(grep -oHE '<!--[[:space:]]*compile-skip:[^>]*-->' "${checked[@]}" 2>/dev/null)
+
+    CTMP="$(mktemp -d)"
+    trap 'rm -rf "$CTMP"' EXIT
+    n_ok=0; n_skipped=0
+
+    for f in "${checked[@]}"; do
+      [ -n "${CSKIP[$f]:-}" ] && continue
+
+      # Split the page into its code blocks, undo the HTML escaping, and keep
+      # the ones that are a whole program rather than a fragment.
+      i=0
+      while IFS= read -r -d $'\002' block; do
+        i=$((i + 1))
+        case "$block" in
+          *"void setup()"*"void loop()"*) ;;
+          *) continue ;;
+        esac
+
+        name="s$(printf '%s' "$f" | tr -c 'A-Za-z0-9' '_')_$i"
+        mkdir -p "$CTMP/$name"
+        printf '%s' "$block" > "$CTMP/$name/$name.ino"
+
+        if out=$(arduino-cli compile -b arduino:avr:uno --warnings all "$CTMP/$name" 2>&1); then
+          # Warnings from inside a library are not this repo's problem, so keep
+          # only the ones pointing at the extracted sketch itself.
+          w=$(printf '%s' "$out" | grep "warning:" | grep -F "$name.ino" | sed 's/.*warning:/warning:/' | sort -u)
+          if [ -n "$w" ]; then
+            while IFS= read -r line; do
+              [ -n "$line" ] && err "$f (code block $i): $line"
+            done <<< "$w"
+          fi
+          n_ok=$((n_ok + 1))
+        elif printf '%s' "$out" | grep -qE "\.h: No such file or directory"; then
+          # A missing library is a gap in this machine's toolchain, not a fault
+          # in the page. Say which one, and do not fail over it.
+          lib=$(printf '%s' "$out" | grep -oE "[A-Za-z0-9_]+\.h: No such file" | head -1)
+          compile_notes+="  $f (code block $i): cannot verify, ${lib% No such file} is not installed"$'\n'
+          n_skipped=$((n_skipped + 1))
+        else
+          while IFS= read -r line; do
+            [ -n "$line" ] && err "$f (code block $i): ${line##*error: }"
+          done <<< "$(printf '%s' "$out" | grep "error:" | head -3)"
+        fi
+      done < <(awk '
+        /<pre class="code-wrapper/ {
+          inblk = 1
+          sub(/.*<code>/, "")
+        }
+        inblk {
+          if (index($0, "</code></pre>")) {
+            sub(/<\/code><\/pre>.*/, "")
+            printf "%s\002", $0 "\n"
+            inblk = 0
+            next
+          }
+          printf "%s\n", $0
+        }
+      ' "$f" | sed -e 's/&lt;/</g' -e 's/&gt;/>/g' -e 's/&quot;/"/g' -e "s/&#39;/'/g" -e 's/&amp;/\&/g')
+    done
+
+    take; v="$TAKEN"
+    [ -n "$v" ] && compile_errs+="Sketch does not compile cleanly:"$'\n'"$v"
+    compile_notes+="  $n_ok sketches compiled clean"
+    [ "$n_skipped" -gt 0 ] && compile_notes+=", $n_skipped could not be verified"
+    compile_notes+=$'\n'
+  fi
+fi
+
 # ----------------------------------------------------------- reporting
 
 report=""
@@ -797,6 +921,7 @@ report=""
 [ -n "$asset_errs" ]    && report+="Asset hygiene:"$'\n'"$asset_errs"
 [ -n "$style_errs" ]    && report+="$style_errs"
 [ -n "$naming_errs" ]   && report+="$naming_errs"
+[ -n "$compile_errs" ]  && report+="$compile_errs"
 
 if [ -n "$FIXED" ]; then
   printf 'Fixed automatically (review with "git diff"):\n%s' "$FIXED"
@@ -809,6 +934,9 @@ fi
 # Deliberate deviations stay visible, just not as findings.
 if [ -n "${skip_notes:-}" ]; then
   printf 'Deviations recorded in the page itself (audit-skip):\n%s\n' "$skip_notes"
+fi
+if [ -n "$compile_notes" ]; then
+  printf 'Sketch compilation:\n%s\n' "$compile_notes"
 fi
 
 if [ -n "$report" ]; then
@@ -825,5 +953,6 @@ if [ "$HOOK_MODE" -eq 0 ]; then
   [ -n "$warnings" ] && printf 'Pending placeholders (not blocking):\n%s' "$warnings"
   echo "check-content: OK (${#files[@]} .html files: links, manifests, wiring, assets, style)"
   [ "$AUDIT" -eq 0 ] && echo "                 (--audit also reports house-style drift, --fix repairs the mechanical ones)"
+  [ "$COMPILE" -eq 0 ] && echo "                 (--compile builds every sketch on the pages with the real Arduino compiler)"
 fi
 exit 0
