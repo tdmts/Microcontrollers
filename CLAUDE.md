@@ -92,6 +92,21 @@ deliberately wrong records that with `<!-- compile-skip: reason -->` (page-level
 next to it); [`Labo0/Reference/Iteraties.html`](Labo0/Reference/Iteraties.html) is the reason it
 exists, since two of its examples demonstrate a bug and the compiler warning is the lesson.
 
+Two things about the extraction itself, both learned the hard way. **A block is recognised whether or
+not it carries a `<code>` tag** &mdash; glued (`<pre class="..."><code>`), on its own line, or absent
+altogether, closing at `</code></pre>` or a bare `</pre>`. An earlier version matched only the glued
+form, so a block written the other way never ended: it swallowed the rest of the page and its final
+chunk, carrying no delimiter, was dropped by the reader. That hid **28 blocks across 18 pages, 27 of
+them whole sketches**, while the check reported green &mdash; a quarter of the repo silently unverified.
+Hence the second half: **an unclosed block is now a reported error**, not a silent skip. The house
+form is still the glued one and every page uses it, but the extractor no longer depends on that.
+
+A block containing `???` is a fill-in-the-blank skeleton for the student, not a program, so it is
+skipped &mdash; and listed, like every other skip. This is deliberately **per block, not per page**:
+[`Labo2/Exercises/TemperatuursensorTMP36.html`](Labo2/Exercises/TemperatuursensorTMP36.html) has both
+an *Opgave* full of `???` and a real *Oplossing*, and a page-level skip would stop checking exactly
+the sketch most worth compiling. Filling the blanks in to make it build would hand over the answer.
+
 A page can record that a deviation is deliberate with `<!-- audit-skip: oplossing -->` (comma-separate
 several; valid rules are `lead`, `figure`, `indienen`, `oplossing`, `code-class`,
 `checklist-driven`). Skipped deviations are still listed, under "Deviations recorded in the page

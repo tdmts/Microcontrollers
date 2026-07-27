@@ -37,8 +37,7 @@
     <h2 id="voorbeeldcode">Voorbeeldcode</h2>
 
     <p>Lees de functie <code>knipper()</code> eerst eens aandachtig door voor je begint. Er staat iets in dat op het eerste gezicht omgekeerd lijkt aan wat je in labo 0 gebouwd hebt.</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language">
-const int pinLed = 12;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinLed = 12;
 
 const bool KORT = false;
 const bool LANG = true;
@@ -75,8 +74,7 @@ void loop()
   //Nu nog de S
   //...
 
-}
-    </pre>
+}</code></pre>
 
     <h2 id="denk-eens-na-over-de-niveaus">Denk eens na over de niveaus</h2>
 
@@ -120,8 +118,7 @@ void loop()
                 (0,7s), anders zou de laatste S van dit SOS direct overlopen in
                 de eerste S van de volgende herhaling.
             </p>
-            <pre class="code-wrapper language-cpp linenumbers show-language">
-void loop()
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
 {
   //De letter S = 3x kort
   for(int i = 0; i < 3; i++)
@@ -143,8 +140,7 @@ void loop()
     knipper(KORT);
   }
   delay(700); //Pauze tussen twee woorden (voor herhaling van SOS)
-}
-            </pre>
+}</code></pre>
         </div>
     </div>
 </div>

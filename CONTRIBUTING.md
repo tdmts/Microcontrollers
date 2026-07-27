@@ -114,6 +114,28 @@ de pagina zelf, met de reden ernaast:
 voorbeelden daar bevatten met opzet een fout, dus de waarschuwing van de compiler ís de les. De
 markering geldt voor de hele pagina en blijft zichtbaar in de output.
 
+Staat er `???` in een codeblok, dan is dat een invuloefening voor de student en geen programma. Zo'n
+blok wordt overgeslagen (en netjes vermeld in de output). Dat gebeurt **per blok, niet per pagina**:
+[Labo2/Exercises/TemperatuursensorTMP36.html](Labo2/Exercises/TemperatuursensorTMP36.html) heeft een
+*Opgave* vol `???` én een echte *Oplossing*, en die oplossing wil je juist wél gecontroleerd zien.
+Vul de `???` dus niet in om de compiler tevreden te stellen: dan geef je het antwoord weg.
+
+### Hoe je een codeblok schrijft
+
+De huisvorm is `<code>` tegen de openingstag aan, en `</code></pre>` tegen de laatste regel code:
+
+```html
+<pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
+{
+  pinMode(3, OUTPUT);
+}</code></pre>
+```
+
+Schrijf je het anders (`<code>` op een eigen regel, of helemaal geen `<code>`), dan werkt de
+controle nog steeds: die herkent alle drie de vormen. Dat was ooit níet zo, en dat kostte ons 28
+blokken over 18 pagina's die nooit gecompileerd werden terwijl de controle groen bleef. Vergeet je
+`</pre>`, dan krijg je nu een foutmelding in plaats van stilte.
+
 ## Een oefening toevoegen
 
 1. **Kopieer een bestaande oefening** als vertrekpunt, bijvoorbeeld

@@ -819,9 +819,17 @@ take; v="$TAKEN"
 #
 # The fork-free rule that governs the rest of this script does not apply here.
 # This mode spawns a compiler per sketch by definition; that is the whole job.
+#
+# The extractor below accepts a code block with <code> glued to the opening tag,
+# on its own line, or missing entirely. It used to insist on the glued form, so
+# a block written any other way never terminated: it ran to end of file and its
+# last chunk, carrying no delimiter, was silently discarded by "read -d". That
+# hid 28 blocks across 18 pages, 27 of them whole sketches, while this check
+# reported green. An unclosed block is therefore an error now, not a skip.
 
 compile_errs=""
 compile_notes=""
+extract_errs=""
 
 if [ "$COMPILE" -eq 1 ]; then
   if ! command -v arduino-cli >/dev/null 2>&1; then
@@ -854,12 +862,77 @@ if [ "$COMPILE" -eq 1 ]; then
 
       # Split the page into its code blocks, undo the HTML escaping, and keep
       # the ones that are a whole program rather than a fragment.
+      #
+      # The extraction runs into a file rather than straight into the loop, so
+      # that a structural complaint from awk (an unclosed block) is visible.
+      # Piped into "while read" it would be lost with the exit status.
+      if ! awk '
+        # A block opens at <pre class="code-wrapper ...">. The <code> that
+        # usually follows may be glued to that tag, sit on its own line, or be
+        # missing altogether, and the close is </code></pre> or a bare </pre>.
+        # Accepting only the glued shape silently dropped every other one: the
+        # block never ended, so it swallowed the rest of the page and its final
+        # chunk, carrying no delimiter, was discarded by the reader below.
+        !inblk && /<pre class="code-wrapper/ {
+          inblk = 1; openline = NR; atstart = 1
+          sub(/.*<pre class="code-wrapper[^>]*>/, "")
+          sub(/^[[:space:]]*<code>/, "")
+          if ($0 == "") next
+        }
+        inblk {
+          if (atstart) {
+            atstart = 0
+            if ($0 ~ /^[[:space:]]*<code>[[:space:]]*$/) next
+          }
+          if ($0 ~ /^[[:space:]]*<\/code>[[:space:]]*$/) next
+          if (index($0, "</pre>")) {
+            sub(/[[:space:]]*(<\/code>)?[[:space:]]*<\/pre>.*/, "")
+            if ($0 != "") printf "%s\n", $0
+            printf "\002"
+            inblk = 0
+            next
+          }
+          printf "%s\n", $0
+        }
+        # An unclosed block is reported rather than dropped. Emitting the
+        # delimiter hands what there is to the compiler as well, so the page is
+        # never quietly skipped: this is the exact failure that hid 28 sketches.
+        END {
+          if (inblk) {
+            printf "\002"
+            print FILENAME ": code block opened at line " openline \
+                  " is never closed (no </pre>)" > "/dev/stderr"
+            exit 3
+          }
+        }
+      ' "$f" 2>"$CTMP/awk.err" \
+        | sed -e 's/&lt;/</g' -e 's/&gt;/>/g' -e 's/&quot;/"/g' \
+              -e "s/&#39;/'/g" -e 's/&amp;/\&/g' > "$CTMP/blocks"; then
+        while IFS= read -r line; do
+          [ -n "$line" ] && extract_errs+="  $line"$'\n'
+        done < "$CTMP/awk.err"
+      fi
+
       i=0
       while IFS= read -r -d $'\002' block; do
         i=$((i + 1))
         case "$block" in
           *"void setup()"*"void loop()"*) ;;
           *) continue ;;
+        esac
+
+        # A block holding ??? is a fill-in-the-blank skeleton for the student,
+        # not a program: the Opgave on TemperatuursensorTMP36 is the canonical
+        # one. It cannot compile by construction, and filling the blanks in
+        # would hand over the answer the exercise is asking for. So it is
+        # skipped per BLOCK rather than per page, because the same page's
+        # Oplossing is a real sketch and is exactly what you want compiled.
+        # Listed below like every other skip, never silently dropped.
+        case "$block" in
+          *'???'*)
+            compile_notes+="  $f (code block $i): fill-in skeleton (???), nothing to compile"$'\n'
+            n_skipped=$((n_skipped + 1))
+            continue ;;
         esac
 
         name="s$(printf '%s' "$f" | tr -c 'A-Za-z0-9' '_')_$i"
@@ -887,25 +960,12 @@ if [ "$COMPILE" -eq 1 ]; then
             [ -n "$line" ] && err "$f (code block $i): ${line##*error: }"
           done <<< "$(printf '%s' "$out" | grep "error:" | head -3)"
         fi
-      done < <(awk '
-        /<pre class="code-wrapper/ {
-          inblk = 1
-          sub(/.*<code>/, "")
-        }
-        inblk {
-          if (index($0, "</code></pre>")) {
-            sub(/<\/code><\/pre>.*/, "")
-            printf "%s\002", $0 "\n"
-            inblk = 0
-            next
-          }
-          printf "%s\n", $0
-        }
-      ' "$f" | sed -e 's/&lt;/</g' -e 's/&gt;/>/g' -e 's/&quot;/"/g' -e "s/&#39;/'/g" -e 's/&amp;/\&/g')
+      done < "$CTMP/blocks"
     done
 
     take; v="$TAKEN"
     [ -n "$v" ] && compile_errs+="Sketch does not compile cleanly:"$'\n'"$v"
+    [ -n "$extract_errs" ] && compile_errs+="Code block is never closed, so the compiler only saw part of it:"$'\n'"$extract_errs"
     compile_notes+="  $n_ok sketches compiled clean"
     [ "$n_skipped" -gt 0 ] && compile_notes+=", $n_skipped could not be verified"
     compile_notes+=$'\n'

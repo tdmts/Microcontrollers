@@ -66,8 +66,7 @@
                 met <code>map()</code> voor je ze naar de led stuurt. De led moet op een
                 PWM-pin hangen (aangeduid met een <code>~</code>, bijvoorbeeld pin 3).
             </p>
-            <pre class="code-wrapper language-cpp linenumbers show-language">
-const int potPin = A0; // potentiometer op analoge ingang A0
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int potPin = A0; // potentiometer op analoge ingang A0
 const int ledPin = 3;  // led op een PWM-pin (~)
 
 void setup()
@@ -80,8 +79,7 @@ void loop()
   int potWaarde = analogRead(potPin);               // 0..1023
   int helderheid = map(potWaarde, 0, 1023, 0, 255); // herschaal naar 0..255
   analogWrite(ledPin, helderheid);
-}
-            </pre>
+}</code></pre>
         </div>
     </div>
 </div>

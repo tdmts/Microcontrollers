@@ -85,8 +85,7 @@
     <h2 id="opgave">Opgave</h2>
     <p>Maak een programma waarbij je een TMP36 gebruikt en de temperatuur toont in de seriële monitor. Je kan je baseren op onderstaande code:</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language">
-void setup()
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
 {
   Serial.begin(9600);
 }
@@ -99,8 +98,7 @@ void loop()
   double temperatuur = ???;
 
   Serial.println(temperatuur);
-}
-    </pre>
+}</code></pre>
 
     <hr>
 
@@ -137,8 +135,7 @@ void loop()
                 uitgang, en per graad komt er 0,01 V bij. De temperatuur is dus
                 0,75 V aftrekken, delen door 0,01 en er 25 bij optellen.
             </p>
-            <pre class="code-wrapper language-cpp linenumbers show-language">
-const int sensorPin = A0;
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int sensorPin = A0;
 
 void setup()
 {
@@ -157,8 +154,7 @@ void loop()
   Serial.println(" graden C");
 
   delay(500);
-}
-            </pre>
+}</code></pre>
         </div>
     </div>
 </div>
