@@ -46,7 +46,7 @@ void loop()
 
     <h2 id="wat-is-het-verschil">Wat is het verschil?</h2>
     <h3>INPUT</h3>
-    <p><strong>Standaard staat elke pin in INPUT-mode.</strong> Dit is een hoogimpedante instelling waarbij de ingangsweerstand van de pin zo'n 100 MOhm is. Dit betekent dat er zeer weinig stroom nodig is om de pin van een lage naar een hoge toestand te brengen. Daarmee is deze pin dan ook gevoelig voor storing uit de nabijheid wanneer er niets op aangesloten is. Zelfs een naburige pin die schakelt, kan er dan voor zorgen dat de toestand van de pin verandert.</p>
+    <p><strong>Standaard staat elke pin in INPUT-mode.</strong> Dit is een <a href="Impedantie.html#hoog-en-laagimpedant">hoogimpedante</a> instelling waarbij de ingangsweerstand van de pin zo'n 100 MOhm is. Dit betekent dat er zeer weinig stroom nodig is om de pin van een lage naar een hoge toestand te brengen. Daarmee is deze pin dan ook gevoelig voor storing uit de nabijheid wanneer er niets op aangesloten is. Zelfs een naburige pin die schakelt, kan er dan voor zorgen dat de toestand van de pin verandert.</p>
     <p>Dit kan opgelost worden door extern een pullup- of pulldownweerstand aan te schakelen. Meestal gebruikt men daarvoor een weerstand van 10 KOhm.</p>
 
     <h3>INPUT_PULLUP</h3>
@@ -58,7 +58,7 @@ void loop()
     </div>
 
     <h3>OUTPUT</h3>
-    <p>In deze mode staat de pin in laagimpedante toestand en levert hij stroom aan de buitenwereld. Het <strong>absolute maximum</strong> is 40 mA, maar in de praktijk hou je <strong>20 mA per pin</strong> aan als veilige waarde. Dat is genoeg om een led aan te sturen, maar ruim onvoldoende om een motor aan te sturen. Daarvoor is dan een interfaceschakeling nodig (zie verder). De volledige uitleg over die grenzen staat op <a href="SourcenSinken.html">Sourcen en sinken</a>.</p>
+    <p>In deze mode staat de pin in <a href="Impedantie.html#hoog-en-laagimpedant">laagimpedante</a> toestand en levert hij stroom aan de buitenwereld. Het <strong>absolute maximum</strong> is 40 mA, maar in de praktijk hou je <strong>20 mA per pin</strong> aan als veilige waarde. Dat is genoeg om een led aan te sturen, maar ruim onvoldoende om een motor aan te sturen. Daarvoor is dan een interfaceschakeling nodig (zie verder). De volledige uitleg over die grenzen staat op <a href="SourcenSinken.html">Sourcen en sinken</a>.</p>
     <p>Hoewel een led rechtstreeks op de pin kan worden aangesloten, is het toch altijd verstandig om een outputpin te voorzien van een externe serieweerstand. Een outputpin die bijvoorbeeld kortgesloten wordt, kan beschadigd worden waardoor hij niet meer werkt. Dit heeft meestal geen gevolgen voor de rest van de controller, maar men heeft dan wel een "dode pin" waar men niets meer mee kan aanvangen. Voor een led op 5 V kom je uit bij <strong>220 Ohm</strong>, en voor andere toepassingen is 1 KOhm een gangbare waarde. Hoe je die 220 Ohm zelf berekent, lees je op <a href="WetVanOhm.html">De wet van Ohm</a>.</p>
     <div class="info-box">
         <div class="info-title remark">Stroombeperking</div>

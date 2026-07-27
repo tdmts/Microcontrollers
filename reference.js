@@ -34,7 +34,8 @@ window.LAB_REFERENCE = {
                     { id: 'digitalreadwrite', name: 'digitalRead / digitalWrite', href: 'digitalReadDigitalWrite.html', blurb: 'Met digitalRead() en digitalWrite() bedien je de digitale ingangen en uitgangen van de Arduino.' },
                     { id: 'pullup-pulldown', name: 'Pull up en pull down weerstanden', href: 'PullUpPullDown.html', blurb: 'Dieper ingaan op het uitlezen van knoppen via pull-up- en pull-downweerstanden.' },
                     { id: 'sourcensinken', name: 'Sourcen en sinken', href: 'SourcenSinken.html', blurb: 'Het verschil tussen een pin die stroom sourcet (levert) of sinkt (opneemt).' },
-                    { id: 'wetvanohm', name: 'De wet van Ohm', href: 'WetVanOhm.html', blurb: 'Het verband tussen spanning, stroom en weerstand, en hoe je daarmee de voorschakelweerstand van een led berekent.' }
+                    { id: 'wetvanohm', name: 'De wet van Ohm', href: 'WetVanOhm.html', blurb: 'Het verband tussen spanning, stroom en weerstand, en hoe je daarmee de voorschakelweerstand van een led berekent.' },
+                    { id: 'impedantie', name: 'Weerstand en impedantie', href: 'Impedantie.html', blurb: 'Wat impedantie is, waarom ze in dit vak samenvalt met weerstand, en wat een hoog- of laagimpedante pin doet met de stroom.' }
                 ]
             },
             {
