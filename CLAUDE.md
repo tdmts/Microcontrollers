@@ -108,9 +108,14 @@ hook timeout, versus ~2s now.
 - `LaboN/Exercises/` — one HTML page per exercise, plus that lab's `dashboard.html` (progress/XP view).
 - `LaboN/Reference/` — theory pages, plus `reference.html` (the non-linear reference hub).
 - `TestN/` — evaluation-moment material, a different animal from a lab: a flat folder holding
-  `overview.html` (the hub, and the only page pasted into Orion for that test), `PraktischeInfo.html`
-  (timing, allowed resources), `Voorbeeldtest.html` (a practical practice test) and `Quiz.html`
-  (theory questions). **No manifest, no XP, no checklist sync** — the hub's three links are
+  `overview.html` (the hub, and the only page pasted into Orion for that test),
+  `AlgemeneInformatie.html` (timing, allowed resources, what to bring),
+  `PraktischeVoorbeeldtest.html` (a practical practice test) and `TheoretischeVoorbeeldtest.html`
+  (theory questions). Apart from the hub, a page's filename is the PascalCase form of its own
+  `<h1>`/`<title>`, and the two practice tests are named as a matched pair off the *praktische
+  test* / *theoretische test* wording that `AlgemeneInformatie.html` establishes — keep that
+  vocabulary rather than introducing *praktijkgedeelte* or *quiz* alongside it.
+  **No manifest, no XP, no checklist sync** — the hub's three links are
   hardcoded `<a href>`s. That is deliberate: `check-content.sh` scopes its manifest rules to
   `labo[0-9]+` keys, so a `testN` block in `reference.js` would render fine but be validated by
   nothing, whereas plain links in the HTML are covered by rule 1 (resolve, tracked, exact case).
