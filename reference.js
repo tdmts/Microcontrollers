@@ -12,6 +12,7 @@ window.LAB_REFERENCE = {
             {
                 name: 'Basisbegrippen',
                 topics: [
+                    { id: 'watiseenmicrocontroller', name: 'Wat is een microcontroller?', href: 'WatIsEenMicrocontroller.html', blurb: 'Een computer op één chip: waarin hij verschilt van de pc waarop je programmeert, en van een PLC of Siemens LOGO.' },
                     { id: 'hardensoftware', name: 'Hard- en software', href: 'HardEnSoftware.html', blurb: 'Overzicht van de hardware (Arduino-kit) en software (Arduino IDE, TinkerCAD) die je nodig hebt.' },
                     { id: 'setuploop', name: 'Setup en loop', href: 'SetupLoop.html', blurb: 'Een Arduino-programma bestaat altijd uit twee functies: setup en loop.' },
                     { id: 'programmauploaden', name: 'Een programma uploaden', href: 'ProgrammaUploaden.html', blurb: 'Stap voor stap een sketch verifiëren en uploaden naar de Arduino.' }
@@ -41,7 +42,7 @@ window.LAB_REFERENCE = {
             {
                 name: 'Debuggen & robuustheid',
                 topics: [
-                    { id: 'debouncen', name: 'Debouncen', href: 'Debouncen.html', blurb: 'Hoe je het bouncen van een mechanische schakelaar softwarematig opvangt.' },
+                    { id: 'debouncen', name: 'Debouncen', href: 'Debouncen.html', blurb: 'Hoe je het denderen van een mechanische schakelaar softwarematig opvangt.' },
                     { id: 'debuggen', name: 'Debuggen', href: 'Debuggen.html', blurb: 'Seriële communicatie gebruiken om te zien wat er in je programma gebeurt, want er is geen scherm of debugger.' }
                 ]
             }

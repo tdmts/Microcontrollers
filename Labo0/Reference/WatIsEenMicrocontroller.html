@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wat is een microcontroller?</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Wat is een microcontroller?</h1>
+    <p class="lead">In het eerste jaar van het modeltraject schreef je C#-programma's voor een pc in Technisch programmeren, en programmeerde je een Siemens LOGO in Logische sturingen. Dit semester komen daar PLC's en microcontrollers bij. Maar waar past een microcontroller nu precies in die rij? Op deze pagina zie je wat het is, en waarin het verschilt van je laptop en van een PLC.</p>
+
+    <h2 id="een-computer-op-een-chip">Een computer op één chip</h2>
+
+    <p>Een <strong>microcontroller</strong> is een volledige computer in één chip: een processor, geheugen en aansluitingen naar de buitenwereld zitten samen in één behuizing. Er is, in tegenstelling tot een pc, geen moederbord met losse onderdelen, geen harde schijf en geen grafische kaart.</p>
+
+    <p>Die chip alleen kan je niet gebruiken. Ze heeft een voeding nodig, een manier om een programma binnen te krijgen en aansluitingen waar je draadjes in kan steken. Dat is precies wat Arduino eromheen doet.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">De Arduino is niet de microcontroller</div>
+        <p>Op een Arduino Uno is de microcontroller het langwerpige zwarte blokje in het midden, een <strong>ATmega328P</strong>. De rest van de printplaat is er alleen om die chip bruikbaar te maken.</p>
+    </div>
+
+    <!-- TODO: foto van een Arduino Uno van bovenaf, waarop de ATmega328P duidelijk herkenbaar is tussen de rest van het bordje -->
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-arduino-uno-met-atmega328p.png" class="img-fluid" alt="TODO: foto van een Arduino Uno met de ATmega328P-chip in het midden">
+            <figcaption>Een Arduino Uno. Het brede zwarte blokje in het midden is de microcontroller zelf.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="de-drie-naast-elkaar">De drie toestellen naast elkaar</h2>
+
+    <p>Alle drie voeren ze een programma uit dat jij geschreven hebt, en toch is het binnenin drie keer een ander toestel. Deze tabel is het overzicht; de rest van de pagina werkt uit wat elke rij voor jou betekent.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Dezelfde vraag, drie soorten toestellen</caption>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Laptop</th>
+                    <th scope="col">Arduino Uno</th>
+                    <th scope="col">Siemens LOGO of PLC</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Wat er draait</th>
+                    <td>Windows, en daarbovenop tientallen programma's tegelijk</td>
+                    <td>Geen besturingssysteem, alleen jouw programma</td>
+                    <td>Alleen jouw programma, op vaste firmware van de fabrikant</td>
+                </tr>
+                <tr>
+                    <th scope="row">Start en stop</th>
+                    <td>Jij start het programma, en het eindigt</td>
+                    <td>Start bij het aanzetten en stopt nooit</td>
+                    <td>Draait cyclisch zolang het toestel in RUN staat</td>
+                </tr>
+                <tr>
+                    <th scope="row">Waarin je programmeert</th>
+                    <td>C# in Visual Studio</td>
+                    <td>C++ in de Arduino IDE</td>
+                    <td>Functieblokken of ladderlogica</td>
+                </tr>
+                <tr>
+                    <th scope="row">Fouten zoeken</th>
+                    <td>Breakpoints en een console</td>
+                    <td>Alleen tekst via de seriële monitor</td>
+                    <td>Live meekijken in de programmeersoftware</td>
+                </tr>
+                <tr>
+                    <th scope="row">Scherm en bediening</th>
+                    <td>Scherm, toetsenbord en muis</td>
+                    <td>Niets</td>
+                    <td>Een klein schermpje met knoppen, of een apart bedieningspaneel</td>
+                </tr>
+                <tr>
+                    <th scope="row">Geheugen</th>
+                    <td>Enkele GB werkgeheugen, honderden GB opslag</td>
+                    <td>2 KB werkgeheugen, 32 KB voor je programma</td>
+                    <td>Je telt blokken in plaats van bytes</td>
+                </tr>
+                <tr>
+                    <th scope="row">Snelheid</th>
+                    <td>Enkele GHz, meerdere kernen</td>
+                    <td>16 MHz, één kern</td>
+                    <td>Een cyclustijd van enkele milliseconden, bewaakt door het toestel</td>
+                </tr>
+                <tr>
+                    <th scope="row">Contact met de buitenwereld</th>
+                    <td>Via het besturingssysteem en drivers</td>
+                    <td>Rechtstreeks via de pinnen, met echte stroom en spanning</td>
+                    <td>Via klemmen: beveiligde ingangen en uitgangen die vermogen schakelen</td>
+                </tr>
+                <tr>
+                    <th scope="row">Waar het thuishoort</th>
+                    <td>Op een bureau</td>
+                    <td>Ingebouwd in het product zelf</td>
+                    <td>In een schakelkast, op een DIN-rail</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 id="verschil-met-een-computer">Wat dat betekent tegenover je laptop</h2>
+
+    <p><strong>Een programma dat je geschreven hebt voor een microcontroller eindigt niet.</strong> Als je op je laptop in C# programmeert reageert een <code>EventHandler</code> op het klikken van een knop: jouw code doet iets, geeft de controle terug, en het programma wacht tot er weer iets gebeurt. Het programma in een microcontroller blijft draaien zolang er spanning op staat.</p>
+
+    <p><strong>Je kan niet zo makkelijk debuggen.</strong> Werkt je c# programma niet, dan zet je een breakpoint. Bij een microcontroller is de seriële verbinding vaak de enige manier om te <a href="Debuggen.html">debuggen</a>.</p>
+
+    <p><strong>Er is mogelijkheid tot I/O.</strong> Tussen jouw code en de hardware zit geen besturingssysteem: <code>digitalWrite()</code> zet letterlijk 5 V op een aansluiting van de chip. Daarom hoort er elektronica bij dit vak, en ben jij verantwoordelijk voor wat je aan iedere pin van de chip hangt.</p>
+
+    <p><strong>Elke byte telt.</strong> Die 2 kB werkgeheugen en 32 kB programmageheugen zijn geen schrijffouten, dus je kiest bij elke variabele bewust een gegevenstype. Zie <a href="ConstantenVariabelenGegevenstypes.html">Constanten, variabelen en gegevenstypes</a>.</p>
+
+    <h2 id="verschil-met-een-plc">Wat dat betekent tegenover een LOGO of PLC</h2>
+
+    <p>Een <strong>PLC</strong> is een industriële stuurkast die machines aanstuurt, en dit semester ga je er in het vak PLC zelf mee aan de slag. De Siemens LOGO is er het kleine broertje van.</p>
+
+    <p><strong>De cyclus.</strong> Ingangen lezen, het programma afwerken, uitgangen schrijven, opnieuw beginnen: dat is exact de vorm van <code>loop()</code> die je zal terugvinden in je Arduino programma. Alleen doet een PLC dat lezen en schrijven zelf en bewaakt hij zijn cyclustijd. Hier schrijf jij het met <code>digitalRead()</code> en <code>digitalWrite()</code>, en bewaakt niemand iets.</p>
+
+    <p><strong>De klemmen.</strong> Op een LOGO schroef je een knop op een ingang en een lamp op een uitgang, en dat werkt: die aansluitingen zijn beveiligd en de relaisuitgangen mogen 230 V schakelen. Een pin is dat allemaal niet. Alles wat de LOGO voor jou regelde, staat nu op jouw breadboard.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Waarom dan een microcontroller?</div>
+        <p>Omdat je in echte code programmeert in plaats van in functieblokken, omdat de chip een paar euro kost en in het product zelf past (in je afstandsbediening, je wasmachine en je fietscomputer zit er precies zo eentje), en omdat jij bepaalt wat er aan de pinnen hangt. Een PLC blijft de betere keuze in een industriële omgeving, waar vermogen geschakeld wordt.</p>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+</body>
+</html>

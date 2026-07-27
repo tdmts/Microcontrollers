@@ -209,3 +209,43 @@ precies dat.
 `Iteraties.html` staan nu op 9600, gelijk aan de rest van de cursus.
 
 **Status:** opgelost, 2026-07-26
+
+---
+
+## L0-09 &middot; BEGRIP &middot; vertraagt &middot; opgelost
+
+Niet uit een leesronde, maar uit een vraag van de lesgever op 2026-07-27. Hier
+opgeschreven zodat een volgende ronde er niet opnieuw over valt.
+
+**Pagina's:** heel labo 0, en [Debuggen.html:15](../Labo0/Reference/Debuggen.html#L15)
+
+**Wat de student raakt:** de cursus definieerde nergens wat een microcontroller is. Het
+woord kwam in de volledige inhoud &eacute;&eacute;n keer voor, op `Debuggen.html`, waar
+het als bekend verondersteld werd ("Er is geen scherm of debugger zoals op een computer").
+De enige ori&euml;ntatiepagina van labo 0 was
+[HardEnSoftware.html](../Labo0/Reference/HardEnSoftware.html), en dat is een aankoop- en
+installatielijst, geen begrip. Een vak dat *Microcontrollers* heet begon dus zonder te
+zeggen wat dat ding is, terwijl een reeks regels die de student als losse feiten binnenkreeg
+(de 20 mA per pin, de voorschakelweerstand, waarom `delay()` alles blokkeert, waarom de
+seri&euml;le monitor je enige venster is) allemaal rechtstreeks uit dat ene begrip volgt.
+
+**Besluit (2026-07-27):** aanvaard, nieuwe referentiepagina
+[Wat is een microcontroller?](../Labo0/Reference/WatIsEenMicrocontroller.html) als eerste
+topic onder 'Basisbegrippen', v&oacute;&oacute;r `HardEnSoftware`, met een verwijzing
+bovenaan [Blink.html](../Labo0/Exercises/Blink.html) zodat ze niet onbereikbaar is (dezelfde
+val als L0-05). Elk verschil met een pc krijgt een gevolg dat de student later tegenkomt en
+linkt naar de pagina waar dat uitgewerkt staat; er staat bewust g&eacute;&eacute;n
+specificatietabel op die de student nergens aan kan ophangen.
+
+De vergelijking met een PLC staat er expliciet in, omdat deze studenten het jaar voordien al
+Siemens LOGO's programmeerden en er verderop in de opleiding nog PLC's aan bod komen. De
+cyclische verwerking van een LOGO is de vorm van `loop()`, en de afgeschermde klemmen van
+een LOGO zijn precies wat een kale pin niet is. Zonder die voorkennis was dat vergelijken
+van twee onbekenden geweest en had het niet op de pagina gehoord.
+
+**Uitdrukkelijk verworpen (2026-07-27):** een bijhorende theorievraag in
+[TheoretischeVoorbeeldtest.html](../Test1/TheoretischeVoorbeeldtest.html). Voorgesteld omdat
+een conceptuele pagina zonder testaanwezigheid als vrijblijvend gelezen kan worden; de
+lesgever wil de voorbeeldtest concreet houden. Niet opnieuw voorstellen.
+
+**Status:** opgelost, 2026-07-27
