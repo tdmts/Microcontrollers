@@ -39,8 +39,9 @@ bash scripts/check-content.sh --fix
 
 Dit herstelt zelf wat maar één juist antwoord heeft: em-dashes, accolades die op de verkeerde regel
 staan, een ontbrekende `referrerpolicy`, een `initChecklistSync` die naar het verkeerde labo wijst,
-een `href` met verkeerde hoofdletters, en afbeeldingen die je vergat toe te voegen aan git. Wat het
-niet kan verzinnen (een ontbrekende `blurb` bijvoorbeeld) blijft gewoon in de lijst staan.
+een `href` met verkeerde hoofdletters, een referentiepagina die `reference.js` niet inlaadt, en
+afbeeldingen die je vergat toe te voegen aan git. Wat het niet kan verzinnen (een ontbrekende
+`blurb` bijvoorbeeld) blijft gewoon in de lijst staan.
 
 Het script herschrijft je bestanden, dus het vraagt een propere werkmap: commit of stash eerst, en
 bekijk daarna met `git diff` wat het precies veranderd heeft voor je commit.
@@ -117,6 +118,39 @@ te maken dat je nog moet opkuisen.
 Zet het bestand in `LaboN/Reference/` en voeg een entry toe in [reference.js](reference.js), in de
 juiste categorie. `href` is hier gewoon de bestandsnaam. `name` en `blurb` zijn verplicht.
 Referentiepagina's houden geen voortgang bij, ze zijn puur navigatie.
+
+Net voor `</body>` horen deze twee scripts:
+
+```html
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+```
+
+`back-link.js` heeft `reference.js` nodig om te weten welk onderwerp na dit onderwerp komt (zie
+hieronder). Vergeet je die eerste regel, dan ziet de pagina er perfect uit en verdwijnt enkel de
+"Volgende"-link, zonder foutmelding. Het script controleert dit daarom, en `--fix` zet de regel er
+zelf bij.
+
+## Terug- en volgende-links
+
+`back-link.js` zet zelf een navigatierij boven en onder elke pagina: links "Terug naar ...", rechts
+"Volgende: ...". Je hoeft er niets voor op te roepen, het script leest alles uit het pad en uit het
+manifest van dat labo.
+
+De volgorde komt uit de manifests, niet uit de pagina:
+
+- **oefeningen**: het `order`-nummer in `exercises.js`, dezelfde volgorde als de kaarten op het
+  dashboard. Verander je een `order`, dan verschuift de "Volgende"-link mee.
+- **referentiepagina's**: de volgorde waarin ze in `reference.js` staan, categorie na categorie.
+  Wil je een andere leesvolgorde, verplaats dan de entries.
+
+Op het laatste item wijst de link terug naar het dashboard of naar het overzicht, zodat een student
+nooit op een dood spoor eindigt. Wijst de terug-link links toevallig al naar diezelfde pagina, dan
+valt de "Volgende" gewoon weg: twee keer dezelfde link naast elkaar leest als een fout. Datasheets
+(PDF's) staan niet in de rij: die openen in een nieuw tabblad en dragen zelf geen navigatie.
+
+Geen "Volgende"-link krijgen: `dashboard.html`, `reference.html` (dat zijn de overzichten zelf) en
+alles onder `TestN/` (daar bepaalt `overview.html` de volgorde met gewone links).
 
 ## Een volledig nieuw labo toevoegen
 

@@ -10,7 +10,7 @@
 # Sections:
 #   1. Local links and assets resolve (and are tracked by git, exact case).
 #   2. Manifest <-> filesystem consistency (exercises.js, reference.js).
-#   3. Page wiring (Orion CDN, checklist/solution/dashboard/hub script sets).
+#   3. Page wiring (Orion CDN, nav/checklist/solution/dashboard/hub script sets).
 #   4. Asset hygiene (no Brightspace hotlinks, no remote images, no remote
 #      documents, YouTube embeds carry referrerpolicy).
 #   5. Code style (Allman braces, no em-dashes).
@@ -249,6 +249,20 @@ do_fix() {
     rewrite "$f" "init call -> $want" \
       sed -i "s/LAB_EXERCISES\.$have/LAB_EXERCISES.$want/g; s/initReferenceHub('$have')/initReferenceHub('$want')/g; s/initReferenceHub(\"$have\")/initReferenceHub(\"$want\")/g"
   done < <(grep -oHE "init(ChecklistSync|Dashboard)\(LAB_EXERCISES\.labo[0-9]+\)|initReferenceHub\([\"']labo[0-9]+[\"']\)" "${checked[@]}" 2>/dev/null)
+
+  # A reference topic that never loads reference.js. back-link.js reads the
+  # topic order out of it to build the forward link, and the tag always goes in
+  # exactly one place, right above back-link.js, with the same relative prefix.
+  for f in "${checked[@]}"; do
+    case "$f" in Labo*/Reference/*) ;; *) continue ;; esac
+    [ "${f##*/}" = "reference.html" ] && continue
+    grep -qE 'src="[^"]*reference\.js"' "$f" && continue
+    # Slurped, so s/// without /g hits the first back-link.js tag only. The line
+    # ending is captured and re-emitted rather than assumed, so a CRLF working
+    # copy does not end up with one stray LF line.
+    rewrite "$f" "reference.js include" \
+      perl -0777 -pi -e 's{([ \t]*)(<script src="([^"]*)back-link\.js"></script>)(\r?\n)}{$1<script src="$3reference.js"></script>$4$1$2$4}'
+  done
 
   # A manifest href whose casing does not match the file on disk.
   for mf in exercises.js reference.js; do
@@ -496,6 +510,7 @@ take; manifest_errs="$TAKEN"
 
 declare -A HAS_CSS=() HAS_JS=() HAS_CHECKLIST=() HAS_BACKLINK=() HAS_EXERCISES=()
 declare -A HAS_SYNC=() HAS_SOLUTION=() HAS_REVEAL=() HAS_DASHJS=() HAS_HUBJS=()
+declare -A HAS_REFJS=()
 mark HAS_CSS       'OrionContent/orion\.css'
 mark HAS_JS        'OrionContent/orion\.js'
 mark HAS_CHECKLIST 'class="checklist"'
@@ -506,6 +521,8 @@ mark HAS_SOLUTION  'solution-container'
 mark HAS_REVEAL    'solution-reveal\.js'
 mark HAS_DASHJS    'src="[^"]*dashboard\.js"'
 mark HAS_HUBJS     'reference-dashboard\.js'
+# Anchored on src="..." so reference-dashboard.js does not count as the manifest.
+mark HAS_REFJS     'src="[^"]*reference\.js"'
 
 # Which lab each init call names, so a copy-pasted page pointing at the wrong
 # lab manifest is caught (it would silently track progress under the wrong key).
@@ -542,6 +559,25 @@ for f in "${checked[@]}"; do
     esac
   fi
 
+  # back-link.js renders both the way back and the way forward, and it reads the
+  # order out of the lab's manifest. Drop that manifest and the page still looks
+  # perfect, only the "volgende" link quietly disappears: the same silent failure
+  # as a mismatched manifest basename, so it gets the same treatment.
+  case "$f" in
+    Labo*/Exercises/*)
+      if [ "$base" != "dashboard.html" ]; then
+        [ -n "${HAS_BACKLINK[$f]:-}" ]  || err "$f is an exercise but is missing back-link.js"
+        [ -n "${HAS_EXERCISES[$f]:-}" ] || err "$f is an exercise but is missing exercises.js (back-link.js needs it for the forward link, which otherwise vanishes silently)"
+      fi
+      ;;
+    Labo*/Reference/*)
+      if [ "$base" != "reference.html" ]; then
+        [ -n "${HAS_BACKLINK[$f]:-}" ] || err "$f is a reference topic but is missing back-link.js"
+        [ -n "${HAS_REFJS[$f]:-}" ]    || err "$f is a reference topic but is missing reference.js (back-link.js needs it for the forward link, which otherwise vanishes silently)"
+      fi
+      ;;
+  esac
+
   if [ -n "${HAS_CHECKLIST[$f]:-}" ]; then
     [ -n "${HAS_BACKLINK[$f]:-}" ]  || err "$f has a checklist but is missing back-link.js"
     [ -n "${HAS_EXERCISES[$f]:-}" ] || err "$f has a checklist but is missing exercises.js"
@@ -570,6 +606,7 @@ for f in "${checked[@]}"; do
 
   if [ "$base" = "reference.html" ] && [ -n "$lab" ]; then
     [ -n "${HAS_HUBJS[$f]:-}" ] || err "$f is missing reference-dashboard.js"
+    [ -n "${HAS_REFJS[$f]:-}" ] || err "$f is missing reference.js (the hub renders empty without it)"
     case "${INIT_HUB[$f]:-}" in
       "$lab") ;;
       '') err "$f never calls initReferenceHub('$lab')" ;;

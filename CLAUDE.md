@@ -40,13 +40,16 @@ in order:
    every page under `LaboN/Exercises/` or `LaboN/Reference/` is listed in the matching manifest (an
    unlisted page earns no XP and is unreachable). This is the rule that otherwise fails *silently*:
    a mismatched basename makes checklist sync no-op with no error anywhere.
-3. **Page wiring** — every page links the hosted `orion.css`/`orion.js`; a page with a `.checklist`
-   carries `back-link.js`, `exercises.js`, `checklist-sync.js` and calls `initChecklistSync` for
-   *its own* lab; a `.solution-container` carries `solution-reveal.js`; `dashboard.html` and
-   `reference.html` call `initDashboard` / `initReferenceHub` for their own lab; and any page in a
-   `LaboN/` folder whose `laboN` block does not exist yet in the manifest is flagged (adding a lab
-   folder before its manifest block renders an empty dashboard, silently). Init calls are matched
-   with either quote style.
+3. **Page wiring** — every page links the hosted `orion.css`/`orion.js`; every exercise page carries
+   `back-link.js` + `exercises.js` and every reference topic carries `back-link.js` + `reference.js`,
+   because `back-link.js` builds its "volgende"-link out of that manifest and without it the page
+   renders perfectly with the link silently absent; a page with a `.checklist` additionally carries
+   `checklist-sync.js` and calls `initChecklistSync` for *its own* lab; a `.solution-container`
+   carries `solution-reveal.js`; `dashboard.html` and `reference.html` call `initDashboard` /
+   `initReferenceHub` for their own lab (and the hub links `reference.js`, or it renders empty); and
+   any page in a `LaboN/` folder whose `laboN` block does not exist yet in the manifest is flagged
+   (adding a lab folder before its manifest block renders an empty dashboard, silently). Init calls
+   are matched with either quote style.
 4. **Asset hygiene** — no Brightspace `/content/enforced/` hotlinks, no remote `<img src="http...">`
    (self-host in `img/`), no remote document links (`href` ending in `.pdf`/`.zip`/`.docx`/`.pptx`/
    `.xlsx` — self-host in `datasheets/`, since a vendor PDF URL dies mid-semester exactly like a
@@ -86,7 +89,9 @@ Reach for this only when the page type genuinely differs, not to quiet a page yo
 
 `bash scripts/check-content.sh --fix` repairs the mechanical violations first and then reports the
 rest: em-dashes, K&R braces that end a line, a missing `referrerpolicy`, an init call naming the
-wrong lab, a manifest `href` with the wrong casing, and assets that exist but were never staged.
+wrong lab, a manifest `href` with the wrong casing, a reference topic that never loads
+`reference.js` (the tag has exactly one place to go, right above `back-link.js`, with the same
+relative prefix), and assets that exist but were never staged.
 It deliberately does *not* touch anything needing words (a missing `blurb`) or a decision (which lab
 an orphan page belongs to, what to name a downloaded image). It wants a clean tree so `git diff`
 shows exactly what it changed (`--force` overrides), and it refuses to combine with `--hook`, since
@@ -171,12 +176,25 @@ Engines (all IIFEs exposing one `window.*` init function):
   topic pointing at a page does not. The hub is iframed into Orion, so a PDF in the same tab would
   render inside that narrow frame. The card itself looks identical either way, and the decision is
   made from the `href`, so a new datasheet needs nothing beyond its `reference.js` entry.
-- [back-link.js](back-link.js) — self-running, no init. Injects a "← Terug naar ..." link above the
-  `<h1>` and at the bottom. Targets the previous page (trusted same-origin `.html` referrer) when
-  known, else the lab dashboard, else the reference hub for pages under `Reference/`. No-ops on
-  `dashboard.html`. A page under `TestN/` is the exception: it always targets that folder's
-  `overview.html` and ignores the referrer, so the exit is identical wherever the student came from,
-  and it no-ops on `overview.html` itself the same way it does on `dashboard.html`.
+- [back-link.js](back-link.js) — self-running, no init. Injects the nav row above the `<h1>` and at
+  the bottom: "← Terug naar ..." on the left, "Volgende: ..." on the right. **Back** targets the
+  previous page (trusted same-origin `.html` referrer) when known, else the lab dashboard, else the
+  reference hub for pages under `Reference/`. No-ops on `dashboard.html`. A page under `TestN/` is
+  the exception: it always targets that folder's `overview.html` and ignores the referrer, so the
+  exit is identical wherever the student came from, and it no-ops on `overview.html` itself the same
+  way it does on `dashboard.html`.
+  **Forward** is the next entry in the page's own lab manifest: `exercises.js` sorted by `order`
+  (the same comparator as `dashboard.js`, so "volgende" and the dashboard order cannot drift apart),
+  or `reference.js` flattened in array order, categories then topics. On the last entry it points at
+  the dashboard / the hub ("Terug naar dashboard →") rather than leaving a dead end, and is dropped
+  altogether when the back link already points at that same page (no referrer), since two mirrored
+  links to one URL read as a bug. Document
+  topics (the `.pdf` datasheets) are skipped: a PDF carries no nav of its own and the hub opens
+  documents in a new tab on purpose. No forward link on `dashboard.html`, `reference.html` or under
+  `TestN/`. Everything runs on `DOMContentLoaded`, so the manifest `<script>` may sit on either side
+  of this one. **This is why an exercise page must load `exercises.js` and a reference topic must
+  load `reference.js`** — without it the page renders perfectly and only the forward link vanishes,
+  so rule 3 of the content check asserts the include.
 - [solution-reveal.js](solution-reveal.js) — one-way "Toon oplossing" reveal for `.solution-container`.
 
 ## localStorage progress model (no backend)
@@ -197,6 +215,9 @@ An exercise page whose lab has a `laboN` key in `exercises.js` gets a **live** c
 `back-link.js`, `exercises.js`, `checklist-sync.js`, `solution-reveal.js`, then
 `initChecklistSync(LAB_EXERCISES.laboN)`. See [Labo1/Exercises/Looplicht.html](Labo1/Exercises/Looplicht.html)
 for the canonical example. Every new exercise must also get a matching entry in `exercises.js`.
+
+A reference topic is the shorter version of the same idea: `reference.js` then `back-link.js` before
+`</body>`, no init call, no checklist. See [Labo1/Reference/Arrays.html](Labo1/Reference/Arrays.html).
 
 ## Didactic review (the guardrail no script can be)
 
