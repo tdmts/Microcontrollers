@@ -13,7 +13,7 @@
     <h1>Ledbar met potentiometer</h1>
     <p class="lead">Maak een schakeling waarbij de stand van een potentiometer op een analoge ingang wordt gelezen, en geef afhankelijk van de waarde een patroon weer op een schuifregister-ledbar.</p>
 
-    <p>Een <strong>ledbar</strong> is niets anders dan acht leds in één behuizing, netjes op een rij. Elektrisch verandert er dus niets tegenover de acht losse leds uit <a href="Looplicht8Bit.html">het 8-bit looplicht</a>: elke led hangt met zijn eigen voorschakelweerstand aan een uitgang van het schuifregister. Let wel op de oriëntatie, want ook hier zitten alle anodes aan één kant en alle kathodes aan de andere.</p>
+    <p>Een <strong>ledbar</strong> is acht leds op een rij in één behuizing. Elektrisch verandert er dus niets tegenover de acht losse leds uit <a href="Looplicht8Bit.html">het 8-bit looplicht</a>: elke led hangt met zijn eigen voorschakelweerstand aan een uitgang van het schuifregister. Let wel op de oriëntatie, want ook hier zitten alle anodes aan één kant en alle kathodes aan de andere.</p>
 
     <!-- TODO: foto of pinout van de ledbar uit de kit, met duidelijk welke kant de anodes
          zijn en waar pin 1 zit -->
@@ -58,8 +58,8 @@
     <p>Maak ook dit programma zo kort en efficiënt mogelijk.</p>
 
     <div class="info-box tip">
-        <div class="info-title tip">Acht even brede stapjes</div>
-        <p>Kijk eens goed naar de tabel: elk bereik is precies even breed. Dat betekent dat je die hele tabel niet met acht <code>if</code>-testen hoeft na te bouwen. Eén berekening volstaat. Twijfel je over het uitlezen van de potentiometer, kijk dan even bij <a href="../../Labo2/Reference/analogRead.html">analogRead()</a>.</p>
+        <div class="info-title tip">Acht even brede stappen</div>
+        <p>Elk bereik in de tabel is even breed. Daarom volstaat één berekening om te bepalen hoeveel leds er moeten branden, in plaats van acht <code>if</code>-testen. Twijfel je over het uitlezen van de potentiometer, kijk dan bij <a href="../../Labo2/Reference/analogRead.html">analogRead()</a>.</p>
     </div>
 
     <p>De bedrading van het schuifregister blijft dezelfde als in de vorige oefeningen: DS op pin 2, STCP op pin 3 en SHCP op pin 4. De potentiometer komt op een analoge ingang, met de loper naar A0 en de twee buitenste aansluitingen naar de +5 V en de massa.</p>
@@ -87,7 +87,7 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>De acht bereiken zijn elk 128 breed, dus een gehele deling door 128 geeft je meteen een getal van 0 tot 7. Tel er 1 bij op en je hebt het aantal brandende leds. Dat is de hele tabel in één regel.</p>
+            <p>De acht bereiken zijn elk 128 breed, dus een gehele deling door 128 geeft je meteen een getal van 0 tot 7. Tel er 1 bij op en je hebt het aantal brandende leds.</p>
             <p>Daarna schuif je acht bits naar buiten. Omdat de laatst verschoven bit op Q0 belandt, tel je af van 8 naar 1 en schuif je een 1 zodra het nummer van de led kleiner of gelijk is aan het gevraagde aantal.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang

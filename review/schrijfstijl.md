@@ -23,8 +23,8 @@ nodig.
 |---|---|---|---|
 | Labo 0 | 19 | 0 | **klaar** |
 | Labo 1 | 11 | 0 | **klaar** |
-| Labo 2 | 14 | 4 | open |
-| Labo 3 | 7 | 3 | open |
+| Labo 2 | 14 | 0 | **klaar** |
+| Labo 3 | 7 | 0 | **klaar** |
 | Labo 4 | 9 | 2 | open |
 | Labo 5 | 14 | 14 | open |
 | Labo 6 | 12 | 5 | open |
@@ -138,6 +138,100 @@ Alle vijf zijn beslist. Ze blijven staan omdat een volgende doorloop ze anders o
 | "Dat is precies het onderscheid uit Sourcen en sinken, maar dan zeven keer naast elkaar." | `ZevenSegmentDisplay.html`, onder de tabel | **Strakker.** Nu "Het is hetzelfde onderscheid als in Sourcen en sinken, zeven keer naast elkaar." De terugkoppeling en het inhoudelijke "zeven keer naast elkaar" blijven, de opbouw naar de pointe (`precies` + `maar dan`) gaat weg. Een pointe mag, de opvoering eromheen niet. |
 | Kop "De oplossing: multiplexing" | `VastGetalOpDubbel7Segment.html` | **Blijft.** Een dubbele punt in een kop gaat weg wanneer hij een pointe aankondigt ("De truc: te snel om te zien"), en blijft wanneer hij het onderwerp noemt. Dat vraagt per kop een oordeel en is dus niet greppable. |
 | "Zo zie je met eigen ogen waar de truc zit, in plaats van meteen een werkend getal te hebben zonder te weten waarom." | `VastGetalOpDubbel7Segment.html`, kader "Begin traag, dan snel" | **Strakker.** Nu "Zo zie je waar de truc zit." Het waarom van traag beginnen blijft staan, "met eigen ogen" en de "in plaats van"-tegenstelling zijn opsmuk. |
+
+## Labo 2
+
+Klaar. Tien oefeningen plus vier theoriepagina's; `dashboard.html` en `reference.html` hebben alleen
+een boilerplate `lead` en zijn ongewijzigd gebleven. Geen enkele pagina bleef helemaal ongemoeid,
+maar op de meeste ging het om één zin.
+
+Dit labo is voor het grootste deel geïmporteerde cursustekst, en dat is te zien aan wát er veranderde:
+de opvoering zit hier bijna niet in de opgaven maar in de stukken die er later bij geschreven zijn
+(de TMP36-vergelijking tussen `map()` en een eigen formule, `Spanningsdeler.html`), terwijl de
+geïmporteerde delen vooral de `men`-vorm en de Noord-Nederlandse woordkeuze meebrachten.
+
+| Pagina | Wat er veranderde |
+|---|---|
+| [PotentiometerUitlezen.html](../Labo2/Exercises/PotentiometerUitlezen.html) | `men` twee keer naar de je-vorm in de vragen, vulwoord `gewoon` weg uit "is trouwens gewoon een spanningsdeler" (13), en "Let wel: als je dit doet, moet je het resultaat opslaan in" naar "Sla het resultaat wel op in" (4). |
+| [LedDimmen.html](../Labo2/Exercises/LedDimmen.html) | `men` drie keer naar de je-vorm, en "men past een trucje toe door de pulsbreedte aan te passen" naar "dat is een truc met de pulsbreedte" (11). |
+| [LedDimmenMetPotentiometer.html](../Labo2/Exercises/LedDimmenMetPotentiometer.html) | "Niets verplicht je om het uitvoerbereik oplopend te schrijven" naar "Je mag het uitvoerbereik ook aflopend schrijven" (6), en de dubbele punt erna naar een nevenschikking (4). |
+| [DimmerMetSchakelaar.html](../Labo2/Exercises/DimmerMetSchakelaar.html) | Kadertitel "Tip" naar "Met INPUT_PULLUP heb je geen externe weerstand nodig", "De dimmer zelf blijft ongewijzigd:" naar een punt (4), en vulwoord `gewoon` weg (13). |
+| [LdrLichtmeting.html](../Labo2/Exercises/LdrLichtmeting.html) | "Meet gerust eerst even af wat je binnenkrijgt" naar "Meet eerst wat je binnenkrijgt" (13, drie verzachters op één werkwoord). |
+| [NachtlampMetTijd.html](../Labo2/Exercises/NachtlampMetTijd.html) | Kadertitel "Tip: gebruik geen delay()" naar "Gebruik geen delay()", en de dubbele punt in "blokkeer je je hele programma: tijdens die 10 seconden" naar een punt (4). |
+| [TemperatuursensorTMP36.html](../Labo2/Exercises/TemperatuursensorTMP36.html) | De zwaarste pagina van het labo. Kadertitel "En daar loopt het meteen mis" naar "map() rekent met gehele getallen" (1), "De uitkomst is onbruikbaar." samengevoegd met de zin ervoor (5), twee dubbele punten als aankondiging weg (4), "en het loont om ze allebei even te bekijken" weg (1), "dat is precies het soort code waar later fouten in sluipen" naar "daar sluipen makkelijk fouten in" (1), "Dat betekent niet dat map() slecht is" naar "map() blijft wel bruikbaar" (6), de vetgedrukte vuistregelzin ontvet (10), en `heel makkelijk` en `gewoon` weg (13). |
+| [TemperatuursensorLM35.html](../Labo2/Exercises/TemperatuursensorLM35.html) | Twee dubbele punten als aankondiging naar een punt (4), en "Precies daarom" naar "Daarom" (10). |
+| [TemperatuurindicatorMetRGBLed.html](../Labo2/Exercises/TemperatuurindicatorMetRGBLed.html) | "of de temperatuur onder de 30 zit: dat weet je dan al" naar "..., want dat weet je dan al" (4). |
+| [ThermometerOp7Segment.html](../Labo2/Exercises/ThermometerOp7Segment.html) | Dubbele punt naar een punt (4) en vulwoord `even` weg (13), allebei in dezelfde zin van de oplossing. |
+| [analogRead.html](../Labo2/Reference/analogRead.html) | `kunt` naar `kan` (12). |
+| [analogWrite.html](../Labo2/Reference/analogWrite.html) | `kun je` twee keer naar `kan je` (12), kadertitel "Belangrijk" naar "PWM werkt alleen op de pinnen met een ~", en het uitroepteken uit "Niet alle pinnen ondersteunen PWM!" (10, meteen ook een ontkennende opening, 6). |
+| [map.html](../Labo2/Reference/map.html) | `kun je` naar `kan je` in de `lead` (12). |
+| [Spanningsdeler.html](../Labo2/Reference/Spanningsdeler.html) | "Dat klinkt onnozel, maar" uit de `lead` (10), "is niets anders dan een spanningsdeler" naar "is een spanningsdeler" (6), `netjes` weg (13), `meetstapjes` naar `meetstappen` (11), kadertitel "De vuistregel" naar "Kies rond het midden van je sensorbereik", twee dubbele punten naar een punt (4), `gewoon` en `precies` weg (13), en "voor elk van hen" naar "voor elk ervan". |
+
+Woorden toegevoegd aan `scripts/check-content.sh`, allebei eerst gemeten:
+
+- `DIMINUTIVES`: `meetstapjes?`. Eén voorkomen in de hele repo, op `Spanningsdeler.html`, en
+  `meetstappen` zegt hetzelfde. Geen vakterm: de datasheets en de ADC-uitleg spreken van stappen.
+- `NOORD_NL`: `[Jj]e kunt` is `kunt` geworden. Het onderwerp staat niet altijd naast het werkwoord
+  ("een waarde die je in je programma kunt gebruiken" op `analogRead.html`), waardoor die zin er al
+  die tijd doorheen glipte. `kunt` los is veilig: de Vlaamse standaardvorm is in al die posities
+  `kan`, en `kunt u` blijft aan de u-vormregel. Eén extra treffer in de gecontroleerde pagina's, nu weg.
+
+Niet toegevoegd, hoewel het erop lijkt: `gewoon`. Dat staat 101 keer in de repo en betekent meestal
+iets ("een gewone digitale uitgang"), en het commentaar bij `FILLERS` zondert het daarom
+uitdrukkelijk uit. De vier keer dat het hier wegging, was het vulling; op één plaats
+(`Spanningsdeler.html`, "Hang je de LDR gewoon tussen 5 V en een analoge ingang") betekende het
+"zonder meer" en is het `rechtstreeks` geworden in plaats van geschrapt.
+
+### Twijfelgevallen
+
+| Wat | Waar | De vraag |
+|---|---|---|
+| De ik-vorm in de vragenlijsten | `PotentiometerUitlezen.html` ("met welke waarde moet ik de gelezen waarde vermenigvuldigen") en `LedDimmen.html` ("wanneer ik de waarde 128 gebruik") | `men` is overal naar de je-vorm gegaan, maar in deze twee titels staat `ik`. Dat is de student die de vraag stelt, en dat leest niet fout. Blijft `ik` staan, of gaat de hele vragenlijst naar de je-vorm? |
+| "Twee grensgevallen om het gevoel te krijgen" | `Spanningsdeler.html`, kadertitel | Het kader beschrijft er drie: R2 veel groter, R2 veel kleiner, en de twee gelijk. "Twee" naar "drie" zetten verandert wat de titel beweert, en dat valt buiten een stijlronde. |
+| `je wilt` | `map.html` (2x, `lead` en parameterlijst) en `Labo0/Reference/pinMode.html` (1x) | Dezelfde vorm als `kun je`: drie keer `je wilt` tegenover tientallen keren `je wil`. Het staat niet in SCHRIJFSTIJL.md 12 en is standaardtaal, dus het is hier blijven staan. Als het mee moet, is het een repo-brede ingreep zoals `LED` naar `led`, ook op een pagina die al klaar is. |
+
+## Labo 3
+
+Klaar. Zes oefeningen plus één theoriepagina; `dashboard.html` en `reference.html` hebben alleen een
+boilerplate `lead` en zijn ongewijzigd gebleven. Elke pagina is aangeraakt, maar meestal voor één of
+twee zinnen.
+
+Dit labo valt op door wát er te doen was. De opgaven zijn geïmporteerde cursustekst en die stond
+grotendeels goed; bijna alle opvoering zat in de kaders en de oplossingsteksten die er later bij
+geschreven zijn, en dan vooral in de dubbele punt als aankondiging (patroon 4), die vijf keer
+terugkwam. Zeven kadertitels waren in orde en zeiden al iets, drie niet.
+
+| Pagina | Wat er veranderde |
+|---|---|
+| [Enkel7SegmentDisplay.html](../Labo3/Exercises/Enkel7SegmentDisplay.html) | Vulwoord `eigenlijk` weg (13), kadertitel "Let op: pas aan op basis van je eigen display" naar "Pas de patronen aan op basis van je eigen display", en de dubbele punt in "Let op de volgorde in `toonPatroon()`:" naar een punt (4). Daarnaast "Gezien we 7 segmenten aansturen" naar "Aangezien", met de ontbrekende komma erbij. |
+| [Dubbel7SegmentDisplay.html](../Labo3/Exercises/Dubbel7SegmentDisplay.html) | "zonder ook maar één extra pin" uit de `lead` naar "zonder extra pinnen" (10); de zusteroefening `Looplicht16Bit.html` zegt hetzelfde al zonder nadruk. "Maar wat als je bijvoorbeeld meerdere displays wil aansturen?" naar een voorwaardelijke zin (3), `gewoon` twee keer weg (13), kadertitel "Let op: staan je cijfers omgewisseld?" naar de vraag alleen, en de dubbele punt in "vervangen door die ene array:" naar "want" (4). |
+| [Looplicht8Bit.html](../Labo3/Exercises/Looplicht8Bit.html) | `gewoon` en `precies` weg (13), de vetgedrukte zin "**Probeer dit eens zelf uit...**" ontvet (10), en `mini versie` twee keer aaneengeschreven als `miniversie`, plus een ontbrekende komma. |
+| [Looplicht16Bit.html](../Labo3/Exercises/Looplicht16Bit.html) | `eigenlijk` uit de kadertitel, `netjes` en `heel` weg (13), "met één verschil: `aantalLeds` staat nu op 16" naar een bijzin (4, meteen ook `exact` weg), en de dubbele punt bij de `delay()` naar een punt (4). |
+| [LedbarMetPotentiometer.html](../Labo3/Exercises/LedbarMetPotentiometer.html) | "is niets anders dan acht leds in één behuizing, netjes op een rij" naar "is acht leds op een rij in één behuizing" (6 en 13), kadertitel `stapjes` naar `stappen` (11), de dubbele punt en `precies` uit "Kijk eens goed naar de tabel: elk bereik is precies even breed" (4, 13), en "Eén berekening volstaat." samengevoegd met de zin ervoor (5). In de oplossing "Dat is de hele tabel in één regel." weg (1). |
+| [LichtpatronenUitEenArray.html](../Labo3/Exercises/LichtpatronenUitEenArray.html) | Alleen de kadertitel "Universeel betekent: geen vaste getallen" naar "Universeel betekent dat er geen vaste getallen in je code staan" (4). Dat is exact de vorm uit het regeldocument ("Serieel betekent: achter elkaar"). De rest van de pagina stond goed. |
+| [Schuifregister.html](../Labo3/Reference/Schuifregister.html) | Kadertitel "Opmerking" naar "Het schuifregister en het storage register staan los van elkaar", "Dat is precies waarom je geen tussenliggende rommel ziet flikkeren" naar een nevenschikking (1, 13), "merk je de volgorde:" naar een punt (4), `klein functietje` naar `functie` (11), en het `shiftOut()`-kader: de titel "En dan vind je `shiftOut()`, en vraag je je af waarom je dit allemaal zelf doet" naar "Waarom je `shiftOut()` hier niet gebruikt", "Terecht." weg (5) en de slotzin "`shiftOut()` verbergt precies dat." naar voren gehaald als mededeling (1). |
+
+Woorden toegevoegd aan `scripts/check-content.sh`, eerst gemeten:
+
+- `DIMINUTIVES`: `stapjes?`. Vier voorkomens in de repo, verdeeld over drie pagina's: de kadertitel
+  hier, en in labo 5 "één stapje voorbij 512" (2x, `SnelheidEnRichtingMetL293.html`) en "kleine
+  stapjes van 1 graad" (`Servo.html`). Geen vakterm, en de repo zegt het overal elders met `stap`:
+  de stappenmotor zet stappen en de ADC meet in stappen. `meetstapjes?` blijft apart in de lijst
+  staan, want `\b` laat `stapjes?` niet aanslaan binnen `meetstapjes`. De twee treffers in labo 5
+  blijven open tot dat labo aan de beurt is.
+
+Niet toegevoegd, hoewel het een verkleinwoord is: `rommeltje` stond al in de lijst, maar `rommel`
+zelf niet, en dat is terecht. "Tussenliggende rommel" hier is hetzelfde `rommel` als in labo 6 en 7
+("er komt vroeg of laat rommel binnen op een seriële lijn", "meet je willekeurige rommel"), dus het
+is gevestigd vocabulaire van deze repo en geen opsmuk.
+
+### Twijfelgevallen
+
+| Wat | Waar | De vraag |
+|---|---|---|
+| `<strong>TLDR:</strong>` | `Dubbel7SegmentDisplay.html`, boven het kader "Waarom werkt dat?" | Enige voorkomen in de hele repo. Het is geen van de dertien patronen, maar het is wel internetjargon in een cursustekst, en de dubbele punt erna is de aankondigingsvorm uit patroon 4. Mag dit "Kort gezegd:" worden, of is de informele toon hier bedoeld? |
+| "terwijl je maar drie pinnen van je Arduino <strong>opoffert</strong>" | `Schuifregister.html`, `lead` | Blijven staan of `gebruikt` worden? `opoffert` zegt iets extra (drie pinnen die je kwijt bent), maar het is ook het enige beeldende werkwoord in een verder feitelijke lead. Eén voorkomen in de repo. |
+| Kop "Stijgende flank?" | `Enkel7SegmentDisplay.html`, `<h3>` boven `risingEdge()` | Een vraagteken in een kop. Ongemoeid gelaten omdat de kop het onderwerp noemt en niet als retorische overgang leest (patroon 3), maar het is dezelfde oordeelsvraag als de dubbele punt in een kop uit de labo 1-ronde. |
 
 ## Repo-brede ingrepen
 

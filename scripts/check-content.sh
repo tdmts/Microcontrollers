@@ -734,7 +734,7 @@ if [ "$AUDIT" -eq 1 ]; then
   # vocabulary this course already uses: "pootjes" (the outer legs of a
   # potentiometer, in the original author's own text), "rekstrookje",
   # "ezelsbruggetje". It may grow; it may never gain a technical term.
-  DIMINUTIVES='eentje|blokjes?|chipje|draadjes?|schermpje|lampje|knopje|lusje|regeltje|sketchje|functietje|woordje|zinnetje|looplichtje|lichtpuntje|lettertje|motortje|rommeltje|duwtje|trucje|lijstjes?|plaatsjes?|stukjes?|flitsje'
+  DIMINUTIVES='eentje|blokjes?|chipje|draadjes?|schermpje|lampje|knopje|lusje|regeltje|sketchje|functietje|woordje|zinnetje|looplichtje|lichtpuntje|lettertje|motortje|rommeltje|duwtje|trucje|lijstjes?|plaatsjes?|stukjes?|flitsje|meetstapjes?|stapjes?'
   while IFS= read -r hit; do
     [ -z "$hit" ] && continue
     f="${hit%%:*}"; w="${hit##*:}"
@@ -757,10 +757,14 @@ if [ "$AUDIT" -eq 1 ]; then
   # Belgicisms: the target is standard Dutch as written in Flanders, so it will
   # never ask for "vijs" or "kuisen".
   # "kunt u" is left to the u-vorm rule below rather than reported twice.
-  # "Kun je" / "Je kunt" are spelled out with both cases rather than matched
+  # "Kun je" is spelled out with both cases rather than matched
   # case-insensitively: the rest of the list must stay case-sensitive, and a
-  # sentence-initial "Je kunt" slipped past the lowercase-only form.
-  NOORD_NL='[Kk]un je|[Jj]e kunt|flinke?|prima|eventjes|hartstikke|gaaf|nou ja'
+  # sentence-initial "Kun je" would slip past the lowercase-only form.
+  # "kunt" stands alone rather than as "je kunt", because the subject is not
+  # always next to it: "een waarde die je in je programma kunt gebruiken" on
+  # analogRead.html sat between the two and went unreported for that reason.
+  # The Flemish standard form is "kan" in every one of those positions.
+  NOORD_NL='[Kk]un je|kunt|flinke?|prima|eventjes|hartstikke|gaaf|nou ja'
   while IFS= read -r hit; do
     [ -z "$hit" ] && continue
     f="${hit%%:*}"; w="${hit##*:}"

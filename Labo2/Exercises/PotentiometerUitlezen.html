@@ -15,7 +15,7 @@
 
     <p>Gebruik de <code>analogRead()</code> instructie om een analoge waarde te lezen. Welke pinnen dat kunnen, waarom je een getal tussen 0 en 1023 terugkrijgt en hoe je dat omrekent naar een spanning, staat op <a href="../Reference/analogRead.html">analogRead()</a>.</p>
 
-    <p>Een potentiometer met drie pootjes is trouwens gewoon een <a href="../Reference/Spanningsdeler.html">spanningsdeler</a> waarvan je het middenpunt kan verschuiven. De twee buitenste pootjes gaan naar +5 V en GND, en het middelste, de loper, naar je analoge ingang.</p>
+    <p>Een potentiometer met drie pootjes is trouwens een <a href="../Reference/Spanningsdeler.html">spanningsdeler</a> waarvan je het middenpunt kan verschuiven. De twee buitenste pootjes gaan naar +5 V en GND, en het middelste, de loper, naar je analoge ingang.</p>
 
     <!-- TODO: teken het aansluitschema van de potentiometer (buitenste pootjes aan +5V en
          GND, loper naar A0). Drie pootjes is niet te raden voor een beginner -->
@@ -36,7 +36,7 @@
     <h2 id="vragen">Vragen</h2>
     <div class="accordion-container">
         <div class="accordion-item">
-            <div class="title">Kan men op elke pin van de Arduino een analoge spanning inlezen? Indien niet, op welke dan wel?</div>
+            <div class="title">Kan je op elke pin van de Arduino een analoge spanning inlezen? Indien niet, op welke dan wel?</div>
             <p>Enkel op de analoge ingangen kan je dit doen. Op de UNO zijn dat er zes: A0 tot en met A5, samen gegroepeerd onder het opschrift ANALOG IN.</p>
             <div class="my-4">
                 <figure class="figure w-100 text-center figure-zoom">
@@ -49,7 +49,7 @@
             <p>Tussen 0 V en 5 V.</p>
         </div>
         <div class="accordion-item">
-            <div class="title">Welke waarden krijgt men terug in het programma als men een analoge spanning inleest?</div>
+            <div class="title">Welke waarden krijg je terug in het programma als je een analoge spanning inleest?</div>
             <p>Een numerieke waarde tussen 0 en 1023. 0 stelt dan 0 V voor en 1023 stelt 5 V voor.</p>
         </div>
         <div class="accordion-item">
@@ -57,7 +57,7 @@
             <p>Om dit probleem op te lossen moet je de regel van 3 toepassen.</p>
             <p>Een gelezen waarde van 1023 komt overeen met 5 V. Eén eenheid komt dus overeen met 5 V / 1023 = <strong>0,00489 V</strong>.</p>
             <p>Stel dat je 712 inleest, dan is de spanning 712 * 0,00489 V = 3,48 V.</p>
-            <p>Let wel: als je dit doet, moet je het resultaat opslaan in een <strong>double</strong> of een <strong>float</strong>.</p>
+            <p>Sla het resultaat wel op in een <strong>double</strong> of een <strong>float</strong>.</p>
         </div>
         <div class="accordion-item">
             <div class="title">Uitgaande van een voedingsspanning van 5 V, met welke spanning komt een waarde van 255 overeen?</div>

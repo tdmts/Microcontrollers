@@ -11,11 +11,11 @@
 <body>
 <div class="container">
     <h1>De spanningsdeler</h1>
-    <p class="lead">Twee weerstanden in serie verdelen de spanning onder elkaar. Dat klinkt onnozel, maar het is de manier waarop je zowat elke weerstandssensor uitleest: een LDR, een thermistor, een rekstrookje. Je Arduino kan namelijk geen weerstand meten, alleen spanning.</p>
+    <p class="lead">Twee weerstanden in serie verdelen de spanning onder elkaar. Zo lees je zowat elke weerstandssensor uit: een LDR, een thermistor, een rekstrookje. Je Arduino kan namelijk geen weerstand meten, alleen spanning.</p>
 
     <h2 id="het-probleem">Waarom je dit nodig hebt</h2>
 
-    <p>Een LDR is een weerstand die verandert met het licht: donker geeft veel weerstand, licht weinig. Maar <a href="analogRead.html"><code>analogRead()</code></a> meet geen ohm, het meet volt. Hang je de LDR gewoon tussen 5 V en een analoge ingang, dan meet je altijd 5 V, hoe donker het ook is: er loopt immers geen stroom, dus valt er ook geen spanning over de LDR.</p>
+    <p>Een LDR is een weerstand die verandert met het licht: donker geeft veel weerstand, licht weinig. Maar <a href="analogRead.html"><code>analogRead()</code></a> meet geen ohm, het meet volt. Hang je de LDR rechtstreeks tussen 5 V en een analoge ingang, dan meet je altijd 5 V, hoe donker het ook is. Er loopt immers geen stroom, dus valt er ook geen spanning over de LDR.</p>
 
     <p>Je hebt dus een tweede weerstand nodig, zodat er wel stroom kan lopen en de spanning zich over de twee kan verdelen. Die verdeling verschuift mee met je sensor, en dat is wat je meet.</p>
 
@@ -46,19 +46,19 @@
 
     <p>Bij een sensor is één van de twee weerstanden de sensor zelf, en de andere kies je. Die keuze bepaalt hoe bruikbaar je meting wordt.</p>
 
-    <p>Neem je een vaste weerstand die veel te groot of veel te klein is tegenover je sensor, dan zit je meting altijd tegen 5 V of tegen 0 V geplakt en verandert er nauwelijks iets als de sensor beweegt. Je gooit dan het grootste deel van je 1024 meetstapjes weg.</p>
+    <p>Neem je een vaste weerstand die veel te groot of veel te klein is tegenover je sensor, dan zit je meting altijd tegen 5 V of tegen 0 V geplakt en verandert er nauwelijks iets als de sensor beweegt. Je gooit dan het grootste deel van je 1024 meetstappen weg.</p>
 
     <div class="info-box tip">
-        <div class="info-title tip">De vuistregel</div>
+        <div class="info-title tip">Kies rond het midden van je sensorbereik</div>
         <p>Kies je vaste weerstand ergens in het <strong>midden van het bereik</strong> dat je sensor doorloopt, meetkundig gezien. Varieert je LDR tussen 400 &Omega; en 9000 &Omega;, dan zit je goed rond de 2 k&Omega;. Zo krijg je het grootste verschil tussen je laagste en je hoogste meting.</p>
-        <p>Twijfel je tussen een paar waarden die je in huis hebt, vul dan gewoon de formule in voor elk van hen en kijk welke het grootste verschil tussen minimum en maximum oplevert. Dat is precies wat je bij <a href="../Exercises/LdrLichtmeting.html">LDR: lichtmeting</a> doet.</p>
+        <p>Twijfel je tussen een paar waarden die je in huis hebt, vul dan de formule in voor elk ervan en kijk welke het grootste verschil tussen minimum en maximum oplevert. Dat is wat je bij <a href="../Exercises/LdrLichtmeting.html">LDR: lichtmeting</a> doet.</p>
     </div>
 
     <h2 id="de-potentiometer">De potentiometer is er ook een</h2>
 
-    <p>Een potentiometer met drie pootjes is niets anders dan een spanningsdeler waarvan je het middenpunt kan verschuiven. De twee buitenste pootjes hang je aan 5 V en aan GND, en het middelste pootje, de loper, is precies dat punt tussen R1 en R2. Draaien aan de knop verschuift de verhouding tussen de twee helften, en dus de spanning die je meet.</p>
+    <p>Een potentiometer met drie pootjes is een spanningsdeler waarvan je het middenpunt kan verschuiven. De twee buitenste pootjes hang je aan 5 V en aan GND, en het middelste pootje, de loper, is precies dat punt tussen R1 en R2. Draaien aan de knop verschuift de verhouding tussen de twee helften, en dus de spanning die je meet.</p>
 
-    <p>Daarom levert een potentiometer netjes de volle 0 tot 1023 op: de loper kan van het ene uiterste naar het andere, dus van 0 V tot 5 V.</p>
+    <p>Daarom levert een potentiometer de volle 0 tot 1023 op. De loper kan van het ene uiterste naar het andere, dus van 0 V tot 5 V.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Belast je deler niet zwaar</div>

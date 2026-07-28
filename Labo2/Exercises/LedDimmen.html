@@ -34,7 +34,7 @@
     <h2 id="vragen">Vragen</h2>
     <div class="accordion-container">
         <div class="accordion-item">
-            <div class="title">Kan men naar elke pin van de Arduino een analoge spanning sturen?</div>
+            <div class="title">Kan je naar elke pin van de Arduino een analoge spanning sturen?</div>
             <p>Het hangt er vanaf welke Arduino je gebruikt. Je kan dit enkel doen naar een PWM (Pulse Width Modulation) pin, maar niet bij iedere Arduino zijn die PWM-pinnen dezelfde.</p>
             <p>Op <a href="https://www.arduino.cc/reference/en/language/functions/analog-io/analogwrite/" target="_blank">deze website</a> zie je een overzicht per Arduino waar je die PWM-pinnen terug kan vinden. Ze worden aangeduid met een ~ op de PCB.</p>
             <p>Voor de UNO is dat bijvoorbeeld pin 11, 10, 9, 6, 5 en 3.</p>
@@ -46,7 +46,7 @@
         </div>
         <div class="accordion-item">
             <div class="title">Wordt op de pin echt een analoge spanning aangeboden?</div>
-            <p>Nee, men past een trucje toe door de <strong>pulsbreedte</strong> aan te passen. De gemiddelde waarde komt dan overeen met de uitgestuurde analoge spanning.</p>
+            <p>Nee, dat is een truc met de <strong>pulsbreedte</strong>. De gemiddelde waarde komt dan overeen met de uitgestuurde analoge spanning.</p>
             <div class="my-4">
                 <figure class="figure w-100 text-center figure-zoom">
                     <img src="../../img/pwm-pulsbreedte.gif" class="img-fluid" alt="PWM-signaal waarvan de gemiddelde waarde overeenkomt met de analoge spanning">
@@ -60,7 +60,7 @@
             <p>Zolang de spanning over de led lager is dan die 1,7 V is de led dus gedoofd. Eenmaal hoger dan de doorlaatspanning gaat dit eerder exponentieel.</p>
         </div>
         <div class="accordion-item">
-            <div class="title">Wat is de maximale spanning die men op een pin kan plaatsen?</div>
+            <div class="title">Wat is de maximale spanning die je op een pin kan plaatsen?</div>
             <p>5 V.</p>
         </div>
         <div class="accordion-item">
@@ -71,7 +71,7 @@
             <p>128 * 0,01960 V = <strong>2,5088 V</strong>.</p>
         </div>
         <div class="accordion-item">
-            <div class="title">Hoe kan men de bekomen spanning stabieler maken?</div>
+            <div class="title">Hoe kan je de bekomen spanning stabieler maken?</div>
             <p>Door er een condensator (met eventueel nog een weerstand, dus een RC-combinatie) op te zetten. Die gedraagt zich als een laagdoorlaatfilter waardoor het PWM-signaal afgevlakt wordt en er effectief een spanning op de uitgang komt te staan in plaats van een blokgolf.</p>
         </div>
         <div class="accordion-item">

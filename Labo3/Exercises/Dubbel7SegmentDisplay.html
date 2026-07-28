@@ -11,15 +11,15 @@
 <body>
 <div class="container">
     <h1>2x 7 segment display</h1>
-    <p class="lead">Plaats twee 74HC595 schuifregisters in cascade en stuur er twee 7 segment displays mee aan. Je telt af van 10 naar 0, zonder ook maar één extra pin van je Arduino te gebruiken.</p>
+    <p class="lead">Plaats twee 74HC595 schuifregisters in cascade en stuur er twee 7 segment displays mee aan. Je telt af van 10 naar 0 zonder extra pinnen van je Arduino te gebruiken.</p>
 
-    <p>Maar wat als je bijvoorbeeld meerdere 7 segment displays wil aansturen? Je kan de 74595 <strong>in cascade</strong> plaatsen. De werking van het register zelf, en waarom je in dit labo alles met de hand naar buiten schuift, staat op <a href="../Reference/Schuifregister.html">Werking van het schuifregister</a>. Wil je er ook de Arduino-documentatie bij, dan vind je die op <a href="https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut" target="_blank" rel="noopener">de ShiftOut-pagina</a>; die gebruikt wel de ingebouwde functie <code>shiftOut()</code>, die wij hier bewust niet gebruiken.</p>
+    <p>Wil je meerdere 7 segment displays aansturen, dan plaats je de 74595 <strong>in cascade</strong>. De werking van het register zelf, en waarom je in dit labo alles met de hand naar buiten schuift, staat op <a href="../Reference/Schuifregister.html">Werking van het schuifregister</a>. Wil je er ook de Arduino-documentatie bij, dan vind je die op <a href="https://www.arduino.cc/en/Tutorial/Foundations/ShiftOut" target="_blank" rel="noopener">de ShiftOut-pagina</a>; die gebruikt wel de ingebouwde functie <code>shiftOut()</code>, die wij hier bewust niet gebruiken.</p>
 
-    <p><strong>TLDR:</strong> verbind Q7S van de eerste 74595 met DS van de tweede. SHCP en STCP mag je gewoon doorverbinden met elkaar.</p>
+    <p><strong>TLDR:</strong> verbind Q7S van de eerste 74595 met DS van de tweede. SHCP en STCP mag je doorverbinden met elkaar.</p>
 
     <div class="info-box remark">
         <div class="info-title remark">Waarom werkt dat?</div>
-        <p>Q7S is de bit die aan de achterkant het schuifregister verlaat. Door die op DS van het tweede register aan te sluiten, vormen de twee IC's samen één lang schuifregister van 16 bits. Je schuift dus gewoon 16 keer in plaats van 8 keer, en omdat STCP van beide registers aan elkaar hangt, springen alle 16 uitgangen op hetzelfde moment naar hun nieuwe waarde.</p>
+        <p>Q7S is de bit die aan de achterkant het schuifregister verlaat. Door die op DS van het tweede register aan te sluiten, vormen de twee IC's samen één lang schuifregister van 16 bits. Je schuift dus 16 keer in plaats van 8 keer, en omdat STCP van beide registers aan elkaar hangt, springen alle 16 uitgangen op hetzelfde moment naar hun nieuwe waarde.</p>
     </div>
 
     <h2 id="schema">Schema</h2>
@@ -66,12 +66,12 @@
 
         <div class="spoiler-content solution-content">
             <div class="info-box warning">
-                <div class="info-title warning">Let op: staan je cijfers omgewisseld?</div>
+                <div class="info-title warning">Staan je cijfers omgewisseld?</div>
                 <p>Welk display de tientallen toont, hangt af van welk schuifregister jij aan je Arduino hebt gehangen. Deze oplossing gaat ervan uit dat het <strong>eerste</strong> register (het register dat aan pin 2, 3 en 4 hangt) het <strong>linkse</strong> display aanstuurt. Ziet het er bij jou omgekeerd uit, wissel dan in <code>toonGetal()</code> de twee <code>schuifCijfer()</code>-regels om.</p>
             </div>
 
             <p>In plaats van tien aparte procedures zet je de tien cijferpatronen in één array. <code>schuifCijfer()</code> schuift dan acht bits naar buiten zonder te latchen, en <code>toonGetal()</code> roept die twee keer na elkaar op en geeft pas op het einde één stijgende flank op STCP. Zo verschijnen beide cijfers op exact hetzelfde moment.</p>
-            <p>De drie procedures <code>three()</code>, <code>two()</code> en <code>one()</code> uit de vorige oefening zijn hier vervangen door die ene array: tien procedures overtikken zou hetzelfde patroon tien keer herhalen.</p>
+            <p>De drie procedures <code>three()</code>, <code>two()</code> en <code>one()</code> uit de vorige oefening zijn hier vervangen door die ene array, want tien procedures overtikken zou hetzelfde patroon tien keer herhalen.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang van het eerste schuifregister
 const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register

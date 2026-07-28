@@ -22,7 +22,7 @@
     </div>
 
     <div class="info-box tip">
-        <div class="info-title tip">Tip</div>
+        <div class="info-title tip">Met INPUT_PULLUP heb je geen externe weerstand nodig</div>
         <p>Lees de schakelaar in met <a href="../../Labo0/Reference/digitalReadDigitalWrite.html"><code>digitalRead()</code></a>. Gebruik <a href="../../Labo0/Reference/PullUpPullDown.html"><code>INPUT_PULLUP</code></a> zodat je geen externe weerstand nodig hebt: de ingang is dan <code>HIGH</code> in rust en <code>LOW</code> wanneer je de knop indrukt.</p>
     </div>
 
@@ -50,10 +50,10 @@
 
         <div class="spoiler-content solution-content">
             <p>
-                De dimmer zelf blijft ongewijzigd: je leest de potentiometer in met
+                De dimmer zelf blijft ongewijzigd. Je leest de potentiometer in met
                 <code>analogRead()</code> en herschaalt die waarde met <code>map()</code>
                 naar 0 tot 255. Nieuw is dat je eerst de schakelaar uitleest. Staat die
-                niet ingedrukt, dan schrijf je gewoon 0 naar de led in plaats van de
+                niet ingedrukt, dan schrijf je 0 naar de led in plaats van de
                 berekende helderheid.
             </p>
             <p>

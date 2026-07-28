@@ -16,8 +16,8 @@
     <p>Plaats het tweede schuifregister in cascade, precies zoals bij <a href="Dubbel7SegmentDisplay.html">2x 7 segment display</a>: Q7S van het eerste register naar DS van het tweede, en SHCP en STCP van beide registers aan elkaar. Op de acht uitgangen van het tweede register hangen dan acht extra leds, elk met hun eigen voorschakelweerstand. Wat Q7S precies doet, staat op <a href="../Reference/Schuifregister.html">Werking van het schuifregister</a>.</p>
 
     <div class="info-box tip">
-        <div class="info-title tip">Hoeveel moet je eigenlijk aanpassen?</div>
-        <p>Als je je 8-bit looplicht netjes met een lus hebt geschreven, is dit een heel korte oefening. Kijk eens waar het getal 8 in je code staat, en vraag je af of je het overal door een constante kan vervangen. Lukt dat, dan is je programma meteen ook klaar voor 24 of 32 bit.</p>
+        <div class="info-title tip">Hoeveel moet je aanpassen?</div>
+        <p>Als je je 8-bit looplicht met een lus hebt geschreven, is dit een korte oefening. Kijk eens waar het getal 8 in je code staat, en vraag je af of je het overal door een constante kan vervangen. Lukt dat, dan is je programma meteen ook klaar voor 24 of 32 bit.</p>
     </div>
 
     <hr>
@@ -44,8 +44,8 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>Dit is exact dezelfde code als bij het 8-bit looplicht, met één verschil: <code>aantalLeds</code> staat nu op 16. Omdat de twee registers samen één lang schuifregister van 16 bits vormen, hoeft je programma niet te weten dat er twee IC's hangen. Je schuift gewoon 16 bits in plaats van 8 en latcht één keer.</p>
-            <p>De <code>delay()</code> gaat wel omlaag: met een seconde per stap zou één ronde 16 seconden duren en dat leest niet meer als een looplicht.</p>
+            <p>Dit is dezelfde code als bij het 8-bit looplicht, met als enige verschil dat <code>aantalLeds</code> nu op 16 staat. Omdat de twee registers samen één lang schuifregister van 16 bits vormen, hoeft je programma niet te weten dat er twee IC's hangen. Je schuift gewoon 16 bits in plaats van 8 en latcht één keer.</p>
+            <p>De <code>delay()</code> gaat wel omlaag. Met een seconde per stap zou één ronde 16 seconden duren, en dan ziet het er niet meer uit als een looplicht.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang van het eerste schuifregister
 const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register

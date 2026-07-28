@@ -44,13 +44,13 @@
 
         <div class="spoiler-content solution-content">
             <p>
-                De LM35 is eenvoudiger dan de TMP36: bij 0 °C staat er 0 V op de
+                De LM35 is eenvoudiger dan de TMP36. Bij 0 °C staat er 0 V op de
                 uitgang, en per graad komt er 10 mV bij. Je moet er dus niets van
                 aftrekken en niets bij optellen, enkel delen door 0,01.
             </p>
             <p>
-                Precies daarom kan de LM35 geen temperaturen onder nul meten zonder
-                extra schakeling: dat zou een negatieve spanning vragen, en die kan je
+                Daarom kan de LM35 geen temperaturen onder nul meten zonder een extra
+                schakeling. Dat zou een negatieve spanning vragen, en die kan je
                 Arduino niet inlezen.
             </p>
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int sensorPin = A0;

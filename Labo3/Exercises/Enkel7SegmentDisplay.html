@@ -34,7 +34,7 @@
     <h3>Voorschakelweerstanden</h3>
     <p>In de <a href="../../datasheets/74hc595.pdf" target="_blank" rel="noopener">datasheet</a> kan je onder <em>Limiting values</em> lezen dat de output current op pin Q0 tot en met Q7 maximum 35 mA bedraagt. Maar de supply current (of de ground current) is maximum 70 mA.</p>
     <p>Dit betekent dat de IC maximum 70 mA kan sourcen of sinken over alle uitgangspinnen samen.</p>
-    <p>Gezien we 7 segmenten (tegelijk) aansturen betekent dit dat we op iedere pin maximum 10 mA mogen sourcen of sinken.</p>
+    <p>Aangezien we 7 segmenten (tegelijk) aansturen, betekent dit dat we op iedere pin maximum 10 mA mogen sourcen of sinken.</p>
     <p>Bereken hoeveel de voorschakelweerstand moet bedragen als je weet dat de voedingsspanning 5 V bedraagt, de doorlaatspanning van een rode led 1.8 V is en de stroom 10 mA mag bedragen.</p>
 
     <div class="solution-container">
@@ -59,7 +59,7 @@
     <h2 id="stap-3-code">Stap 3: code</h2>
 
     <h3>Definiëren van I/O</h3>
-    <p>Begin altijd eerst met het definiëren van pinnummers als constanten. Het is ook altijd een goed idee om er commentaar bij te schrijven zodat je weet wat de pinnen eigenlijk betekenen. Als je later je programma bekijkt of moet debuggen weet je onmiddellijk welke pin wat doet.</p>
+    <p>Begin altijd eerst met het definiëren van pinnummers als constanten. Het is ook altijd een goed idee om er commentaar bij te schrijven zodat je weet wat de pinnen betekenen. Als je later je programma bekijkt of moet debuggen weet je onmiddellijk welke pin wat doet.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
 const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
@@ -225,12 +225,12 @@ void a()
 
         <div class="spoiler-content solution-content">
             <div class="info-box warning">
-                <div class="info-title warning">Let op: pas aan op basis van je eigen display</div>
+                <div class="info-title warning">Pas de patronen aan op basis van je eigen display</div>
                 <p>Deze oplossing gaat uit van een <strong>common cathode</strong> display, waarbij een 1 een segment doet oplichten. Heb jij een common anode display, dan draai je de waarden in de patronen om (of je keert <code>HIGH</code> en <code>LOW</code> om in <code>toonPatroon()</code>).</p>
             </div>
 
             <p>De opdracht vraagt drie procedures <code>three()</code>, <code>two()</code> en <code>one()</code>, maar je wil niet drie keer acht regels <code>digitalWrite</code> overtikken. Daarom zet je het patroon van elk cijfer in een array en schrijf je één keer een functie <code>toonPatroon()</code> die zo'n array naar buiten schuift. De drie procedures blijven dan één regel lang.</p>
-            <p>Let op de volgorde in <code>toonPatroon()</code>: de laatst verschoven bit belandt op Q0, dus loop je de array van achter naar voor door. Pas helemaal op het einde geef je één stijgende flank op STCP, zodat het hele cijfer in één keer verschijnt.</p>
+            <p>Let op de volgorde in <code>toonPatroon()</code>. De laatst verschoven bit belandt op Q0, dus loop je de array van achter naar voor door. Pas helemaal op het einde geef je één stijgende flank op STCP, zodat het hele cijfer in één keer verschijnt.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
 const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register

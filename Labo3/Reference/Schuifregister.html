@@ -116,8 +116,8 @@
     </ul>
 
     <div class="info-box remark">
-        <div class="info-title remark">Opmerking</div>
-        <p>Het schuifregister en het storage register staan los van elkaar. Zolang je enkel op SHCP klokt, verandert er niets aan de uitgangen: je bent dan achter de schermen aan het opbouwen wat er straks moet komen te staan. Pas bij een stijgende flank op STCP springt alles tegelijk zichtbaar op de uitgang. Dat is precies waarom je geen tussenliggende rommel ziet flikkeren.</p>
+        <div class="info-title remark">Het schuifregister en het storage register staan los van elkaar</div>
+        <p>Zolang je enkel op SHCP klokt, verandert er niets aan de uitgangen. Je bent dan achter de schermen aan het opbouwen wat er straks moet komen te staan. Pas bij een stijgende flank op STCP springt alles tegelijk zichtbaar op de uitgang, en daarom zie je geen tussenliggende rommel flikkeren.</p>
     </div>
 
     <h2 id="probeer-het-zelf">Probeer het zelf</h2>
@@ -190,9 +190,9 @@
     </div>
 
     <h2 id="een-byte-naar-buiten-schuiven">Een byte naar buiten schuiven</h2>
-    <p>Als je met de simulatie speelt, merk je de volgorde: de bit die je er als <strong>laatste</strong> inschuift, komt op <strong>Q0</strong> terecht. Wil je dus een bepaald patroon op de uitgangen, dan begin je bij Q7 en eindig je bij Q0. Daarna geef je één stijgende flank op STCP om het hele patroon in één keer zichtbaar te maken.</p>
+    <p>Als je met de simulatie speelt, zie je de volgorde. De bit die je er als <strong>laatste</strong> inschuift, komt op <strong>Q0</strong> terecht. Wil je dus een bepaald patroon op de uitgangen, dan begin je bij Q7 en eindig je bij Q0. Daarna geef je één stijgende flank op STCP om het hele patroon in één keer zichtbaar te maken.</p>
 
-    <p>Je stuurt SHCP en STCP aan met gewone digitale uitgangen. Omdat de 74HC595 enkel op een <strong>stijgende flank</strong> reageert en <code>digitalWrite()</code> alleen vaste toestanden kent, schrijf je daar zelf een klein functietje voor:</p>
+    <p>Je stuurt SHCP en STCP aan met gewone digitale uitgangen. Omdat de 74HC595 enkel op een <strong>stijgende flank</strong> reageert en <code>digitalWrite()</code> alleen vaste toestanden kent, schrijf je daar zelf een functie voor:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>void risingEdge(int pinNummer)
 {
@@ -201,9 +201,9 @@
 }</code></pre>
 
     <div class="info-box remark">
-        <div class="info-title remark">En dan vind je <code>shiftOut()</code>, en vraag je je af waarom je dit allemaal zelf doet</div>
-        <p>Terecht. Arduino heeft een ingebouwde functie <code>shiftOut()</code> die precies dit doet: acht bits na elkaar naar buiten klokken, in &eacute;&eacute;n regel. Zoek je online naar de 74HC595, dan is dat zowat het eerste wat je tegenkomt, en ook de Arduino-pagina over cascade gebruikt ze.</p>
-        <p>In dit labo schrijf je het toch zelf uit, en dat is met opzet. Door per bit zelf DS te zetten en zelf op SHCP te klokken, zie je wat er bij elke flank gebeurt en waarom de laatst ingeschoven bit op Q0 belandt. Dat inzicht heb je nodig zodra er iets niet werkt, of zodra je twee registers in cascade zet en moet uitzoeken welk cijfer waar terechtkomt. <code>shiftOut()</code> verbergt precies dat.</p>
+        <div class="info-title remark">Waarom je <code>shiftOut()</code> hier niet gebruikt</div>
+        <p>Arduino heeft een ingebouwde functie <code>shiftOut()</code> die precies dit doet: acht bits na elkaar naar buiten klokken, in &eacute;&eacute;n regel. Zoek je online naar de 74HC595, dan is dat zowat het eerste wat je tegenkomt, en ook de Arduino-pagina over cascade gebruikt ze.</p>
+        <p>In dit labo schrijf je het toch zelf uit, en dat is met opzet. <code>shiftOut()</code> verbergt wat er bij elke flank gebeurt. Door per bit zelf DS te zetten en zelf op SHCP te klokken, zie je waarom de laatst ingeschoven bit op Q0 belandt. Dat inzicht heb je nodig zodra er iets niet werkt, of zodra je twee registers in cascade zet en moet uitzoeken welk cijfer waar terechtkomt.</p>
         <p>Heb je het eenmaal met de hand gedaan, gebruik dan gerust de ingebouwde functie in je eigen projecten. Voor de oefeningen van dit labo houden we het bij de uitgeschreven versie.</p>
     </div>
 

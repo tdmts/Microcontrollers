@@ -11,10 +11,10 @@
 <body>
 <div class="container">
     <h1>analogWrite</h1>
-    <p class="lead">Met <code>analogWrite()</code> kun je een analoge spanning <strong>simuleren</strong> op bepaalde pinnen van je Arduino. Dit noemen we <strong>PWM</strong> (Pulse Width Modulation).</p>
+    <p class="lead">Met <code>analogWrite()</code> kan je een analoge spanning <strong>simuleren</strong> op bepaalde pinnen van je Arduino. Dit noemen we <strong>PWM</strong> (Pulse Width Modulation).</p>
 
     <h2 id="hoe-werkt-het">Hoe werkt het?</h2>
-    <p>PWM werkt door een digitaal signaal heel snel aan en uit te zetten. Dit gebeurt ongeveer 490 keer per seconde (490 Hz) op een Arduino Uno of Leonardo. Door de verhouding tussen "aan tijd" en "uit tijd" te variëren, kun je bijvoorbeeld een led dimmen of de snelheid van een motor regelen.</p>
+    <p>PWM werkt door een digitaal signaal heel snel aan en uit te zetten. Dit gebeurt ongeveer 490 keer per seconde (490 Hz) op een Arduino Uno of Leonardo. Door de verhouding tussen "aan tijd" en "uit tijd" te variëren, kan je bijvoorbeeld een led dimmen of de snelheid van een motor regelen.</p>
     <p>Je geeft in de functie analogWrite een waarde mee tussen <strong>0 en 255</strong>:</p>
     <ul>
         <li><strong>0</strong> = altijd uit (0% duty cycle, 0V gemiddeld)</li>
@@ -51,8 +51,8 @@ void loop()
 }</code></pre>
 
     <div class="info-box">
-        <div class="info-title warning">Belangrijk</div>
-        <p>Niet alle pinnen ondersteunen PWM! Op de Arduino Uno en Leonardo zijn dit alleen de pinnen met een <strong>~</strong> symbool ernaast (pin 3, 5, 6, 9, 10, 11).</p>
+        <div class="info-title warning">PWM werkt alleen op de pinnen met een ~</div>
+        <p>Op de Arduino Uno en Leonardo zijn dat de pinnen met een <strong>~</strong> symbool ernaast (pin 3, 5, 6, 9, 10, 11). De andere pinnen ondersteunen geen PWM.</p>
     </div>
 
     <div class="my-4">
