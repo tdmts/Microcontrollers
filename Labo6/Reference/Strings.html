@@ -156,7 +156,7 @@ void loop()
 
     <h2 id="string-en-geheugen">String en het geheugen van je UNO</h2>
 
-    <p>Een String past zijn lengte aan terwijl je programma draait. Hij vraagt daarvoor telkens een stukje geheugen, en geeft het weer vrij als hij niet meer nodig is. Een UNO heeft daar 2 kB voor. Vraag en geef je lang genoeg stukjes van wisselende grootte, dan raakt dat geheugen versnipperd: er is nog genoeg vrij, maar nergens een aaneengesloten stuk dat groot genoeg is. Je programma loopt dan vast zonder ook maar &eacute;&eacute;n foutmelding.</p>
+    <p>Een String past zijn lengte aan terwijl je programma draait. Hij vraagt daarvoor telkens een stuk geheugen, en geeft het weer vrij als hij niet meer nodig is. Een UNO heeft daar 2 kB voor. Vraag en geef je lang genoeg stukken van wisselende grootte, dan raakt dat geheugen versnipperd: er is nog genoeg vrij, maar nergens een aaneengesloten stuk dat groot genoeg is. Je programma loopt dan vast zonder ook maar &eacute;&eacute;n foutmelding.</p>
 
     <p>Dat klinkt erger dan het voor jou is. Het patroon dat je in dit labo gebruikt, is net het veilige:</p>
 
@@ -165,7 +165,7 @@ regel.trim();
 // ... hier gebruik je hem ...
                                              // en aan het einde van de loop weer opgeruimd</code></pre>
 
-    <p>Er leeft hier altijd maar &eacute;&eacute;n String tegelijk, en die wordt aan het einde van elke ronde weer vrijgegeven. Het stukje dat vrijkomt is precies het laatst gevraagde, dus het sluit netjes weer aan bij de rest. Zo blijft er niets versnipperd achter.</p>
+    <p>Er leeft hier altijd maar &eacute;&eacute;n String tegelijk, en die wordt aan het einde van elke ronde weer vrijgegeven. Het stuk dat vrijkomt is precies het laatst gevraagde, dus het sluit netjes weer aan bij de rest. Zo blijft er niets versnipperd achter.</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -182,7 +182,7 @@ regel.trim();
                     <td>E&eacute;n String per ronde, en hem meteen weer laten verdwijnen</td>
                 </tr>
                 <tr>
-                    <td>Een String stukje bij beetje laten groeien met <code>+=</code> in een lus</td>
+                    <td>Een String beetje bij beetje laten groeien met <code>+=</code> in een lus</td>
                     <td><code>regel.reserve(32);</code> in je <code>setup()</code>, zodat hij meteen groot genoeg is</td>
                 </tr>
                 <tr>

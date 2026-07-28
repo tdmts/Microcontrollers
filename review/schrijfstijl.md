@@ -84,17 +84,21 @@ Woorden toegevoegd aan `scripts/check-content.sh`, alle drie eerst gemeten:
 - `NOORD_NL`: `kun je|je kunt` staat er nu als `[Kk]un je|[Jj]e kunt`. De lijst is bewust
   hoofdlettergevoelig, waardoor een zinsinitiaal "Je kunt" op `Iteraties.html` er al die tijd
   doorheen glipte. Alleen die ene extra treffer in de gecontroleerde pagina's.
+- `DIMINUTIVES`: `stukjes?`, na de beslissing hieronder. Elf pagina's plus `reference.js`, en dus
+  de eerste toevoeging die verder reikt dan het labo waarin ze gevonden werd.
 
 ### Twijfelgevallen
 
-| Wat | Waar | De vraag |
+Alle zes zijn beslist. Ze blijven staan omdat een volgende doorloop ze anders opnieuw voorlegt.
+
+| Wat | Waar | De beslissing |
 |---|---|---|
-| "een <strong>stukje</strong> code" | `FunctiesParameters.html` (`lead`) en de blurb in `reference.js`; tien keer over negen pagina's in de hele repo | Verkleinwoord als opsmuk (11) of gewoon de vaste uitdrukking? "een stuk code" bestaat, maar "een stukje code" is in het Nederlands zo ingeburgerd dat het eerder klinkt als "een klein programma" dan als versiering. Niet aangeraakt, en niet aan `DIMINUTIVES` toegevoegd, omdat het in negen pagina's staat en de beslissing dus voor de hele repo geldt. |
-| De knipoog `&#128521;` | `BegeleideOefening.html`, stap 9, na "ruim boven de veilige grens" | Enige emoji in de hele cursus. Geen van de dertien patronen dekt dit, maar het is wel opvoering. Weglaten of houden? |
-| "Nog een denkoefening." / "Opnieuw eerst zelf redeneren." | `BegeleideOefening.html`, stappen 6 en 9 | Korte zinnen (5), maar ze zijn de vaste aankondiging van elk denkstapje en dus functioneel in plaats van effectbejag. Laten staan. |
-| De wij-vorm in de geïmporteerde tekst | `Iteraties.html`, `PullUpPullDown.html`, `pinMode.html` | `men` is overal naar de je-vorm gegaan, want dat is formeel. `we` is blijven staan ("we kunnen deze redenering voortzetten", "wanneer we deze knop bekrachtigen"), omdat de hele repo die inclusieve wij-vorm gebruikt. Wil je die ook naar de je-vorm, dan is dat een aparte, veel grotere doorloop. |
-| Kop "Terug" met als inhoud "Niets" | `pinMode.html`, onder Syntax/Parameters | Dat is een vertaling van "Returns" uit de Arduino-documentatie en leest nu als "terugkeren". "Geeft terug" of "Retourneert" zou kloppen. Niet aangeraakt omdat het een kop is en de betekenis verandert. |
-| Belgicismen | `Iteraties.html` | "op het eerste zicht" en "verderzetten" zijn wél gecorrigeerd naar de standaardtaalvormen, omdat SCHRIJFSTIJL.md 12 expliciet standaardtaal vraagt en geen gewestelijke woordkeuze. Ze zijn minder gemarkeerd dan "vijs" of "kuisen", dus zeg het als je ze liever laat staan. |
+| "een <strong>stukje</strong> code" | `FunctiesParameters.html` (`lead`) en de blurb in `reference.js`; `stukje` in het algemeen op elf pagina's | **Opsmuk.** Overal naar `stuk`, `stukken` of `delen`, en `stukjes?` toegevoegd aan `DIMINUTIVES`. De vraag ging over "stukje code", maar het woord stond ook in "een stukje geheugen", "een stukje veerend metaal" en "in drie stukjes", en die vallen onder dezelfde regel. Twee gevallen konden niet mechanisch: de tabeltitel "De stukjes ASCII die je hier nodig hebt" (`TekensEnGetallen.html`) werd "De ASCII-waarden die je hier nodig hebt", en de uitdrukking "stukje bij beetje" (`Strings.html`, `InterruptServiceRoutine.html`) werd "beetje bij beetje", omdat "stuk bij beetje" niet bestaat en de woordenlijst anders een vaste uitdrukking blijft melden. |
+| De knipoog `&#128521;` | `BegeleideOefening.html`, stap 9, na "ruim boven de veilige grens" | **Weg.** Enige emoji in de hele cursus, en opvoering die geen van de dertien patronen toevallig niet dekte. |
+| "Nog een denkoefening." / "Opnieuw eerst zelf redeneren." | `BegeleideOefening.html`, stappen 6 en 9 | **Blijft.** Korte zinnen (5), maar ze zijn de vaste aankondiging van elk denkstapje en dus functioneel in plaats van effectbejag. |
+| De wij-vorm in de geïmporteerde tekst | `Iteraties.html`, `PullUpPullDown.html`, `pinMode.html` | **Blijft.** `men` is overal naar de je-vorm gegaan, want dat is formeel, maar `we` blijft staan ("we kunnen deze redenering voortzetten"), omdat de hele repo die inclusieve wij-vorm gebruikt. Ook naar de je-vorm gaan is een aparte, repo-brede doorloop en geen stijlronde per labo. |
+| Kop "Terug" met als inhoud "Niets" | `pinMode.html`, onder Syntax/Parameters | **"Geeft terug".** De vertaling van "Returns" las als "terugkeren". De werkwoordsvorm sluit aan bij hoe `FunctiesParameters.html` over functies praat; "Retourneert" was het formelere alternatief. |
+| Belgicismen | `Iteraties.html` | **Correcties blijven.** "op het eerste zicht" → "op het eerste gezicht" (2x) en "verderzetten" → "voortzetten", omdat SCHRIJFSTIJL.md 12 standaardtaal vraagt en geen gewestelijke woordkeuze. |
 
 ## Voor orion-review
 

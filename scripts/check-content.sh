@@ -732,7 +732,7 @@ if [ "$AUDIT" -eq 1 ]; then
   # vocabulary this course already uses: "pootjes" (the outer legs of a
   # potentiometer, in the original author's own text), "rekstrookje",
   # "ezelsbruggetje". It may grow; it may never gain a technical term.
-  DIMINUTIVES='eentje|blokjes?|chipje|draadjes?|schermpje|lampje|knopje|lusje|regeltje|sketchje|functietje|woordje|zinnetje|looplichtje|lichtpuntje|lettertje|motortje|rommeltje|duwtje|trucje|lijstjes?|plaatsjes?'
+  DIMINUTIVES='eentje|blokjes?|chipje|draadjes?|schermpje|lampje|knopje|lusje|regeltje|sketchje|functietje|woordje|zinnetje|looplichtje|lichtpuntje|lettertje|motortje|rommeltje|duwtje|trucje|lijstjes?|plaatsjes?|stukjes?'
   while IFS= read -r hit; do
     [ -z "$hit" ] && continue
     f="${hit%%:*}"; w="${hit##*:}"

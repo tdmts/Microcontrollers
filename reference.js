@@ -25,7 +25,7 @@ window.LAB_REFERENCE = {
                     { id: 'wiskundigeoperatoren', name: 'Wiskundige operatoren', href: 'WiskundigeOperatoren.html', blurb: 'Met wiskundige operatoren kan je berekeningen uitvoeren op variabelen en constanten.' },
                     { id: 'selecties', name: 'Selecties', href: 'Selecties.html', blurb: 'Een keuze maken in je programma op basis van een voorwaarde die herleidt tot true of false.' },
                     { id: 'iteraties', name: 'Iteraties', href: 'Iteraties.html', blurb: 'De for-, while- en do-while-lus om een stuk code herhaaldelijk uit te voeren.' },
-                    { id: 'functiesparameters', name: 'Functies en parameters', href: 'FunctiesParameters.html', blurb: 'Een functie is een stukje code dat een bepaalde taak uitvoert en dat je kan hergebruiken.' }
+                    { id: 'functiesparameters', name: 'Functies en parameters', href: 'FunctiesParameters.html', blurb: 'Een functie is een stuk code dat een bepaalde taak uitvoert en dat je kan hergebruiken.' }
                 ]
             },
             {

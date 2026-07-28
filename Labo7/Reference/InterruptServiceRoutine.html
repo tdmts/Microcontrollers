@@ -83,7 +83,7 @@
 
     <p>Printen vanuit een ISR is verboden, maar om een ander soort reden dan <code>Wire</code>. Je bord hangt er niet van, en dat maakt het net verraderlijk: je probeert het, het lijkt te werken, en je gelooft de waarschuwing niet meer.</p>
 
-    <p>Wat er wel gebeurt: bij 9600 baud duurt &eacute;&eacute;n teken ruim een milliseconde. Normaal geeft je Arduino de tekens stukje bij beetje weg terwijl je programma verder loopt. In een ISR kan dat niet, dus zit je ISR ineens tientallen milliseconden vast te schrijven. Al die tijd staat alles stil: je mist andere knopdrukken, je klok loopt achter, en een I&sup2;C-overdracht die elders bezig was gaat stuk.</p>
+    <p>Wat er wel gebeurt: bij 9600 baud duurt &eacute;&eacute;n teken ruim een milliseconde. Normaal geeft je Arduino de tekens beetje bij beetje weg terwijl je programma verder loopt. In een ISR kan dat niet, dus zit je ISR ineens tientallen milliseconden vast te schrijven. Al die tijd staat alles stil: je mist andere knopdrukken, je klok loopt achter, en een I&sup2;C-overdracht die elders bezig was gaat stuk.</p>
 
     <p>En omgekeerd heeft <code>Serial.available()</code> in een ISR al helemaal geen zin: binnenkomende tekens worden zelf met een interrupt opgevangen, dus terwijl jouw ISR draait kan er onmogelijk iets nieuws binnenkomen.</p>
 
