@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Praktische voorbeeldtest</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Praktische voorbeeldtest</h1>
+    <p class="lead">Dit is de opgave voor de praktische voorbeeldtest van het tweede evaluatiemoment. Zo weet je op voorhand hoe moeilijk de echte test wordt.</p>
+
+    <div class="info-box">
+        <p>Tijdens het tweede evaluatiemoment is er ook een <strong>theoretische test</strong>. Die gaat over de leerinhouden van labo 3 en labo 4. Oefen daarop met de <a href="TheoretischeVoorbeeldtest.html">theoretische voorbeeldtest</a>.</p>
+    </div>
+
+    <h2 id="opgave">Opgave</h2>
+
+    <p>Sluit 8 leds aan op een 74HC595 schuifregister, een potentiometer op je Arduino, en een drukknop op een PCF8574 I/O-expander.</p>
+
+    <p>Gebruik deze pinnen, en wijk hier niet van af:</p>
+
+    <ul>
+        <li>DS van het schuifregister op pin 2</li>
+        <li>STCP op pin 3</li>
+        <li>SHCP op pin 4</li>
+        <li>De potentiometer op pin A0</li>
+        <li>De PCF8574 op de I²C-bus: SDA op A4, SCL op A5</li>
+        <li>De drukknop op P0 van de PCF8574</li>
+    </ul>
+
+    <p>In de opgave hieronder is <strong>led 1</strong> de led op uitgang Q0 en <strong>led 8</strong> die op Q7.</p>
+
+    <h3>Situatie 1: de balk</h3>
+
+    <p>Met de potentiometer regel je hoeveel leds er branden. De leds lopen vol vanaf led 1, dus ze branden altijd aaneengesloten vanaf Q0.</p>
+
+    <ul>
+        <li>Verdeel het bereik van de potentiometer in acht even grote stukken.</li>
+        <li>In het laagste stuk brandt er 1 led, in het hoogste branden er 8.</li>
+        <li>Er brandt dus altijd minstens één led.</li>
+    </ul>
+
+    <h3>Situatie 2: het looplicht</h3>
+
+    <p>Door op de knop te drukken (P0 gaat laag) schakel je over naar het looplicht. Er brandt nu precies één led tegelijk. Die wandelt van led 1 naar led 8 en begint daarna opnieuw. Met de potentiometer regel je de snelheid.</p>
+
+    <ul>
+        <li>Potentiometer van 0% tot 100%: één stap duurt 1000ms (= 0%) tot 100ms (= 100%).</li>
+    </ul>
+
+    <p>Als je opnieuw op de knop drukt kom je terug in situatie 1. De knop wisselt dus tussen situatie 1 en situatie 2.</p>
+
+    <h3>Twee extra eisen</h3>
+
+    <ul>
+        <li>Houd je de knop even ingedrukt, dan mag er maar <strong>één keer</strong> gewisseld worden.</li>
+        <li>De knop moet <strong>blijven reageren</strong>, ook als het looplicht op zijn traagste stand staat. Een druk op de knop mag dus nooit een volle seconde blijven liggen.</li>
+    </ul>
+
+    <h2 id="fysiek">Fysiek bouwen</h2>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Belangrijk</div>
+        <p>Om je volledige punten te behalen moet je deze oefening fysiek maken, niet in TinkerCAD.</p>
+    </div>
+
+    <p>Welke componenten je daarvoor meebrengt, staat op de pagina <a href="AlgemeneInformatie.html#meebrengen">Algemene informatie</a>.</p>
+
+    <h2 id="oplossing-schema">Oplossing schema</h2>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../img/TODO-voorbeeldtest2-schema.png" alt="Aansluitschema met acht leds op een 74HC595, een potentiometer op A0 en een drukknop op P0 van een PCF8574" class="img-fluid">
+                </figure>
+            </div>
+        </div>
+    </div>
+
+    <h2 id="oplossing-code">Oplossing code</h2>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De twee situaties schuiven allebei acht bits naar buiten en latchen daarna één keer, dus ze verschillen enkel in het patroon dat ze samenstellen. Omdat de laatst verschoven bit op Q0 belandt, telt de lus af van led 8 naar led 1.</p>
+
+            <p>De knop lees je uit met <code>~knoppen &amp; vorigeKnoppen</code>. Zo blijft een knop die je vasthoudt maar één keer tellen, en dat is precies de eerste extra eis. De tweede eis is de reden dat de snelheid van het looplicht met <code>millis()</code> geregeld wordt en niet met <code>delay()</code>: bij een <code>delay(1000)</code> zou je een korte druk op de knop gewoon missen.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
+
+const int adresExpander = 0x38; // PCF8574AN met A0, A1 en A2 aan GND
+
+const int pinDS = 2;   // Data ingang
+const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
+const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
+const int pinPot = A0; // Loper van de potentiometer
+
+const int aantalLeds = 8;
+
+bool looplicht = false; // false = situatie 1 (balk), true = situatie 2 (looplicht)
+int positie = 1;        // welke led brandt in situatie 2
+
+byte vorigeKnoppen = 0xFF;
+unsigned long vorigeStap = 0;
+
+void schrijfExpander(byte waarde)
+{
+  Wire.beginTransmission(adresExpander);
+  Wire.write(waarde);
+  Wire.endTransmission();
+}
+
+byte leesExpander()
+{
+  Wire.requestFrom(adresExpander, 1);
+
+  if (Wire.available())
+  {
+    return Wire.read();
+  }
+
+  return 0xFF; // niets ontvangen: doe alsof de knop niet ingedrukt is
+}
+
+void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}
+
+// De leds 1 tot en met aantalAan branden, de rest niet.
+void toonBalk(int aantalAan)
+{
+  // De laatst verschoven bit komt op Q0, dus we tellen af van led 8 naar led 1
+  for (int led = aantalLeds; led &gt;= 1; led--)
+  {
+    digitalWrite(pinDS, led &lt;= aantalAan ? HIGH : LOW);
+    risingEdge(pinSHCP);
+  }
+
+  risingEdge(pinSTCP); // hele balk in één keer bijwerken
+}
+
+// Enkel de led met dat nummer brandt.
+void toonEnkeleLed(int nummer)
+{
+  for (int led = aantalLeds; led &gt;= 1; led--)
+  {
+    digitalWrite(pinDS, led == nummer ? HIGH : LOW);
+    risingEdge(pinSHCP);
+  }
+
+  risingEdge(pinSTCP);
+}
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+
+  Wire.begin();
+
+  schrijfExpander(0xFF); // P0 hoog zetten, anders kan de knop hem niet laag trekken
+}
+
+void loop()
+{
+  byte knoppen = leesExpander();
+
+  // Een knop is net ingedrukt als zijn bit van 1 naar 0 ging
+  byte netIngedrukt = ~knoppen &amp; vorigeKnoppen;
+  vorigeKnoppen = knoppen;
+
+  if (netIngedrukt &amp; B00000001)
+  {
+    looplicht = !looplicht;
+    positie = 1;
+    vorigeStap = millis();
+  }
+
+  int potWaarde = analogRead(pinPot);
+
+  if (looplicht == false)
+  {
+    // 0..1023 gedeeld door 128 geeft 0..7, dus +1 geeft 1 t.e.m. 8 leds
+    toonBalk(potWaarde / 128 + 1);
+  }
+  else
+  {
+    unsigned long stapTijd = map(potWaarde, 0, 1023, 1000, 100);
+
+    if (millis() - vorigeStap &gt;= stapTijd)
+    {
+      vorigeStap = millis();
+      positie = positie % aantalLeds + 1;
+    }
+
+    toonEnkeleLed(positie);
+  }
+}</code></pre>
+
+            <p>Merk op dat de leds in allebei de situaties bij elke doorloop opnieuw geschreven worden, ook als er niets veranderd is. Dat mag: het schuifregister houdt zijn waarde vast tot je opnieuw latcht, dus je ziet geen enkel verschil. Het houdt de <code>loop()</code> wel eenvoudig, want er is maar één plaats waar de leds bijgewerkt worden.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../back-link.js"></script>
+<script src="../solution-reveal.js"></script>
+</body>
+</html>

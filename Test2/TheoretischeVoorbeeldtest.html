@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Theoretische voorbeeldtest</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Theoretische voorbeeldtest</h1>
+    <p class="lead">Theorievragen over de leerinhouden van labo 3 en labo 4, zodat je weet of je klaar bent voor het theoriegedeelte.</p>
+
+    <div class="info-box">
+        <p>Tijdens het tweede evaluatiemoment is er ook een <strong>praktische test</strong>. Hoe die eruitziet, zie je op de <a href="PraktischeVoorbeeldtest.html">praktische voorbeeldtest</a>.</p>
+    </div>
+
+    <h2 id="vragen">Vragen</h2>
+
+    <h3 id="vraag-1">Vraag 1: welke leds branden? (meerkeuze)</h3>
+
+    <p>Op een 74HC595 hangen acht leds: led 1 op Q0 tot en met led 8 op Q7. Je laadt er dit patroon in.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;
+const int pinSTCP = 3;
+const int pinSHCP = 4;
+
+const bool patroon[8] = {1, 1, 0, 0, 0, 0, 0, 0};
+
+void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+}
+
+void loop()
+{
+  for (int i = 0; i &lt; 8; i++)
+  {
+    if (patroon[i] == 1)
+    {
+      digitalWrite(pinDS, HIGH);
+    }
+    else
+    {
+      digitalWrite(pinDS, LOW);
+    }
+
+    risingEdge(pinSHCP);
+  }
+
+  risingEdge(pinSTCP);
+}</code></pre>
+
+    <p>Welke uitgangen staan er hoog?</p>
+
+    <ol type="a">
+        <li>Q0 en Q1</li>
+        <li>Q6 en Q7</li>
+        <li>Alle acht, want de bits blijven doorschuiven</li>
+        <li>Geen enkele, want STCP staat buiten de lus</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Antwoord: b) Q6 en Q7</strong></p>
+
+            <p>De bit die je er als <strong>laatste</strong> inschuift, komt op Q0 terecht. De eerste bit die je inschuift, is dus ook diegene die het verst doorschuift, helemaal tot Q7. Deze lus begint bij <code>patroon[0]</code>, en die belandt daarom op Q7. <code>patroon[1]</code> komt op Q6, en de zes nullen die daarna volgen vullen Q5 tot Q0 op.</p>
+
+            <p>Wil je dat de twee enen op Q0 en Q1 uitkomen, dan moet je de array in de omgekeerde volgorde doorlopen. Dat is precies waarom de oplossingen in labo 3 aftellen van led 8 naar led 1 in plaats van op te tellen.</p>
+
+            <p>Antwoord d) is een strikvraag: <code>risingEdge(pinSTCP)</code> hoort net wel buiten de lus. Zolang je enkel op SHCP klokt, verandert er niets aan de uitgangen. Die ene flank op STCP op het einde kopieert het schuifregister in één keer naar het storage register, en pas dan wordt alles tegelijk zichtbaar.</p>
+
+            <p>Meer hierover: <a href="../Labo3/Reference/Schuifregister.html">Werking van het schuifregister</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-2">Vraag 2: de I²C-bus en de PCF8574 (meerdere juiste antwoorden)</h3>
+
+    <p>Welke van onderstaande uitspraken zijn <strong>juist</strong>? Er zijn er meerdere juist.</p>
+
+    <ol type="a">
+        <li>Op een Arduino UNO liggen SDA en SCL vast op A4 en A5.</li>
+        <li>Je kan acht PCF8574's met hetzelfde basisadres op dezelfde bus hangen door A0, A1 en A2 telkens anders te bedraden.</li>
+        <li>Een pin van de PCF8574 die je als ingang wil gebruiken, zet je eerst laag door er een 0 naar te schrijven.</li>
+        <li>Hang je maar één chip aan de bus, dan mag je A0, A1 en A2 gerust laten zweven.</li>
+        <li>De /INT-pin meldt dat er iets veranderd is op de I/O-lijnen, zodat je daar niet constant naar hoeft te vragen.</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Antwoord: a, b en e zijn juist. c en d zijn fout.</strong></p>
+
+            <ul>
+                <li><strong>a) juist.</strong> Dat is geen keuze die je zelf maakt: de I²C-hardware in de chip hangt nu eenmaal aan die twee pinnen. Op een UNO R3 zijn dezelfde twee lijnen ook nog eens apart uitgebracht naast de AREF-pin, dus daar aansluiten mag ook. Op een Leonardo zijn het pinnen 2 en 3.</li>
+                <li><strong>b) juist.</strong> A2, A1 en A0 zijn verbonden met de laagste drie bits van het adres. Met drie lijnen maak je acht combinaties, dus acht adressen vanaf hetzelfde basisadres. Bij basisadres 0x38 gaat dat van 0x38 tot 0x3F, goed voor 64 extra I/O-lijnen op twee Arduinopinnen.</li>
+                <li><strong>c) fout.</strong> Net omgekeerd. De pinnen zijn <strong>quasi-bidirectioneel</strong>: er is geen aparte in- of uitgangsinstelling. Een pin die je wil lezen moet een <strong>1</strong> in zijn uitgangslatch hebben. Schreef je er eerder een 0 naar, dan lees je die 0 gewoon terug en lijkt je knop permanent ingedrukt.</li>
+                <li><strong>d) fout.</strong> A0, A1 en A2 moeten altijd aan GND of aan Vcc hangen, ook bij één chip. Laat je ze zweven, dan ligt het adres niet vast en vind je de chip soms wel en soms niet terug met de I2C scanner.</li>
+                <li><strong>e) juist.</strong> Dat is precies waar /INT voor dient. In labo 4 gebruik je die functie nog niet en vraag je de knoppen elke doorloop zelf op, maar in labo 7 hang je hem aan een interruptpin.</li>
+            </ul>
+
+            <p>Meer hierover: <a href="../Labo4/Reference/PCF8574.html">Werken met de PCF8574</a> en <a href="../Labo4/Reference/I2CAdres.html">Het I²C adres vinden</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-3">Vraag 3: twee schuifregisters in cascade (open vraag)</h3>
+
+    <p>Je wil zestien leds aansturen met twee 74HC595's, en je wil daarvoor nog altijd maar drie pinnen van je Arduino gebruiken.</p>
+
+    <ol>
+        <li>Leg uit hoe je die twee chips met elkaar verbindt, en wat er met de bits gebeurt terwijl je ze inschuift.</li>
+        <li>Je schuift eerst de acht bits voor het ene register in en dan die voor het andere. Waarom geef je pas op het einde één flank op STCP, en niet na elke acht bits?</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Deel 1</strong></p>
+
+            <p>SHCP en STCP van beide chips hang je gewoon parallel: ze krijgen allebei dezelfde klok en dezelfde latchflank, dus ze werken volledig in de pas. Enkel de dataweg is een ketting. DS van het eerste register komt van je Arduino, en <strong>Q7S</strong> van het eerste register gaat naar <strong>DS</strong> van het tweede. Q7S is de seriële uitgang: daar verlaat een bit het register wanneer hij er aan de andere kant uitgeduwd wordt.</p>
+
+            <p>Schuif je nu zestien bits in, dan blijven de laatste acht in het eerste register staan, en zijn de eerste acht er langs Q7S uitgeschoven en in het tweede terechtgekomen. <strong>Wat je eerst inschuift, schuift dus door naar het tweede register.</strong> Dat is dezelfde regel als bij één chip, alleen loopt de rij nu over zestien plaatsen in plaats van acht.</p>
+
+            <p><strong>Deel 2</strong></p>
+
+            <p>Omdat het schuifregister en het storage register los van elkaar staan. Zolang je enkel op SHCP klokt, verandert er niets aan de uitgangen: je bent achter de schermen aan het opbouwen wat er straks moet komen te staan. Pas bij een stijgende flank op STCP springt alles tegelijk zichtbaar op de uitgang.</p>
+
+            <p>Latch je na de eerste acht bits, dan maak je een tussenstand zichtbaar waarin het eerste register al de nieuwe waarde toont terwijl het tweede nog de oude heeft, of erger nog, waarin de eerste byte kort op de verkeerde chip staat te branden voor hij doorgeschoven is. Bij een teller op twee displays zie je dat als flikkeren en als cijfers die niet gelijk omspringen. Eén flank op het einde laat alle zestien uitgangen op hetzelfde moment veranderen.</p>
+
+            <p>Meer hierover: <a href="../Labo3/Reference/Schuifregister.html">Werking van het schuifregister</a> en de oefening <a href="../Labo3/Exercises/Looplicht16Bit.html">16-bit looplicht</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-4">Vraag 4: bits aanpassen (numeriek)</h3>
+
+    <p>Op de acht pinnen van een PCF8574 hangen acht leds. Op dit moment staat er in je programma:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte poort = B11010110;</code></pre>
+
+    <p>Bereken:</p>
+
+    <ol>
+        <li>Diezelfde waarde in hexadecimale en in decimale notatie.</li>
+        <li>De led op P2 moet uit, de zeven andere blijven zoals ze zijn. Geef de expressie en de nieuwe waarde van <code>poort</code>, binair.</li>
+        <li>Daarna moet de led op P5 er nog bij aan. Geef opnieuw de expressie en de nieuwe waarde, en leg uit waarom je dat niet doet met <code>poort = B00100000;</code>.</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>1. 0xD6 en 214</strong></p>
+
+            <p>Voor hexadecimaal splits je de byte in twee groepjes van vier bits: <code>1101</code> is D en <code>0110</code> is 6, samen <strong>0xD6</strong>. Decimaal tel je de plaatswaarden van de enen op: 128 + 64 + 16 + 4 + 2 = <strong>214</strong>.</p>
+
+            <p><strong>2. <code>poort &amp;= ~(1 &lt;&lt; 2);</code> geeft B11010010</strong></p>
+
+            <p>Lees die expressie van binnen naar buiten. <code>1 &lt;&lt; 2</code> is B00000100, het masker van bit 2. De <code>~</code> keert dat om tot B11111011: overal een 1, behalve op de plaats van bit 2. Een AND daarmee laat elke andere bit gewoon zichzelf blijven en maakt enkel bit 2 gegarandeerd 0.</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <caption>B11010110 &amp; B11111011</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">P7</th>
+                            <th scope="col">P6</th>
+                            <th scope="col">P5</th>
+                            <th scope="col">P4</th>
+                            <th scope="col">P3</th>
+                            <th scope="col">P2</th>
+                            <th scope="col">P1</th>
+                            <th scope="col">P0</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">poort</th>
+                            <td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">masker</th>
+                            <td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">resultaat</th>
+                            <td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p><strong>3. <code>poort |= (1 &lt;&lt; 5);</code> geeft B11110010</strong></p>
+
+            <p>Met OR zet je een bit op 1 zonder de rest te raken: overal waar het masker 0 staat blijft de bit die er al stond. B11010010 met B00100000 erbij geeft <strong>B11110010</strong>, oftewel 0xF2 of 242.</p>
+
+            <p>Waarom niet <code>poort = B00100000;</code>? Omdat je bij een PCF8574 altijd de <strong>hele byte</strong> naar de chip schrijft. Je kan geen enkele pin apart aanspreken. Zet je <code>poort</code> zomaar gelijk aan B00100000, dan zeg je in één keer dat P5 aan moet en alle zeven andere uit. De leds op P7, P6 en P1 zouden dus doven, terwijl je die niet gevraagd hebt te veranderen.</p>
+
+            <p>Meer hierover: <a href="../Labo4/Reference/Bits.html">Werken met bits</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-5">Vraag 5: zoek de twee fouten (code)</h3>
+
+    <p>Een student bouwt een looplicht dat één plaats opschuift telkens je op de knop drukt. De acht leds hangen aan een 74HC595, de knop hangt aan P0 van een PCF8574. De schakeling is correct gebouwd en de I2C scanner vindt de chip op 0x38.</p>
+
+    <p>Toch klopt er niets van. Bij het opstarten schuift het licht één keer op, en daarna verandert de knop niets meer. En in plaats van één heldere led branden er verschillende leds flauw.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
+
+const int adresExpander = 0x38;
+
+const int pinDS = 2;
+const int pinSTCP = 3;
+const int pinSHCP = 4;
+
+byte patroon = B00000001;
+byte vorigeKnoppen = 0xFF;
+
+void risingEdge(int pinNummer)
+{
+  digitalWrite(pinNummer, LOW);
+  digitalWrite(pinNummer, HIGH);
+}
+
+void setup()
+{
+  pinMode(pinDS, OUTPUT);
+  pinMode(pinSTCP, OUTPUT);
+  pinMode(pinSHCP, OUTPUT);
+
+  Wire.begin();
+
+  Wire.beginTransmission(adresExpander);
+  Wire.write(B00000000);
+  Wire.endTransmission();
+}
+
+void loop()
+{
+  byte knoppen = 0xFF;
+
+  Wire.requestFrom(adresExpander, 1);
+
+  if (Wire.available())
+  {
+    knoppen = Wire.read();
+  }
+
+  byte netIngedrukt = ~knoppen &amp; vorigeKnoppen;
+  vorigeKnoppen = knoppen;
+
+  if (netIngedrukt &amp; B00000001)
+  {
+    patroon = patroon &lt;&lt; 1;
+
+    if (patroon == 0)
+    {
+      patroon = B00000001;
+    }
+  }
+
+  for (int led = 8; led &gt;= 1; led--)
+  {
+    if (patroon &amp; (1 &lt;&lt; (led - 1)))
+    {
+      digitalWrite(pinDS, HIGH);
+    }
+    else
+    {
+      digitalWrite(pinDS, LOW);
+    }
+
+    risingEdge(pinSHCP);
+    risingEdge(pinSTCP);
+  }
+}</code></pre>
+
+    <p>Er zitten twee fouten in. Welke, en hoe los je ze op?</p>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Fout 1: de setup schrijft een 0 naar de knoppin</strong></p>
+
+            <p>In de <code>setup()</code> gaat er <code>B00000000</code> naar de expander, en dus ook een 0 naar P0. De pinnen van de PCF8574 zijn quasi-bidirectioneel: een pin die je wil lezen moet een 1 in zijn uitgangslatch hebben. Met een 0 erin lees je die 0 gewoon terug, wat je programma leest als een permanent ingedrukte knop.</p>
+
+            <p>Dat verklaart ook precies wat de student ziet. <code>vorigeKnoppen</code> start op <code>0xFF</code>, dus de allereerste doorloop denkt dat de knop net ingedrukt werd en schuift één keer op. Daarna staat <code>vorigeKnoppen</code> ook op 0 en gaat er nooit nog een bit van 1 naar 0. De knop is dood.</p>
+
+            <p>Oplossing: zet de pinnen die je als ingang gebruikt hoog.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.write(B11111111);</code></pre>
+
+            <p><strong>Fout 2: er wordt gelatcht na elke bit</strong></p>
+
+            <p><code>risingEdge(pinSTCP)</code> staat binnen de lus, dus na elke ingeschoven bit wordt het schuifregister naar het storage register gekopieerd. Elke tussenstand komt zo op de uitgangen terecht: acht zichtbare patronen in plaats van één. Omdat dat sneller gaat dan je oog kan volgen, zie je geen looplicht maar een aantal flauw brandende leds.</p>
+
+            <p>Oplossing: schuif eerst alle acht de bits in, en latch pas daarna één keer.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>for (int led = 8; led &gt;= 1; led--)
+{
+  if (patroon &amp; (1 &lt;&lt; (led - 1)))
+  {
+    digitalWrite(pinDS, HIGH);
+  }
+  else
+  {
+    digitalWrite(pinDS, LOW);
+  }
+
+  risingEdge(pinSHCP);
+}
+
+risingEdge(pinSTCP);</code></pre>
+
+            <p>Meer hierover: <a href="../Labo4/Reference/PCF8574.html">Werken met de PCF8574</a> en <a href="../Labo3/Reference/Schuifregister.html">Werking van het schuifregister</a>.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../back-link.js"></script>
+<script src="../solution-reveal.js"></script>
+</body>
+</html>

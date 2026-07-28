@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Algemene informatie</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Algemene informatie</h1>
+    <p class="lead">Hoe het tweede evaluatiemoment verloopt: hoelang je hebt, wat je mag gebruiken en wat je meebrengt.</p>
+
+    <h2 id="timing">Timing</h2>
+
+    <p>Het evaluatiemoment bestaat uit twee delen: een praktische test waarin je een schakeling bouwt en programmeert, en een theoretische test over labo 3 en 4.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Hoeveel tijd je krijgt per onderdeel</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Onderdeel</th>
+                    <th scope="col">Regulier</th>
+                    <th scope="col">Met IOEM</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Praktische test</th>
+                    <td>60 minuten</td>
+                    <td>75 minuten</td>
+                </tr>
+                <tr>
+                    <th scope="row">Theoretische test</th>
+                    <td>15 minuten</td>
+                    <td>20 minuten</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Heb je een goedgekeurd IOEM-statuut (individuele onderwijs- en examenmaatregelen), dan krijg je automatisch de langere tijd.</p>
+
+    <h2 id="hulpmiddelen">Wat je mag gebruiken</h2>
+
+    <p>De <strong>theoretische test is gesloten boek.</strong></p>
+
+    <p>De <strong>praktische test is open boek</strong>. Je mag alles gebruiken: eigen notities, het leermateriaal op Orion, oefeningen en oplossingen van de labo's, het internet en ook AI. Het enige wat niet mag, is spieken bij een medestudent.</p>
+
+    <p>Om je volledige punten te halen moet je de praktische opdracht fysiek maken, <strong>op je eigen Arduino en met je eigen componenten</strong>. Je mag TinkerCAD gebruiken om je ideeën te testen, maar de eindoplossing moet fysiek op je eigen Arduino werken. Een schakeling die alleen in TinkerCAD bestaat, telt niet mee.</p>
+
+    <h2 id="meebrengen">Wat je meebrengt</h2>
+
+    <p>Breng je Arduino starterkit mee. Controleer op voorhand of deze onderdelen er zeker in zitten:</p>
+
+    <ul>
+        <li>Je Arduino, de USB-kabel, een breadboard en jumper wires</li>
+        <li>Twee 74HC595 schuifregisters</li>
+        <li>Een PCF8574 I/O-expander</li>
+        <li>Acht LEDs, met hun voorschakelweerstanden</li>
+        <li>Twee drukknoppen, met pull-up- of pull-downweerstanden</li>
+        <li>Een potentiometer</li>
+    </ul>
+
+    <div class="info-box">
+        <p>Test op voorhand of je je PCF8574 terugvindt op de bus, en noteer welk adres de I2C scanner geeft. Sta je op de test met een chip waarvan je het adres niet kent, dan ben je daar zo tien minuten aan kwijt. Hoe dat werkt, staat op <a href="../Labo4/Reference/I2CAdres.html">Het I²C adres vinden</a>.</p>
+    </div>
+</div>
+
+<script src="../back-link.js"></script>
+</body>
+</html>
