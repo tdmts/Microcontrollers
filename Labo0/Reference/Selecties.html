@@ -57,6 +57,31 @@ void loop()
   }
 }</code></pre>
 
+    <h2 id="tweevoudige-selectie-in-het-kort">Een tweevoudige selectie in het kort</h2>
+
+    <p>Kies je met een <code>if</code>/<code>else</code> tussen twee <strong>waarden</strong>, en verder niets, dan mag dat ook in één regel. Daarvoor bestaat de operator <code>?:</code>. Je schrijft eerst de voorwaarde, dan een vraagteken, dan de waarde als de voorwaarde waar is, dan een dubbele punt, en tot slot de waarde als ze niet waar is:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>voorwaarde ? waardeAlsWaar : waardeAlsNietWaar</code></pre>
+
+    <p>Deze twee stukken code doen exact hetzelfde:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>// De volledige schrijfwijze
+if (value == HIGH)
+{
+  digitalWrite(pinLed, HIGH);
+}
+else
+{
+  digitalWrite(pinLed, LOW);
+}
+
+// Dezelfde keuze, in het kort
+digitalWrite(pinLed, value == HIGH ? HIGH : LOW);</code></pre>
+
+    <p>Het verschil met een gewone <code>if</code> is dat <code>?:</code> zelf een <strong>waarde oplevert</strong>. Je kan hem daarom rechtstreeks meegeven als argument van een functie, zoals hierboven, of in een toekenning zetten:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>int helderheid = knopIngedrukt ? 255 : 0;</code></pre>
+
     <h2 id="voorbeeld-meervoudige-selectie">Voorbeeld meervoudige selectie</h2>
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinSensor = A0;
 

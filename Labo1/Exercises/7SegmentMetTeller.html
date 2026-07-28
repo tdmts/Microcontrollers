@@ -68,6 +68,16 @@
                 display. Bij 2Hz wisselt het cijfer 2x per seconde, dus elk cijfer
                 blijft <code>500ms</code> staan.
             </p>
+            <p>
+                In <code>toonCijfer()</code> staat een operator die je nog niet
+                eerder gezien hebt:
+                <code>segmentAan ? SEGMENT_AAN : !SEGMENT_AAN</code>. Dat
+                vraagteken is de korte schrijfwijze van een
+                <code>if</code>/<code>else</code> die tussen twee waarden kiest.
+                Hoe je hem leest, staat bij
+                <a href="../../Labo0/Reference/Selecties.html#tweevoudige-selectie-in-het-kort">Een
+                tweevoudige selectie in het kort</a>.
+            </p>
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segA = 3;
 const int segB = 4;
 const int segC = 5;
