@@ -77,7 +77,7 @@ void loop()
 
 }</code></pre>
 
-    <h3>Stijgende flank?</h3>
+    <h3>Wat is een stijgende flank?</h3>
     <p>De ingangen SHCP en STCP reageren volgens de datasheet enkel op een stijgende flank. Dit kan je nalezen in de <a href="../../datasheets/74hc595.pdf" target="_blank" rel="noopener">functional description</a>.</p>
     <p>Tot nu toe hebben we enkel <code>digitalWrite(pinNummer, HIGH)</code> en <code>digitalWrite(pinNummer, LOW)</code> gebruikt. Dat zijn echter twee <strong>vaste toestanden</strong> en deze keer willen we een <strong>flank</strong>.</p>
     <p>Om dat te simuleren bouwen we <strong>zelf een functie risingEdge</strong>. Bekijk de code eens en vraag uitleg in het labo als je dit niet meteen snapt.</p>

@@ -760,11 +760,13 @@ if [ "$AUDIT" -eq 1 ]; then
   # "Kun je" is spelled out with both cases rather than matched
   # case-insensitively: the rest of the list must stay case-sensitive, and a
   # sentence-initial "Kun je" would slip past the lowercase-only form.
-  # "kunt" stands alone rather than as "je kunt", because the subject is not
-  # always next to it: "een waarde die je in je programma kunt gebruiken" on
-  # analogRead.html sat between the two and went unreported for that reason.
-  # The Flemish standard form is "kan" in every one of those positions.
-  NOORD_NL='[Kk]un je|kunt|flinke?|prima|eventjes|hartstikke|gaaf|nou ja'
+  # "kunt" and "wilt" stand alone rather than as "je kunt" / "je wilt", because
+  # the subject is not always next to the verb: "een waarde die je in je
+  # programma kunt gebruiken" on analogRead.html and "wanneer je bijvoorbeeld
+  # een sensorwaarde wilt omzetten" on map.html both sat between the two and
+  # went unreported for that reason. The Flemish standard form is "kan" / "wil"
+  # in every one of those positions. "wilt u" is left to the u-vorm rule below.
+  NOORD_NL='[Kk]un je|kunt|wilt|flinke?|prima|eventjes|hartstikke|gaaf|nou ja'
   while IFS= read -r hit; do
     [ -z "$hit" ] && continue
     f="${hit%%:*}"; w="${hit##*:}"

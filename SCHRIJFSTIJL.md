@@ -190,7 +190,13 @@ geschreven wordt**, en vermijd woorden die typisch Noord-Nederlands aanvoelen.
 De repo is hier al bijna consequent: `kan je` en `je kan` staan er samen 101 keer, `kun je` en
 `je kunt` zes keer, verspreid over vier pagina's. Dat laatste is dus even goed een
 consistentieprobleem als een regionale kwestie, en het staat vooral in tekst die uit een Nederlandse
-bron is overgenomen.
+bron is overgenomen. Hetzelfde geldt voor `wilt`, dat er vier keer stond tegenover twintig keer
+`je wil`.
+
+Let bij `kunt` en `wilt` op waar het onderwerp staat. In "een waarde die je in je programma kunt
+gebruiken" en "wanneer je bijvoorbeeld een sensorwaarde wilt omzetten" staat er van alles tussen `je`
+en het werkwoord, en toch is het dezelfde vorm. De Vlaamse standaardvorm is `kan` en `wil`, waar het
+onderwerp ook staat.
 
 Wat er verder in de lijst staat: `flink` (deel ze flink door) wordt `ruim` of `stevig`, `prima`
 (dat werkt prima) wordt `goed` of `zonder problemen`, en `eventjes` wordt `even` of `kort`. Verder

@@ -184,11 +184,13 @@ uitdrukkelijk uit. De vier keer dat het hier wegging, was het vulling; op één 
 
 ### Twijfelgevallen
 
-| Wat | Waar | De vraag |
+Alle drie zijn beslist. Ze blijven staan omdat een volgende doorloop ze anders opnieuw voorlegt.
+
+| Wat | Waar | Beslissing |
 |---|---|---|
-| De ik-vorm in de vragenlijsten | `PotentiometerUitlezen.html` ("met welke waarde moet ik de gelezen waarde vermenigvuldigen") en `LedDimmen.html` ("wanneer ik de waarde 128 gebruik") | `men` is overal naar de je-vorm gegaan, maar in deze twee titels staat `ik`. Dat is de student die de vraag stelt, en dat leest niet fout. Blijft `ik` staan, of gaat de hele vragenlijst naar de je-vorm? |
-| "Twee grensgevallen om het gevoel te krijgen" | `Spanningsdeler.html`, kadertitel | Het kader beschrijft er drie: R2 veel groter, R2 veel kleiner, en de twee gelijk. "Twee" naar "drie" zetten verandert wat de titel beweert, en dat valt buiten een stijlronde. |
-| `je wilt` | `map.html` (2x, `lead` en parameterlijst) en `Labo0/Reference/pinMode.html` (1x) | Dezelfde vorm als `kun je`: drie keer `je wilt` tegenover tientallen keren `je wil`. Het staat niet in SCHRIJFSTIJL.md 12 en is standaardtaal, dus het is hier blijven staan. Als het mee moet, is het een repo-brede ingreep zoals `LED` naar `led`, ook op een pagina die al klaar is. |
+| De ik-vorm in de vragenlijsten | `PotentiometerUitlezen.html` ("met welke waarde moet ik de gelezen waarde vermenigvuldigen") en `LedDimmen.html` ("wanneer ik de waarde 128 gebruik") | **Naar de je-vorm.** De rest van de vragenlijst staat er al in, en één `ik` ertussen leest als een restant van de bron. In `LedDimmen.html` verschuift `gebruik` mee naar `gebruikt`. |
+| "Twee grensgevallen om het gevoel te krijgen" | `Spanningsdeler.html`, kadertitel | **"Drie grensgevallen".** Het kader beschrijft er drie, dus het getal is gecorrigeerd. De staart "om het gevoel te krijgen" ging mee weg: die klinkt Noord-Nederlands en zegt niets dat de kadertekst niet al zegt. |
+| `je wilt` | `map.html` en `Labo0/Reference/pinMode.html` | **Repo-breed naar `je wil`, met een regel erbij.** Doorgeschoven naar *Repo-brede ingrepen* hieronder, want het raakt ook labo 0, dat al klaar was. |
 
 ## Labo 3
 
@@ -227,11 +229,13 @@ is gevestigd vocabulaire van deze repo en geen opsmuk.
 
 ### Twijfelgevallen
 
-| Wat | Waar | De vraag |
+Alle drie zijn beslist. Ze blijven staan omdat een volgende doorloop ze anders opnieuw voorlegt.
+
+| Wat | Waar | Beslissing |
 |---|---|---|
-| `<strong>TLDR:</strong>` | `Dubbel7SegmentDisplay.html`, boven het kader "Waarom werkt dat?" | Enige voorkomen in de hele repo. Het is geen van de dertien patronen, maar het is wel internetjargon in een cursustekst, en de dubbele punt erna is de aankondigingsvorm uit patroon 4. Mag dit "Kort gezegd:" worden, of is de informele toon hier bedoeld? |
-| "terwijl je maar drie pinnen van je Arduino <strong>opoffert</strong>" | `Schuifregister.html`, `lead` | Blijven staan of `gebruikt` worden? `opoffert` zegt iets extra (drie pinnen die je kwijt bent), maar het is ook het enige beeldende werkwoord in een verder feitelijke lead. Eén voorkomen in de repo. |
-| Kop "Stijgende flank?" | `Enkel7SegmentDisplay.html`, `<h3>` boven `risingEdge()` | Een vraagteken in een kop. Ongemoeid gelaten omdat de kop het onderwerp noemt en niet als retorische overgang leest (patroon 3), maar het is dezelfde oordeelsvraag als de dubbele punt in een kop uit de labo 1-ronde. |
+| `<strong>TLDR:</strong>` | `Dubbel7SegmentDisplay.html`, boven het kader "Waarom werkt dat?" | **Blijft.** De informele toon is hier bedoeld. Het enige voorkomen in de repo, het is geen van de dertien patronen, en de dubbele punt erna kondigt een samenvatting aan en geen pointe. Niet opnieuw voorleggen. |
+| "terwijl je maar drie pinnen van je Arduino <strong>opoffert</strong>" | `Schuifregister.html`, `lead` | **Naar `gebruikt`.** De lead is verder feitelijk, en één beeldend werkwoord erin valt op als opsmuk. Dat de pinnen bezet blijven, staat verderop op de pagina toch al. |
+| Kop "Stijgende flank?" | `Enkel7SegmentDisplay.html`, `<h3>` boven `risingEdge()` | **Naar "Wat is een stijgende flank?".** Een half fragment met een vraagteken leest als een aarzeling; een hele vraag stelt de vraag die de paragraaf erna beantwoordt. De vraagvorm zelf blijft dus, en dit is geen patroon 3: de kop is geen overgang maar een onderwerp. |
 
 ## Repo-brede ingrepen
 
@@ -259,6 +263,20 @@ prozaopmaak (`<p>`, `<li>`, `<td>`, een kop, een `alt`, een `name:` of `blurb:` 
 laat alles binnen een `<pre>` staan, want een regelgewijze grep ziet geen blokgrenzen. Die filter
 kant kiest bewust voor een gemiste melding boven een verzonnen melding. De regel staat ook in
 [SCHRIJFSTIJL.md](../SCHRIJFSTIJL.md) en [CONTRIBUTING.md](../CONTRIBUTING.md).
+
+### `je wilt` naar `je wil` (na labo 2)
+
+Vier vervangingen in twee bestanden: `Labo2/Reference/map.html` (3x, twee in de `lead` en één in de
+parameterlijst) en `Labo0/Reference/pinMode.html` (1x). Daartegenover stond `je wil` al twintig keer,
+verspreid over de hele repo, dus dit was even goed een consistentiekwestie als een regionale.
+
+Het is repo-breed gedaan en niet binnen labo 2, want `pinMode.html` hoort bij labo 0 en dat stond al
+op **klaar**. Dezelfde afweging als bij `LED` naar `led`.
+
+`wilt` staat sindsdien los in `NOORD_NL`, niet als `je wilt`, om exact de reden waarom `je kunt`
+eerder al `kunt` werd: het onderwerp staat niet altijd naast het werkwoord. "Wanneer je bijvoorbeeld
+een sensorwaarde wilt omzetten" in de `lead` van `map.html` zat er met vier woorden tussen, en de
+tweewoordsvorm ving die niet. `wilt u` blijft aan de u-vormregel, zodat niets dubbel gemeld wordt.
 
 ## Voor orion-review
 

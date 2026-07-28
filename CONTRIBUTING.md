@@ -70,7 +70,7 @@ Er zitten ook zes opmerkingen over de tekst zelf bij, de enige zes uit
   staat dus met opzet geen enkele vakterm in: de buitenste **pootjes** van een potentiometer heten
   zo, en `rekstrookje` is gewoon de naam van het onderdeel. Vind je een woord dat er nog bij hoort,
   dan mag je het toevoegen.
-- **Noord-Nederlandse woordkeuze** (`kun je`, `kunt`, `flink`, `prima`, `eventjes`). Onze
+- **Noord-Nederlandse woordkeuze** (`kun je`, `kunt`, `wilt`, `flink`, `prima`, `eventjes`). Onze
   studenten zijn Vlaams, en de repo is dat al bijna overal: `kan je` en `je kan` staan er 101 keer
   tegen 6 keer `kun je`. Let op twee dingen. Het doel is standaardtaal zoals ze in Vlaanderen
   geschreven wordt, **geen Belgicismen**: "je neemt best een weerstand van 10 k&Omega;" blijft
