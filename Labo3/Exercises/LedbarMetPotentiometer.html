@@ -13,13 +13,13 @@
     <h1>Ledbar met potentiometer</h1>
     <p class="lead">Maak een schakeling waarbij de stand van een potentiometer op een analoge ingang wordt gelezen, en geef afhankelijk van de waarde een patroon weer op een schuifregister-ledbar.</p>
 
-    <p>Een <strong>ledbar</strong> is niets anders dan acht LEDs in één behuizing, netjes op een rij. Elektrisch verandert er dus niets tegenover de acht losse LEDs uit <a href="Looplicht8Bit.html">het 8-bit looplicht</a>: elke LED hangt met zijn eigen voorschakelweerstand aan een uitgang van het schuifregister. Let wel op de oriëntatie, want ook hier zitten alle anodes aan één kant en alle kathodes aan de andere.</p>
+    <p>Een <strong>ledbar</strong> is niets anders dan acht leds in één behuizing, netjes op een rij. Elektrisch verandert er dus niets tegenover de acht losse leds uit <a href="Looplicht8Bit.html">het 8-bit looplicht</a>: elke led hangt met zijn eigen voorschakelweerstand aan een uitgang van het schuifregister. Let wel op de oriëntatie, want ook hier zitten alle anodes aan één kant en alle kathodes aan de andere.</p>
 
     <!-- TODO: foto of pinout van de ledbar uit de kit, met duidelijk welke kant de anodes
          zijn en waar pin 1 zit -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-ledbar-pinout.png" class="img-fluid" alt="TODO: pinout van de ledbar met acht LEDs, met de anodekant en pin 1 aangeduid">
+            <img src="../../img/TODO-ledbar-pinout.png" class="img-fluid" alt="TODO: pinout van de ledbar met acht leds, met de anodekant en pin 1 aangeduid">
         </figure>
     </div>
 
@@ -32,25 +32,25 @@
     <hr>
 
     <h2 id="wat-moet-er-branden">Wat moet er branden?</h2>
-    <p>Hoe verder je de potentiometer opendraait, hoe meer LEDs er oplichten:</p>
+    <p>Hoe verder je de potentiometer opendraait, hoe meer leds er oplichten:</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
             <thead>
                 <tr>
                     <th scope="col">Waarde van analogRead()</th>
-                    <th scope="col">Aantal LEDs</th>
+                    <th scope="col">Aantal leds</th>
                 </tr>
             </thead>
             <tbody>
-                <tr><td>0 - 127</td><td>1 LED</td></tr>
-                <tr><td>128 - 255</td><td>2 LED</td></tr>
-                <tr><td>256 - 383</td><td>3 LED</td></tr>
-                <tr><td>384 - 511</td><td>4 LED</td></tr>
-                <tr><td>512 - 639</td><td>5 LED</td></tr>
-                <tr><td>640 - 767</td><td>6 LED</td></tr>
-                <tr><td>768 - 895</td><td>7 LED</td></tr>
-                <tr><td>896 - 1023</td><td>8 LED</td></tr>
+                <tr><td>0 - 127</td><td>1 led</td></tr>
+                <tr><td>128 - 255</td><td>2 led</td></tr>
+                <tr><td>256 - 383</td><td>3 led</td></tr>
+                <tr><td>384 - 511</td><td>4 led</td></tr>
+                <tr><td>512 - 639</td><td>5 led</td></tr>
+                <tr><td>640 - 767</td><td>6 led</td></tr>
+                <tr><td>768 - 895</td><td>7 led</td></tr>
+                <tr><td>896 - 1023</td><td>8 led</td></tr>
             </tbody>
         </table>
     </div>
@@ -74,9 +74,9 @@
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> De potentiometer wordt uitgelezen met analogRead()</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Helemaal dichtgedraaid brandt er 1 LED, helemaal opengedraaid branden er 8</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Helemaal dichtgedraaid brandt er 1 led, helemaal opengedraaid branden er 8</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Alle acht de overgangen kloppen met de tabel</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De LEDs vormen een balk vanaf Q0, er zitten geen gaten tussen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De leds vormen een balk vanaf Q0, er zitten geen gaten tussen</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt geen acht if-testen maar één berekening</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
@@ -87,8 +87,8 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>De acht bereiken zijn elk 128 breed, dus een gehele deling door 128 geeft je meteen een getal van 0 tot 7. Tel er 1 bij op en je hebt het aantal brandende LEDs. Dat is de hele tabel in één regel.</p>
-            <p>Daarna schuif je acht bits naar buiten. Omdat de laatst verschoven bit op Q0 belandt, tel je af van 8 naar 1 en schuif je een 1 zodra het nummer van de LED kleiner of gelijk is aan het gevraagde aantal.</p>
+            <p>De acht bereiken zijn elk 128 breed, dus een gehele deling door 128 geeft je meteen een getal van 0 tot 7. Tel er 1 bij op en je hebt het aantal brandende leds. Dat is de hele tabel in één regel.</p>
+            <p>Daarna schuif je acht bits naar buiten. Omdat de laatst verschoven bit op Q0 belandt, tel je af van 8 naar 1 en schuif je een 1 zodra het nummer van de led kleiner of gelijk is aan het gevraagde aantal.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
 const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register

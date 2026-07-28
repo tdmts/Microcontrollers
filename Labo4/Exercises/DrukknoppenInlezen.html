@@ -13,7 +13,7 @@
     <h1>Drukknoppen inlezen via de PCF8574</h1>
     <p class="lead">In de vorige oefening schreef je naar de expander, nu lees je ervan. Sluit twee drukknoppen aan op de PCF8574 en geef via de seriële monitor weer welke knop ingedrukt is.</p>
 
-    <p>Je vertrekt van de schakeling uit <a href="LedsAansturen.html">LEDs aansturen met de PCF8574</a>: dezelfde chip op dezelfde twee lijnen, A0 tot A2 nog altijd aan GND, en dus ook hetzelfde adres dat je daar met de <a href="../Reference/I2CAdres.html">I2C scanner</a> gevonden hebt.</p>
+    <p>Je vertrekt van de schakeling uit <a href="LedsAansturen.html">leds aansturen met de PCF8574</a>: dezelfde chip op dezelfde twee lijnen, A0 tot A2 nog altijd aan GND, en dus ook hetzelfde adres dat je daar met de <a href="../Reference/I2CAdres.html">I2C scanner</a> gevonden hebt.</p>
 
     <h2 id="drukknoppen-met-pull-up-weerstand">Drukknoppen met pull-up weerstand</h2>
 
@@ -90,7 +90,7 @@ void loop()
 
     <div class="info-box warning">
         <div class="info-title warning">Waarom die 0xFF in de setup?</div>
-        <p>De pinnen van de PCF8574 zijn <strong>quasi-bidirectioneel</strong>: er is geen aparte instelling voor ingang of uitgang. Een pin die je wil lezen moet een <strong>1</strong> hebben staan. Kom je hier rechtstreeks van de vorige oefening, dan staan P0 en P1 nog laag van je LEDs, en lees je die nullen gewoon terug alsof beide knoppen ingedrukt zijn. Zie <a href="../Reference/PCF8574.html">Werken met de PCF8574</a>.</p>
+        <p>De pinnen van de PCF8574 zijn <strong>quasi-bidirectioneel</strong>: er is geen aparte instelling voor ingang of uitgang. Een pin die je wil lezen moet een <strong>1</strong> hebben staan. Kom je hier rechtstreeks van de vorige oefening, dan staan P0 en P1 nog laag van je leds, en lees je die nullen gewoon terug alsof beide knoppen ingedrukt zijn. Zie <a href="../Reference/PCF8574.html">Werken met de PCF8574</a>.</p>
     </div>
 
     <h2 id="maak-het-af">Maak het af</h2>

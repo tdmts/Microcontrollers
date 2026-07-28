@@ -11,9 +11,9 @@
 <body>
 <div class="container">
     <h1>Vast getal op een dubbel 7-segment display</h1>
-    <p class="lead">Zet het getal 42 op een dubbel 7-segment display, en houd het stabiel. Er telt hier nog niets: het enige dat je erbij leert, is hoe je twee cijfers tegelijk zichtbaar krijgt met de pinnen van één display.</p>
+    <p class="lead">Zet het getal 42 op een dubbel 7-segment display, en houd het stabiel. Er telt hier nog niets. Het enige dat je erbij leert, is hoe je twee cijfers tegelijk zichtbaar krijgt met de pinnen van één display.</p>
 
-    <p>Je hebt alles al: de cijferpatronen komen uit <a href="7SegmentMetTeller.html">7 segment met teller</a>, en de segmenten leerde je kennen bij <a href="AchtAnimatieOp7Segment.html">de 8-animatie</a>. Wat er nieuw bijkomt, is één ding.</p>
+    <p>Je hebt alles al: de cijferpatronen komen uit <a href="7SegmentMetTeller.html">7 segment met teller</a>, en de segmenten leerde je kennen bij <a href="AchtAnimatieOp7Segment.html">de 8-animatie</a>.</p>
 
     <h2 id="het-probleem">Twee cijfers, maar één stel pinnen</h2>
 
@@ -27,19 +27,19 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: waarom kan je zo geen 42 tonen?</button>
         <div class="spoiler-content solution-content">
             <p>Omdat de segmentpinnen gedeeld zijn, krijgen beide cijfers altijd hetzelfde patroon. Zet je het patroon van een 4 op de pinnen, dan staat er 44. Zet je dat van een 2, dan staat er 22. Twee verschillende cijfers tegelijk is fysiek onmogelijk met deze bedrading.</p>
-            <p>Wat je wel apart kan aansturen, is welk van de twee cijfers op dat moment stroom krijgt. Daar draait de oplossing om.</p>
+            <p>Wat je wel apart kan aansturen, is welk van de twee cijfers op dat moment stroom krijgt.</p>
         </div>
     </div>
 
     <h2 id="multiplexing">De oplossing: multiplexing</h2>
 
-    <p>Je toont de twee cijfers niet tegelijk, maar om beurten, en je wisselt zo snel dat je oog het verschil niet meer ziet. Hoe dat werkt, hoe snel het moet en waarom het werkt, staat op <a href="../Reference/Multiplexing.html">Multiplexing</a>.</p>
+    <p>Je toont de twee cijfers om beurten, en je wisselt zo snel dat je oog het verschil niet meer ziet. Hoe dat werkt, hoe snel het moet en waarom het werkt, staat op <a href="../Reference/Multiplexing.html">Multiplexing</a>.</p>
 
     <p>Zoek in je sjabloon op welke pin bepaalt welk cijfer actief is, en welke stand van die pin bij welk cijfer hoort. Zet dat in een constante, dan kan je het in één regel omdraaien als het omgekeerd blijkt te zijn.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Begin traag, dan snel</div>
-        <p>Zet je wisseltijd eerst eens op <code>delay(500)</code>. Je ziet dan de twee cijfers om beurten knipperen, en dat is precies wat er gebeurt. Breng die tijd daarna stap voor stap omlaag tot je niets meer ziet flikkeren. Zo zie je met eigen ogen waar de truc zit, in plaats van meteen een werkend getal te hebben zonder te weten waarom.</p>
+        <p>Zet je wisseltijd eerst eens op <code>delay(500)</code>. Je ziet dan de twee cijfers om beurten knipperen, en dat is precies wat er gebeurt. Breng die tijd daarna stap voor stap omlaag tot je niets meer ziet flikkeren. Zo zie je waar de truc zit.</p>
     </div>
 
     <hr>
@@ -74,7 +74,7 @@
                 segmentpinnen. <code>multiplexStap()</code> doet dat twee keer na elkaar,
                 telkens met de juiste helft van het display actief. Die functie wordt
                 vanuit de <code>loop()</code> eindeloos herhaald, en dat herhalen is wat
-                het beeld staande houdt: stopt het, dan dooft het display.
+                het beeld staande houdt. Stopt het, dan dooft het display.
             </p>
             <p>
                 De <code>?:</code> in <code>toonCijfer()</code> is de korte

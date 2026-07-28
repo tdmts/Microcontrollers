@@ -17,24 +17,24 @@
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/schuifregister-looplicht-schema.png" alt="Breadboardschema met een Arduino UNO, een 74HC595 en acht LEDs met voorschakelweerstanden">
+            <img src="../../img/schuifregister-looplicht-schema.png" alt="Breadboardschema met een Arduino UNO, een 74HC595 en acht leds met voorschakelweerstanden">
         </figure>
     </div>
 
     <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: hoe zijn de LEDs geschakeld?</button>
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: hoe zijn de leds geschakeld?</button>
         <div class="spoiler-content solution-content">
-            <p>Actief hoog. De uitgangen van het schuifregister sourcen de stroom, dus een LED licht op bij een <strong>1</strong> op de bijhorende uitgang.</p>
+            <p>Actief hoog. De uitgangen van het schuifregister sourcen de stroom, dus een led licht op bij een <strong>1</strong> op de bijhorende uitgang.</p>
         </div>
     </div>
 
-    <p>Het schuifregister hangt aan dezelfde drie pinnen als in de vorige oefeningen: DS op pin 2, STCP op pin 3 en SHCP op pin 4. Alleen wat er aan de uitgangen hangt verandert: acht LEDs in plaats van een 7 segment display. De <code>risingEdge()</code>-functie en de regel dat de laatst ingeschoven bit op Q0 belandt, kan je nalezen op <a href="../Reference/Schuifregister.html">Werking van het schuifregister</a>.</p>
+    <p>Het schuifregister hangt aan dezelfde drie pinnen als in de vorige oefeningen: DS op pin 2, STCP op pin 3 en SHCP op pin 4. Alleen wat er aan de uitgangen hangt verandert: acht leds in plaats van een 7 segment display. De <code>risingEdge()</code>-functie en de regel dat de laatst ingeschoven bit op Q0 belandt, kan je nalezen op <a href="../Reference/Schuifregister.html">Werking van het schuifregister</a>.</p>
 
     <h2 id="stap-1-schuiven">Stap 1: schuiven</h2>
-    <p>Begin met een mini versie van het looplicht waarbij je drie LEDs afwisselend laat branden. Schrijf het dus eerst gewoon uit als een sequentie, zonder lus. Zo zie je precies welke stappen je telkens herhaalt.</p>
+    <p>Begin met een mini versie van het looplicht waarbij je drie leds afwisselend laat branden. Schrijf het dus eerst gewoon uit als een sequentie, zonder lus. Zo zie je precies welke stappen je telkens herhaalt.</p>
 
     <h2 id="stap-2-schuiven-met-een-lus">Stap 2: schuiven met een lus</h2>
-    <p>Breid nu jouw mini versie uit en probeer te werken met een <strong>lus</strong> om alle LEDs aan te sturen.</p>
+    <p>Breid nu jouw mini versie uit en probeer te werken met een <strong>lus</strong> om alle leds aan te sturen.</p>
     <p>Als je een sequentie (opeenvolging van instructies) wil omzetten naar een iteratie (lus) dan moet je eerst kijken naar:</p>
     <ol>
         <li>hoeveel keer je de lus moet uitvoeren?</li>
@@ -64,10 +64,10 @@
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> Elke LED heeft een eigen voorschakelweerstand</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt altijd precies één LED tegelijk</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke led heeft een eigen voorschakelweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt altijd precies één led tegelijk</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Het licht loopt van Q0 tot Q7 en begint daarna opnieuw</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Je stuurt de LEDs aan met een lus, niet met acht uitgeschreven blokken</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je stuurt de leds aan met een lus, niet met acht uitgeschreven blokken</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Per stap schuif je exact 8 bits naar buiten en latch je één keer</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
@@ -78,7 +78,7 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>De buitenste lus telt af welke LED aan de beurt is. De twee binnenste lussen schuiven de nullen naar buiten: eerst die vóór de brandende LED, dan die erna. Samen zijn dat altijd 7 nullen en 1 één, dus precies 8 bits.</p>
+            <p>De buitenste lus telt af welke led aan de beurt is. De twee binnenste lussen schuiven de nullen naar buiten: eerst die vóór de brandende led, dan die erna. Samen zijn dat altijd 7 nullen en 1 één, dus precies 8 bits.</p>
             <p>Omdat de laatst verschoven bit op Q0 belandt, staat de eerste binnenlus voor de hoge uitgangen (Q7 naar beneden) en de tweede voor de lage. Op het einde van elke stap één stijgende flank op STCP, en dan pas de <code>delay()</code>.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang

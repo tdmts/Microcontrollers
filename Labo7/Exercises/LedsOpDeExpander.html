@@ -3,24 +3,24 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>LEDs op de expander zelf</title>
+    <title>Leds op de expander zelf</title>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
     <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
 </head>
 <body>
 <div class="container">
-    <h1>LEDs op de expander zelf</h1>
-    <p class="lead">Nu gaan de LEDs mee op de PCF8574. Vier knoppen en vier LEDs op &eacute;&eacute;n chip, met twee draden naar je Arduino. Er zit een valstrik in waardoor je knoppen voorgoed ingedrukt lijken.</p>
+    <h1>Leds op de expander zelf</h1>
+    <p class="lead">Nu gaan de leds mee op de PCF8574. Vier knoppen en vier leds op &eacute;&eacute;n chip, met twee draden naar je Arduino. Er zit een valstrik in waardoor je knoppen voorgoed ingedrukt lijken.</p>
 
-    <p>Vertrek van je vorige oefening. De knoppen blijven op P0 tot P3 staan, en de twee LEDs verhuizen van je Arduino naar P4 tot P7. Er komen er meteen twee bij.</p>
+    <p>Vertrek van je vorige oefening. De knoppen blijven op P0 tot P3 staan, en de twee leds verhuizen van je Arduino naar P4 tot P7. Er komen er meteen twee bij.</p>
 
     <h2 id="het-schema">Het schema</h2>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/pcf8574-leds-op-de-expander-schema.png" class="img-fluid" alt="Breadboardschema met een PCF8574 met vier drukknoppen op P0 tot P3 en vier LEDs op P4 tot P7, actief laag geschakeld met hun weerstand naar de plus">
-            <figcaption class="figure-caption">De LEDs hangen met hun weerstand aan de plus. Ze branden dus wanneer de expanderpin <strong>laag</strong> staat.</figcaption>
+            <img src="../../img/pcf8574-leds-op-de-expander-schema.png" class="img-fluid" alt="Breadboardschema met een PCF8574 met vier drukknoppen op P0 tot P3 en vier leds op P4 tot P7, actief laag geschakeld met hun weerstand naar de plus">
+            <figcaption class="figure-caption">De leds hangen met hun weerstand aan de plus. Ze branden dus wanneer de expanderpin <strong>laag</strong> staat.</figcaption>
         </figure>
     </div>
 
@@ -40,7 +40,7 @@
                 </tr>
                 <tr>
                     <td>P4 t.e.m. P7</td>
-                    <td>Vier LEDs, met hun weerstand naar de <strong>plus</strong></td>
+                    <td>Vier leds, met hun weerstand naar de <strong>plus</strong></td>
                 </tr>
                 <tr>
                     <td>/INT</td>
@@ -52,36 +52,36 @@
 
     <p>Naar je Arduino lopen nu nog maar drie draden: SDA, SCL en /INT. Alle acht de in- en uitgangen zitten op de expander. Dat is precies waarvoor zo'n chip bestaat.</p>
 
-    <h2 id="actief-laag">Waarom de LEDs omgekeerd hangen</h2>
+    <h2 id="actief-laag">Waarom de leds omgekeerd hangen</h2>
 
-    <p>Op je Arduino hing een LED altijd met zijn anode aan de pin en zijn kathode via een weerstand naar de massa: <strong>sourcing</strong>. Hier gaat dat niet.</p>
+    <p>Op je Arduino hing een led altijd met zijn anode aan de pin en zijn kathode via een weerstand naar de massa: <strong>sourcing</strong>. Hier gaat dat niet.</p>
 
-    <p>Een uitgang van de PCF8574 kan een flinke stroom naar de massa afvoeren, maar kan er nauwelijks stroom uit leveren: ongeveer 4 mA in het beste geval, en daar gaat een LED niet fatsoenlijk van branden. De chip kan dus wel goed <strong>sinken</strong> en slecht sourcen.</p>
+    <p>Een uitgang van de PCF8574 kan een flinke stroom naar de massa afvoeren, maar kan er nauwelijks stroom uit leveren: ongeveer 4 mA in het beste geval, en daar gaat een led niet fatsoenlijk van branden. De chip kan dus wel goed <strong>sinken</strong> en slecht sourcen.</p>
 
-    <p>Daarom hangt elke LED met zijn weerstand aan de plus, en met zijn kathode aan de expanderpin. De stroom loopt van de plus door de LED naar de chip. Een LED brandt dus bij een <strong>0</strong> en dooft bij een <strong>1</strong>. Dat heet <strong>actief laag</strong>.</p>
+    <p>Daarom hangt elke led met zijn weerstand aan de plus, en met zijn kathode aan de expanderpin. De stroom loopt van de plus door de led naar de chip. Een led brandt dus bij een <strong>0</strong> en dooft bij een <strong>1</strong>. Dat heet <strong>actief laag</strong>.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Dit ken je al</div>
-        <p>Het is precies de sinking-schakeling uit <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>, en je hebt hem in <a href="../../Labo4/Exercises/LedsAansturen.html">LEDs aansturen via de PCF8574</a> in labo 4 al eens gebruikt. Alleen de reden is nu expliciet: de chip k&aacute;n niet anders.</p>
+        <p>Het is precies de sinking-schakeling uit <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>, en je hebt hem in <a href="../../Labo4/Exercises/LedsAansturen.html">leds aansturen via de PCF8574</a> in labo 4 al eens gebruikt. Alleen de reden is nu expliciet: de chip k&aacute;n niet anders.</p>
     </div>
 
     <div class="info-box warning">
         <div class="info-title warning">Neem hier 470 &Omega; of 1 k&Omega;, geen 220 &Omega;</div>
-        <p>Met 220 &Omega; trekt elke LED ongeveer 17 mA. Vier LEDs tegelijk is dan bijna 70 mA die allemaal door de massapin van &eacute;&eacute;n chipje moeten. Dat is te veel voor de PCF8574, ook al kan &eacute;&eacute;n enkele pin die stroom aan.</p>
-        <p>Met 470 &Omega; of 1 k&Omega; zit je op 4 tot 8 mA per LED. Ze branden iets minder fel en je chip blijft heel.</p>
+        <p>Met 220 &Omega; trekt elke led ongeveer 17 mA. Vier leds tegelijk is dan bijna 70 mA die allemaal door de massapin van &eacute;&eacute;n chipje moeten. Dat is te veel voor de PCF8574, ook al kan &eacute;&eacute;n enkele pin die stroom aan.</p>
+        <p>Met 470 &Omega; of 1 k&Omega; zit je op 4 tot 8 mA per led. Ze branden iets minder fel en je chip blijft heel.</p>
     </div>
 
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
 
-    <p>Elke knop bedient de LED die ernaast ligt, en zolang je drukt:</p>
+    <p>Elke knop bedient de led die ernaast ligt, en zolang je drukt:</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
-            <caption>Welke knop welke LED bedient</caption>
+            <caption>Welke knop welke led bedient</caption>
             <thead>
                 <tr>
                     <th scope="col">Knop</th>
-                    <th scope="col">LED</th>
+                    <th scope="col">led</th>
                 </tr>
             </thead>
             <tbody>
@@ -105,11 +105,11 @@
         </table>
     </div>
 
-    <p>Laat je de knop los, dan dooft de LED weer. De LED <strong>volgt</strong> de knop dus gewoon.</p>
+    <p>Laat je de knop los, dan dooft de led weer. De led <strong>volgt</strong> de knop dus gewoon.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Dat maakt deze oefening op &eacute;&eacute;n punt makkelijker</div>
-        <p>Omdat de LED de knop volgt en niet omschakelt, hoef je hier <em>geen</em> flanken te detecteren en <em>niet</em> te ontdenderen. Stuitert je knop een paar milliseconden, dan flikkert je LED een paar milliseconden mee. Dat ziet niemand.</p>
+        <p>Omdat de led de knop volgt en niet omschakelt, hoef je hier <em>geen</em> flanken te detecteren en <em>niet</em> te ontdenderen. Stuitert je knop een paar milliseconden, dan flikkert je led een paar milliseconden mee. Dat ziet niemand.</p>
         <p>Dezelfde hardware als de vorige oefening, een andere eis, en ineens veel minder code. Weten w&aacute;&aacute;rom je iets nodig hebt, bepaalt of je het deze keer nog moet schrijven.</p>
     </div>
 
@@ -117,7 +117,7 @@
 
     <p>Dit is de reden dat deze oefening drie pepers krijgt, en je loopt er gegarandeerd in.</p>
 
-    <p>De PCF8574 heeft geen manier om te zeggen welke pin een ingang is en welke een uitgang. Er is maar &eacute;&eacute;n opdracht, en die schrijft <strong>alle acht de bits tegelijk</strong>. Schrijf je een byte om je LEDs aan te sturen, dan zet je dus ook de vier bits van je knoppen.</p>
+    <p>De PCF8574 heeft geen manier om te zeggen welke pin een ingang is en welke een uitgang. Er is maar &eacute;&eacute;n opdracht, en die schrijft <strong>alle acht de bits tegelijk</strong>. Schrijf je een byte om je leds aan te sturen, dan zet je dus ook de vier bits van je knoppen.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Wat er gebeurt als je een 0 op een knoppin schrijft</div>
@@ -140,12 +140,12 @@
         <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte decimaal = 247;
 byte hexadecimaal = 0xF7;
 byte binair = B11110111;</code></pre>
-        <p>Voor deze oefening is de binaire vorm veruit de handigste, want je ziet meteen welke LED brandt en welke knoppin hoog blijft staan.</p>
+        <p>Voor deze oefening is de binaire vorm veruit de handigste, want je ziet meteen welke led brandt en welke knoppin hoog blijft staan.</p>
     </div>
 
     <h2 id="een-vertrekpunt">Een handig vertrekpunt</h2>
 
-    <p>Begin je byte bij <code>0xFF</code>, dus alle bits op 1. Dan staan je vier knoppinnen meteen goed en zijn al je LEDs uit. Vervolgens zet je alleen de bits op 0 van de LEDs die moeten branden. Zo kan je onmogelijk per ongeluk een knoppin platleggen.</p>
+    <p>Begin je byte bij <code>0xFF</code>, dus alle bits op 1. Dan staan je vier knoppinnen meteen goed en zijn al je leds uit. Vervolgens zet je alleen de bits op 0 van de leds die moeten branden. Zo kan je onmogelijk per ongeluk een knoppin platleggen.</p>
 
     <p>Handig daarbij zijn <code>bitRead()</code> en <code>bitClear()</code>. Zie <a href="../../Labo4/Reference/Bits.html">Bits</a>.</p>
 
@@ -158,12 +158,12 @@ byte binair = B11110111;</code></pre>
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> Elke knop doet de LED ernaast branden zolang je drukt</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Laat je los, dan dooft de LED</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Twee knoppen tegelijk doen twee LEDs branden</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke knop doet de led ernaast branden zolang je drukt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Laat je los, dan dooft de led</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Twee knoppen tegelijk doen twee leds branden</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je knoppen blijven werken, ook na tientallen drukken</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De byte die je schrijft heeft altijd 1 in de vier laagste bits</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Je LEDs zijn actief laag geschakeld, met hun weerstand naar de plus</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je leds zijn actief laag geschakeld, met hun weerstand naar de plus</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt weerstanden van 470 &Omega; of meer, niet van 220 &Omega;</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je ISR bevat nog altijd alleen het zetten van de vlag</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Er lopen nog maar drie draden tussen je expander en je Arduino</label></li>
@@ -176,7 +176,7 @@ byte binair = B11110111;</code></pre>
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>De <code>loop()</code> is korter dan die van de vorige oefening. Geen <code>vorigeKnoppen</code>, geen flankdetectie, geen ontdendering: de LED volgt de knop, en meer moet dat niet zijn.</p>
+            <p>De <code>loop()</code> is korter dan die van de vorige oefening. Geen <code>vorigeKnoppen</code>, geen flankdetectie, geen ontdendering: de led volgt de knop, en meer moet dat niet zijn.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
 
@@ -254,13 +254,13 @@ void loop()
 
             <div class="info-box remark">
                 <div class="info-title remark">Die <code>i + 4</code> is de hele oefening</div>
-                <p>Knop 0 zit op bit 0, en zijn LED op bit 4. Knop 1 op bit 1, LED op bit 5. Vandaar dat ene <code>+ 4</code>: het schuift je van de onderste helft van de byte naar de bovenste.</p>
+                <p>Knop 0 zit op bit 0, en zijn led op bit 4. Knop 1 op bit 1, led op bit 5. Vandaar dat ene <code>+ 4</code>: het schuift je van de onderste helft van de byte naar de bovenste.</p>
                 <p>Merk ook op dat de <code>for</code>-lus tot 4 loopt en niet tot 8. De bovenste vier bits van <code>knoppen</code> zijn geen ingangen, daar lees je gewoon terug wat je er zelf op gezet hebt.</p>
             </div>
 
             <div class="info-box remark">
                 <div class="info-title remark">Het kan ook in &eacute;&eacute;n regel</div>
-                <p>Omdat een ingedrukte knop een 0 geeft &eacute;n een brandende LED een 0 nodig heeft, valt de onderste helft van de byte precies op de bovenste te schuiven:</p>
+                <p>Omdat een ingedrukte knop een 0 geeft &eacute;n een brandende led een 0 nodig heeft, valt de onderste helft van de byte precies op de bovenste te schuiven:</p>
                 <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte teSturen = ((knoppen &amp; B00001111) &lt;&lt; 4) | B00001111;</code></pre>
                 <p>Kort, en volstrekt onleesbaar tot je het drie keer gelezen hebt. Voor je eigen oplossing is de lus beter: die laat zien w&aacute;t je doet en waarom die laagste vier bits op 1 blijven. Maar het is nuttig om te zien dat het kan, want zo staat het in echte code vaak wel geschreven.</p>
             </div>

@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Morsecode</h1>
-    <p class="lead">Maak een nieuw programma. Plaats een rode LED op pin 12 en schrijf een programma waarbij de led het woord <strong>SOS</strong> in morsecode weergeeft.</p>
+    <p class="lead">Maak een nieuw programma. Plaats een rode led op pin 12 en schrijf een programma waarbij de led het woord <strong>SOS</strong> in morsecode weergeeft.</p>
 
     <p>De schakeling van de morse decoder is beschikbaar via Tinkercad. Volg deze stappen om de schakeling te openen:</p>
     <ol>
@@ -22,7 +22,7 @@
     </ol>
 
     <h2 id="opgave">Opgave</h2>
-    <p>Morsecode bestaat uit korte signalen (punten) en lange signalen (strepen). De letter <strong>S</strong> bestaat uit drie punten, de letter <strong>O</strong> uit drie strepen. Om SOS te seinen laat je de LED dus knipperen volgens het patroon <strong>S - O - S</strong>.</p>
+    <p>Morsecode bestaat uit korte signalen (punten) en lange signalen (strepen). De letter <strong>S</strong> bestaat uit drie punten, de letter <strong>O</strong> uit drie strepen. Om SOS te seinen laat je de led dus knipperen volgens het patroon <strong>S - O - S</strong>.</p>
 
     <p>Hou hierbij rekening met de volgende timing:</p>
     <ul>
@@ -78,13 +78,13 @@ void loop()
 
     <h2 id="denk-eens-na-over-de-niveaus">Denk eens na over de niveaus</h2>
 
-    <p>In de begeleide oefening van labo 0 liet <code>digitalWrite(pin, HIGH)</code> je LED branden. Hier doet <code>knipper()</code> net het omgekeerde: de LED gaat aan bij <code>LOW</code> en uit bij <code>HIGH</code>. Hoe kan dat, en wat zegt dat over de manier waarop de LED in deze schakeling aangesloten is?</p>
+    <p>In de begeleide oefening van labo 0 liet <code>digitalWrite(pin, HIGH)</code> je led branden. Hier doet <code>knipper()</code> net het omgekeerde: de led gaat aan bij <code>LOW</code> en uit bij <code>HIGH</code>. Hoe kan dat, en wat zegt dat over de manier waarop de led in deze schakeling aangesloten is?</p>
 
     <div class="solution-container">
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
         <div class="spoiler-content solution-content">
-            <p>Deze schakeling is <strong>sinking</strong>. De LED hangt met de anode aan de +5V-rail en met de kathode (via de weerstand) aan pin 12. Er staat dus pas spanning over de LED wanneer de pin <code>LOW</code> is: de pin "zinkt" de stroom naar de massa. Bij <code>HIGH</code> staan beide kanten op 5 V, is er geen spanningsverschil, en blijft de LED gedoofd.</p>
-            <p>In labo 0 hing de LED er net andersom in, met de anode aan de pin: dat is <strong>sourcing</strong>, waarbij <code>HIGH</code> hem doet branden. Welke van de twee je hebt, lees je dus af van je schema en niet van je code. Zie <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
+            <p>Deze schakeling is <strong>sinking</strong>. De led hangt met de anode aan de +5V-rail en met de kathode (via de weerstand) aan pin 12. Er staat dus pas spanning over de led wanneer de pin <code>LOW</code> is: de pin "zinkt" de stroom naar de massa. Bij <code>HIGH</code> staan beide kanten op 5 V, is er geen spanningsverschil, en blijft de led gedoofd.</p>
+            <p>In labo 0 hing de led er net andersom in, met de anode aan de pin: dat is <strong>sourcing</strong>, waarbij <code>HIGH</code> hem doet branden. Welke van de twee je hebt, lees je dus af van je schema en niet van je code. Zie <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
             <p>Zo'n actief lage schakeling kom je in dit vak nog vaak tegen, onder meer bij het 7-segment display met common anode en bij de I/O-expander in labo 4.</p>
         </div>
     </div>
@@ -98,7 +98,7 @@ void loop()
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> De LED knippert het SOS-patroon (punt-punt-punt / streep-streep-streep / punt-punt-punt) op pin 12</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De led knippert het SOS-patroon (punt-punt-punt / streep-streep-streep / punt-punt-punt) op pin 12</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Timing van punten, strepen en pauzes klopt volgens de opgave</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>

@@ -61,7 +61,7 @@
   }
 }</code></pre>
 
-    <p>De <code>trim()</code> is geen overbodige luxe. De zender schrijft <code>println()</code> en zet er dus <code>'\r'</code> &eacute;n <code>'\n'</code> achter. <code>readStringUntil()</code> stopt bij de <code>'\n'</code>, dus die <code>'\r'</code> zit nog aan je tekst geplakt. Vergeet je de <code>trim()</code>, dan is <code>regel</code> gelijk aan <code>"LED:1\r"</code> in plaats van <code>"LED:1"</code>, en dan klopt je vergelijking niet meer.</p>
+    <p>De <code>trim()</code> is geen overbodige luxe. De zender schrijft <code>println()</code> en zet er dus <code>'\r'</code> &eacute;n <code>'\n'</code> achter. <code>readStringUntil()</code> stopt bij de <code>'\n'</code>, dus die <code>'\r'</code> zit nog aan je tekst geplakt. Vergeet je de <code>trim()</code>, dan is <code>regel</code> gelijk aan <code>"led:1\r"</code> in plaats van <code>"led:1"</code>, en dan klopt je vergelijking niet meer.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Gebruik altijd het teken '\n', nooit "\r\n"</div>

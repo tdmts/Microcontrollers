@@ -3,24 +3,24 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Vier knoppen, twee LEDs</title>
+    <title>Vier knoppen, twee leds</title>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
     <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
 </head>
 <body>
 <div class="container">
-    <h1>Vier knoppen, twee LEDs</h1>
+    <h1>Vier knoppen, twee leds</h1>
     <p class="lead">Je expander stuurt je &eacute;&eacute;n byte per keer, en daar zitten vier knoppen in verstopt. Tijd om te leren welke knop welke is.</p>
 
-    <p>Vertrek van je vorige oefening. De vier knoppen blijven waar ze zijn, je zet er een tweede LED bij.</p>
+    <p>Vertrek van je vorige oefening. De vier knoppen blijven waar ze zijn, je zet er een tweede led bij.</p>
 
     <h2 id="het-schema">Het schema</h2>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/pcf8574-vier-knoppen-twee-leds-schema.png" class="img-fluid" alt="Breadboardschema met een PCF8574 met vier drukknoppen op P0 tot P3, de INT-pin naar pin 2 van de Arduino en twee LEDs met voorschakelweerstand op pin 3 en pin 4">
-            <figcaption class="figure-caption">Dezelfde schakeling als daarnet, met een tweede LED erbij.</figcaption>
+            <img src="../../img/pcf8574-vier-knoppen-twee-leds-schema.png" class="img-fluid" alt="Breadboardschema met een PCF8574 met vier drukknoppen op P0 tot P3, de INT-pin naar pin 2 van de Arduino en twee leds met voorschakelweerstand op pin 3 en pin 4">
+            <figcaption class="figure-caption">Dezelfde schakeling als daarnet, met een tweede led erbij.</figcaption>
         </figure>
     </div>
 
@@ -40,11 +40,11 @@
                 </tr>
                 <tr>
                     <td>pin 3</td>
-                    <td>De linkse LED, via een weerstand van 220 &Omega;</td>
+                    <td>De linkse led, via een weerstand van 220 &Omega;</td>
                 </tr>
                 <tr>
                     <td>pin 4</td>
-                    <td>De rechtse LED, via een weerstand van 220 &Omega;</td>
+                    <td>De rechtse led, via een weerstand van 220 &Omega;</td>
                 </tr>
             </tbody>
         </table>
@@ -72,19 +72,19 @@
             <tbody>
                 <tr>
                     <td>P0</td>
-                    <td>Zet de <strong>linkse</strong> LED aan</td>
+                    <td>Zet de <strong>linkse</strong> led aan</td>
                 </tr>
                 <tr>
                     <td>P1</td>
-                    <td>Zet de <strong>linkse</strong> LED uit</td>
+                    <td>Zet de <strong>linkse</strong> led uit</td>
                 </tr>
                 <tr>
                     <td>P2</td>
-                    <td>Zet de <strong>rechtse</strong> LED aan</td>
+                    <td>Zet de <strong>rechtse</strong> led aan</td>
                 </tr>
                 <tr>
                     <td>P3</td>
-                    <td>Zet de <strong>rechtse</strong> LED uit</td>
+                    <td>Zet de <strong>rechtse</strong> led uit</td>
                 </tr>
             </tbody>
         </table>
@@ -149,7 +149,7 @@
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> Elk van de vier knoppen doet precies wat er in de tabel staat</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Een knop die de LED aanzet terwijl die al brandt, verandert niets</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een knop die de led aanzet terwijl die al brandt, verandert niets</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Loslaten van een knop doet niets</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je test op de bits die van 1 naar 0 gingen, niet op de huidige stand</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt maskers zoals <code>B00000100</code> en geen losse getallen zonder uitleg</label></li>

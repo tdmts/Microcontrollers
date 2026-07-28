@@ -21,7 +21,7 @@
 
     <p>Een String kan meer dan een gewone variabele: je kan hem van alles vr&aacute;gen. Dat doe je met een punt achter de naam, net zoals bij <code>Serial.print()</code>.</p>
 
-    <p>Dit zijn de functies die je in dit labo nodig hebt. Hieronder staan ze allemaal in &eacute;&eacute;n programma dat je gewoon kan uploaden. Typ in de seri&euml;le monitor een boodschap met een dubbelepunt erin, bijvoorbeeld <code>LED:1</code>, en je ziet van elke instructie het resultaat verschijnen. Achter elke regel staat in commentaar wat je krijgt als je precies <code>LED:1</code> typt.</p>
+    <p>Dit zijn de functies die je in dit labo nodig hebt. Hieronder staan ze allemaal in &eacute;&eacute;n programma dat je gewoon kan uploaden. Typ in de seri&euml;le monitor een boodschap met een dubbelepunt erin, bijvoorbeeld <code>led:1</code>, en je ziet van elke instructie het resultaat verschijnen. Achter elke regel staat in commentaar wat je krijgt als je precies <code>led:1</code> typt.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
 {
@@ -88,14 +88,14 @@ void loop()
 
     <h2 id="vergelijken">Twee Strings vergelijken</h2>
 
-    <p>Met <code>==</code> vergelijk je de inhoud, precies zoals je zou verwachten. Hoofdletters tellen mee, dus <code>"LED"</code> is niet hetzelfde als <code>"led"</code>.</p>
+    <p>Met <code>==</code> vergelijk je de inhoud, precies zoals je zou verwachten. Hoofdletters tellen mee, dus <code>"led"</code> is niet hetzelfde als <code>"led"</code>.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>if (sleutel == "LED")
 {
   // ...
 }</code></pre>
 
-    <p>Er bestaat ook <code>sleutel.equals("LED")</code>. Dat doet exact hetzelfde: de <code>==</code> van een String roept intern gewoon <code>equals()</code> op. Neem gerust <code>==</code>, dat leest het vlotst. Wil je hoofdletters negeren, dan is er <code>equalsIgnoreCase()</code>.</p>
+    <p>Er bestaat ook <code>sleutel.equals("led")</code>. Dat doet exact hetzelfde: de <code>==</code> van een String roept intern gewoon <code>equals()</code> op. Neem gerust <code>==</code>, dat leest het vlotst. Wil je hoofdletters negeren, dan is er <code>equalsIgnoreCase()</code>.</p>
 
     <div class="info-box remark">
         <div class="info-title remark">Als je Java kent, vergeet die regel hier</div>

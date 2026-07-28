@@ -227,6 +227,25 @@ buffer een braaf wezen, en dat is patroon 7. Let ook op `heel even` (een verzach
 verzachter), en kijk met dezelfde blik naar `eigenlijk` en `uiteraard`. `letterlijk` in
 "`digitalWrite()` zet letterlijk 5 V op een pin" blijft, want daar betekent het echt iets.
 
+### Spelling: `led`, niet `LED`
+
+Dit is geen patroon, want er is niets opgesmukt aan een kapitaal. Het is een spellingafspraak, en ze
+staat hier omdat ze anders nergens staat: in de lopende tekst schrijf je `led` en `leds`, met een
+hoofdletter alleen waar een zin of een titel begint.
+
+> **Voor:** Laat vier LEDs vollopen vanaf de kant van de ingedrukte knop.
+>
+> **Na:** Laat vier leds vollopen vanaf de kant van de ingedrukte knop.
+
+In code blijft alles zoals het is. `pinLED` is een naam die de student overtypt, en in labo 6 is
+`"LED"` de sleutel van het protocol tussen de pc en de Arduino (`serialPort.WriteLine("LED:1")`),
+dus daar is de kapitaal gegeven. `scripts/check-content.sh --audit` meldt daarom alleen `LED` in een
+regel met prozaopmaak en laat alles binnen een `<pre>` met rust.
+
+Schrijft een pagina de afkorting ooit voluit, dan blijft `LED` staan in "LED staat voor Light
+Emitting Diode" en zet je er `<!-- audit-skip: led-spelling -->` bij. Vandaag doet geen enkele
+pagina dat.
+
 ### En, nog steeds: geen em-dashes
 
 Geen `—` en geen `&mdash;`, nergens in de tekst. Gebruik een komma, een dubbele punt, een punt of

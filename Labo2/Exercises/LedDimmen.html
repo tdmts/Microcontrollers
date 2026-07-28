@@ -3,15 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>LED dimmen</title>
+    <title>Led dimmen</title>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
     <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
 </head>
 <body>
 <div class="container">
-    <h1>LED dimmen</h1>
-    <p class="lead">Maak een programma waarbij een LED langzaam van gedoofd naar volle sterkte gaat, en terug naar gedoofd.</p>
+    <h1>Led dimmen</h1>
+    <p class="lead">Maak een programma waarbij een led langzaam van gedoofd naar volle sterkte gaat, en terug naar gedoofd.</p>
 
     <p>Gebruik de <code>analogWrite()</code> instructie om een analoge waarde op de pin te zetten. Wat er dan echt op die pin gebeurt, welke pinnen het kunnen en waarom de waarde deze keer tussen 0 en 255 ligt in plaats van 0 en 1023, staat op <a href="../Reference/analogWrite.html">analogWrite()</a>.</p>
 
@@ -55,9 +55,9 @@
         </div>
         <div class="accordion-item">
             <div class="title">Verloopt het dimmen lineair? Hoe zou dat komen?</div>
-            <p>Nee, want de uitgangskarakteristiek van een LED is niet lineair.</p>
-            <p>Afhankelijk van de kleur van de LED is er een andere doorlaatspanning. Bij een rode LED is dat bijvoorbeeld 1,7 V.</p>
-            <p>Zolang de spanning over de LED lager is dan die 1,7 V is de LED dus gedoofd. Eenmaal hoger dan de doorlaatspanning gaat dit eerder exponentieel.</p>
+            <p>Nee, want de uitgangskarakteristiek van een led is niet lineair.</p>
+            <p>Afhankelijk van de kleur van de led is er een andere doorlaatspanning. Bij een rode led is dat bijvoorbeeld 1,7 V.</p>
+            <p>Zolang de spanning over de led lager is dan die 1,7 V is de led dus gedoofd. Eenmaal hoger dan de doorlaatspanning gaat dit eerder exponentieel.</p>
         </div>
         <div class="accordion-item">
             <div class="title">Wat is de maximale spanning die men op een pin kan plaatsen?</div>
@@ -89,9 +89,9 @@
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> De LED is aangesloten op een PWM-pin (aangeduid met ~)</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De led is aangesloten op een PWM-pin (aangeduid met ~)</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De helderheid wordt geregeld met <code>analogWrite()</code></label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De LED gaat langzaam van gedoofd naar volle sterkte en terug</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De led gaat langzaam van gedoofd naar volle sterkte en terug</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De waarde in <code>analogWrite()</code> blijft tussen 0 en 255</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>

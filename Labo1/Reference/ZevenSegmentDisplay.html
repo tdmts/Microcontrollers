@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Het 7-segment display</h1>
-    <p class="lead">Een 7-segment display is niets meer dan zeven leds in de vorm van een acht, plus meestal een achtste voor de decimale punt. Elk cijfer dat je toont, is gewoon een keuze welke van die zeven branden.</p>
+    <p class="lead">Een 7-segment display is zeven leds in de vorm van een acht, plus meestal een achtste voor de decimale punt. Elk cijfer dat je toont, is een keuze welke van die zeven branden.</p>
 
     <h2 id="de-segmenten">De segmenten en hun namen</h2>
 
@@ -59,14 +59,14 @@
         </table>
     </div>
 
-    <p>Dat is precies het onderscheid uit <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>, maar dan zeven keer naast elkaar.</p>
+    <p>Het is hetzelfde onderscheid als in <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>, zeven keer naast elkaar.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Schrijf het niveau nooit rechtstreeks in je code</div>
         <p>Zet het in een constante bovenaan, dan pas je bij een ander display één regel aan in plaats van je hele programma:</p>
         <pre class="code-wrapper language-cpp linenumbers show-language"><code>const bool SEGMENT_AAN = LOW;  // common anode; HIGH bij common cathode
 const bool SEGMENT_UIT = !SEGMENT_AAN;</code></pre>
-        <p>Weet je niet welk type je hebt? Sluit één segment aan met zijn weerstand en probeer beide niveaus uit. Wat het segment doet oplichten, is jouw <code>SEGMENT_AAN</code>.</p>
+        <p>Weet je niet welk type je hebt, sluit dan één segment aan met zijn weerstand en probeer beide niveaus uit. Wat het segment doet oplichten, is jouw <code>SEGMENT_AAN</code>.</p>
     </div>
 
     <div class="info-box warning">
@@ -118,7 +118,7 @@ const bool SEGMENT_UIT = !SEGMENT_AAN;</code></pre>
 
     <h2 id="meerdere-displays">Meerdere displays</h2>
 
-    <p>Wil je twee cijfers tonen, dan heb je in principe veertien pinnen nodig. Dat hoeft niet: je kan de segmentpinnen delen tussen beide displays en razendsnel wisselen welk display je aanstuurt. Hoe dat werkt, staat op <a href="Multiplexing.html">Multiplexing</a>.</p>
+    <p>Wil je twee cijfers tonen, dan heb je in principe veertien pinnen nodig. Dat hoeft niet, want je kan de segmentpinnen delen tussen beide displays en razendsnel wisselen welk display je aanstuurt. Hoe dat werkt, staat op <a href="Multiplexing.html">Multiplexing</a>.</p>
 </div>
 
 <script src="../../reference.js"></script>

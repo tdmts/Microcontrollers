@@ -21,7 +21,7 @@
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-noodstop-over-serieel-schema.png" class="img-fluid" alt="TODO: schema met twee Arduino's serieel verbonden, vier LEDs volgens sinking op de pinnen 3 tot en met 6 van de eerste, en een noodstopknop op pin 2 van de tweede">
+            <img src="../../img/TODO-noodstop-over-serieel-schema.png" class="img-fluid" alt="TODO: schema met twee Arduino's serieel verbonden, vier leds volgens sinking op de pinnen 3 tot en met 6 van de eerste, en een noodstopknop op pin 2 van de tweede">
         </figure>
     </div>
 
@@ -39,7 +39,7 @@
                 <tr>
                     <td>Arduino 1 (de machine)</td>
                     <td>pin 3 t.e.m. 6</td>
-                    <td>Vier LEDs volgens sinking, zoals in je looplicht</td>
+                    <td>Vier leds volgens sinking, zoals in je looplicht</td>
                 </tr>
                 <tr>
                     <td>Arduino 2 (de bedieningspost)</td>
@@ -63,9 +63,9 @@
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
 
     <ol>
-        <li><strong>Arduino 1</strong> laat een looplicht lopen over zijn vier LEDs.</li>
+        <li><strong>Arduino 1</strong> laat een looplicht lopen over zijn vier leds.</li>
         <li><strong>Arduino 2</strong> heeft een noodstopknop op een interrupt. Wordt die ingedrukt, dan stuurt hij <code>STOP</code> over de lijn.</li>
-        <li><strong>Arduino 1</strong> ontvangt dat, dooft alle LEDs, en blijft gestopt.</li>
+        <li><strong>Arduino 1</strong> ontvangt dat, dooft alle leds, en blijft gestopt.</li>
     </ol>
 
     <h2 id="valkuil-1">De eerste valkuil: niet zenden vanuit je ISR</h2>
@@ -80,7 +80,7 @@
 
     <p>Bouw eerst de voor de hand liggende versie. Arduino 1 draait het looplicht dat je in <a href="LooplichtMetNoodstop.html">Noodstop op je looplicht</a> geschreven hebt, met zijn <code>delay(250)</code>, en kijkt bovenaan zijn <code>loop()</code> of er iets binnengekomen is.</p>
 
-    <p>Druk nu op de noodstop en let goed op wanneer de LEDs doven.</p>
+    <p>Druk nu op de noodstop en let goed op wanneer de leds doven.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Je interrupt heeft je hier niets opgeleverd</div>
@@ -89,7 +89,7 @@
         <p>Een interrupt versnelt alleen het bord waar hij op staat. Zit de ontvanger vast, dan sta je nergens.</p>
     </div>
 
-    <p>Arduino 1 moet dus zijn <code>delay()</code> opgeven. In plaats van te w&aacute;chten tot het tijd is voor de volgende LED, blijft hij rondjes draaien en <strong>kijkt</strong> hij telkens of het al tijd is.</p>
+    <p>Arduino 1 moet dus zijn <code>delay()</code> opgeven. In plaats van te w&aacute;chten tot het tijd is voor de volgende led, blijft hij rondjes draaien en <strong>kijkt</strong> hij telkens of het al tijd is.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Wachten zonder delay</div>
@@ -128,7 +128,7 @@ void loop()
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> Het looplicht van Arduino 1 loopt vlot</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Een druk op de noodstop van Arduino 2 dooft de LEDs zonder merkbare vertraging</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een druk op de noodstop van Arduino 2 dooft de leds zonder merkbare vertraging</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Daarna blijft alles uit tot je Arduino 1 reset</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De ISR van Arduino 2 bevat geen enkele <code>Serial</code>-opdracht</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Arduino 1 gebruikt nergens nog een <code>delay()</code> in zijn looplicht</label></li>
@@ -147,7 +147,7 @@ void loop()
         <div class="spoiler-content solution-content">
             <p><strong>Arduino 1, de machine met het looplicht:</strong></p>
 
-            <p>Geen enkele <code>delay()</code> meer. De <code>loop()</code> draait vrij rond en doet twee dingen: kijken of er post is, en kijken of het tijd is voor de volgende LED.</p>
+            <p>Geen enkele <code>delay()</code> meer. De <code>loop()</code> draait vrij rond en doet twee dingen: kijken of er post is, en kijken of het tijd is voor de volgende led.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int leds[] = {3, 4, 5, 6};
 const int aantalLeds = 4;

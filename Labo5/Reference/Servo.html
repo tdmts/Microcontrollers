@@ -60,7 +60,7 @@
     <div class="info-box remark">
         <div class="info-title remark">Een servo hoeft niet op een pin met een ~</div>
         <p>Je zou het verwachten, maar het klopt niet. De Servo-bibliotheek maakt de pulsen zelf en werkt op <strong>elke digitale pin</strong> van de UNO. De <code>~</code>-pinnen zijn de pinnen waar <code>analogWrite()</code> op werkt, en dat is hier een ander signaal.</p>
-        <p>Het omgekeerde geldt wel: zodra je op een UNO ook maar één servo aankoppelt, gebruikt de bibliotheek de timer van pin 9 en pin 10. Op die twee pinnen werkt <code>analogWrite()</code> dan niet meer, ook al staat er een <code>~</code> bij. Heb je in dezelfde schakeling nog een LED te dimmen, kies daar dan pin 3, 5, 6 of 11 voor.</p>
+        <p>Het omgekeerde geldt wel: zodra je op een UNO ook maar één servo aankoppelt, gebruikt de bibliotheek de timer van pin 9 en pin 10. Op die twee pinnen werkt <code>analogWrite()</code> dan niet meer, ook al staat er een <code>~</code> bij. Heb je in dezelfde schakeling nog een led te dimmen, kies daar dan pin 3, 5, 6 of 11 voor.</p>
     </div>
 
     <h2 id="de-functies">De functies</h2>

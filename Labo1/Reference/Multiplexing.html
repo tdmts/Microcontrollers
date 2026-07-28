@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Multiplexing</h1>
-    <p class="lead">Twee cijfers tonen met de pinnen van één display. Je stuurt ze niet tegelijk aan, je wisselt er zo snel tussen dat je oog het verschil niet ziet.</p>
+    <p class="lead">Twee cijfers tonen met de pinnen van één display. Je stuurt ze om beurten aan, en je wisselt zo snel dat je oog het verschil niet ziet.</p>
 
     <h2 id="het-probleem">Het probleem</h2>
 
@@ -21,9 +21,9 @@
 
     <p>Dat scheelt pinnen, maar het levert meteen een nieuw probleem op: zet je een patroon op de segmentpinnen, dan krijgen <em>beide</em> cijfers datzelfde patroon. Je kan dus onmogelijk tegelijk een 4 links en een 7 rechts tonen. Wat je wel kan, is kiezen welk cijfer op dat moment stroom krijgt.</p>
 
-    <h2 id="de-truc">De truc: te snel om te zien</h2>
+    <h2 id="de-truc">Te snel om te zien</h2>
 
-    <p>Je toont de twee cijfers dus niet tegelijk, maar om beurten:</p>
+    <p>Je toont de twee cijfers dus om beurten:</p>
 
     <ol>
         <li>Zet het patroon van het <strong>linkse</strong> cijfer op de segmentpinnen.</li>
@@ -33,7 +33,7 @@
         <li>Opnieuw vanaf stap 1.</li>
     </ol>
 
-    <p>Doe je dat traag, dan zie je de twee cijfers om beurten flikkeren. Doe je het snel genoeg, dan kan je oog de twee niet meer uit elkaar houden en zie je gewoon twee cijfers naast elkaar staan. Dat heet <strong>persistentie van het netvlies</strong>: je oog blijft een lichtpunt nog een fractie van een seconde zien nadat het al gedoofd is. Vanaf ongeveer 50 wisselingen per seconde per cijfer valt er niets meer te merken.</p>
+    <p>Doe je dat traag, dan zie je de twee cijfers om beurten flikkeren. Doe je het snel genoeg, dan kan je oog de twee niet meer uit elkaar houden en zie je twee cijfers naast elkaar staan. Dat heet <strong>persistentie van het netvlies</strong>: je oog blijft een lichtpunt nog een fractie van een seconde zien nadat het al gedoofd is. Vanaf ongeveer 50 wisselingen per seconde per cijfer valt er niets meer te merken.</p>
 
     <div class="info-box remark">
         <div class="info-title remark">Dit is dezelfde truc als bij film</div>
@@ -58,7 +58,7 @@ void multiplexStap(int linksCijfer, int rechtsCijfer)
   delay(5);
 }</code></pre>
 
-    <p>Met twee keer 5 ms duurt één volledige wissel 10 ms, dus elk cijfer komt honderd keer per seconde aan de beurt. Ruim genoeg.</p>
+    <p>Met twee keer 5 ms duurt één volledige wissel 10 ms, dus elk cijfer komt honderd keer per seconde aan de beurt, ruim genoeg.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Er mag niets anders lang duren</div>

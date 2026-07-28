@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>LDR: lichtmeting</h1>
-    <p class="lead">Gebruik een LDR in serie met een weerstand om licht te meten, en laat de LED feller branden naarmate het donkerder wordt.</p>
+    <p class="lead">Gebruik een LDR in serie met een weerstand om licht te meten, en laat de led feller branden naarmate het donkerder wordt.</p>
 
     <p>Een LDR (Light Dependent Resistor) is een weerstand waarvan de waarde afhangt van hoeveel licht erop valt. Je Arduino kan geen weerstand meten, alleen spanning, dus zet je de LDR in serie met een vaste weerstand tot een <a href="../Reference/Spanningsdeler.html">spanningsdeler</a>. Het punt tussen de twee lees je in met <a href="../Reference/analogRead.html">analogRead()</a>. Om de gemeten waarde daarna om te keren naar een helderheid gebruik je <a href="../Reference/map.html">map()</a> met een omgedraaid uitvoerbereik, zoals bij de vorige oefeningen.</p>
 
@@ -99,8 +99,8 @@
             <li><label><input type="checkbox" class="form-check-input me-2"> De LDR staat in serie met een vaste weerstand als spanningsdeler</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Het midden van de spanningsdeler is aangesloten op een analoge ingang</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De lichtwaarde wordt ingelezen met <code>analogRead()</code></label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De LED hangt op een PWM-pin en wordt aangestuurd met <code>analogWrite()</code></label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Hoe donkerder het wordt, hoe feller de LED brandt</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De led hangt op een PWM-pin en wordt aangestuurd met <code>analogWrite()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Hoe donkerder het wordt, hoe feller de led brandt</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
@@ -111,7 +111,7 @@
 
         <div class="spoiler-content solution-content">
             <p>
-                De spanningsdeler levert een waarde tussen 0 en 1023. Je wil de LED
+                De spanningsdeler levert een waarde tussen 0 en 1023. Je wil de led
                 feller laten branden naarmate het donkerder wordt, dus je moet de
                 meting <em>omkeren</em>. Dat doe je door bij <code>map()</code> het
                 uitvoerbereik om te draaien: 0 wordt 255 en 1023 wordt 0.

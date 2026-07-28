@@ -11,13 +11,13 @@
 <body>
 <div class="container">
     <h1>8-animatie op een 7-segment display</h1>
-    <p class="lead">Je eerste display. Je begint met één segment, zoekt uit welk type display je hebt, en laat daarna de segmenten na elkaar oplichten in de vorm van een acht. Elk segment blijft 1 seconde aan.</p>
+    <p class="lead">Dit is je eerste display. Je begint met één segment, zoekt uit welk type display je hebt, en laat daarna de segmenten na elkaar oplichten in de vorm van een acht. Elk segment blijft 1 seconde aan.</p>
 
-    <p>Een 7-segment display is niets anders dan zeven leds in de vorm van een acht. Hoe ze heten en hoe ze aangesloten zijn, staat op <a href="../Reference/ZevenSegmentDisplay.html">Het 7-segment display</a>. Lees dat eerst even door.</p>
+    <p>Een 7-segment display is zeven leds in de vorm van een acht. Hoe ze heten en hoe ze aangesloten zijn, staat op <a href="../Reference/ZevenSegmentDisplay.html">Het 7-segment display</a>. Lees dat eerst even door.</p>
 
     <h2 id="begin-met-een-segment">Begin met één segment</h2>
 
-    <p>Sluit eerst alleen <strong>segment a</strong> aan, met zijn eigen voorschakelweerstand, en verbind de gemeenschappelijke pin volgens het schema van je display. Schrijf een sketchje dat die ene pin afwisselend hoog en laag zet, met een seconde ertussen.</p>
+    <p>Sluit eerst alleen <strong>segment a</strong> aan, met zijn eigen voorschakelweerstand, en verbind de gemeenschappelijke pin volgens het schema van je display. Schrijf een korte sketch die die ene pin afwisselend hoog en laag zet, met een seconde ertussen.</p>
 
     <p>Dat kleine programma beantwoordt meteen twee vragen die je verderop nodig hebt: welke Arduino-pin hangt effectief aan segment a, en gaat het segment branden bij <code>HIGH</code> of bij <code>LOW</code>?</p>
 
@@ -79,7 +79,7 @@
                 <p>De pinnummers hieronder zijn die van een display dat met segment a op pin 2 begint. Hangt het bij jou anders, pas dan de constanten bovenaan aan. Datzelfde geldt voor <code>SEGMENT_AAN</code>: die staat hier op <code>LOW</code> voor een common anode display, en moet <code>HIGH</code> zijn als het jouwe common cathode is.</p>
             </div>
             <p>
-                Er staan twee arrays in deze oplossing, en ze doen echt iets anders.
+                Er staan twee arrays in deze oplossing, en ze doen iets anders.
                 <code>segPins</code> zegt welke pin bij welk segment hoort en dient om
                 alles in één lus als uitgang te zetten. <code>animatie</code> is de
                 volgorde waarin de segmenten oplichten, en daar staat <code>pinG</code>

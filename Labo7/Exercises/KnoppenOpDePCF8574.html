@@ -38,7 +38,7 @@
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/pcf8574-vier-knoppen-een-led-schema.png" class="img-fluid" alt="Breadboardschema met een Arduino UNO, een PCF8574 met vier drukknoppen op P0 tot P3, de INT-pin naar pin 2 van de Arduino en een LED met voorschakelweerstand">
+            <img src="../../img/pcf8574-vier-knoppen-een-led-schema.png" class="img-fluid" alt="Breadboardschema met een Arduino UNO, een PCF8574 met vier drukknoppen op P0 tot P3, de INT-pin naar pin 2 van de Arduino en een led met voorschakelweerstand">
             <figcaption class="figure-caption">Vier drukknoppen op P0 tot P3, en de /INT-pin naar pin 2 van je Arduino.</figcaption>
         </figure>
     </div>
@@ -67,7 +67,7 @@
                 </tr>
                 <tr>
                     <td>Pin 4 van je Arduino</td>
-                    <td>Een LED, via een weerstand van 220 &Omega;</td>
+                    <td>Een led, via een weerstand van 220 &Omega;</td>
                 </tr>
             </tbody>
         </table>
@@ -77,7 +77,7 @@
 
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
 
-    <p>Eenvoudige opdracht: <strong>elke druk op eender welke van de vier knoppen schakelt de LED om</strong>. Brandt hij, dan gaat hij uit, en omgekeerd.</p>
+    <p>Eenvoudige opdracht: <strong>elke druk op eender welke van de vier knoppen schakelt de led om</strong>. Brandt hij, dan gaat hij uit, en omgekeerd.</p>
 
     <p>Maar er zitten drie valkuilen in, en ze zijn alle drie het soort waar je een halve avond op kan zoeken.</p>
 
@@ -102,7 +102,7 @@
 
     <h2 id="valkuil-3">Valkuil 3: /INT meldt ook het loslaten</h2>
 
-    <p>De expander meldt <em>elke</em> verandering, dus zowel het indrukken als het loslaten van een knop. Laat je je LED bij elke melding omschakelen, dan schakelt hij twee keer per druk om en lijkt hij dood.</p>
+    <p>De expander meldt <em>elke</em> verandering, dus zowel het indrukken als het loslaten van een knop. Laat je je led bij elke melding omschakelen, dan schakelt hij twee keer per druk om en lijkt hij dood.</p>
 
     <p>Je moet dus zelf uitzoeken welke bits van 1 naar 0 gegaan zijn. Dat idioom ken je al uit <a href="../../Labo4/Exercises/TellerMetI2CDrukknoppen.html">Teller met I&sup2;C-drukknoppen</a>:</p>
 
@@ -119,8 +119,8 @@
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> Elke druk op elk van de vier knoppen schakelt de LED om</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Twee keer drukken brengt de LED terug in zijn oorspronkelijke toestand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke druk op elk van de vier knoppen schakelt de led om</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Twee keer drukken brengt de led terug in zijn oorspronkelijke toestand</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je blijft na tien drukken nog altijd werken, dus /INT blijft niet hangen</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je ISR bevat geen enkele <code>Wire</code>-opdracht, alleen het zetten van de vlag</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je schrijft <code>0xFF</code> naar de expander in je <code>setup()</code>, anders lees je de knoppen niet</label></li>
@@ -231,7 +231,7 @@ void loop()
             <div class="info-box remark">
                 <div class="info-title remark">Waarom &amp; B00001111 erachter staat</div>
                 <p>Alleen P0 tot P3 hebben een knop. P4 tot P7 hangen nergens aan en kunnen dus van alles teruggeven. Met dat masker gooi je de bovenste vier bits weg en kijk je alleen naar de vier die er echt toe doen.</p>
-                <p>Laat je het weg, dan schakelt je LED misschien om door een zwevende pin waar je nooit aan geraakt hebt.</p>
+                <p>Laat je het weg, dan schakelt je led misschien om door een zwevende pin waar je nooit aan geraakt hebt.</p>
             </div>
 
             <div class="info-box remark">

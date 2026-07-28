@@ -51,21 +51,21 @@
 
     <p>Elke spoel kan je in <strong>twee richtingen</strong> bekrachtigen, want de stroom kan er twee kanten door. Dat geeft vier standen om naartoe te trekken: A in de ene richting, B in de ene richting, A in de andere, B in de andere. En omdat je per spoel de stroomrichting moet kunnen kiezen, heb je per spoel een <a href="HBrug.html">H-brug</a> nodig. Twee spoelen, twee bruggen, en dat is precies wat er in één L293D zit.</p>
 
-    <h2 id="in-tinkercad">In TinkerCAD: vier LEDs in plaats van een motor</h2>
+    <h2 id="in-tinkercad">In TinkerCAD: vier leds in plaats van een motor</h2>
 
-    <p>TinkerCAD heeft geen bruikbaar model van een stappenmotor. We vervangen de motor daarom door <strong>vier LEDs</strong>, twee per twee <strong>anti-parallel</strong> geschakeld: elk paar staat op de plaats van één spoel.</p>
+    <p>TinkerCAD heeft geen bruikbaar model van een stappenmotor. We vervangen de motor daarom door <strong>vier leds</strong>, twee per twee <strong>anti-parallel</strong> geschakeld: elk paar staat op de plaats van één spoel.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/stappenmotor-leds-antiparallel.png" alt="Vier LEDs in een kruis, twee per twee anti-parallel geschakeld, als vervanging voor de twee spoelen van een stappenmotor">
+            <img src="../../img/stappenmotor-leds-antiparallel.png" alt="Vier leds in een kruis, twee per twee anti-parallel geschakeld, als vervanging voor de twee spoelen van een stappenmotor">
         </figure>
     </div>
 
-    <p>Anti-parallel wil zeggen: naast elkaar, maar omgekeerd. Loopt de stroom de ene kant op door het paar, dan brandt de ene LED. Loopt hij de andere kant op, dan brandt de andere. Zo zie je aan welke LED brandt niet alleen <em>of</em> een spoel bekrachtigd is, maar ook <strong>in welke richting</strong>. Een correct draaiende motor herken je aan LEDs die netjes in de rondte oplichten.</p>
+    <p>Anti-parallel wil zeggen: naast elkaar, maar omgekeerd. Loopt de stroom de ene kant op door het paar, dan brandt de ene led. Loopt hij de andere kant op, dan brandt de andere. Zo zie je aan welke led brandt niet alleen <em>of</em> een spoel bekrachtigd is, maar ook <strong>in welke richting</strong>. Een correct draaiende motor herken je aan leds die netjes in de rondte oplichten.</p>
 
     <div class="info-box remark">
-        <div class="info-title remark">Waarom niet gewoon vier losse LEDs?</div>
-        <p>Omdat een echte stappenmotor ook maar twee spoelen heeft, en dus maar vier draden. Met vier losse LEDs zou je vier onafhankelijke uitgangen simuleren die in de echte motor niet bestaan, en dan schrijf je code die op een echte motor niet werkt.</p>
+        <div class="info-title remark">Waarom niet gewoon vier losse leds?</div>
+        <p>Omdat een echte stappenmotor ook maar twee spoelen heeft, en dus maar vier draden. Met vier losse leds zou je vier onafhankelijke uitgangen simuleren die in de echte motor niet bestaan, en dan schrijf je code die op een echte motor niet werkt.</p>
     </div>
 
     <h2 id="aansluiten-op-de-l293d">Aansluiten op de L293D</h2>
@@ -175,7 +175,7 @@
 
     <div class="info-box warning">
         <div class="info-title warning">De volgorde is A, B, A, B en niet A, A, B, B</div>
-        <p>Kijk goed naar de tabel: je wisselt telkens van spoel. Zou je eerst spoel A in beide richtingen doen en dan pas spoel B, dan springt de rotor van 0 naar 180 graden en weer terug naar 90. Hij draait dan niet rond, hij trilt alleen maar heen en weer. Dat is de klassieke fout, en aan je LEDs zie je het meteen: die moeten <strong>in de rondte</strong> oplichten, niet om de beurt van links naar rechts.</p>
+        <p>Kijk goed naar de tabel: je wisselt telkens van spoel. Zou je eerst spoel A in beide richtingen doen en dan pas spoel B, dan springt de rotor van 0 naar 180 graden en weer terug naar 90. Hij draait dan niet rond, hij trilt alleen maar heen en weer. Dat is de klassieke fout, en aan je leds zie je het meteen: die moeten <strong>in de rondte</strong> oplichten, niet om de beurt van links naar rechts.</p>
     </div>
 
     <h2 id="half-step">Half step</h2>

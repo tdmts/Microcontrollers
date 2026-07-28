@@ -3,21 +3,21 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>LED dimmen met potentiometer</title>
+    <title>Led dimmen met potentiometer</title>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
     <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
 </head>
 <body>
 <div class="container">
-    <h1>LED dimmen met potentiometer</h1>
-    <p class="lead">Maak een dimmer waarbij de potentiometer de LED regelt.</p>
+    <h1>Led dimmen met potentiometer</h1>
+    <p class="lead">Maak een dimmer waarbij de potentiometer de led regelt.</p>
 
     <p>Je combineert hier de twee vorige oefeningen: <a href="../Reference/analogRead.html">analogRead()</a> om de potentiometer te lezen, en <a href="../Reference/analogWrite.html">analogWrite()</a> om de led te dimmen. Plaats eventueel ook een kleine weerstand (bijvoorbeeld 100 Ohm) in serie met de potentiometer zodat je bij verkeerd schakelen niets kapot maakt.</p>
 
     <h2 id="twee-bereiken-die-niet-passen">Twee bereiken die niet op elkaar passen</h2>
 
-    <p>Er zit een addertje onder het gras. <code>analogRead()</code> geeft je een waarde tussen <strong>0 en 1023</strong>, maar <code>analogWrite()</code> verwacht er een tussen <strong>0 en 255</strong>. Stuur je de gelezen waarde rechtstreeks door, dan staat je led al op vol vermogen zodra de potentiometer een kwart gedraaid is, en verandert er daarna niets meer.</p>
+    <p><code>analogRead()</code> geeft je een waarde tussen <strong>0 en 1023</strong>, maar <code>analogWrite()</code> verwacht er een tussen <strong>0 en 255</strong>. Stuur je de gelezen waarde rechtstreeks door, dan staat je led al op vol vermogen zodra de potentiometer een kwart gedraaid is, en verandert er daarna niets meer.</p>
 
     <p>Je moet de waarde dus <strong>herschalen</strong>: het bereik 0 tot 1023 uitrekken of samendrukken tot 0 tot 255. Daar bestaat een functie voor:</p>
 
@@ -46,10 +46,10 @@
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> De potentiometer wordt ingelezen met <code>analogRead()</code></label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De LED is aangesloten op een PWM-pin (aangeduid met ~)</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De helderheid van de LED wordt geregeld met <code>analogWrite()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De led is aangesloten op een PWM-pin (aangeduid met ~)</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De helderheid van de led wordt geregeld met <code>analogWrite()</code></label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De waarde van de potentiometer (0-1023) wordt herschaald naar 0-255, bijvoorbeeld met <code>map()</code></label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Draaien aan de potentiometer maakt de LED zichtbaar feller of zwakker</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Draaien aan de potentiometer maakt de led zichtbaar feller of zwakker</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>

@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Stappenmotor laten draaien in full step</h1>
-    <p class="lead">Bouw in TinkerCAD een schakeling waarin je een stappenmotor in <strong>full step</strong> aanstuurt via een L293D. De vier LEDs die de spoelen voorstellen moeten netjes in de rondte oplichten, niet heen en weer springen.</p>
+    <p class="lead">Bouw in TinkerCAD een schakeling waarin je een stappenmotor in <strong>full step</strong> aanstuurt via een L293D. De vier leds die de spoelen voorstellen moeten netjes in de rondte oplichten, niet heen en weer springen.</p>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">
@@ -19,19 +19,19 @@
         </div>
     </div>
 
-    <p>Een stappenmotor werkt helemaal anders dan de DC motor van de vorige oefeningen: hij draait niet vanzelf, jij duwt hem stap voor stap voort door de spoelen in de juiste volgorde te bekrachtigen. Wat er binnenin gebeurt, waarom TinkerCAD er vier LEDs van maakt en hoe de stappentabel eruitziet, staat op <a href="../Reference/Stappenmotor.html">De stappenmotor</a>. Die pagina heb je hier van begin tot eind nodig.</p>
+    <p>Een stappenmotor werkt helemaal anders dan de DC motor van de vorige oefeningen: hij draait niet vanzelf, jij duwt hem stap voor stap voort door de spoelen in de juiste volgorde te bekrachtigen. Wat er binnenin gebeurt, waarom TinkerCAD er vier leds van maakt en hoe de stappentabel eruitziet, staat op <a href="../Reference/Stappenmotor.html">De stappenmotor</a>. Die pagina heb je hier van begin tot eind nodig.</p>
 
     <h2 id="de-schakeling">De schakeling</h2>
 
-    <p>TinkerCAD heeft geen bruikbaar model van een stappenmotor, dus vervang je de motor door <strong>vier LEDs, twee per twee anti-parallel</strong>. Elk paar staat op de plaats van één spoel.</p>
+    <p>TinkerCAD heeft geen bruikbaar model van een stappenmotor, dus vervang je de motor door <strong>vier leds, twee per twee anti-parallel</strong>. Elk paar staat op de plaats van één spoel.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/stappenmotor-leds-antiparallel.png" alt="Vier LEDs in een kruis, twee per twee anti-parallel geschakeld, als vervanging voor de twee spoelen van een stappenmotor">
+            <img src="../../img/stappenmotor-leds-antiparallel.png" alt="Vier leds in een kruis, twee per twee anti-parallel geschakeld, als vervanging voor de twee spoelen van een stappenmotor">
         </figure>
     </div>
 
-    <p>Elk LED-paar hangt over één brug van de L293D: het eerste paar tussen 1Y en 2Y, het tweede tussen 3Y en 4Y. De vier ingangen 1A, 2A, 3A en 4A stuur je aan vanaf pin 2, 3, 4 en 5 van de Arduino. Beide enable-pinnen mag je vast aan 5 V hangen, want hier regel je de snelheid niet met PWM. De volledige aansluittabel staat op de referentiepagina.</p>
+    <p>Elk led-paar hangt over één brug van de L293D: het eerste paar tussen 1Y en 2Y, het tweede tussen 3Y en 4Y. De vier ingangen 1A, 2A, 3A en 4A stuur je aan vanaf pin 2, 3, 4 en 5 van de Arduino. Beide enable-pinnen mag je vast aan 5 V hangen, want hier regel je de snelheid niet met PWM. De volledige aansluittabel staat op de referentiepagina.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Voorzie een externe spanningsbron, en verbind de massa's</div>
@@ -40,7 +40,7 @@
 
     <div class="info-box tip">
         <div class="info-title tip">Vergeet de voorschakelweerstanden niet</div>
-        <p>Er staan LEDs in je schakeling, en die hebben nog altijd een weerstand nodig. Eén weerstand per LED-paar volstaat, want er brandt er per paar toch maar één tegelijk.</p>
+        <p>Er staan leds in je schakeling, en die hebben nog altijd een weerstand nodig. Eén weerstand per led-paar volstaat, want er brandt er per paar toch maar één tegelijk.</p>
     </div>
 
     <h2 id="de-volgorde">De volgorde is het hele punt</h2>
@@ -49,7 +49,7 @@
 
     <div class="info-box warning">
         <div class="info-title warning">Je wisselt telkens van spoel</div>
-        <p>De volgorde is spoel A, spoel B, spoel A de andere kant op, spoel B de andere kant op. Doe je eerst spoel A in beide richtingen en dan pas spoel B, dan schiet de rotor van 0 naar 180 graden en weer terug: hij trilt in plaats van te draaien. Aan je LEDs zie je meteen welke van de twee je hebt: <strong>in de rondte</strong> is goed, <strong>om de beurt van links naar rechts</strong> niet.</p>
+        <p>De volgorde is spoel A, spoel B, spoel A de andere kant op, spoel B de andere kant op. Doe je eerst spoel A in beide richtingen en dan pas spoel B, dan schiet de rotor van 0 naar 180 graden en weer terug: hij trilt in plaats van te draaien. Aan je leds zie je meteen welke van de twee je hebt: <strong>in de rondte</strong> is goed, <strong>om de beurt van links naar rechts</strong> niet.</p>
     </div>
 
     <h2 id="uitbreiding">Uitbreiding: de snelheid regelen</h2>
@@ -78,13 +78,13 @@
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> De vier LEDs lichten in de rondte op en niet heen en weer</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt telkens precies één LED tegelijk</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De vier leds lichten in de rondte op en niet heen en weer</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt telkens precies één led tegelijk</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De stappentabel staat als array in je code, niet als losse digitalWrite-regels</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Na de laatste stap begint de reeks vanzelf opnieuw</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De motor krijgt een externe spanningsbron</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De massa van die voeding hangt aan de GND van de Arduino</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Elk LED-paar heeft een voorschakelweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elk led-paar heeft een voorschakelweerstand</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Uitbreiding: de potentiometer regelt de snelheid, en de motor blijft ook op de traagste stand netjes draaien</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>

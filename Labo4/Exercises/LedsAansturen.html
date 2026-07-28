@@ -3,17 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>LEDs aansturen met de PCF8574</title>
+    <title>Leds aansturen met de PCF8574</title>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
     <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
 </head>
 <body>
 <div class="container">
-    <h1>LEDs aansturen met de PCF8574</h1>
-    <p class="lead">Bouw je eerste I²C-schakeling: een PCF8574 I/O-expander aan de bus, met twee LEDs eraan die om de seconde afwisselend branden. Onderweg zoek je op welk adres jouw chip heeft.</p>
+    <h1>Leds aansturen met de PCF8574</h1>
+    <p class="lead">Bouw je eerste I²C-schakeling: een PCF8574 I/O-expander aan de bus, met twee leds eraan die om de seconde afwisselend branden. Onderweg zoek je op welk adres jouw chip heeft.</p>
 
-    <p>Tot nu toe hing elke LED en elke knop aan een eigen pin van de Arduino. In dit labo werk je met een <strong>I/O-expander</strong>: een chip die je met twee draden aan de Arduino hangt en die er acht in- of uitgangen bij levert. Hoe die bus werkt, wat SDA en SCL zijn en hoe de chip aan zijn adres komt, staat op <a href="../Reference/PCF8574.html">Werken met de PCF8574</a>. Je gebruikt hier ook je eerste bibliotheek, en hoe dat werkt lees je op <a href="../Reference/Bibliotheken.html">Bibliotheken gebruiken</a>. Lees die twee pagina's door voor je begint te bouwen.</p>
+    <p>Tot nu toe hing elke led en elke knop aan een eigen pin van de Arduino. In dit labo werk je met een <strong>I/O-expander</strong>: een chip die je met twee draden aan de Arduino hangt en die er acht in- of uitgangen bij levert. Hoe die bus werkt, wat SDA en SCL zijn en hoe de chip aan zijn adres komt, staat op <a href="../Reference/PCF8574.html">Werken met de PCF8574</a>. Je gebruikt hier ook je eerste bibliotheek, en hoe dat werkt lees je op <a href="../Reference/Bibliotheken.html">Bibliotheken gebruiken</a>. Lees die twee pagina's door voor je begint te bouwen.</p>
 
     <h2 id="de-basisschakeling">De basisschakeling</h2>
 
@@ -37,19 +37,19 @@
         <p>Op de UNO ligt de I²C-bus vast op <strong>A4 (SDA)</strong> en <strong>A5 (SCL)</strong>. Op een UNO R3 zijn diezelfde twee lijnen ook uitgebracht naast de AREF-pin, dus je mag ze daar even goed op aansluiten.</p>
     </div>
 
-    <h2 id="de-leds-erbij">De LEDs erbij</h2>
+    <h2 id="de-leds-erbij">De leds erbij</h2>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/labo-4-basis-oefening-2-image-9581104.png" alt="Breadboardschema met een Arduino UNO, een PCF8574 en twee LEDs met voorschakelweerstanden op P0 en P1">
+            <img src="../../img/labo-4-basis-oefening-2-image-9581104.png" alt="Breadboardschema met een Arduino UNO, een PCF8574 en twee leds met voorschakelweerstanden op P0 en P1">
         </figure>
     </div>
 
-    <p>Dezelfde schakeling als hierboven, met twee LEDs op P0 en P1 erbij. A0, A1 en A2 blijven aan GND, dus je chip houdt het adres dat je net gevonden hebt.</p>
+    <p>Dezelfde schakeling als hierboven, met twee leds op P0 en P1 erbij. A0, A1 en A2 blijven aan GND, dus je chip houdt het adres dat je net gevonden hebt.</p>
 
     <div class="info-box warning">
-        <div class="info-title warning">De LEDs staan actief laag</div>
-        <p>Een uitgang van de PCF8574 kan maar ongeveer 4 mA <strong>leveren</strong>, te weinig om een LED deftig te doen branden. Opnemen kan hij wel veel meer. Daarom hangen de LEDs met hun weerstand aan de <strong>plus</strong>, en niet aan de massa. Een <strong>0</strong> op de uitgang doet de LED branden, een <strong>1</strong> laat ze gedoofd.</p>
+        <div class="info-title warning">De leds staan actief laag</div>
+        <p>Een uitgang van de PCF8574 kan maar ongeveer 4 mA <strong>leveren</strong>, te weinig om een led deftig te doen branden. Opnemen kan hij wel veel meer. Daarom hangen de leds met hun weerstand aan de <strong>plus</strong>, en niet aan de massa. Een <strong>0</strong> op de uitgang doet de led branden, een <strong>1</strong> laat ze gedoofd.</p>
     </div>
 
     <p>Blijft de vraag wat je doet met P2 tot P7, die je hier niet gebruikt. Je mag ze gewoon <strong>open</strong> laten hangen, en dat is wat deze oefening doet. Je mag ze ook aan <strong>GND</strong> leggen, zoals verderop in dit labo bij de volloper gebeurt, maar dan geldt er een voorwaarde: zo'n pin moet dan in <em>elk</em> bitpatroon dat je uitstuurt laag blijven. Stuur je er een 1 naartoe, dan probeert de uitgang een pin hoog te trekken die vastligt aan de massa. Een weerstand tussen de pin en GND vangt dat op.</p>
@@ -61,13 +61,13 @@
 
     <h2 id="wat-stuur-je-uit">Wat stuur je uit?</h2>
 
-    <p>Je stuurt telkens één byte naar de chip, en die byte bevat de toestand van alle acht de pinnen tegelijk. Je kan dus niet één LED apart aansturen: je schrijft altijd het hele patroon. Hoe je zo'n patroon opbouwt en leest, staat op <a href="../Reference/Bits.html">Werken met bits</a>.</p>
+    <p>Je stuurt telkens één byte naar de chip, en die byte bevat de toestand van alle acht de pinnen tegelijk. Je kan dus niet één led apart aansturen: je schrijft altijd het hele patroon. Hoe je zo'n patroon opbouwt en leest, staat op <a href="../Reference/Bits.html">Werken met bits</a>.</p>
 
     <div class="solution-container">
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: hoe ziet dat patroon eruit?</button>
         <div class="spoiler-content solution-content">
-            <p>Het meest rechtse bit van je byte is P0, het meest linkse is P7. Wil je enkel de LED op P0 laten branden, dan moet enkel dat bit 0 zijn en de rest 1. Dat is dus <code>B11111110</code>.</p>
-            <p>Voor de LED op P1 schuift die nul één plaats op: <code>B11111101</code>.</p>
+            <p>Het meest rechtse bit van je byte is P0, het meest linkse is P7. Wil je enkel de led op P0 laten branden, dan moet enkel dat bit 0 zijn en de rest 1. Dat is dus <code>B11111110</code>.</p>
+            <p>Voor de led op P1 schuift die nul één plaats op: <code>B11111101</code>.</p>
         </div>
     </div>
 
@@ -84,9 +84,9 @@
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> Je hebt het adres van je eigen chip opgezocht met de I2C scanner</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> A0, A1 en A2 hangen vast aan GND en zweven niet</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Elke LED heeft een eigen voorschakelweerstand</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt altijd precies één LED tegelijk</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De LEDs wisselen om de seconde af</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke led heeft een eigen voorschakelweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt altijd precies één led tegelijk</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De leds wisselen om de seconde af</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De pinnen die je niet gebruikt hangen open, of ze blijven laag in elk patroon dat je uitstuurt</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>

@@ -3,15 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Een LED die aangaat zonder loop</title>
+    <title>Een led die aangaat zonder loop</title>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
     <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
 </head>
 <body>
 <div class="container">
-    <h1>Een LED die aangaat zonder loop</h1>
-    <p class="lead">Je eerste interrupt, en meteen het bewijs dat hij werkt: je <code>loop()</code> blijft helemaal leeg, en toch reageert je LED op de knop.</p>
+    <h1>Een led die aangaat zonder loop</h1>
+    <p class="lead">Je eerste interrupt, en meteen het bewijs dat hij werkt: je <code>loop()</code> blijft helemaal leeg, en toch reageert je led op de knop.</p>
 
     <p>Zes labo's lang stond alles wat er moest gebeuren in je <code>loop()</code>. Deze keer laat je die met opzet leeg. Werkt je programma toch, dan weet je zeker dat de interrupt het werk gedaan heeft, want er is niets anders dat het gedaan k&aacute;n hebben.</p>
 
@@ -35,7 +35,7 @@
                 </tr>
                 <tr>
                     <td>pin 8</td>
-                    <td>Een LED, via een weerstand van 220 &Omega; naar de massa</td>
+                    <td>Een led, via een weerstand van 220 &Omega; naar de massa</td>
                 </tr>
             </tbody>
         </table>
@@ -49,7 +49,7 @@
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
 
     <ol>
-        <li>Schrijf een functie die de LED aanzet. Ze is <code>void</code> en heeft geen parameters.</li>
+        <li>Schrijf een functie die de led aanzet. Ze is <code>void</code> en heeft geen parameters.</li>
         <li>Koppel die functie in je <code>setup()</code> aan pin 2 met <code>attachInterrupt()</code>, en laat hem afgaan op de dalende flank.</li>
         <li>Laat je <code>loop()</code> volledig leeg. Er mag geen enkele regel in staan.</li>
     </ol>
@@ -58,14 +58,14 @@
 
     <h2 id="wat-je-zal-zien">Wat je zal zien</h2>
 
-    <p>Bij het opstarten gebeurt er niets. Druk je op de knop, dan gaat de LED aan. En dan blijft hij aan.</p>
+    <p>Bij het opstarten gebeurt er niets. Druk je op de knop, dan gaat de led aan. En dan blijft hij aan.</p>
 
-    <p>Dat is geen fout, dat is precies wat je geschreven hebt: er staat nergens iets dat de LED weer uitzet. Druk je nog eens, dan gaat je ISR opnieuw af, maar je ziet er niets van omdat de LED al brandt. Wil je opnieuw beginnen, druk dan op de resetknop van je Arduino.</p>
+    <p>Dat is geen fout, dat is precies wat je geschreven hebt: er staat nergens iets dat de led weer uitzet. Druk je nog eens, dan gaat je ISR opnieuw af, maar je ziet er niets van omdat de led al brandt. Wil je opnieuw beginnen, druk dan op de resetknop van je Arduino.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Probeer dit eens, het is de hele les van deze oefening</div>
         <p>Zet als proef een <code>delay(5000)</code> in je <code>loop()</code>. Je programma zit nu vijf seconden per keer niets te doen.</p>
-        <p>Druk nu op de knop. De LED gaat nog altijd meteen aan, ook al zit je <code>loop()</code> midden in die vijf seconden vast. Precies dat kon je met <code>digitalRead()</code> nooit voor elkaar krijgen.</p>
+        <p>Druk nu op de knop. De led gaat nog altijd meteen aan, ook al zit je <code>loop()</code> midden in die vijf seconden vast. Precies dat kon je met <code>digitalRead()</code> nooit voor elkaar krijgen.</p>
         <p>Haal die <code>delay()</code> daarna weer weg voor je indient.</p>
     </div>
 
@@ -79,7 +79,7 @@
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> Je <code>loop()</code> is helemaal leeg</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Een druk op de knop doet de LED branden</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een druk op de knop doet de led branden</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je knop zit op pin 2 of pin 3, want geen enkele andere pin kan dit</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt <code>digitalPinToInterrupt()</code> en geen ruw interruptnummer</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je ISR is <code>void</code> en heeft niets tussen de haakjes staan</label></li>
@@ -127,7 +127,7 @@ void loop()
             <div class="info-box remark">
                 <div class="info-title remark">Waarom FALLING en niet RISING?</div>
                 <p>Met <code>INPUT_PULLUP</code> staat de pin hoog zolang je niets doet. Druk je, dan verbindt de knop hem met de massa en gaat hij naar laag. De flank op het moment van indrukken is dus een d&aacute;lende flank.</p>
-                <p>Schrijf je <code>RISING</code>, dan gaat je LED pas branden op het moment dat je de knop weer <em>loslaat</em>. Probeer het gerust eens, het maakt het verschil meteen duidelijk.</p>
+                <p>Schrijf je <code>RISING</code>, dan gaat je led pas branden op het moment dat je de knop weer <em>loslaat</em>. Probeer het gerust eens, het maakt het verschil meteen duidelijk.</p>
             </div>
 
             <div class="info-box remark">

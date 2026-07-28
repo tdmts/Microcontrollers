@@ -74,7 +74,7 @@ void loop()
 
     <h2 id="de-noodstop">Een noodstop die niet stopt</h2>
 
-    <p>Kijk eens naar dit programma. Twee LEDs wisselen elkaar af, met tien seconden ertussen. Op pin 2 zit een noodstop: druk je die in, dan moeten alle LEDs doven en blijven ze uit.</p>
+    <p>Kijk eens naar dit programma. Twee leds wisselen elkaar af, met tien seconden ertussen. Op pin 2 zit een noodstop: druk je die in, dan moeten alle leds doven en blijven ze uit.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 const int ledPin1 = 3;
@@ -121,7 +121,7 @@ void loop()
 }</code></pre>
 
     <div class="info-box warning">
-        <div class="info-title warning">Hoe lang moet je die noodstop ingedrukt houden voor de LEDs doven?</div>
+        <div class="info-title warning">Hoe lang moet je die noodstop ingedrukt houden voor de leds doven?</div>
         <p>Denk er even over na voor je verder leest. Het antwoord is niet "een fractie van een seconde".</p>
         <p>De <code>loop()</code> zit in <code>delay(10000)</code>. Pas als die tien seconden om zijn, kijkt het programma weer naar de knop. Laat je de noodstop v&oacute;&oacute;r dat moment los, dan is er niets gebeurd. Je moet hem dus in het slechtste geval <strong>tien seconden lang ingedrukt houden</strong>.</p>
         <p>Dat is geen noodstop. Dat is een suggestie.</p>
@@ -195,13 +195,13 @@ void loop()
   }
 }</code></pre>
 
-    <p>Merk op dat de <code>loop()</code> nu <em>niet meer naar de knop kijkt</em>. Die regel is verdwenen. En toch doven de LEDs op het moment dat je drukt, ook al zit de <code>loop()</code> nog acht seconden vast in zijn <code>delay()</code>.</p>
+    <p>Merk op dat de <code>loop()</code> nu <em>niet meer naar de knop kijkt</em>. Die regel is verdwenen. En toch doven de leds op het moment dat je drukt, ook al zit de <code>loop()</code> nog acht seconden vast in zijn <code>delay()</code>.</p>
 
     <h2 id="het-belangrijkste-idee">Het belangrijkste idee van dit labo</h2>
 
     <p>Kijk goed naar wat er in die ISR staat, en vooral naar wat er niet in staat.</p>
 
-    <p>De ISR doet het <strong>dringende werk aan de hardware</strong>: de LEDs uit. Dat moet nu gebeuren, en het duurt maar een paar microseconden. Daarnaast zet ze een <strong>vlag</strong>: <code>noodstop = true</code>. Die vlag is er voor de <code>loop()</code>, zodat die weet dat hij de LEDs niet opnieuw mag aansteken zodra zijn <code>delay()</code> afgelopen is.</p>
+    <p>De ISR doet het <strong>dringende werk aan de hardware</strong>: de leds uit. Dat moet nu gebeuren, en het duurt maar een paar microseconden. Daarnaast zet ze een <strong>vlag</strong>: <code>noodstop = true</code>. Die vlag is er voor de <code>loop()</code>, zodat die weet dat hij de leds niet opnieuw mag aansteken zodra zijn <code>delay()</code> afgelopen is.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Onthou dit ene zinnetje</div>

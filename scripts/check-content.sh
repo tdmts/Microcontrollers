@@ -651,7 +651,7 @@ if [ "$AUDIT" -eq 1 ]; then
   # The deviation is then listed as skipped rather than as a finding, so the
   # decision lives in the file that deviates and the audit output can reach
   # zero. An audit nobody can silence is an audit nobody reads.
-  VALID_SKIPS=" lead figure indienen oplossing code-class checklist-driven lead-opener u-vorm verkleinwoord noord-nederlands vulwoord "
+  VALID_SKIPS=" lead figure indienen oplossing code-class checklist-driven lead-opener u-vorm verkleinwoord noord-nederlands vulwoord led-spelling "
   declare -A SKIP=()
   skip_notes=""
   while IFS= read -r hit; do
@@ -698,11 +698,13 @@ if [ "$AUDIT" -eq 1 ]; then
     [[ "$cls" == *show-language* ]] || note "$f: code block without show-language"
   done < <(grep -oHE 'class="code-wrapper[^"]*"' "${checked[@]}" 2>/dev/null)
 
-  # The only two rules out of SCHRIJFSTIJL.md a grep can see. The other eight
-  # (a closing punchline, a rhetorical tricolon, a colon announcing a pointe)
-  # need a reader, which is exactly why both of these are advisory: a style
-  # pass that blocks on the mechanical tenth would give the other nine an
-  # authority they never earned.
+  # The four rules out of SCHRIJFSTIJL.md's thirteen patterns that a grep can
+  # see: 9, 11, 12 and 13 below. The other nine (a closing punchline, a
+  # rhetorical tricolon, a colon announcing a pointe) need a reader, which is
+  # exactly why these four are advisory: a style pass that blocks on the
+  # mechanical third would give the rest an authority they never earned. The
+  # u-vorm and the led spelling that follow are not patterns at all, but they
+  # are greppable and they live in the same document.
 
   # Patroon 9: the lead announcing itself on a stock formula. Any single one of
   # these is fine; the tell is that they are all the same one, so every lead
@@ -732,7 +734,7 @@ if [ "$AUDIT" -eq 1 ]; then
   # vocabulary this course already uses: "pootjes" (the outer legs of a
   # potentiometer, in the original author's own text), "rekstrookje",
   # "ezelsbruggetje". It may grow; it may never gain a technical term.
-  DIMINUTIVES='eentje|blokjes?|chipje|draadjes?|schermpje|lampje|knopje|lusje|regeltje|sketchje|functietje|woordje|zinnetje|looplichtje|lichtpuntje|lettertje|motortje|rommeltje|duwtje|trucje|lijstjes?|plaatsjes?|stukjes?'
+  DIMINUTIVES='eentje|blokjes?|chipje|draadjes?|schermpje|lampje|knopje|lusje|regeltje|sketchje|functietje|woordje|zinnetje|looplichtje|lichtpuntje|lettertje|motortje|rommeltje|duwtje|trucje|lijstjes?|plaatsjes?|stukjes?|flitsje'
   while IFS= read -r hit; do
     [ -z "$hit" ] && continue
     f="${hit%%:*}"; w="${hit##*:}"
@@ -779,6 +781,44 @@ if [ "$AUDIT" -eq 1 ]; then
     skipped "$f" vulwoord && continue
     note "$f: '$w' is padding, drop it (SCHRIJFSTIJL.md 13)"
   done < <(grep -ohHE "\b($FILLERS)\b" "${checked[@]}" 2>/dev/null | sort -u)
+
+  # Spelling, not ornament, and the first rule here that is not one of the
+  # thirteen patterns. The house spelling is "led" and "leds"; the capitals were
+  # in 43 files until the labo 1 pass lowercased 400 of them, and a rule is the
+  # only thing that keeps them from creeping back in one page at a time.
+  #
+  # The hard part is that LED belongs in code. "pinLED" and "blinkLED" are
+  # identifiers, and in labo 6 the string "LED" is the protocol key between the
+  # pc and the Arduino ("LED:1"), so there the capitals are data. Those all sit
+  # inside a <pre>, but a line-based grep cannot see block boundaries, so the
+  # match is filtered the other way round: the line must carry a prose tag, and
+  # must not be the <pre ...><code> opening line, where labo 6 happens to put
+  # its `if (sleutel == "LED")`. Code lines carry no tag and drop out. That
+  # errs toward missing a violation rather than inventing one, which is the
+  # right way round for an advisory rule.
+  #
+  # Advisory like the rest, and here that matters more than usual: "LED" is
+  # correct the day a page spells out Light Emitting Diode. No page does today,
+  # and when one does it records `<!-- audit-skip: led-spelling -->` rather than
+  # losing the acronym.
+  LED_TARGETS=("${checked[@]}")
+  [ -f exercises.js ] && LED_TARGETS+=(exercises.js)
+  [ -f reference.js ] && LED_TARGETS+=(reference.js)
+  declare -A LED_SEEN=()
+  while IFS= read -r hit; do
+    [ -z "$hit" ] && continue
+    f="${hit%%:*}"; text="${hit#*:}"; text="${text#*:}"
+    [ -n "${LED_SEEN[$f]:-}" ] && continue
+    case "$text" in *'<pre'*|*'<code>'*) continue ;; esac
+    case "$text" in
+      *'<p'*|*'<li'*|*'<td'*|*'<th'*|*'<h1'*|*'<h2'*|*'<h3'*|*'<title>'*|\
+      *'<caption>'*|*'<figcaption'*|*'alt="'*|*'name:'*|*'blurb:'*) ;;
+      *) continue ;;
+    esac
+    LED_SEEN["$f"]=1
+    skipped "$f" led-spelling && continue
+    note "$f: 'LED' in the prose, the house spelling is 'led' (SCHRIJFSTIJL.md, spelling)"
+  done < <(grep -nE '\bLEDs?\b' "${LED_TARGETS[@]}" 2>/dev/null)
 
   # The je-vorm has been a house rule since the first commit and nothing ever
   # checked it. Imported content is where it slips in. Advisory rather than

@@ -17,15 +17,15 @@
 
     <h2 id="wat-is-een-volloper">Wat is een volloper?</h2>
 
-    <p>Een volloper is een lichteffect waarbij eerst de uiterst linkse LED gaat branden, daarna de twee uiterst linkse LEDs, daarna de drie uiterst linkse enzovoort, tot alle LEDs branden. Daarna gaan alle LEDs uit en begint alles opnieuw. In dit voorbeeld gebruiken we 4 LEDs.</p>
+    <p>Een volloper is een lichteffect waarbij eerst de uiterst linkse led gaat branden, daarna de twee uiterst linkse leds, daarna de drie uiterst linkse enzovoort, tot alle leds branden. Daarna gaan alle leds uit en begint alles opnieuw. In dit voorbeeld gebruiken we 4 leds.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/labo-4-gevorderde-oefening-1-image-9581111.png" alt="Breadboardschema met een Arduino UNO, een PCF8574AN met twee drukknoppen en vier LEDs met voorschakelweerstanden">
+            <img src="../../img/labo-4-gevorderde-oefening-1-image-9581111.png" alt="Breadboardschema met een Arduino UNO, een PCF8574AN met twee drukknoppen en vier leds met voorschakelweerstanden">
         </figure>
     </div>
 
-    <p>De LEDs zijn <strong>actief laag</strong> geschakeld: een 0 op de uitgang doet de LED branden. Een uitgang van de PCF8574 kan namelijk maar zo'n 4 mA leveren, te weinig voor een LED, maar hij kan er wel veel meer opnemen.</p>
+    <p>De leds zijn <strong>actief laag</strong> geschakeld: een 0 op de uitgang doet de led branden. Een uitgang van de PCF8574 kan namelijk maar zo'n 4 mA leveren, te weinig voor een led, maar hij kan er wel veel meer opnemen.</p>
 
     <p>Merk op dat de lege I/O-pinnen op het schema verbonden zijn met ground. Op die manier ligt hun toestand vast. Zou je later de /INT gebruiken, dan kan dat een rol spelen.</p>
 
@@ -36,12 +36,12 @@
 
     <div class="info-box warning">
         <div class="info-title warning">Reken op een gebruiker die rare dingen doet</div>
-        <p>Ga er altijd van uit dat een gebruiker domme dingen gaat doen. Dat betekent dat hij bijvoorbeeld ook beide knoppen tegelijk kan indrukken. In dat geval moeten alle LEDs gedoofd blijven.</p>
+        <p>Ga er altijd van uit dat een gebruiker domme dingen gaat doen. Dat betekent dat hij bijvoorbeeld ook beide knoppen tegelijk kan indrukken. In dat geval moeten alle leds gedoofd blijven.</p>
     </div>
 
-    <h2 id="een-paar-leds-aansturen">Een paar LEDs aansturen</h2>
+    <h2 id="een-paar-leds-aansturen">Een paar leds aansturen</h2>
 
-    <p>Bekijk eens deze voorbeeldcode. Ze leest de knoppen en zet meteen een vast patroon op de LEDs, zodat je kan zien of je bedrading klopt.</p>
+    <p>Bekijk eens deze voorbeeldcode. Ze leest de knoppen en zet meteen een vast patroon op de leds, zodat je kan zien of je bedrading klopt.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
 
@@ -110,10 +110,10 @@ void loop()
                 <tr>
                     <td>Naar GND</td>
                     <td>Naar GND</td>
-                    <td>LED4</td>
-                    <td>LED3</td>
-                    <td>LED2</td>
-                    <td>LED1</td>
+                    <td>Led 4</td>
+                    <td>Led 3</td>
+                    <td>Led 2</td>
+                    <td>Led 1</td>
                     <td>Drukknop 2</td>
                     <td>Drukknop 1</td>
                 </tr>
@@ -130,10 +130,10 @@ void loop()
                 <tr>
                     <td>*</td>
                     <td>*</td>
-                    <td>LED aan</td>
-                    <td>LED uit</td>
-                    <td>LED uit</td>
-                    <td>LED aan</td>
+                    <td>led aan</td>
+                    <td>led uit</td>
+                    <td>led uit</td>
+                    <td>led aan</td>
                     <td>**</td>
                     <td>**</td>
                 </tr>
@@ -175,7 +175,7 @@ void loop()
                 </figure>
             </div>
 
-            <p>In bovenstaand schema is de PCF8574 geconfigureerd op adres 0x3F, want de drie adreslijnen staan alle drie hoog. De LEDs zijn niet mee getekend om de tekening niet te overladen. Hangt jouw chip met A0 tot A2 aan GND, dan is jouw adres 0x38.</p>
+            <p>In bovenstaand schema is de PCF8574 geconfigureerd op adres 0x3F, want de drie adreslijnen staan alle drie hoog. De leds zijn niet mee getekend om de tekening niet te overladen. Hangt jouw chip met A0 tot A2 aan GND, dan is jouw adres 0x38.</p>
 
             <p><strong>Versie 1:</strong> de negen stappen één voor één uitgeschreven.</p>
 
@@ -228,7 +228,7 @@ void loop()
   delay(500);
 }</code></pre>
 
-            <p>Hier zijn de LEDs in common anode geplaatst, dus een 0 doet de LED branden en bij een 1 blijft ze gedoofd. Daarom telt het patroon van 0xFF (alles uit) naar 0x00 (alles aan).</p>
+            <p>Hier zijn de leds in common anode geplaatst, dus een 0 doet de led branden en bij een 1 blijft ze gedoofd. Daarom telt het patroon van 0xFF (alles uit) naar 0x00 (alles aan).</p>
 
             <p><strong>Versie 2:</strong> je ziet in versie 1 steeds een herhaling van dezelfde 4 instructies:</p>
 
@@ -267,16 +267,16 @@ void loop()
 
             <div class="info-box warning">
                 <div class="info-title warning">Tel je lus goed na</div>
-                <p>De array bevat 9 waarden, met indexen 0 tot en met 8. Schrijf je per ongeluk <code>i &lt; 10</code>, dan leest de lus in de laatste doorloop een element dat er niet is. De compiler zegt daar niets over en je sketch loopt gewoon door, maar je stuurt dan een willekeurige byte naar je LEDs. Laat <code>sizeof</code> het aantal berekenen, dan kan je er niet naast zitten.</p>
+                <p>De array bevat 9 waarden, met indexen 0 tot en met 8. Schrijf je per ongeluk <code>i &lt; 10</code>, dan leest de lus in de laatste doorloop een element dat er niet is. De compiler zegt daar niets over en je sketch loopt gewoon door, maar je stuurt dan een willekeurige byte naar je leds. Laat <code>sizeof</code> het aantal berekenen, dan kan je er niet naast zitten.</p>
             </div>
 
-            <p>Het mag duidelijk zijn dat dit al een veel betere oplossing is. Deze volloper gebruikt wel alle acht de uitgangen. In jouw schakeling hangen er maar vier LEDs, en moet je bovendien P0 en P1 hoog houden voor je knoppen.</p>
+            <p>Het mag duidelijk zijn dat dit al een veel betere oplossing is. Deze volloper gebruikt wel alle acht de uitgangen. In jouw schakeling hangen er maar vier leds, en moet je bovendien P0 en P1 hoog houden voor je knoppen.</p>
         </div>
     </div>
 
     <h2 id="maak-de-volloper-af">Maak de volloper af</h2>
 
-    <p>Maak nu zelf de oefening verder af. Je hebt alles wat je nodig hebt: je kan de knoppen lezen, je weet welke bit bij welke LED hoort, en je weet hoe je een sequentie omzet naar een lus.</p>
+    <p>Maak nu zelf de oefening verder af. Je hebt alles wat je nodig hebt: je kan de knoppen lezen, je weet welke bit bij welke led hoort, en je weet hoe je een sequentie omzet naar een lus.</p>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">
@@ -298,14 +298,14 @@ void loop()
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> Elke LED heeft een eigen voorschakelweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke led heeft een eigen voorschakelweerstand</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Knop 1 geeft een volloper in de ene richting, knop 2 in de andere</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De volloper vult op tot alle vier de LEDs branden en begint dan opnieuw</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Druk je beide knoppen tegelijk in, dan blijven alle LEDs gedoofd</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Laat je beide knoppen los, dan blijven alle LEDs gedoofd</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De volloper vult op tot alle vier de leds branden en begint dan opnieuw</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Druk je beide knoppen tegelijk in, dan blijven alle leds gedoofd</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Laat je beide knoppen los, dan blijven alle leds gedoofd</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> P0 en P1 blijven hoog in elk patroon dat je uitstuurt</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> P6 en P7 blijven laag in elk patroon dat je uitstuurt</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Je stuurt de LEDs aan met een lus, niet met vier uitgeschreven blokken</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je stuurt de leds aan met een lus, niet met vier uitgeschreven blokken</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
@@ -317,10 +317,10 @@ void loop()
         <div class="spoiler-content solution-content">
             <div class="info-box warning">
                 <div class="info-title warning">Lopen je vollopers de verkeerde kant op?</div>
-                <p>Welke knop welke richting geeft, hangt af van hoe jij je LEDs op je breadboard gelegd hebt. Deze oplossing gaat ervan uit dat LED1 aan P2 hangt en LED4 aan P5. Ziet het er bij jou omgekeerd uit, wissel dan de <code>true</code> en <code>false</code> om in de oproep van <code>maakPatroon()</code>.</p>
+                <p>Welke knop welke richting geeft, hangt af van hoe jij je leds op je breadboard gelegd hebt. Deze oplossing gaat ervan uit dat led 1 aan P2 hangt en led 4 aan P5. Ziet het er bij jou omgekeerd uit, wissel dan de <code>true</code> en <code>false</code> om in de oproep van <code>maakPatroon()</code>.</p>
             </div>
 
-            <p>De kern is <code>maakPatroon()</code>. Die vertrekt van <code>allesUit</code>, het patroon waarin P0 en P1 hoog staan voor de knoppen en P6 en P7 laag voor de massa, en zet daarna één voor één de bits van de brandende LEDs op 0. Welke bits dat zijn, hangt af van de richting: opbouwend vanaf P2, of afbouwend vanaf P5.</p>
+            <p>De kern is <code>maakPatroon()</code>. Die vertrekt van <code>allesUit</code>, het patroon waarin P0 en P1 hoog staan voor de knoppen en P6 en P7 laag voor de massa, en zet daarna één voor één de bits van de brandende leds op 0. Welke bits dat zijn, hangt af van de richting: opbouwend vanaf P2, of afbouwend vanaf P5.</p>
             <p>De regel <code>patroon &amp;= ~(1 &lt;&lt; bitNummer)</code> is de standaardmanier om precies één bit op 0 te zetten en de zeven andere te laten staan. Ze staat stap voor stap uitgelegd op <a href="../Reference/Bits.html">Werken met bits</a>.</p>
             <p>De <code>loop()</code> gebruikt <code>millis()</code> in plaats van <code>delay()</code> voor het doorschuiven. Zou je hier <code>delay(300)</code> zetten, dan leest je programma de knoppen 300 ms lang niet en voelt het traag aan wanneer je van richting wisselt of allebei de knoppen loslaat.</p>
             <p><code>knop1 == knop2</code> vangt in één test twee gevallen op: geen enkele knop ingedrukt, en allebei tegelijk. In beide gevallen doven we alles en zetten we de teller terug op nul.</p>

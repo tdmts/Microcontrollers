@@ -7,8 +7,8 @@ passen", dan volgt hij het. Eén labo per doorloop, in cursusorde.
 Dit register is met opzet dunner dan de ledgers in deze map voor de didactische review. Daar
 krijgt elke bevinding een vast nummer, omdat het beslissingen zijn die anders elke ronde
 opnieuw besproken worden. Hier is het regeldocument zelf de beslissing, dus wat hier bijgehouden
-wordt is alleen: hoe ver we staan, wat er teruggehouden is voor jou, en welke woorden er aan een
-lijst in `scripts/check-content.sh` toegevoegd zijn.
+wordt is alleen: hoe ver we staan, wat er teruggehouden is voor jou, welke woorden er aan een
+lijst in `scripts/check-content.sh` toegevoegd zijn, en welke ingrepen buiten één labo vielen.
 
 **Een bewuste afwijking hoort hier niet.** Die gaat in de pagina zelf, als
 `<!-- audit-skip: verkleinwoord -->` met de reden ernaast, zodat de beslissing staat waar de
@@ -22,7 +22,7 @@ nodig.
 | Labo | Pagina's | Greppable open | Status |
 |---|---|---|---|
 | Labo 0 | 19 | 0 | **klaar** |
-| Labo 1 | 11 | 3 | open |
+| Labo 1 | 11 | 0 | **klaar** |
 | Labo 2 | 14 | 4 | open |
 | Labo 3 | 7 | 3 | open |
 | Labo 4 | 9 | 2 | open |
@@ -99,6 +99,72 @@ Alle zes zijn beslist. Ze blijven staan omdat een volgende doorloop ze anders op
 | De wij-vorm in de geïmporteerde tekst | `Iteraties.html`, `PullUpPullDown.html`, `pinMode.html` | **Blijft.** `men` is overal naar de je-vorm gegaan, want dat is formeel, maar `we` blijft staan ("we kunnen deze redenering voortzetten"), omdat de hele repo die inclusieve wij-vorm gebruikt. Ook naar de je-vorm gaan is een aparte, repo-brede doorloop en geen stijlronde per labo. |
 | Kop "Terug" met als inhoud "Niets" | `pinMode.html`, onder Syntax/Parameters | **"Geeft terug".** De vertaling van "Returns" las als "terugkeren". De werkwoordsvorm sluit aan bij hoe `FunctiesParameters.html` over functies praat; "Retourneert" was het formelere alternatief. |
 | Belgicismen | `Iteraties.html` | **Correcties blijven.** "op het eerste zicht" → "op het eerste gezicht" (2x) en "verderzetten" → "voortzetten", omdat SCHRIJFSTIJL.md 12 standaardtaal vraagt en geen gewestelijke woordkeuze. |
+
+## Labo 1
+
+Klaar. Acht oefeningen plus drie theoriepagina's; `dashboard.html` en `reference.html` hebben alleen
+een boilerplate `lead` en zijn ongewijzigd gebleven. Twee pagina's bleven helemaal ongemoeid:
+`Morsecode.html` en `7SegmentMetTeller.html` stonden al goed.
+
+| Pagina | Wat er veranderde |
+|---|---|
+| [Looplicht.html](../Labo1/Exercises/Looplicht.html) | Alleen `led's` naar `leds` in de `lead`. De rest van de pagina stond goed. |
+| [KnightRider.html](../Labo1/Exercises/KnightRider.html) | `led's` naar `leds`, en `"lichtpuntje"` naar `het licht` (11). Dat verkleinwoord stond bovendien tussen aanhalingstekens, wat het nog een graad opgesmukter maakte. |
+| [RGBLed.html](../Labo1/Exercises/RGBLed.html) | "Die ga je niet zeven keer uitschrijven: je zet ze in een tabel" naar één bevestigende zin (4 en 6). |
+| [AchtAnimatieOp7Segment.html](../Labo1/Exercises/AchtAnimatieOp7Segment.html) | `lead` begon op de werkwoordloze "Je eerste display." (5), `sketchje` naar "een korte sketch" (11), "is niets anders dan zeven leds" naar "is zeven leds" (6), en het vulwoord `echt` weg (13). |
+| [VastGetalOpDubbel7Segment.html](../Labo1/Exercises/VastGetalOpDubbel7Segment.html) | De dubbele punt in de `lead` naar een punt (4), "Wat er nieuw bijkomt, is één ding." weg (1, pure spanningsopbouw waar de kop eronder het antwoord al geeft), "Daar draait de oplossing om." weg (1), "niet tegelijk, maar om beurten" naar "om beurten" (6), de dubbele punt in "het beeld staande houdt: stopt het" naar een punt (4), en de slotzin van het kader "Begin traag, dan snel" ingekort tot "Zo zie je waar de truc zit." (1). |
+| [Dubbel7SegmentMetTeller.html](../Labo1/Exercises/Dubbel7SegmentMetTeller.html) | "Dat klinkt als één regel erbij, maar er zit een addertje onder het gras." weg (1): de kadertitel eronder noemt het addertje meteen bij naam. Verder `flitsje` naar `flits` (11) en "Die ken je: het is de `millis()`-aanpak uit Debouncen" naar de terugkoppeling als feit (4). |
+| [Arrays.html](../Labo1/Reference/Arrays.html) | "Het grote verschil:" naar een gewone zin (4), "Hier komt de winst." weg (5, de alinea onder het codevoorbeeld zegt concreet wát de winst is), `eentje` naar "een waarde" (11), en een kommasplitsing bij de `sizeof`-truc. |
+| [ZevenSegmentDisplay.html](../Labo1/Reference/ZevenSegmentDisplay.html) | "is niets meer dan zeven leds" naar "is zeven leds" (6), vulwoord `gewoon` weg (13), "Weet je niet welk type je hebt?" naar een gewone voorwaardelijke zin (3), "Dat hoeft niet: je kan" naar "Dat hoeft niet, want je kan" (4), en de slotzin onder de tabel ontdaan van de wending "Dat is precies ... maar dan zeven keer naast elkaar" (1). |
+| [Multiplexing.html](../Labo1/Reference/Multiplexing.html) | `lead` had een kommasplitsing én een ontkennende opening (6), kop "De truc: te snel om te zien" naar "Te snel om te zien" (4), "niet tegelijk, maar om beurten" naar "om beurten" (6), vulwoord `gewoon` weg (13), en "Ruim genoeg." samengevoegd met de zin ervoor (5). |
+
+Woorden toegevoegd aan `scripts/check-content.sh`:
+
+- `DIMINUTIVES`: `flitsje`. Eén voorkomen in de hele repo, op `Dubbel7SegmentMetTeller.html`, en
+  `flits` zegt precies hetzelfde. Geen vakterm.
+
+Niet toegevoegd, hoewel het een verkleinwoord is: `addertje`. Dat is deel van de vaste uitdrukking
+"een addertje onder het gras", en SCHRIJFSTIJL.md 11 zondert vaste uitdrukkingen uitdrukkelijk uit.
+De zin ging hier weg om patroon 1, niet om het verkleinwoord.
+
+### Twijfelgevallen
+
+Alle vijf zijn beslist. Ze blijven staan omdat een volgende doorloop ze anders opnieuw voorlegt.
+
+| Wat | Waar | De beslissing |
+|---|---|---|
+| `LED` in kapitalen | Repo-breed, 43 bestanden | **Overal naar `led` en `leds`.** Uitgevoerd als losse doorloop, zie hieronder. |
+| "een addertje onder het gras" | `Labo2/Exercises/LedDimmenMetPotentiometer.html`, `Labo6/Exercises/DrukknopHierLedDaar.html` | **Overal weg**, en meteen gedaan in plaats van te wachten op de beurt van labo 2 en 6. In allebei was het een losse openingszin voor een alinea die het probleem daarna gewoon uitlegt, dus de zin kon zonder vervanging weg. Voor de rest zijn die twee pagina's ongemoeid gebleven. |
+| "Dat is precies het onderscheid uit Sourcen en sinken, maar dan zeven keer naast elkaar." | `ZevenSegmentDisplay.html`, onder de tabel | **Strakker.** Nu "Het is hetzelfde onderscheid als in Sourcen en sinken, zeven keer naast elkaar." De terugkoppeling en het inhoudelijke "zeven keer naast elkaar" blijven, de opbouw naar de pointe (`precies` + `maar dan`) gaat weg. Een pointe mag, de opvoering eromheen niet. |
+| Kop "De oplossing: multiplexing" | `VastGetalOpDubbel7Segment.html` | **Blijft.** Een dubbele punt in een kop gaat weg wanneer hij een pointe aankondigt ("De truc: te snel om te zien"), en blijft wanneer hij het onderwerp noemt. Dat vraagt per kop een oordeel en is dus niet greppable. |
+| "Zo zie je met eigen ogen waar de truc zit, in plaats van meteen een werkend getal te hebben zonder te weten waarom." | `VastGetalOpDubbel7Segment.html`, kader "Begin traag, dan snel" | **Strakker.** Nu "Zo zie je waar de truc zit." Het waarom van traag beginnen blijft staan, "met eigen ogen" en de "in plaats van"-tegenstelling zijn opsmuk. |
+
+## Repo-brede ingrepen
+
+Dingen die uit een labo-doorloop komen maar niet binnen één labo op te lossen zijn. Ze staan hier
+zodat een volgende doorloop ze niet opnieuw voorlegt.
+
+### `LED` naar `led` (na labo 1)
+
+400 vervangingen in 43 bestanden, inclusief `exercises.js`. `LED` en `LEDs` zijn in de lopende
+tekst `led` en `leds` geworden, met een hoofdletter waar de zin of de cel begint (`<h1>Led
+dimmen</h1>`, `<td>Led 4</td>`). `LED1` tot `LED4` in labo 4 zijn `Led 1` tot `Led 4` geworden, naar
+het model van "Drukknop 1" in dezelfde tabel.
+
+**Code is niet aangeraakt.** Alles binnen een `<pre>` is gebleven zoals het stond: de identifiers
+`pinLED` (44x) en `blinkLED` (3x), maar ook de 60 keer dat `LED` in een commentaarregel of een
+string staat. Dat laatste is een bewuste grens en geen vergetelheid. In labo 6 is `"LED"` de
+sleutel van het protocol tussen de pc en de Arduino (`serialPort.WriteLine("LED:1")`,
+`if (sleutel == "LED")`), dus daar is de kapitaal gegeven data en geen woordkeuze. En de rest van
+de sketch mee verbouwen om alleen commentaar te herspellen levert een diff op waarin een echte
+codewijziging niet meer opvalt.
+
+`scripts/check-content.sh --audit` bewaakt dit sindsdien, als zesde tekstregel naast de vijf over
+opsmuk, met `led-spelling` als naam voor een `audit-skip`. Hij meldt alleen `LED` op een regel met
+prozaopmaak (`<p>`, `<li>`, `<td>`, een kop, een `alt`, een `name:` of `blurb:` in een manifest) en
+laat alles binnen een `<pre>` staan, want een regelgewijze grep ziet geen blokgrenzen. Die filter
+kant kiest bewust voor een gemiste melding boven een verzonnen melding. De regel staat ook in
+[SCHRIJFSTIJL.md](../SCHRIJFSTIJL.md) en [CONTRIBUTING.md](../CONTRIBUTING.md).
 
 ## Voor orion-review
 

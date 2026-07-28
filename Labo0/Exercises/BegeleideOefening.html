@@ -16,7 +16,7 @@
          nadenkt. Een aparte Oplossing-sectie op het einde zou die antwoorden
          dupliceren en de stap-voor-stap opbouw doorbreken. -->
     <h1>Begeleide oefening</h1>
-    <p class="lead">In deze oefening bouw je stap voor stap een schakeling met een drukknop en een LED. We beginnen heel klein en breiden je programma telkens een beetje uit, tot je op het einde een LED laat knipperen met een functie die je zelf hebt geschreven. Neem rustig de tijd en lees bij elke stap ook even het waarom.</p>
+    <p class="lead">In deze oefening bouw je stap voor stap een schakeling met een drukknop en een led. We beginnen heel klein en breiden je programma telkens een beetje uit, tot je op het einde een led laat knipperen met een functie die je zelf hebt geschreven. Neem rustig de tijd en lees bij elke stap ook even het waarom.</p>
 
     <h2 id="stappenplan">Stappenplan</h2>
 
@@ -91,9 +91,9 @@ void loop()
         </figure>
     </div>
 
-    <h3>Stap 5: LED aansluiten op pin 3</h3>
-    <p>Verbind een LED met pin 3 en sluit hem aan volgens het principe van <a href="../Reference/SourcenSinken.html#sourcing">sourcing</a>: de pin levert de stroom die door de LED loopt. Plaats een voorschakelweerstand van <strong>220&nbsp;&Omega;</strong> in serie met de LED om die stroom te begrenzen. Hoe je precies aan die 220&nbsp;&Omega; komt, reken je zelf uit in stap 7.</p>
-    <p>Let goed op de polariteit van je LED. Met het ezelsbruggetje <strong>KNAP</strong> onthoud je het makkelijk: <strong>K</strong>athode <strong>N</strong>egatief, <strong>A</strong>node <strong>P</strong>ositief. Je herkent de kathode (de minkant) op twee manieren:</p>
+    <h3>Stap 5: led aansluiten op pin 3</h3>
+    <p>Verbind een led met pin 3 en sluit hem aan volgens het principe van <a href="../Reference/SourcenSinken.html#sourcing">sourcing</a>: de pin levert de stroom die door de led loopt. Plaats een voorschakelweerstand van <strong>220&nbsp;&Omega;</strong> in serie met de led om die stroom te begrenzen. Hoe je precies aan die 220&nbsp;&Omega; komt, reken je zelf uit in stap 7.</p>
+    <p>Let goed op de polariteit van je led. Met het ezelsbruggetje <strong>KNAP</strong> onthoud je het makkelijk: <strong>K</strong>athode <strong>N</strong>egatief, <strong>A</strong>node <strong>P</strong>ositief. Je herkent de kathode (de minkant) op twee manieren:</p>
     <div class="table-responsive table-spacer">
         <table class="table table-striped table-bordered align-middle" style="border-collapse: collapse;">
             <thead class="table-header-custom">
@@ -105,45 +105,45 @@ void loop()
             <tbody>
                 <tr>
                     <td style="border: 1px solid #000;">De behuizing is vlak aan de kant van de kathode en rond aan de kant van de anode.</td>
-                    <td style="border: 1px solid #000;">Het "vlakje" binnen in de LED is groter bij de kathode dan bij de anode.</td>
+                    <td style="border: 1px solid #000;">Het "vlakje" binnen in de led is groter bij de kathode dan bij de anode.</td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/led-polariteit.webp" class="img-fluid" alt="Schematische voorstelling van de polariteit van een LED, met kathode en anode aangeduid">
+            <img src="../../img/led-polariteit.webp" class="img-fluid" alt="Schematische voorstelling van de polariteit van een led, met kathode en anode aangeduid">
         </figure>
     </div>
     <p>Zo ziet een sourcing-aansluiting er schematisch uit:</p>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/sourcing-schema.png" class="img-fluid" alt="Schema van een LED die volgens het principe van sourcing wordt aangestuurd">
+            <img src="../../img/sourcing-schema.png" class="img-fluid" alt="Schema van een led die volgens het principe van sourcing wordt aangestuurd">
         </figure>
     </div>
-    <!-- TODO: voeg een echte foto toe van dit schema op het breadboard (LED met 220 ohm voorschakelweerstand op pin 3) -->
+    <!-- TODO: voeg een echte foto toe van dit schema op het breadboard (led met 220 ohm voorschakelweerstand op pin 3) -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-sourcing-led-breadboard.png" class="img-fluid" alt="TODO: foto van de LED met voorschakelweerstand op pin 3 op het breadboard">
+            <img src="../../img/TODO-sourcing-led-breadboard.png" class="img-fluid" alt="TODO: foto van de led met voorschakelweerstand op pin 3 op het breadboard">
         </figure>
     </div>
     <div class="info-box">
-        <div class="info-title warning">Waarschuwing: bescherm je LED</div>
-        <p>Sluit een LED <strong>nooit</strong> rechtstreeks op een pin aan zonder voorschakelweerstand, en let op de polariteit. Zonder weerstand loopt er te veel stroom en beschadig je de LED en mogelijk ook de pin van je Arduino. Welke weerstand je nodig hebt, bereken je in stap 7.</p>
+        <div class="info-title warning">Waarschuwing: bescherm je led</div>
+        <p>Sluit een led <strong>nooit</strong> rechtstreeks op een pin aan zonder voorschakelweerstand, en let op de polariteit. Zonder weerstand loopt er te veel stroom en beschadig je de led en mogelijk ook de pin van je Arduino. Welke weerstand je nodig hebt, bereken je in stap 7.</p>
     </div>
 
     <h3>Stap 6: Denk eens na over de niveaus voor sourcing</h3>
-    <p>Opnieuw eerst zelf redeneren. Als je de LED aanstuurt volgens sourcing, welk niveau moet er dan op de anode staan en welk op de kathode om de LED te doen oplichten?</p>
+    <p>Opnieuw eerst zelf redeneren. Als je de led aanstuurt volgens sourcing, welk niveau moet er dan op de anode staan en welk op de kathode om de led te doen oplichten?</p>
     <div class="solution-container">
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
         <div class="spoiler-content solution-content">
-            <p>Bij sourcing komt de anode (de pluskant) aan de pin. Zet je de pin <strong>HIGH</strong>, dan staat de anode op ongeveer 5&nbsp;V en de kathode via de weerstand op 0&nbsp;V (GND). Er loopt dan stroom van de anode naar de kathode en de LED brandt. Zet je de pin <strong>LOW</strong>, dan is er geen spanningsverschil en blijft de LED uit.</p>
+            <p>Bij sourcing komt de anode (de pluskant) aan de pin. Zet je de pin <strong>HIGH</strong>, dan staat de anode op ongeveer 5&nbsp;V en de kathode via de weerstand op 0&nbsp;V (GND). Er loopt dan stroom van de anode naar de kathode en de led brandt. Zet je de pin <strong>LOW</strong>, dan is er geen spanningsverschil en blijft de led uit.</p>
         </div>
     </div>
 
     <h3>Stap 7: De juiste voorschakelweerstand berekenen</h3>
-    <p>Nu berekenen we welke weerstand je nodig hebt. In de datasheet van een LED vind je twee waarden terug. De <strong>I<sub>forward</sub></strong> is de nominale stroom die je door de LED wil sturen om die mooi te laten branden, vaak ongeveer 20&nbsp;mA. De <strong>V<sub>forward</sub></strong> is de spanning die over de LED staat bij die stroom, meestal tussen 1,8&nbsp;V en 2&nbsp;V.</p>
-    <p>Met de <a href="../Reference/WetVanOhm.html">wet van Ohm</a> reken je de weerstand uit. Je trekt eerst de spanning over de LED af van de voedingsspanning, want dat is het stuk spanning dat de weerstand moet opnemen:</p>
+    <p>Nu berekenen we welke weerstand je nodig hebt. In de datasheet van een led vind je twee waarden terug. De <strong>I<sub>forward</sub></strong> is de nominale stroom die je door de led wil sturen om die mooi te laten branden, vaak ongeveer 20&nbsp;mA. De <strong>V<sub>forward</sub></strong> is de spanning die over de led staat bij die stroom, meestal tussen 1,8&nbsp;V en 2&nbsp;V.</p>
+    <p>Met de <a href="../Reference/WetVanOhm.html">wet van Ohm</a> reken je de weerstand uit. Je trekt eerst de spanning over de led af van de voedingsspanning, want dat is het stuk spanning dat de weerstand moet opnemen:</p>
     <div class="math-tex">
         $$ R = \frac{U}{I} = \frac{V_{CC} - V_{forward}}{I_{forward}} = \frac{5\,\text{V} - 1{,}8\,\text{V}}{20\,\text{mA}} \approx 160\ \Omega \text{ (theoretisch)} $$
     </div>
@@ -153,7 +153,7 @@ void loop()
     <div class="solution-container">
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
         <div class="spoiler-content solution-content">
-            <p>160&nbsp;&Omega; is een standaardwaarde uit de E24-reeks (de reeks van de gangbare 5%-weerstanden), maar in een basis-starterkit zit die waarde meestal niet. Je neemt dan de dichtstbijzijnde <strong>hogere</strong> waarde die je w&eacute;l hebt: <strong>220&nbsp;&Omega;</strong>. Rond bij twijfel altijd naar boven af: een iets grotere weerstand betekent iets minder stroom en dus een iets minder felle, maar veiligere LED.</p>
+            <p>160&nbsp;&Omega; is een standaardwaarde uit de E24-reeks (de reeks van de gangbare 5%-weerstanden), maar in een basis-starterkit zit die waarde meestal niet. Je neemt dan de dichtstbijzijnde <strong>hogere</strong> waarde die je w&eacute;l hebt: <strong>220&nbsp;&Omega;</strong>. Rond bij twijfel altijd naar boven af: een iets grotere weerstand betekent iets minder stroom en dus een iets minder felle, maar veiligere led.</p>
         </div>
     </div>
 
@@ -162,14 +162,14 @@ void loop()
     <div class="solution-container">
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
         <div class="spoiler-content solution-content">
-            <p>Een pin van de Arduino Uno levert veilig ongeveer <strong>20&nbsp;mA</strong>. Het <strong>absolute maximum</strong> is 40&nbsp;mA (de schadegrens), en alle pinnen samen mogen niet boven ongeveer 200&nbsp;mA komen. Een LED brandt mooi rond die 20&nbsp;mA, dus qua LED zit je goed.</p>
-            <p>Sluit je de LED echter <strong>zonder</strong> weerstand aan, dan legt niets de stroom vast behalve de LED zelf en de kleine inwendige weerstand van de pin (grofweg 25&nbsp;&Omega;). De stroom is dan geen nette 40&nbsp;mA, maar loopt ongecontroleerd op tot ruim boven de aanbevolen 20&nbsp;mA en voorbij het absolute maximum van 40&nbsp;mA. Dat overbelast de pin en kan zowel de pin als de LED beschadigen. Net daarom heb je de weerstand nodig: die legt de stroom vast op een gekende, veilige waarde. Meer hierover lees je bij <a href="../Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
+            <p>Een pin van de Arduino Uno levert veilig ongeveer <strong>20&nbsp;mA</strong>. Het <strong>absolute maximum</strong> is 40&nbsp;mA (de schadegrens), en alle pinnen samen mogen niet boven ongeveer 200&nbsp;mA komen. Een led brandt mooi rond die 20&nbsp;mA, dus qua led zit je goed.</p>
+            <p>Sluit je de led echter <strong>zonder</strong> weerstand aan, dan legt niets de stroom vast behalve de led zelf en de kleine inwendige weerstand van de pin (grofweg 25&nbsp;&Omega;). De stroom is dan geen nette 40&nbsp;mA, maar loopt ongecontroleerd op tot ruim boven de aanbevolen 20&nbsp;mA en voorbij het absolute maximum van 40&nbsp;mA. Dat overbelast de pin en kan zowel de pin als de led beschadigen. Net daarom heb je de weerstand nodig: die legt de stroom vast op een gekende, veilige waarde. Meer hierover lees je bij <a href="../Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
             <p>Ben je nieuwsgierig? Bouw dit gerust zelf na in TinkerCAD en meet de stroom met een multimeter die je op <strong>Stroomsterkte</strong> zet. Je ziet dan een stroom van ongeveer <strong>53&nbsp;mA</strong> verschijnen, ruim boven de veilige grens.</p>
         </div>
     </div>
 
-    <h3>Stap 10: De LED laten reageren op de knop</h3>
-    <p>Nu koppelen we knop en LED aan elkaar. Breid je programma uit met een <a href="../Reference/digitalReadDigitalWrite.html"><code>digitalWrite</code></a> zodat de LED aangaat wanneer je de knop indrukt en weer uitgaat wanneer je loslaat. Denk terug aan stap 3: bij een pull-up is de knop ingedrukt wanneer je <code>LOW</code> leest, dus daar test je met een <a href="../Reference/Selecties.html#voorbeeld-tweevoudige-selectie">tweevoudige selectie</a> (<code>if</code> / <code>else</code>) op.</p>
+    <h3>Stap 10: De led laten reageren op de knop</h3>
+    <p>Nu koppelen we knop en led aan elkaar. Breid je programma uit met een <a href="../Reference/digitalReadDigitalWrite.html"><code>digitalWrite</code></a> zodat de led aangaat wanneer je de knop indrukt en weer uitgaat wanneer je loslaat. Denk terug aan stap 3: bij een pull-up is de knop ingedrukt wanneer je <code>LOW</code> leest, dus daar test je met een <a href="../Reference/Selecties.html#voorbeeld-tweevoudige-selectie">tweevoudige selectie</a> (<code>if</code> / <code>else</code>) op.</p>
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
 const int pinLED = 3;  // pinLED definiëren
 
@@ -196,10 +196,10 @@ void loop()
     digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
   }
 }</code></pre>
-    <!-- TODO: voeg een breadboardfoto toe van de volledige schakeling (knop op pin 2, LED + weerstand op pin 3) -->
+    <!-- TODO: voeg een breadboardfoto toe van de volledige schakeling (knop op pin 2, led + weerstand op pin 3) -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-breadboard-knop-en-led.png" class="img-fluid" alt="TODO: breadboardfoto van de volledige schakeling met de knop op pin 2 en de LED met weerstand op pin 3">
+            <img src="../../img/TODO-breadboard-knop-en-led.png" class="img-fluid" alt="TODO: breadboardfoto van de volledige schakeling met de knop op pin 2 en de led met weerstand op pin 3">
         </figure>
     </div>
 
@@ -234,7 +234,7 @@ void loop()
 }</code></pre>
 
     <h3>Stap 12: Een eigen blink()-functie maken</h3>
-    <p>Vanaf hier maken we je code netter met een <a href="../Reference/FunctiesParameters.html#eigen-functies-maken">eigen functie</a>. Schrijf een functie <code>blink()</code> die de LED 3 keer na elkaar aan- en uitzet wanneer je de knop indrukt. Vergeet niet om de functie ook echt op te roepen in je <a href="../Reference/SetupLoop.html#loop"><code>loop()</code></a>.</p>
+    <p>Vanaf hier maken we je code netter met een <a href="../Reference/FunctiesParameters.html#eigen-functies-maken">eigen functie</a>. Schrijf een functie <code>blink()</code> die de led 3 keer na elkaar aan- en uitzet wanneer je de knop indrukt. Vergeet niet om de functie ook echt op te roepen in je <a href="../Reference/SetupLoop.html#loop"><code>loop()</code></a>.</p>
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
 const int pinLED = 3;  // pinLED definiëren
 
@@ -323,7 +323,7 @@ void blink()
 }</code></pre>
 
     <h3>Stap 14: Het aantal knipperingen instelbaar maken</h3>
-    <p>Nu maken we de functie flexibeler met een <a href="../Reference/FunctiesParameters.html#uitleg">parameter</a>. Voeg een parameter <code>aantal</code> toe zodat je zelf kan kiezen hoe vaak de LED knippert. Roep de functie daarna zo op dat de LED 4 keer aan- en uitgaat: <code>blink(4)</code>.</p>
+    <p>Nu maken we de functie flexibeler met een <a href="../Reference/FunctiesParameters.html#uitleg">parameter</a>. Voeg een parameter <code>aantal</code> toe zodat je zelf kan kiezen hoe vaak de led knippert. Roep de functie daarna zo op dat de led 4 keer aan- en uitgaat: <code>blink(4)</code>.</p>
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
 const int pinLED = 3;  // pinLED definiëren
 
@@ -364,7 +364,7 @@ void blink(int aantal)
 }</code></pre>
 
     <h3>Stap 15: Ook de duurtijd instelbaar maken</h3>
-    <p>Als laatste stap maak je ook de snelheid instelbaar. Voeg een tweede parameter <code>duurtijd</code> toe die bepaalt hoe lang de LED telkens aan en uit staat. Roep de functie zo op dat de LED 4 keer knippert met een duurtijd van 100&nbsp;ms: <code>blink(4, 100)</code>. Je hebt daarmee een herbruikbare functie waarin je zelf het aantal en het tempo bepaalt.</p>
+    <p>Als laatste stap maak je ook de snelheid instelbaar. Voeg een tweede parameter <code>duurtijd</code> toe die bepaalt hoe lang de led telkens aan en uit staat. Roep de functie zo op dat de led 4 keer knippert met een duurtijd van 100&nbsp;ms: <code>blink(4, 100)</code>. Je hebt daarmee een herbruikbare functie waarin je zelf het aantal en het tempo bepaalt.</p>
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
 const int pinLED = 3;  // pinLED definiëren
 
@@ -415,10 +415,10 @@ void blink(int aantal, int duurtijd)
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> Drukknop op pin 2 werkt met een externe pull-upweerstand (ongeveer 10&nbsp;k&Omega;) en <code>pinMode(pinButton, INPUT)</code></label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De status van de knop verschijnt correct in de Seri&euml;le monitor (1 = los, 0 = ingedrukt)</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> LED op pin 3 is volgens sourcing aangesloten, met een gepaste voorschakelweerstand</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De LED gaat aan bij het indrukken van de knop en uit bij het loslaten</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> led op pin 3 is volgens sourcing aangesloten, met een gepaste voorschakelweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De led gaat aan bij het indrukken van de knop en uit bij het loslaten</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Debouncing is toegevoegd</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De functie <code>blink(aantal, duurtijd)</code> laat de LED het gewenste aantal keer knipperen met instelbare duurtijd</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De functie <code>blink(aantal, duurtijd)</code> laat de led het gewenste aantal keer knipperen met instelbare duurtijd</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>

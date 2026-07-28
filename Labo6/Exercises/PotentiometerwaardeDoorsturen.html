@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Een potentiometerwaarde doorsturen en dimmen</h1>
-    <p class="lead">De potentiometer zit op Arduino 1, de LED op Arduino 2. Draai je aan de knop, dan verandert de helderheid van een LED die aan een heel ander bord hangt.</p>
+    <p class="lead">De potentiometer zit op Arduino 1, de led op Arduino 2. Draai je aan de knop, dan verandert de helderheid van een led die aan een heel ander bord hangt.</p>
 
     <p>De vorige oefening stuurde alleen aan of uit door. Nu stuur je een gemeten waarde, en dat is iets anders: een meting verandert voortdurend een klein beetje, dus je moet nadenken over h&oacute;&eacute; vaak je iets doorstuurt. Alles wat je hiervoor nodig hebt aan analoge in- en uitgangen ken je al uit <a href="../../Labo2/Reference/analogRead.html">analogRead()</a>, <a href="../../Labo2/Reference/analogWrite.html">analogWrite()</a> en <a href="../../Labo2/Reference/map.html">map()</a>.</p>
 
@@ -21,7 +21,7 @@
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-potentiometer-doorsturen-schema.png" class="img-fluid" alt="TODO: schema met twee Arduino's serieel verbonden, een potentiometer op A0 van de eerste en een LED met voorschakelweerstand op PWM-pin 3 van de tweede">
+            <img src="../../img/TODO-potentiometer-doorsturen-schema.png" class="img-fluid" alt="TODO: schema met twee Arduino's serieel verbonden, een potentiometer op A0 van de eerste en een led met voorschakelweerstand op PWM-pin 3 van de tweede">
         </figure>
     </div>
 
@@ -44,31 +44,31 @@
                 <tr>
                     <td>Arduino 2</td>
                     <td>pin 3</td>
-                    <td>De LED, via een weerstand van 220 &Omega;</td>
+                    <td>De led, via een weerstand van 220 &Omega;</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <div class="info-box warning">
-        <div class="info-title warning">De LED moet op een pin met een ~</div>
-        <p>Je gaat de helderheid regelen met <code>analogWrite()</code>, en dat werkt alleen op een pin met PWM. Op de UNO staat daar een tilde bij: 3, 5, 6, 9, 10 en 11. Hang je de LED op pin 4, dan gaat ze wel aan en uit, maar dimmen doet ze niet.</p>
+        <div class="info-title warning">De led moet op een pin met een ~</div>
+        <p>Je gaat de helderheid regelen met <code>analogWrite()</code>, en dat werkt alleen op een pin met PWM. Op de UNO staat daar een tilde bij: 3, 5, 6, 9, 10 en 11. Hang je de led op pin 4, dan gaat ze wel aan en uit, maar dimmen doet ze niet.</p>
     </div>
 
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
 
     <ol>
         <li><strong>Arduino 1</strong> leest de potentiometer uit met <code>analogRead()</code> en stuurt die waarde door.</li>
-        <li><strong>Arduino 2</strong> leest de lijn, maakt er met <code>toInt()</code> weer een getal van, schaalt dat met <code>map()</code> naar het bereik van <code>analogWrite()</code> en stuurt het naar de LED.</li>
+        <li><strong>Arduino 2</strong> leest de lijn, maakt er met <code>toInt()</code> weer een getal van, schaalt dat met <code>map()</code> naar het bereik van <code>analogWrite()</code> en stuurt het naar de led.</li>
     </ol>
 
     <p>Let op de twee bereiken. <code>analogRead()</code> geeft je 0 tot 1023, terwijl <code>analogWrite()</code> maar 0 tot 255 aankan. Die omrekening moet ergens gebeuren. Doe ze bij de ontvanger, want dan blijft er op de lijn staan wat er echt gemeten is en niet al een half verwerkt getal.</p>
 
-    <p>Kies zelf hoe vaak je zendt. Te traag en je LED loopt zichtbaar achter op je vinger, te snel en je loopt de buffer over. Ergens tussen twintig en vijftig keer per seconde voelt goed.</p>
+    <p>Kies zelf hoe vaak je zendt. Te traag en je led loopt zichtbaar achter op je vinger, te snel en je loopt de buffer over. Ergens tussen twintig en vijftig keer per seconde voelt goed.</p>
 
     <div class="info-box remark">
         <div class="info-title remark">Waarom zenden zonder pauze mis loopt</div>
-        <p>Bij 9600 baud passen er ongeveer 960 tekens per seconde over de draad. Een waarde als <code>1023</code> plus het regeleinde is al zes tekens, dus je zit rond de 160 boodschappen per seconde als absolute bovengrens. Je <code>loop()</code> draait er duizenden. Zonder <code>delay()</code> stop je er dus meer in dan er uit kan, de buffer van 64 bytes loopt over, en je LED loopt seconden achter terwijl het lijkt alsof je programma traag is.</p>
+        <p>Bij 9600 baud passen er ongeveer 960 tekens per seconde over de draad. Een waarde als <code>1023</code> plus het regeleinde is al zes tekens, dus je zit rond de 160 boodschappen per seconde als absolute bovengrens. Je <code>loop()</code> draait er duizenden. Zonder <code>delay()</code> stop je er dus meer in dan er uit kan, de buffer van 64 bytes loopt over, en je led loopt seconden achter terwijl het lijkt alsof je programma traag is.</p>
     </div>
 
     <hr>
@@ -80,10 +80,10 @@
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> Draai je aan de potentiometer, dan verandert de helderheid van de LED op het andere bord</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De LED gaat volledig uit aan de ene kant en brandt vol aan de andere kant</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De LED reageert vlot, zonder zichtbare achterstand op je vinger</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De LED hangt op een pin met een ~</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Draai je aan de potentiometer, dan verandert de helderheid van de led op het andere bord</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De led gaat volledig uit aan de ene kant en brandt vol aan de andere kant</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De led reageert vlot, zonder zichtbare achterstand op je vinger</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De led hangt op een pin met een ~</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De omrekening van 0-1023 naar 0-255 gebeurt met <code>map()</code></label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De zender wacht tussen twee boodschappen en spamt de lijn niet vol</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De pinnummers staan als const int bovenaan en niet als losse getallen in de loop</label></li>
@@ -116,7 +116,7 @@ void loop()
   delay(50); // twintig keer per seconde is ruim genoeg
 }</code></pre>
 
-            <p><strong>Arduino 2, met de LED:</strong></p>
+            <p><strong>Arduino 2, met de led:</strong></p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 3;
 
@@ -141,7 +141,7 @@ void loop()
   }
 }</code></pre>
 
-            <p>Komt er ooit iets binnen dat geen getal is, dan geeft <code>toInt()</code> je gewoon 0 en gaat de LED even uit. Dat is hier onschuldig. Vanaf de volgende oefening wordt het dat niet meer, en daar gaan we er dan ook iets aan doen.</p>
+            <p>Komt er ooit iets binnen dat geen getal is, dan geeft <code>toInt()</code> je gewoon 0 en gaat de led even uit. Dat is hier onschuldig. Vanaf de volgende oefening wordt het dat niet meer, en daar gaan we er dan ook iets aan doen.</p>
         </div>
     </div>
 </div>

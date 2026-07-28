@@ -17,12 +17,10 @@
 
     <p>Je vertrekt rechtstreeks van <a href="VastGetalOpDubbel7Segment.html">Vast getal op een dubbel 7-segment display</a>. Die schakeling staat er al, en je <code>multiplexStap()</code> houdt daar al twee cijfers stabiel op het scherm. Het enige wat er nog bij moet, is dat het getal elke seconde verandert.</p>
 
-    <p>Dat klinkt als één regel erbij, maar er zit een addertje onder het gras.</p>
-
     <div class="info-box warning">
         <div class="info-title warning">Een <code>delay(1000)</code> dooft je display</div>
-        <p>Zolang je programma in een <code>delay()</code> zit, roept het geen <code>multiplexStap()</code> aan, en dus staat er geen enkel cijfer aan. Zet je een <code>delay(1000)</code> in je <code>loop()</code> om de teller op te hogen, dan is je display een volle seconde donker en zie je alleen een kort flitsje. Multiplexing werkt enkel zolang je blijft wisselen.</p>
-        <p>Je hebt dus een manier nodig om "is er al een seconde voorbij?" te vragen zonder te wachten. Die ken je: het is de <code>millis()</code>-aanpak uit <a href="../../Labo0/Reference/Debouncen.html">Debouncen</a>. Op <a href="../Reference/Multiplexing.html">Multiplexing</a> staat hoe die twee samengaan.</p>
+        <p>Zolang je programma in een <code>delay()</code> zit, roept het geen <code>multiplexStap()</code> aan, en dus staat er geen enkel cijfer aan. Zet je een <code>delay(1000)</code> in je <code>loop()</code> om de teller op te hogen, dan is je display een volle seconde donker en zie je alleen een korte flits. Multiplexing werkt enkel zolang je blijft wisselen.</p>
+        <p>Je hebt dus een manier nodig om "is er al een seconde voorbij?" te vragen zonder te wachten. Dat is de <code>millis()</code>-aanpak die je in <a href="../../Labo0/Reference/Debouncen.html">Debouncen</a> gebruikte. Op <a href="../Reference/Multiplexing.html">Multiplexing</a> staat hoe die twee samengaan.</p>
     </div>
 
     <hr>

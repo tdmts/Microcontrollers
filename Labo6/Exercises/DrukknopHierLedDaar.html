@@ -3,15 +3,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Een drukknop hier, een LED daar</title>
+    <title>Een drukknop hier, een led daar</title>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
     <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
 </head>
 <body>
 <div class="container">
-    <h1>Een drukknop hier, een LED daar</h1>
-    <p class="lead">De drukknop zit op Arduino 1, de LED op Arduino 2, en er loopt geen enkele draad tussen de knop en de LED. Alleen de seri&euml;le lijn.</p>
+    <h1>Een drukknop hier, een led daar</h1>
+    <p class="lead">De drukknop zit op Arduino 1, de led op Arduino 2, en er loopt geen enkele draad tussen de knop en de led. Alleen de seri&euml;le lijn.</p>
 
     <p>Tot nu toe stuurde je gegevens door om ze te t&oacute;nen. Hier stuur je een <em>opdracht</em>: de ene Arduino zegt de andere wat die moet doen. Dat is precies wat serieel communiceren in de praktijk zo bruikbaar maakt.</p>
 
@@ -21,7 +21,7 @@
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-drukknop-hier-led-daar-schema.png" class="img-fluid" alt="TODO: schema met twee Arduino's serieel verbonden, een drukknop op pin 2 van de eerste en een LED met voorschakelweerstand op pin 3 van de tweede">
+            <img src="../../img/TODO-drukknop-hier-led-daar-schema.png" class="img-fluid" alt="TODO: schema met twee Arduino's serieel verbonden, een drukknop op pin 2 van de eerste en een led met voorschakelweerstand op pin 3 van de tweede">
         </figure>
     </div>
 
@@ -44,7 +44,7 @@
                 <tr>
                     <td>Arduino 2</td>
                     <td>pin 3</td>
-                    <td>De LED, via een weerstand van 220 &Omega;</td>
+                    <td>De led, via een weerstand van 220 &Omega;</td>
                 </tr>
             </tbody>
         </table>
@@ -56,14 +56,14 @@
 
     <ol>
         <li><strong>Arduino 1</strong> leest de knop uit en stuurt een <code>1</code> als ze ingedrukt wordt, en een <code>0</code> als ze weer losgelaten wordt.</li>
-        <li><strong>Arduino 2</strong> leest die lijn en schakelt de LED.</li>
+        <li><strong>Arduino 2</strong> leest die lijn en schakelt de led.</li>
     </ol>
 
-    <p>Er zit een addertje onder het gras. Stuur je bij elke ronde van de <code>loop()</code> de stand van de knop door, dan gaan er duizenden boodschappen per seconde over de lijn, terwijl er hoogstens een paar keer per seconde iets ver&aacute;ndert. Stuur dus alleen iets d&oacute;&oacute;r wanneer de knop van stand verandert. Daarvoor moet je onthouden wat de vorige stand was.</p>
+    <p>Stuur je bij elke ronde van de <code>loop()</code> de stand van de knop door, dan gaan er duizenden boodschappen per seconde over de lijn, terwijl er hoogstens een paar keer per seconde iets ver&aacute;ndert. Stuur dus alleen iets d&oacute;&oacute;r wanneer de knop van stand verandert. Daarvoor moet je onthouden wat de vorige stand was.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">De lijn is niet oneindig snel</div>
-        <p>Bij 9600 baud passen er ongeveer 960 tekens per seconde over de draad. Een <code>loop()</code> draait duizenden keren per seconde. Blijf je maar zenden, dan loopt de ontvangstbuffer van 64 bytes over en gaan er boodschappen verloren, terwijl je LED een halve seconde achterloopt op je vinger. Zenden bij verandering lost dat allebei op.</p>
+        <p>Bij 9600 baud passen er ongeveer 960 tekens per seconde over de draad. Een <code>loop()</code> draait duizenden keren per seconde. Blijf je maar zenden, dan loopt de ontvangstbuffer van 64 bytes over en gaan er boodschappen verloren, terwijl je led een halve seconde achterloopt op je vinger. Zenden bij verandering lost dat allebei op.</p>
     </div>
 
     <div class="info-box tip">
@@ -80,7 +80,7 @@
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> Druk je op de knop van Arduino 1, dan gaat de LED van Arduino 2 aan</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Druk je op de knop van Arduino 1, dan gaat de led van Arduino 2 aan</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Laat je los, dan gaat ze weer uit</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Er gaat alleen een boodschap over de lijn wanneer de knop van stand verandert</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> E&eacute;n druk geeft ook maar &eacute;&eacute;n boodschap, dus je knop is ontdenderd</label></li>
@@ -131,7 +131,7 @@ void loop()
   }
 }</code></pre>
 
-            <p><strong>Arduino 2, met de LED:</strong></p>
+            <p><strong>Arduino 2, met de led:</strong></p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 3;
 

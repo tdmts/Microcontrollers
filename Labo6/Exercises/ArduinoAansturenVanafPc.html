@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>De Arduino aansturen vanaf je pc</h1>
-    <p class="lead">Een programma op je computer zet een LED op je Arduino aan en uit, en vraagt er een sensorwaarde aan op. Niet via de seri&euml;le monitor, maar via een venster met knoppen dat je zelf kan aanpassen.</p>
+    <p class="lead">Een programma op je computer zet een led op je Arduino aan en uit, en vraagt er een sensorwaarde aan op. Niet via de seri&euml;le monitor, maar via een venster met knoppen dat je zelf kan aanpassen.</p>
 
     <p>De seri&euml;le monitor is uiteindelijk ook maar een programma dat de COM-poort openzet. Er is niets dat je tegenhoudt om dat zelf te doen. In deze oefening krijg je een klein C#-programma dat precies dat doet, en schrijf je de Arduino-kant erbij.</p>
 
@@ -36,7 +36,7 @@
             <tbody>
                 <tr>
                     <td>pin 3</td>
-                    <td>Een LED, via een weerstand van 220 &Omega;</td>
+                    <td>Een led, via een weerstand van 220 &Omega;</td>
                 </tr>
                 <tr>
                     <td>A0</td>
@@ -52,8 +52,8 @@
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/serieel-communiceren-csharp-app.png" class="img-fluid" alt="Het venster van het C#-programma met knoppen Connect, Disconnect, LED Aan, LED Uit en Ontvangen">
-            <figcaption>Verbinden, de LED schakelen, en een waarde opvragen.</figcaption>
+            <img src="../../img/serieel-communiceren-csharp-app.png" class="img-fluid" alt="Het venster van het C#-programma met knoppen Connect, Disconnect, led Aan, led Uit en Ontvangen">
+            <figcaption>Verbinden, de led schakelen, en een waarde opvragen.</figcaption>
         </figure>
     </div>
 
@@ -80,13 +80,13 @@ string antwoord = serialPort.ReadLine(); // ontvangen</code></pre>
             </thead>
             <tbody>
                 <tr>
-                    <td>LED Aan</td>
-                    <td><code>LED:1</code></td>
+                    <td>led Aan</td>
+                    <td><code>led:1</code></td>
                     <td>niets</td>
                 </tr>
                 <tr>
-                    <td>LED Uit</td>
-                    <td><code>LED:0</code></td>
+                    <td>led Uit</td>
+                    <td><code>led:0</code></td>
                     <td>niets</td>
                 </tr>
                 <tr>
@@ -113,13 +113,13 @@ string antwoord = serialPort.ReadLine(); // ontvangen</code></pre>
     <p>Schrijf de sketch die aan de andere kant van die lijn zit:</p>
 
     <ol>
-        <li>Bij <code>LED:1</code> gaat de LED aan, bij <code>LED:0</code> gaat ze uit.</li>
+        <li>Bij <code>led:1</code> gaat de led aan, bij <code>led:0</code> gaat ze uit.</li>
         <li>Bij <code>SENSOR:?</code> lees je je sensor uit en stuur je het antwoord terug in dezelfde vorm, dus <code>SENSOR:</code> gevolgd door de waarde.</li>
     </ol>
 
     <p>Het uitpluizen van de boodschap is exact hetzelfde als in de twee vorige oefeningen. Dat is ook het punt: het maakt je Arduino niet uit of er een tweede Arduino aan de lijn hangt of een pc.</p>
 
-    <p>Wil je verder gaan: breid het uit met een tweede LED, of laat de Arduino uit zichzelf elke seconde een <code>SENSOR:</code>-boodschap sturen in plaats van te wachten tot er gevraagd wordt. In het C#-programma kan je daarvoor een <code>Timer</code> gebruiken.</p>
+    <p>Wil je verder gaan: breid het uit met een tweede led, of laat de Arduino uit zichzelf elke seconde een <code>SENSOR:</code>-boodschap sturen in plaats van te wachten tot er gevraagd wordt. In het C#-programma kan je daarvoor een <code>Timer</code> gebruiken.</p>
 
     <hr>
 
@@ -131,7 +131,7 @@ string antwoord = serialPort.ReadLine(); // ontvangen</code></pre>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> Het C#-programma verbindt met de juiste COM-poort en baudrate</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De knop LED Aan doet de LED branden, LED Uit doet ze doven</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De knop led Aan doet de led branden, led Uit doet ze doven</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De knop Ontvangen toont een waarde die verandert als je aan je sensor komt</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je Arduino zet zijn antwoord op &eacute;&eacute;n lijn, afgesloten met een <code>println()</code></label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je sketch gebruikt dezelfde SLEUTEL:WAARDE-vorm als de vorige oefeningen</label></li>

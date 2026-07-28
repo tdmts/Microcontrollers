@@ -57,7 +57,7 @@ Dit laat zien waar een pagina wel werkt maar er anders uitziet dan de rest: een 
 `indienen`- of `oplossing`-sectie. **Dit blokkeert nooit iets**, het draait niet in CI, en je mag het
 gerust negeren. Handig als je eens wil opruimen.
 
-Er zitten ook vijf opmerkingen over de tekst zelf bij, de enige vijf uit
+Er zitten ook zes opmerkingen over de tekst zelf bij, de enige zes uit
 [SCHRIJFSTIJL.md](SCHRIJFSTIJL.md) die een script kan zien:
 
 - Een **`lead` die met een standaardformule begint** ("Hier lees je...", "Op deze pagina zie je...").
@@ -78,6 +78,12 @@ Er zitten ook vijf opmerkingen over de tekst zelf bij, de enige vijf uit
   `netjes` is gewoon Nederlands, en `best` in "je neemt best" is juist Belgisch.
 - **Vulwoorden** (`netjes`, `heel even`). "Vergeet je `volatile`, dan compileert alles netjes" zegt
   precies hetzelfde zonder dat laatste woord.
+- **`LED` in kapitalen.** In de lopende tekst schrijf je `led` en `leds`, met een hoofdletter alleen
+  waar een zin of een titel begint. In code verandert er niets: `pinLED` is een naam, en in labo 6
+  is `"LED"` de sleutel van het protocol tussen de pc en de Arduino. De controle kijkt daarom alleen
+  naar regels met prozaopmaak en laat alles binnen een `<pre>` staan. Schrijft een pagina de
+  afkorting ooit voluit ("LED staat voor Light Emitting Diode"), dan blijft de kapitaal staan en zet
+  je er `<!-- audit-skip: led-spelling -->` bij.
 
 De rest van dat document (geen punchline op het einde van een kader, geen retorische drieslag, geen
 retorische vraag als overgang) kan geen `grep` zien, en blijft dus leeswerk. Dat leeswerk gebeurt
@@ -103,8 +109,8 @@ Wijkt een pagina bewust af? Zet dat dan in de pagina zelf, met een korte uitleg 
 ```
 
 Geldige regels: `lead`, `figure`, `indienen`, `oplossing`, `code-class`, `checklist-driven`,
-`lead-opener`, `u-vorm`, `verkleinwoord`, `noord-nederlands`, `vulwoord` (meerdere mag, gescheiden
-door komma's). De afwijking blijft zichtbaar in de output, maar telt niet
+`lead-opener`, `u-vorm`, `verkleinwoord`, `noord-nederlands`, `vulwoord`, `led-spelling` (meerdere
+mag, gescheiden door komma's). De afwijking blijft zichtbaar in de output, maar telt niet
 meer mee als opmerking. Gebruik dit enkel wanneer het soort pagina echt anders is, niet om iets stil
 te maken dat je nog moet opkuisen.
 

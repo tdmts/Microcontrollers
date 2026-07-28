@@ -13,7 +13,7 @@
     <h1>Arrays</h1>
     <p class="lead">Tot nu toe hield elke variabele één waarde bij. Zodra je met acht leds of tien cijferpatronen werkt, wordt dat onwerkbaar. Een array is één variabele die een hele rij waarden bevat, en die je met een lus kan doorlopen.</p>
 
-    <p>Ken je de lessen Technisch programmeren (C#), dan is een array te vergelijken met een <code>List</code>. Het grote verschil: bij een array leg je op voorhand vast hoeveel plaatsen er zijn, en dat aantal verandert daarna niet meer.</p>
+    <p>Ken je de lessen Technisch programmeren (C#), dan is een array te vergelijken met een <code>List</code>. Het grote verschil is dat je bij een array op voorhand vastlegt hoeveel plaatsen er zijn, en dat aantal verandert daarna niet meer.</p>
 
     <h2 id="een-array-declareren">Een array declareren</h2>
 
@@ -61,7 +61,7 @@ lijst[1] = 5;              // de tweede plaats krijgt de waarde 5</code></pre>
 
     <h2 id="het-aantal-plaatsen">Het aantal plaatsen laten berekenen</h2>
 
-    <p>Je kan het aantal plaatsen zelf tellen, maar dan moet je dat getal aanpassen telkens je er eentje bijzet. Laat de compiler het liever uitrekenen:</p>
+    <p>Je kan het aantal plaatsen zelf tellen, maar dan moet je dat getal aanpassen telkens je er een waarde bijzet. Laat de compiler het liever uitrekenen:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>int aantal = sizeof(lijst) / sizeof(lijst[0]);</code></pre>
 
@@ -69,7 +69,7 @@ lijst[1] = 5;              // de tweede plaats krijgt de waarde 5</code></pre>
 
     <h2 id="een-array-doorlopen">Een array doorlopen met een lus</h2>
 
-    <p>Hier komt de winst. Met een <a href="../../Labo0/Reference/Iteraties.html#de-for-instructie">for-lus</a> behandel je alle plaatsen zonder de code te herhalen:</p>
+    <p>Met een <a href="../../Labo0/Reference/Iteraties.html#de-for-instructie">for-lus</a> behandel je alle plaatsen zonder de code te herhalen:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPins[] = {3, 4, 5, 6};
 const int aantalLeds = sizeof(ledPins) / sizeof(ledPins[0]);
@@ -134,7 +134,7 @@ const int tabel[3][2] = {
 
     <h2 id="rijen-en-kolommen-tellen">Rijen en kolommen laten berekenen</h2>
 
-    <p>Dezelfde <code>sizeof</code>-truc werkt ook bij twee dimensies, je moet ze alleen twee keer toepassen:</p>
+    <p>Dezelfde <code>sizeof</code>-truc werkt ook bij twee dimensies, alleen moet je ze twee keer toepassen:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>// De hele tabel gedeeld door één rij geeft het aantal rijen
 const int aantalRijen = sizeof(tabel) / sizeof(tabel[0]);

@@ -76,14 +76,24 @@ belong in a `figure` (table cells excluded), exercise pages need `indienen` and 
 the `indienen` section must be the standard `<p>Sla je oefening op.</p>` and nothing else (a hosted
 page is not the dropbox, so anything about handing in belongs in Brightspace; imported content drags
 that wording along), and a manifest `checklistDriven` flag must agree with the page's own markup. It
-also carries the five greppable rules out of [`SCHRIJFSTIJL.md`](SCHRIJFSTIJL.md): a `lead` that opens
+also carries the six greppable rules out of [`SCHRIJFSTIJL.md`](SCHRIJFSTIJL.md): a `lead` that opens
 on a stock formula ("Hier lees je", "Op deze pagina zie je"), which is a tell precisely because every
 page uses the same one; the `u`-vorm, which `CONTRIBUTING.md` has always ruled out but nothing
 enforced; a diminutive dressing up a technical part ("het zwarte blokje", "draadjes", "zo eentje");
 Netherlandic word choice in a course for Flemish students (`kun je` where the repo says `kan je` 101
-times, `flink`, `prima`, `eventjes`); and filler adverbs (`netjes`, 19 uses and nearly all padding).
+times, `flink`, `prima`, `eventjes`); filler adverbs (`netjes`, 19 uses and nearly all padding); and
+`LED` in capitals where the house spelling is `led`.
 
-All five are word lists rather than clever patterns, and the reason is worth keeping. The obvious
+That last one is spelling rather than ornament, and it is the only rule here that has to reason about
+where in the file it is looking. `LED` belongs in code: `pinLED` is an identifier, and in labo 6 the
+string `"LED"` is the protocol key between the pc and the Arduino (`WriteLine("LED:1")`). Those all
+sit inside a `<pre>`, which a line-based grep cannot see, so the match is filtered the other way
+round: the line must carry a prose tag and must not be the `<pre ...><code>` opening line, where labo
+6 happens to put its `if (sleutel == "LED")`. Code lines carry no tag and drop out. It errs toward
+missing a violation rather than inventing one, which is the right way round for an advisory rule, and
+`<!-- audit-skip: led-spelling -->` is there for the day a page spells out Light Emitting Diode.
+
+The other five are word lists rather than clever patterns, and the reason is worth keeping. The obvious
 `-je`/`-tje` suffix regex for diminutives also catches "haakjes", "netjes", "oranje" and "vrije", and
 cannot tell decoration from the established term for a component: `pootjes` is what the outer legs of
 a potentiometer are called in this course's own original text, so no technical term is ever listed.
@@ -126,7 +136,8 @@ the sketch most worth compiling. Filling the blanks in to make it build would ha
 
 A page can record that a deviation is deliberate with `<!-- audit-skip: oplossing -->` (comma-separate
 several; valid rules are `lead`, `figure`, `indienen`, `oplossing`, `code-class`,
-`checklist-driven`, `lead-opener`, `u-vorm`, `verkleinwoord`, `noord-nederlands`, `vulwoord`). Skipped deviations are still listed, under "Deviations recorded in the page
+`checklist-driven`, `lead-opener`, `u-vorm`, `verkleinwoord`, `noord-nederlands`, `vulwoord`,
+`led-spelling`). Skipped deviations are still listed, under "Deviations recorded in the page
 itself", just not as findings, and an unrecognised rule name is reported rather than silently
 ignoring nothing. Put the reason in a comment next to the marker: see
 [`Labo0/Exercises/BegeleideOefening.html`](Labo0/Exercises/BegeleideOefening.html), a guided
@@ -307,7 +318,9 @@ The failure mode to avoid is over-correcting. The imported labo 1 and 2 prose ("
 display...") is exactly as dry as asked for and explains nothing, which is what `orion-review` exists
 to fix. Terser is not the goal; unperformed is.
 
-Five of those rules are greppable and live in `--audit` (see the content check above). The rest is a
+Six of those rules are greppable and live in `--audit` (see the content check above); the sixth is the
+spelling rule `led` rather than `LED`, which the document carries alongside the em-dash ban because it
+is not one of the thirteen patterns. The rest is a
 reading judgement, so [`Labo0/Reference/WatIsEenMicrocontroller.html`](Labo0/Reference/WatIsEenMicrocontroller.html)
 is kept as the worked specimen: it had eleven of the thirteen and was rewritten against the document.
 

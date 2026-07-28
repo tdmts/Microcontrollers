@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Drukken tellen zonder dender</h1>
-    <p class="lead">Je LED moet nu <em>omschakelen</em> bij elke druk, en je wil weten hoeveel keer er gedrukt is. Klinkt eenvoudig. Het is de oefening waarin je twee valkuilen tegenkomt die je de rest van dit labo blijven achtervolgen.</p>
+    <p class="lead">Je led moet nu <em>omschakelen</em> bij elke druk, en je wil weten hoeveel keer er gedrukt is. Klinkt eenvoudig. Het is de oefening waarin je twee valkuilen tegenkomt die je de rest van dit labo blijven achtervolgen.</p>
 
     <p>Vertrek van je vorige oefening. Dezelfde bedrading, alleen de code verandert.</p>
 
@@ -33,7 +33,7 @@
                 </tr>
                 <tr>
                     <td>pin 8</td>
-                    <td>De LED, via een weerstand van 220 &Omega;</td>
+                    <td>De led, via een weerstand van 220 &Omega;</td>
                 </tr>
             </tbody>
         </table>
@@ -42,7 +42,7 @@
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
 
     <ol>
-        <li>Elke druk op de knop schakelt de LED om: brandt hij, dan gaat hij uit, en omgekeerd.</li>
+        <li>Elke druk op de knop schakelt de led om: brandt hij, dan gaat hij uit, en omgekeerd.</li>
         <li>Je houdt bij hoeveel keer er gedrukt is.</li>
         <li>Je <code>loop()</code> print dat aantal naar de seri&euml;le monitor, maar alleen wanneer het ver&aacute;nderd is.</li>
     </ol>
@@ -55,7 +55,7 @@
 
     <h2 id="probeer-eerst-de-simpele-versie">Probeer eerst de simpele versie</h2>
 
-    <p>Schrijf je programma eerst zonder je zorgen te maken over de details. Dus: ISR schakelt de LED om en telt op, <code>loop()</code> print. Upload het, en druk vijf keer.</p>
+    <p>Schrijf je programma eerst zonder je zorgen te maken over de details. Dus: ISR schakelt de led om en telt op, <code>loop()</code> print. Upload het, en druk vijf keer.</p>
 
     <p>Werk je op een echt bord, dan zie je waarschijnlijk iets als 3, 9, 14, 21. Werk je in TinkerCAD, dan zie je netjes 1, 2, 3, 4, 5.</p>
 
@@ -83,7 +83,7 @@
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> Elke druk schakelt de LED om</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elke druk schakelt de led om</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De seri&euml;le monitor telt met &eacute;&eacute;n tegelijk op, niet met sprongen</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je ISR bevat geen enkele <code>Serial</code>-opdracht</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je ontdendert met een vergrendeling op basis van <code>millis()</code></label></li>
