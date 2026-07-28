@@ -651,7 +651,7 @@ if [ "$AUDIT" -eq 1 ]; then
   # The deviation is then listed as skipped rather than as a finding, so the
   # decision lives in the file that deviates and the audit output can reach
   # zero. An audit nobody can silence is an audit nobody reads.
-  VALID_SKIPS=" lead figure indienen oplossing code-class checklist-driven "
+  VALID_SKIPS=" lead figure indienen oplossing code-class checklist-driven lead-opener u-vorm verkleinwoord noord-nederlands vulwoord "
   declare -A SKIP=()
   skip_notes=""
   while IFS= read -r hit; do
@@ -697,6 +697,99 @@ if [ "$AUDIT" -eq 1 ]; then
     [[ "$cls" == *linenumbers* ]]   || note "$f: code block without linenumbers"
     [[ "$cls" == *show-language* ]] || note "$f: code block without show-language"
   done < <(grep -oHE 'class="code-wrapper[^"]*"' "${checked[@]}" 2>/dev/null)
+
+  # The only two rules out of SCHRIJFSTIJL.md a grep can see. The other eight
+  # (a closing punchline, a rhetorical tricolon, a colon announcing a pointe)
+  # need a reader, which is exactly why both of these are advisory: a style
+  # pass that blocks on the mechanical tenth would give the other nine an
+  # authority they never earned.
+
+  # Patroon 9: the lead announcing itself on a stock formula. Any single one of
+  # these is fine; the tell is that they are all the same one, so every lead
+  # telegraphs the next. Matched over the whole line rather than the first text
+  # run, since the formula lands in the lead's last sentence and an inline
+  # <code> before it would otherwise hide it. Deliberately narrow: it takes
+  # "Hier lees je" but not "In deze oefening bouw je", which describes the task
+  # instead of announcing the page.
+  # The "we"-forms were added by the labo 0 style pass: "Op deze pagina
+  # behandelen we" and "In dit artikel gaan we" are the same announcement in the
+  # first person plural, and both stood in a labo 0 lead.
+  STOCK_LEAD='Hier lees je|Hier zie je|Hier ontdek je|Hieronder lees je|Hieronder zie je|Op deze pagina (lees|zie|ontdek|vind|leer) je|Op deze pagina (behandelen|bespreken) we|In dit artikel'
+  while IFS= read -r hit; do
+    [ -z "$hit" ] && continue
+    f="${hit%%:*}"
+    skipped "$f" lead-opener && continue
+    note "$f: lead opens on a stock formula, vary it (SCHRIJFSTIJL.md 9)"
+  done < <(grep -lE "class=\"lead\">.*($STOCK_LEAD)" "${checked[@]}" 2>/dev/null)
+
+  # Patroon 11: a diminutive dressing up a technical part ("het zwarte blokje",
+  # "draadjes", "zo eentje") reads as affected. An explicit word list rather
+  # than a -je/-tje suffix regex, which is the obvious implementation and the
+  # wrong one: it also hits "haakjes", "netjes", "eventjes", "oranje" and
+  # "vrije", none of which are diminutives in function, and it cannot tell a
+  # decoration from the established term for a component. So the list holds
+  # only words that have a plain equivalent, and deliberately leaves out the
+  # vocabulary this course already uses: "pootjes" (the outer legs of a
+  # potentiometer, in the original author's own text), "rekstrookje",
+  # "ezelsbruggetje". It may grow; it may never gain a technical term.
+  DIMINUTIVES='eentje|blokjes?|chipje|draadjes?|schermpje|lampje|knopje|lusje|regeltje|sketchje|functietje|woordje|zinnetje|looplichtje|lichtpuntje|lettertje|motortje|rommeltje|duwtje|trucje|lijstjes?|plaatsjes?'
+  while IFS= read -r hit; do
+    [ -z "$hit" ] && continue
+    f="${hit%%:*}"; w="${hit##*:}"
+    skipped "$f" verkleinwoord && continue
+    note "$f: '$w' is a diminutive dressing up a part, name the thing (SCHRIJFSTIJL.md 11)"
+  done < <(grep -ohHE "\b($DIMINUTIVES)\b" "${checked[@]}" 2>/dev/null | sort -u)
+
+  # Patroon 12: Netherlandic word choice in a course written for Flemish
+  # students. "kan je" and "je kan" appear 101 times against 6 for "kun je" and
+  # "je kunt", so this is a consistency rule as much as a regional one, and the
+  # Northern forms sit almost entirely in text taken over from a Dutch source.
+  #
+  # Two words were measured and deliberately left OUT, because a plausible list
+  # is not the same as a correct one. "best" in "neem daarvoor best een
+  # weerstand" is Belgian Dutch, not Northern, so flagging it would push the
+  # text the wrong way. "hoor" is the verb horen in "bij een echte motor hoor je
+  # dat", so the sentence particle cannot be matched without the verb. Same
+  # reason "netjes" is not here: it is ordinary Dutch used in Flanders too, and
+  # its real problem is patroon 13 below. The list also stays clear of
+  # Belgicisms: the target is standard Dutch as written in Flanders, so it will
+  # never ask for "vijs" or "kuisen".
+  # "kunt u" is left to the u-vorm rule below rather than reported twice.
+  # "Kun je" / "Je kunt" are spelled out with both cases rather than matched
+  # case-insensitively: the rest of the list must stay case-sensitive, and a
+  # sentence-initial "Je kunt" slipped past the lowercase-only form.
+  NOORD_NL='[Kk]un je|[Jj]e kunt|flinke?|prima|eventjes|hartstikke|gaaf|nou ja'
+  while IFS= read -r hit; do
+    [ -z "$hit" ] && continue
+    f="${hit%%:*}"; w="${hit##*:}"
+    skipped "$f" noord-nederlands && continue
+    note "$f: '$w' reads as Netherlandic, use the Flemish form (SCHRIJFSTIJL.md 12)"
+  done < <(grep -ohHE "\b($NOORD_NL)\b" "${checked[@]}" 2>/dev/null | sort -u)
+
+  # Patroon 13: an adverb that adds nothing. Narrow on purpose. "gewoon" occurs
+  # 101 times and usually means something ("een gewone digitale uitgang"), and
+  # "letterlijk" earns its place in "digitalWrite() zet letterlijk 5 V op een
+  # pin", so neither is listed. "netjes" is the real tic at 19 uses, nearly all
+  # padding, and in "het bericht wacht netjes in zijn ontvangstbuffer" it also
+  # turns the buffer into a well-behaved creature, which is patroon 7.
+  FILLERS='netjes|heel even'
+  while IFS= read -r hit; do
+    [ -z "$hit" ] && continue
+    f="${hit%%:*}"; w="${hit##*:}"
+    skipped "$f" vulwoord && continue
+    note "$f: '$w' is padding, drop it (SCHRIJFSTIJL.md 13)"
+  done < <(grep -ohHE "\b($FILLERS)\b" "${checked[@]}" 2>/dev/null | sort -u)
+
+  # The je-vorm has been a house rule since the first commit and nothing ever
+  # checked it. Imported content is where it slips in. Advisory rather than
+  # blocking because "u" is a legal Dutch word in other positions and a false
+  # positive must never be able to stop a commit.
+  while IFS= read -r hit; do
+    [ -z "$hit" ] && continue
+    f="${hit%%:*}"
+    skipped "$f" u-vorm && continue
+    note "$hit  <- u-vorm, these pages are in the je-vorm"
+  done < <(grep -nE '\b([Uu]w|[Uu] (kunt|kan|moet|hebt|zult|krijgt|ziet|maakt))\b' "${checked[@]}" 2>/dev/null)
 
   for f in "${checked[@]}"; do
     base="${f##*/}"

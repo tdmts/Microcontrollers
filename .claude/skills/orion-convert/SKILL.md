@@ -437,10 +437,85 @@ inline example must all follow the same style so pages read as one system:
 
 ## Prose style
 
-Never use em-dashes (`—` or `&mdash;`) anywhere in student-facing prose; they
-read as an AI-tell. Rewrite the sentence with a comma, a colon, a period, or a
+[`SCHRIJFSTIJL.md`](../../../SCHRIJFSTIJL.md) in the repo root is the full rule,
+in Dutch, with a before/after pair per pattern. Read it when you are writing a
+whole page. The working summary:
+
+**Keep the didactics.** The *why* behind each step, in plain declarative
+sentences. The callback to what the student can already do, stated as fact ("Je
+gebruikte `analogRead()` al in labo 2"), not as build-up. Concrete examples in
+the main clause rather than in parentheses. The cross-links to the Reference
+pages. The je-vorm, warm and informal. Box titles that say something ("De
+Arduino is niet de microcontroller") instead of "Belangrijk". Full sketches.
+
+**Drop the theatre.** Eleven patterns, all of them ways of performing a paragraph
+instead of writing one (12 and 13 below are about word choice rather than
+ornament):
+
+1. No closing line meant to land. End on the last sentence that carries
+   information ("...en luistert er niemand" ends a box on applause, not on
+   content).
+2. No rhetorical tricolon. Three parallel *claims* as a figure ("omdat...,
+   omdat..., en omdat..."). A list of three concrete things is fine.
+3. No rhetorical question as a transition ("Waarom?", "Wat gebeurt er dan?").
+   State the claim. A real question *to* the student, in an assignment, is fine.
+4. No colon announcing a pointe ("Serieel betekent: achter elkaar", "Het idee:",
+   "Regel:"). A colon before a list, table or code block is just punctuation.
+5. No short sentence for effect ("Eentje maar.", "Zonder uitzondering.").
+6. No opening on a negation ("Een stappenmotor draait niet vanzelf rond").
+   Start from what the thing *is*.
+7. No machines with intentions ("de compiler denkt:", "twee zenders die tegen
+   elkaar roepen").
+8. No obligatory counterweight. Add the nuance only where the student has to
+   make that call themselves.
+9. No stock `lead` opener ("Hier lees je...", "Op deze pagina zie je...", "Hier
+   zie je waar..."). Vary the opening per page; `--audit` flags the known ones.
+10. No theatrical emphasis. Bold and italics mark a **term**, a pin name or a
+    component, not a sentence you want to hit.
+11. No diminutive dressing up a part ("het zwarte blokje", "draadjes waar je in
+    kan steken", "in je wasmachine zit er zo eentje"). Name the thing: chip,
+    draden, zo'n chip. The exception is real and matters: a diminutive that *is*
+    the established term stays, so the outer **pootjes** of a potentiometer and a
+    **rekstrookje** are correct Dutch for those parts, and fixed expressions
+    ("tussen haakjes", "een beetje") are not diminutives in function. The test is
+    whether a plain word exists that says the same thing. There is a linguistic
+    reason this pattern grates here specifically: Netherlandic Dutch uses
+    softening diminutives far more freely than Belgian Dutch, so a Flemish reader
+    hears affectation where a Dutch one hears friendliness.
+
+**Word choice, for a Flemish audience:**
+
+12. **Write standard Dutch as written in Flanders.** `kan je` / `je kan`, not
+    `kun je` / `je kunt` (the repo already says the Flemish form 101 times
+    against 6). Also `flink` -> ruim/stevig, `prima` -> goed/zonder problemen,
+    `eventjes` -> even/kort, and no `hartstikke`, `gaaf`, `nou ja`.
+    **Two traps.** The goal is standard language, *not* Belgicisms: "je neemt
+    best een weerstand van 10 kΩ" is correct Belgian Dutch and stays, while
+    "vijs" or "kuisen" are not what this asks for. And some words only look
+    Northern: `netjes` is ordinary Dutch used in Flanders too (its problem is 13),
+    `best` in "je neemt best" is Belgian rather than Northern, and `hoor` in "bij
+    een echte motor hoor je dat" is just the verb. Measure before you add a word
+    to any list.
+13. **No filler adverbs.** "Vergeet je `volatile`, dan compileert alles netjes"
+    says the same without the last word, and "het bericht wacht netjes in zijn
+    ontvangstbuffer" also turns the buffer into a well-behaved creature (11's
+    sibling, and pattern 7). Watch `netjes` and `heel even`; look twice at
+    `eigenlijk` and `uiteraard`. `letterlijk` in "`digitalWrite()` zet letterlijk
+    5 V op een pin" earns its place and stays.
+
+And still: **never use em-dashes** (`—` or `&mdash;`) anywhere in
+student-facing prose. Rewrite the sentence with a comma, a colon, a period, or a
 word like "en"/"maar" instead. This applies to all body text, callouts,
-accordion answers, and solution explanations.
+accordion answers, and solution explanations, and it is the one prose rule the
+content check actually enforces.
+
+The over-correction is the real risk here. The imported labo 1 and 2 prose
+("Maak een teller op 1 display die doorlopend telt van 0 tot en met 9." and
+nothing else) trips almost none of these thirteen and is bad writing anyway,
+because it explains nothing. Unperformed, not terse.
+[`Labo0/Reference/WatIsEenMicrocontroller.html`](../../../Labo0/Reference/WatIsEenMicrocontroller.html)
+is the worked specimen: it had eleven of the thirteen and was rewritten against the
+document, so it shows what the target actually reads like.
 
 ## Back link
 

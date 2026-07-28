@@ -40,7 +40,17 @@ is referred to by code months later.
   house-style drift. Run `orion-check` for that. A review finding that a
   script could have caught is a wasted finding.
 - **Spelling, tone, and phrasing** unless the phrasing is what makes the
-  assignment ambiguous, in which case it is an `OPDRACHT`.
+  assignment ambiguous, in which case it is an `OPDRACHT`. How the prose *reads*
+  has its own rule in [`SCHRIJFSTIJL.md`](../../../SCHRIJFSTIJL.md) (no closing
+  punchline, no rhetorical tricolon, no stock `lead` opener) and its own moments:
+  writing or converting the page, and the `orion-style` pass over existing pages,
+  tracked in [`review/schrijfstijl.md`](../../../review/schrijfstijl.md). Do not
+  reach for it here: a paragraph
+  can be flawless didactically and still be overwritten, and a review that
+  starts editing sentences stops seeing the gaps it exists to find. The reverse
+  matters too, since that document explicitly protects the *why*, the callbacks
+  and the cross-links, which are exactly what a `BEGRIP` or `SPRONG` finding
+  asks for. The two never ask for opposite things.
 
 ## Severity
 

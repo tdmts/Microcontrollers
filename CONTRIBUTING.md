@@ -57,6 +57,34 @@ Dit laat zien waar een pagina wel werkt maar er anders uitziet dan de rest: een 
 `indienen`- of `oplossing`-sectie. **Dit blokkeert nooit iets**, het draait niet in CI, en je mag het
 gerust negeren. Handig als je eens wil opruimen.
 
+Er zitten ook vijf opmerkingen over de tekst zelf bij, de enige vijf uit
+[SCHRIJFSTIJL.md](SCHRIJFSTIJL.md) die een script kan zien:
+
+- Een **`lead` die met een standaardformule begint** ("Hier lees je...", "Op deze pagina zie je...").
+  Zo'n opening is niet fout, maar hij staat op zoveel pagina's dat de volgende lead voorspelbaar
+  wordt. Begin liever bij het onderwerp zelf.
+- De **u-vorm** (`u kunt`, `uw`). Deze pagina's staan in de je-vorm.
+- Een **verkleinwoord dat een onderdeel gezellig maakt** (`het zwarte blokje`, `draadjes`,
+  `zit er zo eentje`). Dit werkt met een vaste woordenlijst en niet met een `-je`-regel, want die
+  pakt ook `haakjes`, `netjes` en `oranje`, en kan een vakterm niet van opsmuk onderscheiden. Er
+  staat dus met opzet geen enkele vakterm in: de buitenste **pootjes** van een potentiometer heten
+  zo, en `rekstrookje` is gewoon de naam van het onderdeel. Vind je een woord dat er nog bij hoort,
+  dan mag je het toevoegen.
+- **Noord-Nederlandse woordkeuze** (`kun je`, `je kunt`, `flink`, `prima`, `eventjes`). Onze
+  studenten zijn Vlaams, en de repo is dat al bijna overal: `kan je` en `je kan` staan er 101 keer
+  tegen 6 keer `kun je`. Let op twee dingen. Het doel is standaardtaal zoals ze in Vlaanderen
+  geschreven wordt, **geen Belgicismen**: "je neemt best een weerstand van 10 k&Omega;" blijft
+  staan, "vijs" en "kuisen" horen er niet. En sommige woorden lijken alleen Noord-Nederlands:
+  `netjes` is gewoon Nederlands, en `best` in "je neemt best" is juist Belgisch.
+- **Vulwoorden** (`netjes`, `heel even`). "Vergeet je `volatile`, dan compileert alles netjes" zegt
+  precies hetzelfde zonder dat laatste woord.
+
+De rest van dat document (geen punchline op het einde van een kader, geen retorische drieslag, geen
+retorische vraag als overgang) kan geen `grep` zien, en blijft dus leeswerk. Dat leeswerk gebeurt
+labo per labo; hoe ver we staan, staat in [review/schrijfstijl.md](review/schrijfstijl.md). Vraag
+Claude om "de schrijfstijl van labo N toe te passen" en hij volgt dat protocol: hij herschrijft
+meteen en legt enkel de twijfelgevallen aan je voor.
+
 Eén daarvan verdient wat uitleg: de **Indienen-sectie is vaste tekst**, exact deze twee regels:
 
 ```html
@@ -74,8 +102,9 @@ Wijkt een pagina bewust af? Zet dat dan in de pagina zelf, met een korte uitleg 
 <!-- audit-skip: oplossing -->
 ```
 
-Geldige regels: `lead`, `figure`, `indienen`, `oplossing`, `code-class`, `checklist-driven`
-(meerdere mag, gescheiden door komma's). De afwijking blijft zichtbaar in de output, maar telt niet
+Geldige regels: `lead`, `figure`, `indienen`, `oplossing`, `code-class`, `checklist-driven`,
+`lead-opener`, `u-vorm`, `verkleinwoord`, `noord-nederlands`, `vulwoord` (meerdere mag, gescheiden
+door komma's). De afwijking blijft zichtbaar in de output, maar telt niet
 meer mee als opmerking. Gebruik dit enkel wanneer het soort pagina echt anders is, niet om iets stil
 te maken dat je nog moet opkuisen.
 
@@ -275,7 +304,14 @@ Deze worden automatisch afgedwongen:
 
 Deze niet, maar hou ze toch aan:
 
-- **Schrijf in het Nederlands, in de je-vorm**, warm en niet formeel.
+- **Schrijf in het Nederlands, in de je-vorm**, warm en niet formeel, maar zonder retoriek.
+  [SCHRIJFSTIJL.md](SCHRIJFSTIJL.md) staat er helemaal over: kort gezegd leg je uit waarom iets zo
+  is, in gewone mededelende zinnen, en laat je de opsmuk weg. Geen slotzin die moet blijven hangen,
+  geen drie parallelle stellingen op een rij, geen retorische vraag als overgang, en geen
+  verkleinwoorden om een onderdeel gezellig te maken (het is een chip, geen blokje). Schrijf
+  standaardtaal zoals ze in Vlaanderen geschreven wordt, dus `kan je` en niet `kun je`, maar zonder
+  in Belgicismen te vervallen. Let op de omgekeerde fout: dit is geen vraag om korter of karig te
+  schrijven, de uitleg blijft.
 - **Volledige sketches** in de oplossing, geen fragmenten.
 - **Pinnummers van laag naar hoog.** Een gewone digitale uitgang begint bij 2, iets met
   `analogWrite()` bij de laagste PWM-pin, dus **3** (PWM op UNO en Leonardo: 3, 5, 6, 9, 10, 11).

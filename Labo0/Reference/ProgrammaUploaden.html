@@ -11,43 +11,104 @@
 <body>
 <div class="container">
     <h1>Een programma uploaden</h1>
-    <p class="lead">Stap voor stap van een geopende sketch naar een draaiend programma op je Arduino: het juiste bord en de juiste poort kiezen, en daarna uploaden.</p>
+    <p class="lead">Stap voor stap van een lege Arduino IDE naar een draaiend programma: het juiste board en de juiste port kiezen, het voorbeeldprogramma Blink openen, compileren en uploaden. Op het einde weet je ook hoe je ziet dat de upload wel of niet gelukt is.</p>
 
+    <p>We gebruiken hier <strong>Blink</strong> als testprogramma. Dat is het voorbeeld dat de ingebouwde led van je bord laat knipperen. Je hoeft er niets voor aan te sluiten en je ziet aan het bord zelf of de upload geslaagd is, en daarmee is het geschikt om je programmeeromgeving te testen.</p>
+
+    <h2 id="je-bord-en-poort-kiezen">1. Je bord en poort kiezen</h2>
     <ol>
         <li>Open de Arduino IDE.</li>
         <li>Verbind de Arduino via de USB-kabel met je computer.</li>
-        <li>Als je klikt op <strong>Select board</strong>, dan zou je jouw Arduino in het lijstje moeten zien.
+        <li>Als je klikt op <strong>Select board</strong>, dan zou je jouw Arduino in de lijst moeten zien.
             <div class="my-4">
                 <figure class="figure w-100 text-center figure-zoom">
-                    <img src="../../img/arduino-ide-select-board.png" class="img-fluid" alt="Arduino in het Select board-lijstje" width="600">
-                    <figcaption>De Arduino verschijnt in het lijstje onder Select board.</figcaption>
+                    <img src="../../img/arduino-ide-select-board.png" class="img-fluid" alt="Arduino in de Select board-lijst" width="600">
+                    <figcaption>De Arduino verschijnt in de lijst onder Select board.</figcaption>
                 </figure>
             </div>
         </li>
-        <li>Als je klikt op Verify (linkse knop) dan wordt de code gecompileerd.
+        <li>Klap die lijst open en kies de lijn met jouw bord. Daar staat niet alleen het type bord (<strong>Arduino Uno / Leonardo</strong>) maar ook de <strong>poort</strong> waarop het aangesloten is.
             <div class="my-4">
                 <figure class="figure w-100 text-center figure-zoom">
-                    <img src="../../img/arduino-ide-verify-knop.png" class="img-fluid" alt="De Verify-knop in de Arduino IDE" width="600">
-                </figure>
-            </div>
-            <p>Als Verify gelukt is zonder fouten dan krijg je de boodschap <strong>Done compiling.</strong><br>
-            Als Verify niet lukt dan krijg je de boodschap <strong>Compilation error</strong> en ga je zelf op zoek moeten gaan naar de syntaxfout.</p>
-            <div class="my-4">
-                <figure class="figure w-100 text-center figure-zoom">
-                    <img src="../../img/arduino-ide-done-compiling.png" class="img-fluid" alt="De boodschap Done compiling in de Arduino IDE" width="600">
-                </figure>
-            </div>
-        </li>
-        <li>Meestal ga je de moeite niet doen om op Verify te klikken en wil je gewoon <strong>Uploaden</strong> naar de Arduino om meteen te testen.<br>
-            De <strong>Upload</strong> knop gaat eerst een <strong>Verify</strong> uitvoeren om zeker te zijn dat er geen syntaxfouten in het programma zitten en de Arduino voldoende geheugen heeft om je programma op te slaan en uit te voeren.<br>
-            In het <strong>Output window</strong> zie je misschien rode tekst maar dat is niet noodzakelijk een foutmelding.
-            <div class="my-4">
-                <figure class="figure w-100 text-center figure-zoom">
-                    <img src="../../img/arduino-ide-upload-knop.png" class="img-fluid" alt="De Upload-knop en het Output window in de Arduino IDE" width="600">
+                    <img src="../../img/TODO-arduino-ide-select-board-open.png" class="img-fluid" alt="TODO: screenshot van de opengeklapte Select board-dropdown met Arduino Uno en de COM-poort zichtbaar" width="600">
+                    <figcaption>In de opengeklapte lijst zie je zowel het bord als de poort staan.</figcaption>
                 </figure>
             </div>
         </li>
     </ol>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Welke poort is dat?</div>
+        <p>Op <strong>Windows</strong> heet een poort <code>COM</code> gevolgd door een nummer, bijvoorbeeld <code>COM3</code>. Op <strong>macOS</strong> en <strong>Linux</strong> is het een apparaatnaam die begint met <code>/dev/tty</code> of <code>/dev/cu.usbmodem</code>. Welke poort je Arduino krijgt, hangt af van je computer en van de USB-aansluiting waarin je de kabel steekt, dus dat nummer kan veranderen als je een andere poort gebruikt.</p>
+        <p>Je kan hetzelfde ook nakijken en instellen via <strong>Tools &gt; Port</strong>. Onderaan rechts in het venster van de IDE staat altijd welk bord en welke poort op dit moment geselecteerd zijn.</p>
+    </div>
+
+    <h2 id="blink-openen">2. Het voorbeeldprogramma Blink openen</h2>
+    <p>De Arduino IDE opent met een lege sketch, met een leeg <code>setup()</code> en een leeg <code>loop()</code>. Dat programma doet nog niets, dus open het voorbeeldprogramma via <strong>File &gt; Examples &gt; 01.Basics &gt; Blink</strong>.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-arduino-ide-file-examples-blink.png" class="img-fluid" alt="TODO: screenshot van het opengeklapte menu File groter dan Examples groter dan 01.Basics groter dan Blink" width="600">
+            <figcaption>Blink zit bij de meegeleverde voorbeelden onder 01.Basics.</figcaption>
+        </figure>
+    </div>
+    <p>Blink opent in een <strong>nieuw venster</strong>, met de naam <code>Blink</code> in de titelbalk en <code>Blink.ino</code> op het tabblad. In dat venster staat een volledig programma: <code>setup()</code> zet de ingebouwde led als uitgang, en <code>loop()</code> zet die led afwisselend aan en uit met telkens een seconde ertussen.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Zelf een programma schrijven</div>
+        <p>Voor je eigen programma's begin je met een lege sketch via <strong>File &gt; New Sketch</strong>. Verifiëren en uploaden werkt daarna voor elk programma op dezelfde manier als hieronder.</p>
+        <p>Pas je een voorbeeld zoals Blink aan, dan kan je het niet zomaar bewaren op zijn oorspronkelijke plaats. De IDE vraagt je dan om het eerst ergens anders op te slaan via <strong>Save As</strong>. Zo blijven de voorbeelden altijd in hun originele vorm staan.</p>
+    </div>
+
+    <h2 id="verifieren">3. Verifiëren</h2>
+    <p>Als je klikt op <strong>Verify</strong>, de knop helemaal links in de werkbalk, dan wordt de code gecompileerd.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/arduino-ide-verify-knop.png" class="img-fluid" alt="De Verify-knop in de Arduino IDE" width="600">
+            <figcaption>De Verify-knop staat helemaal links in de werkbalk.</figcaption>
+        </figure>
+    </div>
+    <p>Als Verify gelukt is zonder fouten dan krijg je de boodschap <strong>Done compiling.</strong><br>
+    Als Verify niet lukt dan krijg je de boodschap <strong>Compilation error</strong> en moet je zelf de syntaxfout zoeken.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/arduino-ide-done-compiling.png" class="img-fluid" alt="De boodschap Done compiling in de Arduino IDE" width="600">
+            <figcaption>Done compiling: je programma is foutloos vertaald, maar staat nog niet op de Arduino.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="uploaden">4. Uploaden</h2>
+    <p>Meestal ga je de moeite niet doen om op Verify te klikken en wil je gewoon <strong>Uploaden</strong> naar de Arduino om meteen te testen.<br>
+    De <strong>Upload</strong> knop gaat eerst een <strong>Verify</strong> uitvoeren om zeker te zijn dat er geen syntaxfouten in het programma zitten en de Arduino voldoende geheugen heeft om je programma op te slaan en uit te voeren.<br>
+    In het <strong>Output window</strong> zie je misschien rode tekst maar dat is niet noodzakelijk een foutmelding.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/arduino-ide-upload-knop.png" class="img-fluid" alt="De Upload-knop en het Output window in de Arduino IDE" width="600">
+            <figcaption>Tijdens het uploaden staat er Uploading in beeld en knipperen de leds RX en TX op je bord.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="is-het-gelukt">5. Hoe weet je dat het gelukt is?</h2>
+    <p>Als de upload klaar is, verschijnt de boodschap <strong>Done uploading.</strong></p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-arduino-ide-done-uploading.png" class="img-fluid" alt="TODO: screenshot van de melding Done uploading in de Arduino IDE" width="600">
+            <figcaption>Done uploading: je programma staat nu in het geheugen van de microcontroller.</figcaption>
+        </figure>
+    </div>
+    <p>Vanaf dat moment draait je programma op de Arduino zelf. Kijk naar je bord: de kleine led met de letter <strong>L</strong> ernaast knippert nu één seconde aan en één seconde uit. Dat blijft zo, ook als je de USB-kabel uittrekt en het bord op een andere manier voedt. Het programma staat namelijk in de microcontroller en niet op je laptop.</p>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-arduino-uno-blink-led.jpg" class="img-fluid" alt="TODO: foto van een Arduino Uno waarop de ingebouwde led L brandt" width="600">
+            <figcaption>De ingebouwde led L knippert: Blink draait.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="als-het-misloopt">Als het misloopt</h2>
+    <ul>
+        <li><strong>Je bord staat niet in de lijst.</strong> Probeer eerst een andere USB-kabel. Heel wat kabels die bij een gsm geleverd worden, zijn laadkabels zonder datadraden: daarmee gaat de voedingsled op je Arduino wel branden, maar ziet je computer geen enkel apparaat. Helpt dat niet, probeer dan een andere USB-poort van je laptop.</li>
+        <li><strong>Je krijgt een foutmelding dat de poort bezet is</strong> (op Windows bijvoorbeeld <em>Access is denied</em> bij <code>COM3</code>). Dan houdt een ander venster de poort vast. Sluit de seriële monitor, of sluit een tweede venster van de IDE dat nog naar hetzelfde bord verwijst, en probeer opnieuw.</li>
+        <li><strong>Je krijgt Compilation error.</strong> Dan is er nog niets naar de Arduino gestuurd en zit er een fout in de code zelf. Lees de eerste rode lijn in het Output window: daar staan het bestand en het lijnnummer waar de compiler vastliep.</li>
+    </ul>
 </div>
 
 <script src="../../reference.js"></script>

@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>pinMode()</h1>
-    <p class="lead">Op deze pagina behandelen we de verschillende manieren waarop een pin als <strong>input of output</strong> gebruikt kan worden.</p>
+    <p class="lead">Een pin van de Arduino kan als <strong>input of output</strong> gebruikt worden, en met <code>pinMode()</code> leg je vast welke van de twee het wordt.</p>
 
     <h2 id="hoe-definieer-je-een-pin">Hoe definieer je een pin?</h2>
     <p>Vooraleer je een pin kan gebruiken om iets aan te sturen of iets in te lezen, moet je deze pin voor die functie instellen. Dit gebeurt met behulp van de <strong>pinMode</strong>-instructie.</p>
@@ -47,22 +47,22 @@ void loop()
     <h2 id="wat-is-het-verschil">Wat is het verschil?</h2>
     <h3>INPUT</h3>
     <p><strong>Standaard staat elke pin in INPUT-mode.</strong> Dit is een <a href="Impedantie.html#hoog-en-laagimpedant">hoogimpedante</a> instelling waarbij de ingangsweerstand van de pin zo'n 100 MOhm is. Dit betekent dat er zeer weinig stroom nodig is om de pin van een lage naar een hoge toestand te brengen. Daarmee is deze pin dan ook gevoelig voor storing uit de nabijheid wanneer er niets op aangesloten is. Zelfs een naburige pin die schakelt, kan er dan voor zorgen dat de toestand van de pin verandert.</p>
-    <p>Dit kan opgelost worden door extern een pullup- of pulldownweerstand aan te schakelen. Meestal gebruikt men daarvoor een weerstand van 10 KOhm.</p>
+    <p>Dit kan opgelost worden door extern een pullup- of pulldownweerstand aan te schakelen. Meestal gebruik je daarvoor een weerstand van 10 KOhm.</p>
 
     <h3>INPUT_PULLUP</h3>
-    <p>In deze mode schakelt men de ingebouwde pullupweerstand in. Deze ligt tussen 20 KOhm en 50 KOhm en zorgt ervoor dat er, wanneer er niets met de pin verbonden is, altijd een hoge waarde gelezen wordt. Om een laag niveau te lezen, moeten we de pin dus verbinden met de massa.</p>
+    <p>In deze mode schakel je de ingebouwde pullupweerstand in. Deze ligt tussen 20 KOhm en 50 KOhm en zorgt ervoor dat er, wanneer er niets met de pin verbonden is, altijd een hoge waarde gelezen wordt. Om een laag niveau te lezen, moeten we de pin dus verbinden met de massa.</p>
     <p>De meest gebruikte manier hiervoor is een switch, waarvan de NO-kant verbonden wordt met de pin en de COM-kant met de massa. Wanneer de switch niet bediend is, staat op de ingang een hoog niveau vanwege de pullupweerstand. Zodra de schakelaar ingedrukt wordt, krijgen we een verbinding met massa en bijgevolg een laag niveau op de pin. De pin is dus laag assertief.</p>
     <div class="info-box">
         <div class="info-title remark">Ingebouwde led</div>
-        <p>Pin 13 is standaard verbonden met de ingebouwde led en is dus minder geschikt om als ingang gebruikt te worden. De led staat dan in serie geschakeld met de pullupweerstand, waardoor een spanning van ongeveer 1,7 V op de ingang staat en deze altijd als LOW wordt gelezen. Indien men pin 13 absoluut als ingang wil gebruiken, kan men beter de INPUT-mode gebruiken en een externe pulldownweerstand voorzien. Deze ingang is dan hoog assertief.</p>
+        <p>Pin 13 is standaard verbonden met de ingebouwde led en is dus minder geschikt om als ingang gebruikt te worden. De led staat dan in serie geschakeld met de pullupweerstand, waardoor een spanning van ongeveer 1,7 V op de ingang staat en deze altijd als LOW wordt gelezen. Wil je pin 13 absoluut als ingang gebruiken, gebruik dan beter de INPUT-mode en voorzie een externe pulldownweerstand. Deze ingang is dan hoog assertief.</p>
     </div>
 
     <h3>OUTPUT</h3>
     <p>In deze mode staat de pin in <a href="Impedantie.html#hoog-en-laagimpedant">laagimpedante</a> toestand en levert hij stroom aan de buitenwereld. Het <strong>absolute maximum</strong> is 40 mA, maar in de praktijk hou je <strong>20 mA per pin</strong> aan als veilige waarde. Dat is genoeg om een led aan te sturen, maar ruim onvoldoende om een motor aan te sturen. Daarvoor is dan een interfaceschakeling nodig (zie verder). De volledige uitleg over die grenzen staat op <a href="SourcenSinken.html">Sourcen en sinken</a>.</p>
-    <p>Hoewel een led rechtstreeks op de pin kan worden aangesloten, is het toch altijd verstandig om een outputpin te voorzien van een externe serieweerstand. Een outputpin die bijvoorbeeld kortgesloten wordt, kan beschadigd worden waardoor hij niet meer werkt. Dit heeft meestal geen gevolgen voor de rest van de controller, maar men heeft dan wel een "dode pin" waar men niets meer mee kan aanvangen. Voor een led op 5 V kom je uit bij <strong>220 Ohm</strong>, en voor andere toepassingen is 1 KOhm een gangbare waarde. Hoe je die 220 Ohm zelf berekent, lees je op <a href="WetVanOhm.html">De wet van Ohm</a>.</p>
+    <p>Hoewel een led rechtstreeks op de pin kan worden aangesloten, is het toch altijd verstandig om een outputpin te voorzien van een externe serieweerstand. Een outputpin die bijvoorbeeld kortgesloten wordt, kan beschadigd worden waardoor hij niet meer werkt. Dit heeft meestal geen gevolgen voor de rest van de controller, maar je houdt dan wel een "dode pin" over waar je niets meer mee kan aanvangen. Voor een led op 5 V kom je uit bij <strong>220 Ohm</strong>, en voor andere toepassingen is 1 KOhm een gangbare waarde. Hoe je die 220 Ohm zelf berekent, lees je op <a href="WetVanOhm.html">De wet van Ohm</a>.</p>
     <div class="info-box">
         <div class="info-title remark">Stroombeperking</div>
-        <p>Men zou verkeerdelijk kunnen rekenen dat we, als elke pin 40 mA kan leveren, in totaal 13 × 40 mA = 520 mA kunnen leveren. Dit is onmogelijk, aangezien de USB-aansluiting zelf al beperkt is tot 500 mA max. Maar zelfs 500 mA is niet haalbaar omdat <strong>de Arduino de stroom op alle pinnen samen beperkt tot een maximum van 200 mA.</strong></p>
+        <p>Je zou verkeerdelijk kunnen rekenen dat we, als elke pin 40 mA kan leveren, in totaal 13 × 40 mA = 520 mA kunnen leveren. Dit is onmogelijk, aangezien de USB-aansluiting zelf al beperkt is tot 500 mA max. Maar zelfs 500 mA is niet haalbaar omdat <strong>de Arduino de stroom op alle pinnen samen beperkt tot een maximum van 200 mA.</strong></p>
         <p>De voedingspinnen +5V en GND kunnen tot maximum 500 mA leveren via USB, maar indien de Arduino extern gevoed wordt via de barrelconnector door een voeding met voldoende vermogen, dan kunnen we hier tot 1 A gaan. De ingebouwde spanningsregelaar gaat daarna wel in thermal shutdown.</p>
         <p>Er is ook een 3,3V-spanningsregelaar aanwezig, die op de 3,3V-pin een maximale stroom van 150 mA kan leveren.</p>
     </div>

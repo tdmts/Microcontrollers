@@ -75,8 +75,25 @@ proper stays out of: every code block must be `code-wrapper language-cpp linenum
 belong in a `figure` (table cells excluded), exercise pages need `indienen` and `oplossing` sections,
 the `indienen` section must be the standard `<p>Sla je oefening op.</p>` and nothing else (a hosted
 page is not the dropbox, so anything about handing in belongs in Brightspace; imported content drags
-that wording along), and a manifest `checklistDriven` flag must agree with the page's own markup. **It never affects the
-exit code** and never runs in CI or the hook, so a stylistic deviation cannot block anyone.
+that wording along), and a manifest `checklistDriven` flag must agree with the page's own markup. It
+also carries the five greppable rules out of [`SCHRIJFSTIJL.md`](SCHRIJFSTIJL.md): a `lead` that opens
+on a stock formula ("Hier lees je", "Op deze pagina zie je"), which is a tell precisely because every
+page uses the same one; the `u`-vorm, which `CONTRIBUTING.md` has always ruled out but nothing
+enforced; a diminutive dressing up a technical part ("het zwarte blokje", "draadjes", "zo eentje");
+Netherlandic word choice in a course for Flemish students (`kun je` where the repo says `kan je` 101
+times, `flink`, `prima`, `eventjes`); and filler adverbs (`netjes`, 19 uses and nearly all padding).
+
+All five are word lists rather than clever patterns, and the reason is worth keeping. The obvious
+`-je`/`-tje` suffix regex for diminutives also catches "haakjes", "netjes", "oranje" and "vrije", and
+cannot tell decoration from the established term for a component: `pootjes` is what the outer legs of
+a potentiometer are called in this course's own original text, so no technical term is ever listed.
+The regional list was measured before it was written, which is how two plausible entries got dropped:
+`best` in "neem daarvoor best een weerstand" is Belgian rather than Northern, and `hoor` is the verb
+*horen* in "bij een echte motor hoor je dat". The target is standard Dutch as written in Flanders, so
+that list will never ask for a Belgicism like "vijs" or "kuisen" either. Advisory throughout, because
+the remaining patterns (a punchline, a rhetorical tricolon) are not something a grep can see, and a
+style pass that half-blocks would be worse than one that never does. **It never affects the exit
+code** and never runs in CI or the hook, so a stylistic deviation cannot block anyone.
 
 `bash scripts/check-content.sh --compile` adds rule 7, the one rule that does not read the HTML: it
 extracts every code block that is a whole program (has both `setup()` and `loop()`), undoes the HTML
@@ -109,7 +126,7 @@ the sketch most worth compiling. Filling the blanks in to make it build would ha
 
 A page can record that a deviation is deliberate with `<!-- audit-skip: oplossing -->` (comma-separate
 several; valid rules are `lead`, `figure`, `indienen`, `oplossing`, `code-class`,
-`checklist-driven`). Skipped deviations are still listed, under "Deviations recorded in the page
+`checklist-driven`, `lead-opener`, `u-vorm`, `verkleinwoord`, `noord-nederlands`, `vulwoord`). Skipped deviations are still listed, under "Deviations recorded in the page
 itself", just not as findings, and an unrecognised rule name is reported rather than silently
 ignoring nothing. Put the reason in a comment next to the marker: see
 [`Labo0/Exercises/BegeleideOefening.html`](Labo0/Exercises/BegeleideOefening.html), a guided
@@ -256,7 +273,9 @@ the **orion-review** skill (`.claude/skills/orion-review/`). One lab per pass, r
 honest student order (exercises by `order`, reference pages only when the exercise sends
 you there), with the prior-knowledge baseline rebuilt from the manifests of labo 0..N-1.
 It reports four kinds of finding only (`BEGRIP`, `SPRONG`, `OPDRACHT`, `BEELD`), never
-technical correctness and never anything the script already covers.
+technical correctness and never anything the script already covers. It also stays out of tone and
+phrasing, which belong to [`SCHRIJFSTIJL.md`](SCHRIJFSTIJL.md); the exception is phrasing that is what
+makes an assignment ambiguous, and that is an `OPDRACHT`.
 
 The pass ends in an interview, not in edits: every finding gets two or three concrete fix
 options, and the user decides. **The decisions live in [`review/labo4.md`](review/labo4.md)
@@ -267,6 +286,39 @@ never shown the ledger, so a finding that resurfaces on its own is evidence rath
 noise; reconciliation happens afterwards.
 
 ## Authoring conventions
+
+### Prose style
+
+[`SCHRIJFSTIJL.md`](SCHRIJFSTIJL.md) is the single source of truth for how the Dutch prose reads, in
+Dutch because its before/after pairs *are* Dutch prose and the second author has to be able to read
+it. `CONTRIBUTING.md` and the `orion-convert` skill point at it rather than restating the list.
+
+The short version: **keep the didactics, drop the theatre.** The pages written from labo 5 onward (and
+labo 0's theory pages) explain well but read manufactured, because nearly every paragraph builds
+toward a pointe and closes on a line meant to land. Thirteen patterns are named there: eleven about
+ornament (the closing punchline, the rhetorical tricolon, the rhetorical question as a transition, the
+colon-as-pointe, the stock `lead` opener and the decorative diminutive do the most damage) and two
+about word choice, namely Netherlandic vocabulary in a course for Flemish students and filler adverbs.
+What stays is everything didactic: the *why* in plain
+declarative sentences, the callback to prior labs stated as fact, concrete examples in the main clause
+instead of in parentheses, the cross-links, the je-vorm, and box titles that say something.
+
+The failure mode to avoid is over-correcting. The imported labo 1 and 2 prose ("Maak een teller op 1
+display...") is exactly as dry as asked for and explains nothing, which is what `orion-review` exists
+to fix. Terser is not the goal; unperformed is.
+
+Five of those rules are greppable and live in `--audit` (see the content check above). The rest is a
+reading judgement, so [`Labo0/Reference/WatIsEenMicrocontroller.html`](Labo0/Reference/WatIsEenMicrocontroller.html)
+is kept as the worked specimen: it had eleven of the thirteen and was rewritten against the document.
+
+Bringing the *existing* pages in line is a separate, ongoing job with its own protocol: the
+**orion-style** skill (`.claude/skills/orion-style/`). One lab per pass, in course order, rewriting
+rather than proposing (the rules are already agreed, `git diff` is the review surface) but holding
+back anything that would change meaning or needs a fact, as a short list of questions. Progress and
+those hold-backs live in [`review/schrijfstijl.md`](review/schrijfstijl.md). Imported Brightspace
+prose is treated like any other page, style only. Do not confuse this with `orion-review`: that pass
+answers whether a student learns anything and never touches phrasing, this one only touches phrasing
+and never adds an explanation.
 
 ### Bulk import from Brightspace
 

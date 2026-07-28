@@ -4,6 +4,11 @@ Eén ledger per labo, met de bevindingen uit de studentbril-review en wat er per
 beslist is. Het protocol staat in `.claude/skills/orion-review/SKILL.md`; vraag Claude
 gewoon om "labo N met een studentenbril te bekijken", dan volgt hij het.
 
+> Naast deze ledgers staat in deze map ook [schrijfstijl.md](schrijfstijl.md), het register van
+> de schrijfstijlrondes. Dat is een andere vraag: niet *leert een student hier iets van*, maar
+> *klinkt deze tekst zoals de rest van de site*. De regel staat in
+> [SCHRIJFSTIJL.md](../SCHRIJFSTIJL.md), het protocol in `.claude/skills/orion-style/SKILL.md`.
+
 Wat deze bestanden bijhouden en waarom: een bevinding krijgt een **vast nummer** dat nooit
 hergebruikt wordt, en een status. Verworpen bevindingen blijven staan **met hun reden**,
 want dat is precies wat een volgende ronde belet om dezelfde discussie opnieuw te voeren.

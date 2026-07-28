@@ -11,33 +11,33 @@
 <body>
 <div class="container">
     <h1>Wat is een microcontroller?</h1>
-    <p class="lead">In het eerste jaar van het modeltraject schreef je C#-programma's voor een pc in Technisch programmeren, en programmeerde je een Siemens LOGO in Logische sturingen. Dit semester komen daar PLC's en microcontrollers bij. Maar waar past een microcontroller nu precies in die rij? Op deze pagina zie je wat het is, en waarin het verschilt van je laptop en van een PLC.</p>
+    <p class="lead">Een microcontroller is een computer die in één chip zit en die jij zelf programmeert. In het eerste jaar van het modeltraject schreef je C#-programma's voor een pc in Technisch programmeren, en programmeerde je een Siemens LOGO in Logische sturingen. Dit semester komen daar PLC's en microcontrollers bij. Deze pagina zet die drie soorten toestellen naast elkaar, zodat je weet waarvoor een microcontroller dient en waarvoor niet.</p>
 
     <h2 id="een-computer-op-een-chip">Een computer op één chip</h2>
 
-    <p>Een <strong>microcontroller</strong> is een volledige computer in één chip: een processor, geheugen en aansluitingen naar de buitenwereld zitten samen in één behuizing. Er is, in tegenstelling tot een pc, geen moederbord met losse onderdelen, geen harde schijf en geen grafische kaart.</p>
+    <p>Een <strong>microcontroller</strong> is een volledige computer in één chip. De processor, het geheugen en de aansluitingen naar de buitenwereld zitten samen in één behuizing. Een pc heeft daarvoor een moederbord met losse onderdelen, een harde schijf en een grafische kaart nodig.</p>
 
-    <p>Die chip alleen kan je niet gebruiken. Ze heeft een voeding nodig, een manier om een programma binnen te krijgen en aansluitingen waar je draadjes in kan steken. Dat is precies wat Arduino eromheen doet.</p>
+    <p>Zo'n chip heeft nog wel wat rondom zich nodig voor je hem kan gebruiken: een voeding, een manier om je programma binnen te krijgen en aansluitingen waar je draden in kan steken. Een Arduino-bord levert dat alles.</p>
 
     <div class="info-box remark">
         <div class="info-title remark">De Arduino is niet de microcontroller</div>
-        <p>Op een Arduino Uno is de microcontroller het langwerpige zwarte blokje met een rij pootjes langs beide kanten, een <strong>ATmega328P</strong>. De rest van de printplaat is er alleen om die chip bruikbaar te maken.</p>
+        <p>Op een Arduino Uno is de microcontroller de langwerpige zwarte chip met een rij aansluitingen langs beide kanten, een <strong>ATmega328P</strong>. De rest van de printplaat dient om die chip bruikbaar te maken.</p>
     </div>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/arduino-uno-met-atmega328p.jpg" class="img-fluid" alt="Een Arduino Uno R3 van bovenaf, met onderaan het brede zwarte blokje waarop ATMEGA328P staat">
-            <figcaption>Een Arduino Uno. Het brede zwarte blokje onderaan, met ATMEGA328P erop, is de microcontroller zelf.</figcaption>
+            <img src="../../img/arduino-uno-met-atmega328p.jpg" class="img-fluid" alt="Een Arduino Uno R3 van bovenaf, met onderaan de brede zwarte chip waarop ATMEGA328P staat">
+            <figcaption>Een Arduino Uno. De brede zwarte chip onderaan, met ATMEGA328P erop, is de microcontroller zelf.</figcaption>
         </figure>
     </div>
 
     <h2 id="de-drie-naast-elkaar">De drie toestellen naast elkaar</h2>
 
-    <p>Alle drie voeren ze een programma uit dat jij geschreven hebt, en toch is het binnenin drie keer een ander toestel. Deze tabel is het overzicht; de rest van de pagina werkt uit wat elke rij voor jou betekent.</p>
+    <p>Op alle drie draait een programma dat jij geschreven hebt, maar verder werken ze verschillend. De tabel zet de belangrijkste verschillen op een rij; de twee stukken erna leggen uit wat die voor jou betekenen.</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
-            <caption>Dezelfde vraag, drie soorten toestellen</caption>
+            <caption>Laptop, Arduino Uno en PLC naast elkaar</caption>
             <thead>
                 <tr>
                     <th scope="col"></th>
@@ -75,7 +75,7 @@
                     <th scope="row">Scherm en bediening</th>
                     <td>Scherm, toetsenbord en muis</td>
                     <td>Niets</td>
-                    <td>Een klein schermpje met knoppen, of een apart bedieningspaneel</td>
+                    <td>Een klein scherm met knoppen, of een apart bedieningspaneel</td>
                 </tr>
                 <tr>
                     <th scope="row">Geheugen</th>
@@ -107,25 +107,25 @@
 
     <h2 id="verschil-met-een-computer">Wat dat betekent tegenover je laptop</h2>
 
-    <p><strong>Een programma dat je geschreven hebt voor een microcontroller eindigt niet.</strong> Als je op je laptop in C# programmeert reageert een <code>EventHandler</code> op het klikken van een knop: jouw code doet iets, geeft de controle terug, en het programma wacht tot er weer iets gebeurt. Het programma in een microcontroller blijft draaien zolang er spanning op staat.</p>
+    <p><strong>De oneindige lus.</strong> Op je laptop reageert een <code>EventHandler</code> in C# op het klikken van een knop: je code doet iets, geeft de controle terug, en het programma wacht tot er weer iets gebeurt. Een programma op een microcontroller blijft draaien zolang er spanning op de chip staat, en eindigt dus nooit.</p>
 
-    <p><strong>Je kan niet zo makkelijk debuggen.</strong> Werkt je c# programma niet, dan zet je een breakpoint. Bij een microcontroller is de seriële verbinding vaak de enige manier om te <a href="Debuggen.html">debuggen</a>.</p>
+    <p><strong>Debuggen.</strong> Werkt je C#-programma niet, dan zet je een breakpoint en kijk je stap voor stap mee. Op een microcontroller kan dat niet, en is de seriële verbinding meestal je enige manier om te <a href="Debuggen.html">debuggen</a>.</p>
 
-    <p><strong>Er is mogelijkheid tot I/O.</strong> Tussen jouw code en de hardware zit geen besturingssysteem: <code>digitalWrite()</code> zet letterlijk 5 V op een aansluiting van de chip. Daarom hoort er elektronica bij dit vak, en ben jij verantwoordelijk voor wat je aan iedere pin van de chip hangt.</p>
+    <p><strong>De pinnen.</strong> Tussen jouw code en de hardware zit geen besturingssysteem: <code>digitalWrite()</code> zet letterlijk 5 V op een aansluiting van de chip. Daarom hoort er elektronica bij dit vak, en ben je zelf verantwoordelijk voor wat je aan elke pin hangt.</p>
 
-    <p><strong>Elke byte telt.</strong> Die 2 kB werkgeheugen en 32 kB programmageheugen zijn geen schrijffouten, dus je kiest bij elke variabele bewust een gegevenstype. Zie <a href="ConstantenVariabelenGegevenstypes.html">Constanten, variabelen en gegevenstypes</a>.</p>
+    <p><strong>Het geheugen.</strong> De ATmega328P heeft <strong>2 kB</strong> werkgeheugen en <strong>32 kB</strong> programmageheugen. Dat is kilobyte en niet megabyte, en daarom kies je bij elke variabele bewust een gegevenstype. Zie <a href="ConstantenVariabelenGegevenstypes.html">Constanten, variabelen en gegevenstypes</a>.</p>
 
     <h2 id="verschil-met-een-plc">Wat dat betekent tegenover een LOGO of PLC</h2>
 
-    <p>Een <strong>PLC</strong> is een industriële stuurkast die machines aanstuurt, en dit semester ga je er in het vak PLC zelf mee aan de slag. De Siemens LOGO is er het kleine broertje van.</p>
+    <p>Een <strong>PLC</strong> is een industriële stuurkast die machines aanstuurt, en dit semester ga je er in het vak PLC zelf mee aan de slag. De Siemens LOGO uit Logische sturingen is een kleinere uitvoering van hetzelfde idee.</p>
 
-    <p><strong>De cyclus.</strong> Ingangen lezen, het programma afwerken, uitgangen schrijven, opnieuw beginnen: dat is exact de vorm van <code>loop()</code> die je zal terugvinden in je Arduino programma. Alleen doet een PLC dat lezen en schrijven zelf en bewaakt hij zijn cyclustijd. Hier schrijf jij het met <code>digitalRead()</code> en <code>digitalWrite()</code>, en bewaakt niemand iets.</p>
+    <p><strong>De cyclus.</strong> Een PLC leest zijn ingangen, werkt het programma af, schrijft zijn uitgangen en begint opnieuw. Dat is dezelfde vorm als de <code>loop()</code> in een Arduino-programma. Het verschil is dat een PLC dat lezen en schrijven zelf doet en ook zijn cyclustijd bewaakt; op een Arduino schrijf je het zelf met <code>digitalRead()</code> en <code>digitalWrite()</code>, en wordt de cyclustijd niet bewaakt.</p>
 
-    <p><strong>De klemmen.</strong> Op een LOGO schroef je een knop op een ingang en een lamp op een uitgang, en dat werkt: die aansluitingen zijn beveiligd en de relaisuitgangen mogen 230 V schakelen. Een pin is dat allemaal niet. Alles wat de LOGO voor jou regelde, staat nu op jouw breadboard.</p>
+    <p><strong>De klemmen.</strong> Op een LOGO schroef je een knop op een ingang en een lamp op een uitgang, en dat werkt meteen: die aansluitingen zijn beveiligd en de relaisuitgangen mogen 230 V schakelen. Een pin van een microcontroller heeft die beveiliging niet en kan maar een kleine stroom leveren, dus wat de LOGO voor jou regelde, bouw je hier zelf op je breadboard.</p>
 
     <div class="info-box tip">
-        <div class="info-title tip">Waarom dan een microcontroller?</div>
-        <p>Omdat je in echte code programmeert in plaats van in functieblokken, omdat de chip een paar euro kost en in het product zelf past (in je afstandsbediening, je wasmachine en je fietscomputer zit er precies zo eentje), en omdat jij bepaalt wat er aan de pinnen hangt. Een PLC blijft de betere keuze in een industriële omgeving, waar vermogen geschakeld wordt.</p>
+        <div class="info-title tip">Waarvoor je een microcontroller kiest</div>
+        <p>Een microcontroller kost een paar euro en is klein genoeg om in het product zelf te zitten: in je afstandsbediening, je wasmachine en je fietscomputer zit zo'n chip. Je programmeert hem in C++ in plaats van in functieblokken, en je bepaalt zelf wat er aan elke pin hangt. Voor industriële toepassingen waar vermogen geschakeld wordt, gebruik je een PLC.</p>
     </div>
 </div>
 

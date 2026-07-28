@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Pull up en pull down weerstanden</h1>
-    <p class="lead">In dit artikel gaan we wat dieper in op het uitlezen van knoppen. We gaan het daarbij hebben over termen zoals <strong>pull-up</strong> en <strong>pull-down</strong>.</p>
+    <p class="lead">Een knop die je op een ingang aansluit, heeft een <strong>pull-up</strong>- of een <strong>pull-down</strong>weerstand nodig om die ingang in rust een vaste waarde te geven. Deze pagina gaat dieper in op het uitlezen van knoppen.</p>
 
     <h2 id="wat-is-een-knop">Wat is een knop?</h2>
     <div class="my-4">
@@ -26,11 +26,11 @@
             <figcaption>Gesloten schakelaar</figcaption>
         </figure>
     </div>
-    <p>Een knop is niets anders dan een verbinding die men maakt of verbreekt. Knoppen komen dan ook in twee versies voor: de NO en de NC. Deze letterwoorden staan voor "normally open" en "normally closed" en geven aan wat de rusttoestand van de knop is.</p>
+    <p>Een knop is niets anders dan een verbinding die je maakt of verbreekt. Knoppen komen dan ook in twee versies voor: de NO en de NC. Deze letterwoorden staan voor "normally open" en "normally closed" en geven aan wat de rusttoestand van de knop is.</p>
     <p>Bij een NO is de verbinding standaard verbroken (open) en zorgt het drukken op de knop voor het leggen van de verbinding, terwijl bij een NC de verbinding standaard gelegd is en het drukken op de knop de verbinding verbreekt.</p>
 
     <h2 id="pushbutton">Pushbutton</h2>
-    <p>Een gewone schakelaar is bistabiel. Dit wil zeggen dat de status behouden blijft. In onze projecten gaan we echter heel vaak een pushbutton gebruiken. Dit eenvoudig knopje gedraagt zich zoals beschreven in de tabel.</p>
+    <p>Een gewone schakelaar is bistabiel. Dit wil zeggen dat de status behouden blijft. In onze projecten gaan we echter heel vaak een pushbutton gebruiken. Deze eenvoudige knop gedraagt zich zoals beschreven in de tabel.</p>
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
             <tbody>
@@ -67,7 +67,7 @@
         </figure>
     </div>
     <p>Het probleem is dat zo'n stuk losse draad (in dit geval de gele draad) zich als een antenne gedraagt en alle soorten elektromagnetische storingen uit de omgeving kan oppikken, waardoor de ingang willekeurig een hoog of een laag signaal oppikt.</p>
-    <p>Een oplossing is om op de ingang te zorgen voor een standaardwaarde. Dit kan ook weer op twee manieren. We kunnen een pull-up- of een pull-downweerstand gebruiken. Daarbij gaat men de ingang via een grote weerstand verbinden met massa (pull-down, dus trek de ingang omlaag naar 0 V) of met de voedingsspanning Vcc (pull-up, trek de ingang omhoog naar +5 V).</p>
+    <p>Een oplossing is om op de ingang te zorgen voor een standaardwaarde. Dit kan ook weer op twee manieren. We kunnen een pull-up- of een pull-downweerstand gebruiken. Daarbij verbind je de ingang via een grote weerstand met massa (pull-down, dus trek de ingang omlaag naar 0 V) of met de voedingsspanning Vcc (pull-up, trek de ingang omhoog naar +5 V).</p>
 
     <h3>Pull-up</h3>
     <p>Wanneer we een weerstand van een redelijk grote waarde (meestal 1 kΩ, kan ook 10 kΩ zijn) plaatsen tussen +5 V en de ingang, dan zal deze ingang altijd een 1 lezen wanneer er verder niks aan verbonden is.</p>
@@ -92,12 +92,12 @@
         </figure>
     </div>
     <div class="info-box">
-        <div class="info-title tip">Tip</div>
+        <div class="info-title tip"><code>INPUT_PULLUP</code> is de eenvoudigste oplossing</div>
         <p>De <code>INPUT_PULLUP</code>-configuratie is de meest gebruikte en eenvoudigste oplossing, omdat je geen externe weerstand meer hoeft te voorzien.</p>
     </div>
 
     <h3>Pull-down</h3>
-    <p>Men kan ook een pull-downweerstand voorzien. Daarbij wordt tussen de ingang en massa een weerstand geplaatst van dezelfde grootteorde als bij een pull-up. In rust en met een NO-knop staat op de ingang dan een 0, aangezien de ingang verbonden is met de massa.</p>
+    <p>Je kan ook een pull-downweerstand voorzien. Daarbij wordt tussen de ingang en massa een weerstand geplaatst van dezelfde grootteorde als bij een pull-up. In rust en met een NO-knop staat op de ingang dan een 0, aangezien de ingang verbonden is met de massa.</p>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
             <img src="../../img/pulldown-schema.png" class="img-fluid" alt="Pull-downschakeling">
@@ -111,13 +111,13 @@
         </figure>
     </div>
     <div class="info-box">
-        <div class="info-title remark">Opmerking</div>
+        <div class="info-title remark">Een ingebouwde pull-down bestaat niet</div>
         <p>Het is niet mogelijk om een ingebouwde pull-downweerstand in te stellen via de <code>pinMode()</code>-instructie. Dat lukt enkel bij een pull-up.</p>
     </div>
 
     <h3>Normally closed</h3>
     <p>De tegenhanger van de normally-openschakelaar is de normally-closedversie. Dit type schakelaar wordt minder frequent gebruikt en verschilt enkel van de normally-openversie in het feit dat de rusttoestand en de bekrachtigde toestand gewisseld zijn.</p>
-    <p>Zo kun je bijvoorbeeld een noodstopknop realiseren door in serie met de voeding een normally-closedschakelaar op te nemen. Dit moet dan wel een versie met vergrendeling zijn, zodat de schakelaar na het verbreken van de voeding in open positie blijft.</p>
+    <p>Zo kan je bijvoorbeeld een noodstopknop realiseren door in serie met de voeding een normally-closedschakelaar op te nemen. Dit moet dan wel een versie met vergrendeling zijn, zodat de schakelaar na het verbreken van de voeding in open positie blijft.</p>
 </div>
 
 <script src="../../reference.js"></script>
