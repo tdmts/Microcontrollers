@@ -11,9 +11,9 @@
 <body>
 <div class="container">
     <h1>De H-brug</h1>
-    <p class="lead">Een H-brug is een schakeling die een stroom kan leveren waarvan je de <strong>richting</strong> kiest. Daarmee kan je een DC motor in wijzerzin én in tegenwijzerzin laten draaien, zonder ook maar één draad te verleggen.</p>
+    <p class="lead">Een H-brug is een schakeling die een stroom kan leveren waarvan je de <strong>richting</strong> kiest. Daarmee kan je een DC motor in wijzerzin én in tegenwijzerzin laten draaien, zonder een draad te verleggen.</p>
 
-    <p>Met een <a href="TransistorAlsSchakelaar.html">transistor</a> geraakte je niet verder dan aan en uit. De reden is eenvoudig: die ene transistor zit tussen de motor en de massa, dus de stroom kan er maar op één manier door. Om te keren zou je de twee draden van de motor moeten omwisselen. Een H-brug doet dat met vier schakelaars in plaats van met je vingers.</p>
+    <p>Met een <a href="TransistorAlsSchakelaar.html">transistor</a> geraakte je niet verder dan aan en uit, want die ene transistor zit tussen de motor en de massa en de stroom kan er dus maar op één manier door. Om te keren zou je de twee draden van de motor moeten omwisselen. Een H-brug doet dat met vier schakelaars.</p>
 
     <h2 id="waarom-de-naam">Waarom die naam?</h2>
 
@@ -27,12 +27,12 @@
 
     <div class="info-box warning">
         <div class="info-title warning">Nooit twee schakelaars boven elkaar tegelijk</div>
-        <p>Sluit je linksboven en linksonder samen, dan verbind je de plus rechtstreeks met de massa: kortsluiting, en er loopt geen stroom door de motor maar wel dwars door je schakeling. Bij een kant-en-klare H-brug-IC hoef je daar in de praktijk niet aan te denken, omdat je per zijde maar één stuuringang hebt en het IC zelf de twee schakelaars aanstuurt.</p>
+        <p>Sluit je linksboven en linksonder samen, dan verbind je de plus rechtstreeks met de massa. Dat is kortsluiting, en er loopt dan geen stroom door de motor maar wel dwars door je schakeling. Bij een kant-en-klare H-brug-IC hoef je daar in de praktijk niet aan te denken, omdat je per zijde maar één stuuringang hebt en het IC zelf de twee schakelaars aanstuurt.</p>
     </div>
 
     <h2 id="de-l293d">De L293D</h2>
 
-    <p>Je gaat geen H-brug uit losse transistoren bouwen: dat zit kant-en-klaar in een IC. Wij gebruiken de <strong>L293D</strong>. Dat is een <strong>dubbele</strong> H-brug, dus je kan er twee DC motoren mee in beide richtingen laten draaien, of vier motoren in dezelfde richting.</p>
+    <p>Een H-brug zit kant-en-klaar in een IC, dus je bouwt ze niet uit losse transistoren. Wij gebruiken de <strong>L293D</strong>. Dat is een <strong>dubbele</strong> H-brug, dus je kan er twee DC motoren mee in beide richtingen laten draaien, of vier motoren in dezelfde richting.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
@@ -41,7 +41,7 @@
         </figure>
     </div>
 
-    <p>De twee bruggen zitten netjes verdeeld over de twee zijden van het IC. Per brug heb je drie soorten pinnen:</p>
+    <p>De twee bruggen zitten verdeeld over de twee zijden van het IC. Per brug heb je drie soorten pinnen:</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -86,7 +86,7 @@
 
     <h2 id="hoe-je-de-richting-kiest">Hoe je de richting kiest</h2>
 
-    <p>Een uitgang volgt gewoon zijn ingang. Zet je 1A hoog en 2A laag, dan staat 1Y hoog en 2Y laag, en loopt de stroom van 1Y door de motor naar 2Y. Draai je die twee om, dan draait de motor om.</p>
+    <p>Een uitgang volgt zijn ingang. Zet je 1A hoog en 2A laag, dan staat 1Y hoog en 2Y laag, en loopt de stroom van 1Y door de motor naar 2Y. Draai je die twee om, dan draait de motor om.</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -134,7 +134,7 @@
         </table>
     </div>
 
-    <p>Merk het verschil tussen de laatste twee gevallen op. Zet je beide ingangen gelijk, dan hangen de twee motoraansluitingen op dezelfde spanning en remt de motor af. Zet je de enable laag, dan hangt de motor gewoon los en tolt hij uit. Dat is precies het gedrag dat je wil kunnen kiezen bij een rolluik of een lift.</p>
+    <p>Merk het verschil tussen de laatste twee gevallen op. Zet je beide ingangen gelijk, dan hangen de twee motoraansluitingen op dezelfde spanning en remt de motor af. Zet je de enable laag, dan hangt de motor los en tolt hij uit. Dat is het gedrag dat je wil kunnen kiezen bij een rolluik of een lift.</p>
 
     <h2 id="snelheid-regelen">Snelheid regelen</h2>
 
@@ -147,7 +147,7 @@
 
     <h2 id="en-de-vrijloopdiodes">En de vrijloopdiodes?</h2>
 
-    <p>Bij de transistor moest je zelf een <a href="TransistorAlsSchakelaar.html">vrijloopdiode</a> over de motor zetten. Bij de L293<strong>D</strong> hoeft dat niet: die diodes zitten al in het IC, en dat is precies waar de <strong>D</strong> in de naam voor staat. Een kale L293 zonder D heeft ze niet, en dan moet je ze wel zelf voorzien.</p>
+    <p>Bij de transistor moest je zelf een <a href="TransistorAlsSchakelaar.html">vrijloopdiode</a> over de motor zetten. Bij de L293<strong>D</strong> zitten die diodes al in het IC, en daar staat de <strong>D</strong> in de naam voor. Een kale L293 zonder D heeft ze niet, en dan moet je ze wel zelf voorzien.</p>
 
     <h2 id="de-l298n-module">De L298N-module</h2>
 
@@ -222,7 +222,7 @@
 
     <div class="info-box warning">
         <div class="info-title warning">De klem met "12V" hoeft geen 12 V te krijgen</div>
-        <p>Die opdruk is misleidend. Het is gewoon de Vcc2 van daarnet: de spanning die op je motor terechtkomt. Werkt jouw motor op 5 V, dan zet je daar 5 V op. Een motor van 5 V op 12 V zetten omdat het er zo staat, is een dure manier om een motor te slopen.</p>
+        <p>Die opdruk is misleidend. Het is dezelfde Vcc2 als daarnet, de spanning die op je motor terechtkomt. Werkt jouw motor op 5 V, dan zet je daar 5 V op. Zet je een motor van 5 V op 12 V omdat het er zo staat, dan maak je hem stuk.</p>
     </div>
 </div>
 

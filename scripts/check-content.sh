@@ -780,7 +780,14 @@ if [ "$AUDIT" -eq 1 ]; then
   # pin", so neither is listed. "netjes" is the real tic at 19 uses, nearly all
   # padding, and in "het bericht wacht netjes in zijn ontvangstbuffer" it also
   # turns the buffer into a well-behaved creature, which is patroon 7.
-  FILLERS='netjes|heel even'
+  # "uiteraard" and "natuurlijk" were added after the labo 4 pass emptied them:
+  # three uses in the whole repo, all three pure padding. The \b on both ends is
+  # what makes them safe, since it never matches the adjective "natuurlijke".
+  # "eigenlijk" is named in the same paragraph of SCHRIJFSTIJL.md but stays out:
+  # of the eight remaining uses, four are the adjective and three are a genuine
+  # aside in a question to the student ("Hoeveel stroom kan een pin eigenlijk
+  # leveren?"), so the list would report mostly non-findings.
+  FILLERS='netjes|heel even|uiteraard|natuurlijk'
   while IFS= read -r hit; do
     [ -z "$hit" ] && continue
     f="${hit%%:*}"; w="${hit##*:}"

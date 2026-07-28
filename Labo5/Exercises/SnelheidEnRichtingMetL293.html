@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Zacht omkeren met de L293D</h1>
-    <p class="lead">Je vorige programma werkt, en toch deugt het niet. In deze oefening bouw je het om zodat de potentiometer niet alleen de richting bepaalt maar ook de <strong>snelheid</strong>, en de motor dus vloeiend afremt, stilvalt en de andere kant op vertrekt.</p>
+    <p class="lead">Bouw je vorige programma om zodat de potentiometer niet alleen de richting bepaalt maar ook de <strong>snelheid</strong>, en de motor dus vloeiend afremt, stilvalt en de andere kant op vertrekt.</p>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">
@@ -26,9 +26,9 @@
     <div class="solution-container">
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: waarom is die code slecht? Stel je een motor voor die aan 10000 toeren draait...</button>
         <div class="spoiler-content solution-content">
-            <p>Die motor draait aan 10000 toeren naar links. Je schuift de potentiometer één stapje voorbij 512, en van de ene lus op de andere keert de stroom volledig om. De motor moet dus in één klap van 10000 toeren links naar 10000 toeren rechts.</p>
-            <p>Mechanisch is dat een schok waar een tandwielkast of een koppeling niet tegen kan. Elektrisch is het nog erger: een motor die nog draait terwijl je de spanning omkeert werkt even als een generator die tegenwerkt, en de stroompiek die daardoor loopt is een veelvoud van de normale bedrijfsstroom. Je H-brug krijgt die rekening.</p>
-            <p>Wat je wil, is dat de motor <strong>afremt naar nul</strong> voor hij de andere kant op vertrekt. En dat is precies wat je krijgt als je met dezelfde knop ook de snelheid regelt.</p>
+            <p>Die motor draait aan 10000 toeren naar links. Je schuift de potentiometer één stap voorbij 512, en van de ene lus op de andere keert de stroom volledig om. De motor moet dus in één klap van 10000 toeren links naar 10000 toeren rechts.</p>
+            <p>Mechanisch is dat een schok waar een tandwielkast of een koppeling niet tegen kan. Elektrisch is het nog erger. Een motor die nog draait terwijl je de spanning omkeert werkt even als een generator die tegenwerkt, en de stroompiek die daardoor loopt is een veelvoud van de normale bedrijfsstroom. Die piek gaat door je H-brug.</p>
+            <p>Wat je wil, is dat de motor <strong>afremt naar nul</strong> voor hij de andere kant op vertrekt. Dat krijg je als je met dezelfde knop ook de snelheid regelt.</p>
         </div>
     </div>
 
@@ -61,22 +61,22 @@
         </table>
     </div>
 
-    <p>De richting haal je nog altijd uit de vergelijking met 512. Nieuw is de snelheid: hoe <em>ver</em> de knop van het midden af staat, bepaalt hoe hard de motor draait.</p>
+    <p>De richting haal je nog altijd uit de vergelijking met 512. Nieuw is de snelheid. Hoe <em>ver</em> de knop van het midden af staat, bepaalt hoe hard de motor draait.</p>
 
     <h2 id="waar-zet-je-die-pwm">Waar zet je die PWM?</h2>
 
-    <p>Niet op 1A of 2A: die twee bepalen de richting, en daar moet gewoon een vaste HIGH en LOW op staan. De snelheid regel je op de <strong>enable</strong>, met <a href="../../Labo2/Reference/analogWrite.html">analogWrite()</a>. Staat de enable half van de tijd hoog, dan krijgt de motor gemiddeld de helft van de spanning.</p>
+    <p>1A en 2A bepalen de richting, en daar moet een vaste HIGH en LOW op staan. De snelheid regel je op de <strong>enable</strong>, met <a href="../../Labo2/Reference/analogWrite.html">analogWrite()</a>. Staat de enable half van de tijd hoog, dan krijgt de motor gemiddeld de helft van de spanning.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Dan moet die enable wel op een pin met een ~ hangen</div>
-        <p>Hier zie je waarom de vorige oefening je de enable meteen op <strong>pin 3</strong> liet zetten. Op de UNO werkt <code>analogWrite()</code> alleen op pin 3, 5, 6, 9, 10 en 11. Zet je hem op een pin zonder <code>~</code>, dan compileert alles vrolijk en gedraagt je motor zich alsof je gewoon <code>digitalWrite()</code> gebruikt: elke waarde vanaf 128 is voluit, alles eronder is stil. Dat is een fout die je aan je code niet ziet.</p>
+        <p>Hier zie je waarom de vorige oefening je de enable meteen op <strong>pin 3</strong> liet zetten. Op de UNO werkt <code>analogWrite()</code> alleen op pin 3, 5, 6, 9, 10 en 11. Zet je hem op een pin zonder <code>~</code>, dan compileert alles en gedraagt je motor zich alsof je <code>digitalWrite()</code> gebruikt. Elke waarde vanaf 128 is dan voluit, alles eronder is stil. Dat is een fout die je aan je code niet ziet.</p>
     </div>
 
     <div class="solution-container">
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: hoe reken je die afstand tot het midden uit?</button>
         <div class="spoiler-content solution-content">
             <p>Je hebt twee bereiken die allebei op 0 tot 255 moeten uitkomen: 511 terug naar 0 voor de ene kant, en 512 door naar 1023 voor de andere. Met twee keer een <a href="../../Labo2/Reference/map.html">map()</a>, elk in zijn eigen tak van de <code>if</code>, ben je er.</p>
-            <p>Let op de richting van je eerste map: bij een potwaarde van 0 wil je 255 als snelheid, en bij 511 wil je 0. Dat mag, <code>map()</code> aanvaardt een omgekeerd bereik gewoon.</p>
+            <p>Let op de richting van je eerste map: bij een potwaarde van 0 wil je 255 als snelheid, en bij 511 wil je 0. Dat mag, want <code>map()</code> aanvaardt een omgekeerd bereik.</p>
         </div>
     </div>
 
@@ -103,7 +103,7 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>De <code>if</code> doet nu twee dingen tegelijk: hij zet de richting én rekent uit hoe ver de knop van het midden af staat. Die afstand komt in <code>snelheid</code> terecht, en die zet je op de enable.</p>
+            <p>De <code>if</code> doet nu twee dingen tegelijk. Hij zet de richting én rekent uit hoe ver de knop van het midden af staat. Die afstand komt in <code>snelheid</code> terecht, en die zet je op de enable.</p>
             <p>Merk op dat de eerste <code>map()</code> van 511 naar 0 loopt en niet omgekeerd. Hoe kleiner de potwaarde, hoe verder van het midden, hoe sneller de motor.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int enablePin = 3; // 1,2EN van de L293D, moet een PWM-pin zijn
@@ -146,7 +146,7 @@ void loop()
 
             <div class="info-box remark">
                 <div class="info-title remark">Een echte machine krijgt hier nog een dode zone</div>
-                <p>Precies in het midden staat de motor stil, maar één stapje ernaast draait hij al. Een potentiometer die net op de grens blijft hangen laat de motor dan zachtjes zoemen zonder te draaien. In de praktijk maak je daar een <strong>dode zone</strong> rond: alles tussen pakweg 480 en 540 betekent stil. Dat idee kom je in de laatste oefening van dit labo opnieuw tegen, daar onder de naam hysteresis.</p>
+                <p>Precies in het midden staat de motor stil, maar één stap ernaast draait hij al. Een potentiometer die net op de grens blijft hangen laat de motor dan zachtjes zoemen zonder te draaien. In de praktijk maak je daar een <strong>dode zone</strong> rond: alles tussen pakweg 480 en 540 betekent stil. Dat idee kom je in de laatste oefening van dit labo opnieuw tegen, daar onder de naam hysteresis.</p>
             </div>
         </div>
     </div>

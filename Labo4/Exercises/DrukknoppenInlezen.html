@@ -84,13 +84,13 @@ void loop()
         <div class="spoiler-content solution-content">
             <p>Het is een AND-bewerking op 2 getallen.</p>
             <p>Stel dat <code>waarde</code> gelijk is aan 01010101, dan is het resultaat van de AND-bewerking 00000001, ofwel 1, ofwel true.</p>
-            <p>Eigenlijk zijn we van de byte <code>waarde</code> enkel geïnteresseerd in de status van de laatste bit. Dezelfde redenering volgen we voor <code>knop2</code>, waarbij we enkel geïnteresseerd zijn in de voorlaatste bit.</p>
+            <p>We zijn van de byte <code>waarde</code> enkel geïnteresseerd in de status van de laatste bit. Dezelfde redenering volgen we voor <code>knop2</code>, waarbij we enkel geïnteresseerd zijn in de voorlaatste bit.</p>
         </div>
     </div>
 
     <div class="info-box warning">
         <div class="info-title warning">Waarom die 0xFF in de setup?</div>
-        <p>De pinnen van de PCF8574 zijn <strong>quasi-bidirectioneel</strong>: er is geen aparte instelling voor ingang of uitgang. Een pin die je wil lezen moet een <strong>1</strong> hebben staan. Kom je hier rechtstreeks van de vorige oefening, dan staan P0 en P1 nog laag van je leds, en lees je die nullen gewoon terug alsof beide knoppen ingedrukt zijn. Zie <a href="../Reference/PCF8574.html">Werken met de PCF8574</a>.</p>
+        <p>De pinnen van de PCF8574 zijn <strong>quasi-bidirectioneel</strong>: er is geen aparte instelling voor ingang of uitgang. Een pin die je wil lezen moet een <strong>1</strong> hebben staan. Kom je hier rechtstreeks van de vorige oefening, dan staan P0 en P1 nog laag van je leds, en lees je die nullen terug alsof beide knoppen ingedrukt zijn. Zie <a href="../Reference/PCF8574.html">Werken met de PCF8574</a>.</p>
     </div>
 
     <h2 id="maak-het-af">Maak het af</h2>
@@ -127,7 +127,7 @@ void loop()
 
         <div class="spoiler-content solution-content">
             <p>Het lezen zelf zit in <code>leesExpander()</code>: die vraagt één byte op en geeft ze terug. Krijgt hij niets, dan geeft hij 0xFF terug, wat er uitziet als 'geen enkele knop ingedrukt'. Zo hoeft de rest van het programma geen rekening te houden met een mislukte overdracht.</p>
-            <p>In de <code>loop()</code> vergelijken we elke knop met zijn vorige toestand en sturen we alleen iets naar de monitor als die verschilt. De <code>delay()</code> op het einde is meteen een eenvoudige ontdendering: een mechanische knop dendert bij het indrukken een paar milliseconden.</p>
+            <p>In de <code>loop()</code> vergelijken we elke knop met zijn vorige toestand en sturen we alleen iets naar de monitor als die verschilt. De <code>delay()</code> op het einde is meteen een eenvoudige ontdendering, want een mechanische knop dendert bij het indrukken een paar milliseconden.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
 

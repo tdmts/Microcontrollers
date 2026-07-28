@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Werken met bits</h1>
-    <p class="lead">De PCF8574 stuurt acht pinnen tegelijk aan met één byte. Je kan dus niet één pin apart aanspreken: je leest en schrijft altijd alle acht samen. Om toch met één pin te kunnen werken heb je een paar operatoren nodig die je in de vorige labo's nog niet gebruikt hebt.</p>
+    <p class="lead">De PCF8574 stuurt acht pinnen tegelijk aan met één byte. Je kan dus niet één pin apart aanspreken, want je leest en schrijft altijd alle acht samen. Om toch met één pin te kunnen werken heb je een paar operatoren nodig die je in de vorige labo's nog niet gebruikt hebt.</p>
 
     <h2 id="een-byte-is-acht-bits">Een byte is acht bits</h2>
 
@@ -47,11 +47,11 @@
         </table>
     </div>
 
-    <p>Die bit helemaal rechts noemen we <strong>bit 0</strong>, de volgende bit 1, en zo verder tot bit 7. De nummers van de bits komen dus overeen met de nummers van de pinnen, en dat is geen toeval.</p>
+    <p>Die bit helemaal rechts noemen we <strong>bit 0</strong>, de volgende bit 1, en zo verder tot bit 7. De nummers van de bits komen dus overeen met de nummers van de pinnen.</p>
 
     <h2 id="drie-schrijfwijzen">Drie schrijfwijzen voor dezelfde waarde</h2>
 
-    <p>Je mag een byte in je code op drie manieren schrijven. Ze betekenen exact hetzelfde, de compiler maakt er geen onderscheid tussen:</p>
+    <p>Je mag een byte in je code op drie manieren schrijven. Ze betekenen exact hetzelfde, en de compiler maakt er geen onderscheid tussen:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte a = B00100110; // binair: je ziet elke bit staan
 byte b = 0x26;      // hexadecimaal
@@ -59,7 +59,7 @@ byte c = 38;        // decimaal</code></pre>
 
     <div class="info-box tip">
         <div class="info-title tip">Kies de schrijfwijze die je code leesbaar maakt</div>
-        <p>Gaat het over welke pin aan of uit staat, gebruik dan <strong>binair</strong>. In <code>B11111110</code> zie je meteen dat enkel P0 laag staat. In <code>0xFE</code> moet je dat eerst omrekenen. Gaat het over een gewoon getal, dan is decimaal natuurlijk duidelijker.</p>
+        <p>Gaat het over welke pin aan of uit staat, gebruik dan <strong>binair</strong>. In <code>B11111110</code> zie je meteen dat enkel P0 laag staat. In <code>0xFE</code> moet je dat eerst omrekenen. Gaat het over een gewoon getal, dan is decimaal duidelijker.</p>
     </div>
 
     <h2 id="de-operatoren">De operatoren</h2>
@@ -103,7 +103,7 @@ byte c = 38;        // decimaal</code></pre>
 
     <div class="info-box warning">
         <div class="info-title warning">Verwar <code>&amp;</code> niet met <code>&amp;&amp;</code></div>
-        <p><code>&amp;&amp;</code> is de logische EN die je in een <code>if</code> gebruikt: die kijkt naar twee voorwaarden als geheel en levert waar of niet waar op. <code>&amp;</code> met één teken werkt bit per bit en levert een byte op. Datzelfde verschil bestaat tussen <code>|</code> en <code>||</code>. Eén teken te veel of te weinig compileert vaak gewoon, en dan zoek je lang.</p>
+        <p><code>&amp;&amp;</code> is de logische EN die je in een <code>if</code> gebruikt: die kijkt naar twee voorwaarden als geheel en levert waar of niet waar op. <code>&amp;</code> met één teken werkt bit per bit en levert een byte op. Datzelfde verschil bestaat tussen <code>|</code> en <code>||</code>. Eén teken te veel of te weinig compileert vaak gewoon, en de fout is dan moeilijk terug te vinden.</p>
     </div>
 
     <h2 id="een-bit-uitlezen">Eén bit uitlezen: maskeren</h2>
@@ -173,7 +173,7 @@ patroon &amp;= ~(1 &lt;&lt; 3); // bit 3 op 0</code></pre>
 
     <h2 id="veranderingen-opsporen">Alle bits vergelijken in één keer</h2>
 
-    <p>Een laatste patroon dat je in dit labo tegenkomt: nagaan welke knoppen <em>net</em> ingedrukt zijn. Een knop die je ingedrukt houdt, blijft immers doorlopend een 0 geven, waardoor je programma denkt dat je tientallen keren per seconde drukt.</p>
+    <p>Een laatste patroon dat je in dit labo tegenkomt, is nagaan welke knoppen <em>net</em> ingedrukt zijn. Een knop die je ingedrukt houdt, blijft immers doorlopend een 0 geven, waardoor je programma tientallen keren per seconde een nieuwe druk registreert.</p>
 
     <p>Bewaar daarvoor de vorige byte, en zoek de bits die van 1 naar 0 gegaan zijn:</p>
 

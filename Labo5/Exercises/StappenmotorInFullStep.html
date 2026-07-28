@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Stappenmotor laten draaien in full step</h1>
-    <p class="lead">Bouw in TinkerCAD een schakeling waarin je een stappenmotor in <strong>full step</strong> aanstuurt via een L293D. De vier leds die de spoelen voorstellen moeten netjes in de rondte oplichten, niet heen en weer springen.</p>
+    <p class="lead">Bouw in TinkerCAD een schakeling waarin je een stappenmotor in <strong>full step</strong> aanstuurt via een L293D. De vier leds die de spoelen voorstellen moeten in de rondte oplichten en niet heen en weer springen.</p>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">
@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <p>Een stappenmotor werkt helemaal anders dan de DC motor van de vorige oefeningen: hij draait niet vanzelf, jij duwt hem stap voor stap voort door de spoelen in de juiste volgorde te bekrachtigen. Wat er binnenin gebeurt, waarom TinkerCAD er vier leds van maakt en hoe de stappentabel eruitziet, staat op <a href="../Reference/Stappenmotor.html">De stappenmotor</a>. Die pagina heb je hier van begin tot eind nodig.</p>
+    <p>Een stappenmotor werkt anders dan de DC motor van de vorige oefeningen. Hij draait niet vanzelf, maar jij duwt hem stap voor stap voort door de spoelen in de juiste volgorde te bekrachtigen. Wat er binnenin gebeurt, waarom TinkerCAD er vier leds van maakt en hoe de stappentabel eruitziet, staat op <a href="../Reference/Stappenmotor.html">De stappenmotor</a>. Die pagina heb je hier van begin tot eind nodig.</p>
 
     <h2 id="de-schakeling">De schakeling</h2>
 
@@ -35,7 +35,7 @@
 
     <div class="info-box warning">
         <div class="info-title warning">Voorzie een externe spanningsbron, en verbind de massa's</div>
-        <p>De motorvoeding (Vcc2) komt uit een aparte bron, niet uit de Arduino. En zoals bij elke schakeling met twee voedingen: de <strong>min van die voeding moet aan de GND van de Arduino</strong>. Zonder gemeenschappelijke massa hebben je stuursignalen geen referentie en gebeurt er van alles behalve wat je bedoelde.</p>
+        <p>De motorvoeding (Vcc2) komt uit een aparte bron, niet uit de Arduino. Zoals bij elke schakeling met twee voedingen moet de <strong>min van die voeding aan de GND van de Arduino</strong>. Zonder gemeenschappelijke massa hebben je stuursignalen geen referentie en doet de schakeling niet wat je bedoelt.</p>
     </div>
 
     <div class="info-box tip">
@@ -49,7 +49,7 @@
 
     <div class="info-box warning">
         <div class="info-title warning">Je wisselt telkens van spoel</div>
-        <p>De volgorde is spoel A, spoel B, spoel A de andere kant op, spoel B de andere kant op. Doe je eerst spoel A in beide richtingen en dan pas spoel B, dan schiet de rotor van 0 naar 180 graden en weer terug: hij trilt in plaats van te draaien. Aan je leds zie je meteen welke van de twee je hebt: <strong>in de rondte</strong> is goed, <strong>om de beurt van links naar rechts</strong> niet.</p>
+        <p>De volgorde is spoel A, spoel B, spoel A de andere kant op, spoel B de andere kant op. Doe je eerst spoel A in beide richtingen en dan pas spoel B, dan schiet de rotor van 0 naar 180 graden en weer terug, en dan trilt hij in plaats van te draaien. Aan je leds zie je meteen welke van de twee je hebt. <strong>In de rondte</strong> is goed, <strong>om de beurt van links naar rechts</strong> niet.</p>
     </div>
 
     <h2 id="uitbreiding">Uitbreiding: de snelheid regelen</h2>
@@ -62,10 +62,10 @@
         </div>
     </div>
 
-    <p>Dat gaat hier niet met PWM. Bij een stappenmotor is de snelheid gewoon <strong>hoeveel stappen per seconde</strong> je zet, dus je past de wachttijd tussen twee stappen aan. Herschaal de waarde van de potentiometer met <a href="../../Labo2/Reference/map.html">map()</a> naar een zinnig bereik, bijvoorbeeld van 2 tot 100 milliseconden.</p>
+    <p>Bij een stappenmotor is de snelheid <strong>hoeveel stappen per seconde</strong> je zet, dus je past de wachttijd tussen twee stappen aan in plaats van met PWM te werken. Herschaal de waarde van de potentiometer met <a href="../../Labo2/Reference/map.html">map()</a> naar een zinnig bereik, bijvoorbeeld van 2 tot 100 milliseconden.</p>
 
     <div class="info-box remark">
-        <div class="info-title remark">Te snel is echt te snel</div>
+        <div class="info-title remark">Te snel draaien laat de motor stappen overslaan</div>
         <p>Zet je de wachttijd te klein, dan volgt de rotor het magnetisch veld niet meer en slaat de motor stappen over. Hij bromt dan wel, maar hij draait niet meer, en je positie klopt niet meer. Bij een echte motor hoor je dat onmiddellijk. Elke stappenmotor heeft zo'n bovengrens.</p>
     </div>
 
@@ -85,7 +85,7 @@
             <li><label><input type="checkbox" class="form-check-input me-2"> De motor krijgt een externe spanningsbron</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De massa van die voeding hangt aan de GND van de Arduino</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Elk led-paar heeft een voorschakelweerstand</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Uitbreiding: de potentiometer regelt de snelheid, en de motor blijft ook op de traagste stand netjes draaien</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Uitbreiding: de potentiometer regelt de snelheid, en de motor blijft ook op de traagste stand draaien</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
@@ -95,7 +95,7 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>De stappentabel is een <a href="../../Labo1/Reference/Arrays.html">tweedimensionale array</a>: elke rij is één stap, en per rij staat er voor elke motorpin een 1 of een 0. Zo staat de volgorde op één plek, leesbaar naast elkaar, en is de rest van het programma bijna leeg.</p>
+            <p>De stappentabel is een <a href="../../Labo1/Reference/Arrays.html">tweedimensionale array</a>: elke rij is één stap, en per rij staat er voor elke motorpin een 1 of een 0. Zo staat de volgorde op één plek, leesbaar naast elkaar.</p>
             <p><code>zetStap()</code> schrijft één rij naar de vier pinnen. De variabele <code>huidigeStap</code> onthoudt waar je zit, en de restoperator <code>%</code> zorgt ervoor dat je na stap 3 weer bij 0 begint. Dat is korter en veiliger dan een <code>if</code> die op 4 test.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int motorPinnen[] = {2, 3, 4, 5}; // 1A, 2A, 3A, 4A van de L293D
@@ -143,7 +143,7 @@ void loop()
   huidigeStap = (huidigeStap + 1) % aantalStappen;
 }</code></pre>
 
-            <p>Laat je de uitbreiding weg, dan vervang je de twee regels met de potentiometer gewoon door een vaste <code>delay(10)</code>.</p>
+            <p>Laat je de uitbreiding weg, dan vervang je de twee regels met de potentiometer door een vaste <code>delay(10)</code>.</p>
         </div>
     </div>
 </div>

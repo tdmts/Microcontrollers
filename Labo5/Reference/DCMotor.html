@@ -11,9 +11,9 @@
 <body>
 <div class="container">
     <h1>De DC motor</h1>
-    <p class="lead">Een DC motor of gelijkstroommotor is de eenvoudigste elektromotor die er is: zet er spanning op en de as draait. Hoe hoger de spanning, hoe sneller. Draai je de polariteit om, dan draait hij de andere kant op.</p>
+    <p class="lead">Een DC motor of gelijkstroommotor is de eenvoudigste elektromotor die er is. Zet er spanning op en de as draait. Hoe hoger de spanning, hoe sneller. Draai je de polariteit om, dan draait hij de andere kant op.</p>
 
-    <p>Meer stuurmogelijkheden zijn er niet, en dat maakt hem gemakkelijk om te gebruiken. Wat hij <em>niet</em> weet, is waar hij staat. Een DC motor telt geen omwentelingen en kent geen hoek. Wil je weten hoe ver hij gedraaid heeft, dan moet je dat er zelf bij meten, bijvoorbeeld met een eindeloopschakelaar.</p>
+    <p>Meer stuurmogelijkheden zijn er niet, en dat maakt hem gemakkelijk om te gebruiken. Een DC motor telt geen omwentelingen en kent geen hoek, dus hij weet zelf niet waar hij staat. Wil je weten hoe ver hij gedraaid heeft, dan moet je dat er zelf bij meten, bijvoorbeeld met een eindeloopschakelaar.</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -42,7 +42,7 @@
 
     <h2 id="waarom-je-hem-niet-aan-een-pin-hangt">Waarom je hem niet aan een pin hangt</h2>
 
-    <p>Een led hing je gewoon met een weerstand aan een uitgangspin. Bij een motor lukt dat niet. Een digitale pin van de UNO mag maximaal ongeveer <strong>40 mA</strong> leveren, en zelfs dat is een absolute grens waar je liever ver onder blijft. Een kleine hobbymotor trekt al snel <strong>enkele honderden mA</strong>, en op het moment dat hij vanuit stilstand vertrekt nog een pak meer.</p>
+    <p>Een led hing je met een weerstand aan een uitgangspin. Bij een motor lukt dat niet. Een digitale pin van de UNO mag maximaal ongeveer <strong>40 mA</strong> leveren, en zelfs dat is een absolute grens waar je liever ver onder blijft. Een kleine hobbymotor trekt al snel <strong>enkele honderden mA</strong>, en op het moment dat hij vanuit stilstand vertrekt nog veel meer.</p>
 
     <p>Hang je hem er toch rechtstreeks aan, dan gebeurt er in het beste geval niets zinvols en in het slechtste geval sneuvelt de uitgang van je microcontroller. Je hebt dus altijd iets tussen de pin en de motor nodig, dat de stroom uit een andere bron haalt en door de pin alleen laat <em>schakelen</em>:</p>
 
@@ -53,7 +53,7 @@
 
     <h2 id="hoeveel-stroom-trekt-jouw-motor">Hoeveel stroom trekt jouw motor?</h2>
 
-    <p>Dat hoef je niet te gokken. Hang de motor even rechtstreeks aan een voeding en meet de stroom met een multimeter, of lees ze af op de voeding zelf. In TinkerCAD werkt dat precies hetzelfde.</p>
+    <p>Meet het, in plaats van te gokken. Hang de motor even rechtstreeks aan een voeding en meet de stroom met een multimeter, of lees ze af op de voeding zelf. In TinkerCAD werkt dat precies hetzelfde.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
@@ -65,12 +65,12 @@
 
     <div class="info-box tip">
         <div class="info-title tip">Meet bij belasting, niet in het luchtledige</div>
-        <p>Een motor die vrij ronddraait trekt veel minder dan een motor die iets moet trekken. De stroom die je meet met een vrije as is dus een ondergrens. Rekent je schakeling daar krap op, dan werkt ze in TinkerCAD prima en begeeft ze het zodra er een wiel aan hangt.</p>
+        <p>Een motor die vrij ronddraait trekt veel minder dan een motor die iets moet trekken. De stroom die je meet met een vrije as is dus een ondergrens. Rekent je schakeling daar krap op, dan werkt ze in TinkerCAD zonder problemen en begeeft ze het zodra er een wiel aan hangt.</p>
     </div>
 
     <h2 id="in-tinkercad">In TinkerCAD</h2>
 
-    <p>Je vindt de DC motor onder <strong>Gelijkstroommotor</strong> en onder <strong>Hobby motorreductor</strong>. Die laatste is een motor met een tandwielkast erop: trager, maar met meer koppel.</p>
+    <p>Je vindt de DC motor onder <strong>Gelijkstroommotor</strong> en onder <strong>Hobby motorreductor</strong>. Die laatste is een motor met een tandwielkast erop, die trager draait maar meer koppel geeft.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">

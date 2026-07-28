@@ -44,7 +44,7 @@
         </table>
     </div>
 
-    <p>Die puls moet ongeveer <strong>50 keer per seconde</strong> herhaald worden. Zolang de pulsen blijven komen, houdt de servo zijn positie vast en verzet hij zich tegen een duwtje. Stoppen de pulsen, dan laat hij los en kan je de as met de hand ronddraaien.</p>
+    <p>Die puls moet ongeveer <strong>50 keer per seconde</strong> herhaald worden. Zolang de pulsen blijven komen, houdt de servo zijn positie vast en verzet hij zich wanneer je tegen de as duwt. Stoppen de pulsen, dan laat hij los en kan je de as met de hand ronddraaien.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Dit is niet hetzelfde als analogWrite()</div>
@@ -59,8 +59,8 @@
 
     <div class="info-box remark">
         <div class="info-title remark">Een servo hoeft niet op een pin met een ~</div>
-        <p>Je zou het verwachten, maar het klopt niet. De Servo-bibliotheek maakt de pulsen zelf en werkt op <strong>elke digitale pin</strong> van de UNO. De <code>~</code>-pinnen zijn de pinnen waar <code>analogWrite()</code> op werkt, en dat is hier een ander signaal.</p>
-        <p>Het omgekeerde geldt wel: zodra je op een UNO ook maar één servo aankoppelt, gebruikt de bibliotheek de timer van pin 9 en pin 10. Op die twee pinnen werkt <code>analogWrite()</code> dan niet meer, ook al staat er een <code>~</code> bij. Heb je in dezelfde schakeling nog een led te dimmen, kies daar dan pin 3, 5, 6 of 11 voor.</p>
+        <p>De Servo-bibliotheek maakt de pulsen zelf en werkt op <strong>elke digitale pin</strong> van de UNO. De <code>~</code>-pinnen zijn de pinnen waar <code>analogWrite()</code> op werkt, en dat is hier een ander signaal.</p>
+        <p>Het omgekeerde geldt wel. Zodra je op een UNO één servo aankoppelt, gebruikt de bibliotheek de timer van pin 9 en pin 10. Op die twee pinnen werkt <code>analogWrite()</code> dan niet meer, ook al staat er een <code>~</code> bij. Heb je in dezelfde schakeling nog een led te dimmen, kies daar dan pin 3, 5, 6 of 11 voor.</p>
     </div>
 
     <h2 id="de-functies">De functies</h2>
@@ -133,7 +133,7 @@ void loop()
 
     <h2 id="vloeiend-heen-en-weer">Vloeiend heen en weer (sweep)</h2>
 
-    <p>Wil je de as vloeiend zien bewegen in plaats van springen, stuur je hem in kleine stapjes van 1 graad met een korte pauze ertussen. Dat is precies wat een <code>for</code>-lus doet.</p>
+    <p>Wil je de as vloeiend zien bewegen in plaats van springen, stuur je hem in stappen van 1 graad met een korte pauze ertussen. Dat is wat een <code>for</code>-lus doet.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Servo.h&gt;
 
@@ -176,8 +176,8 @@ void loop()
     </div>
 
     <div class="info-box warning">
-        <div class="info-title warning">Twee voedingen? Verbind de massa's!</div>
-        <p>Voed je de servo apart, dan moet de <strong>min van die voeding aan de GND van de Arduino</strong>. Zonder die gemeenschappelijke massa heeft de servo geen referentie voor je stuursignaal: de puls die de Arduino stuurt betekent dan letterlijk niets voor de servo. Het gevolg is een servo die niet reageert of wild begint te schokken, terwijl je code perfect in orde is.</p>
+        <div class="info-title warning">Twee voedingen delen hun massa</div>
+        <p>Voed je de servo apart, dan moet de <strong>min van die voeding aan de GND van de Arduino</strong>. Zonder die gemeenschappelijke massa heeft de servo geen referentie voor je stuursignaal, want de puls die de Arduino stuurt betekent dan niets voor de servo. Het gevolg is een servo die niet reageert of wild begint te schokken, terwijl je code in orde is.</p>
     </div>
 </div>
 

@@ -31,7 +31,7 @@
 
     <div class="info-box tip">
         <div class="info-title tip">Beter met een weerstand</div>
-        <p>Het is geen slecht idee om zowel tussen GND en P6 als tussen GND en P7 een weerstand te plaatsen. Stuur je dan per ongeluk een verkeerd bitpatroon uit, dan maak je geen kortsluiting.</p>
+        <p>Plaats best een weerstand tussen GND en P6 en tussen GND en P7. Stuur je dan per ongeluk een verkeerd bitpatroon uit, dan maak je geen kortsluiting.</p>
     </div>
 
     <div class="info-box warning">
@@ -89,7 +89,7 @@ void loop()
   }
 }</code></pre>
 
-    <p>Om het bitpatroon te begrijpen dat we uitsturen, is het makkelijkst om even een tabel te maken. Hieronder staat <code>B00011011</code> uitgeschreven. Werkt het maskeren en het opbouwen van zo'n patroon nog niet vlot, kijk dan eerst even op <a href="../Reference/Bits.html">Werken met bits</a>.</p>
+    <p>Om het bitpatroon te begrijpen dat we uitsturen, is het makkelijkst om een tabel te maken. Hieronder staat <code>B00011011</code> uitgeschreven. Werkt het maskeren en het opbouwen van zo'n patroon nog niet vlot, kijk dan eerst op <a href="../Reference/Bits.html">Werken met bits</a>.</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -148,7 +148,7 @@ void loop()
 
     <div class="info-box remark">
         <div class="info-title remark">** De twee pinnen van de drukknoppen</div>
-        <p>Die zet je altijd op 1, zodat je de uitgelezen toestand van de schakelaar niet beïnvloedt. Zet je ze op 0, dan simuleer je eigenlijk een ingedrukte knop en lees je je eigen uitgang terug.</p>
+        <p>Die zet je altijd op 1, zodat je de uitgelezen toestand van de schakelaar niet beïnvloedt. Zet je ze op 0, dan simuleer je een ingedrukte knop en lees je je eigen uitgang terug.</p>
     </div>
 
     <div class="video-container">
@@ -159,13 +159,13 @@ void loop()
 
     <h2 id="van-sequentie-naar-lus">Van sequentie naar lus</h2>
 
-    <p>Voor je aan de knoppen begint, is het handig om de volloper zelf al eens werkend te krijgen. Hieronder staan twee versies van diezelfde volloper: eentje zoals je ze snel neerschrijft, en eentje zoals ze er beter uitziet.</p>
+    <p>Voor je aan de knoppen begint, is het handig om de volloper zelf al eens werkend te krijgen. Hieronder staan twee versies van diezelfde volloper: de ene zoals je ze snel neerschrijft, de andere zoals ze er beter uitziet.</p>
 
     <div class="solution-container">
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: de volloper in twee versies</button>
         <div class="spoiler-content solution-content">
             <div class="info-box warning">
-                <div class="info-title warning">Geen deftige oplossing</div>
+                <div class="info-title warning">Werkt, maar volledig sequentieel</div>
                 <p>Versie 1 hieronder is een oplossing zoals een student ze graag indient. Ze doet wat ze moet doen, maar het is geen mooi programma, aangezien er alleen maar sequentieel gewerkt wordt. We vertrekken ervan om aan te tonen hoe het veel beter kan.</p>
             </div>
 
@@ -270,13 +270,13 @@ void loop()
                 <p>De array bevat 9 waarden, met indexen 0 tot en met 8. Schrijf je per ongeluk <code>i &lt; 10</code>, dan leest de lus in de laatste doorloop een element dat er niet is. De compiler zegt daar niets over en je sketch loopt gewoon door, maar je stuurt dan een willekeurige byte naar je leds. Laat <code>sizeof</code> het aantal berekenen, dan kan je er niet naast zitten.</p>
             </div>
 
-            <p>Het mag duidelijk zijn dat dit al een veel betere oplossing is. Deze volloper gebruikt wel alle acht de uitgangen. In jouw schakeling hangen er maar vier leds, en moet je bovendien P0 en P1 hoog houden voor je knoppen.</p>
+            <p>Dit is al een veel betere oplossing. Deze volloper gebruikt wel alle acht de uitgangen. In jouw schakeling hangen er maar vier leds, en moet je bovendien P0 en P1 hoog houden voor je knoppen.</p>
         </div>
     </div>
 
     <h2 id="maak-de-volloper-af">Maak de volloper af</h2>
 
-    <p>Maak nu zelf de oefening verder af. Je hebt alles wat je nodig hebt: je kan de knoppen lezen, je weet welke bit bij welke led hoort, en je weet hoe je een sequentie omzet naar een lus.</p>
+    <p>Maak nu zelf de oefening verder af. Je kan de knoppen lezen, je weet welke bit bij welke led hoort, en je weet hoe je een sequentie omzet naar een lus.</p>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">
@@ -286,7 +286,7 @@ void loop()
 
     <div class="info-box tip">
         <div class="info-title tip">Let op de else if</div>
-        <p>De voorbeeldcode hierboven gebruikt <code>else if</code>, waardoor knop 1 wint als je allebei de knoppen tegelijk indrukt. Dat is precies wat volgens de opdracht <em>niet</em> mag gebeuren. Denk dus goed na over de volgorde van je voorwaarden.</p>
+        <p>De voorbeeldcode hierboven gebruikt <code>else if</code>, waardoor knop 1 wint als je allebei de knoppen tegelijk indrukt. Dat is wat volgens de opdracht <em>niet</em> mag gebeuren. Denk dus goed na over de volgorde van je voorwaarden.</p>
     </div>
 
     <hr>

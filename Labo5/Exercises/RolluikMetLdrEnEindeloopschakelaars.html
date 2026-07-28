@@ -25,11 +25,11 @@
         <li>Staat het luik al waar het moet zijn, dan gebeurt er niets.</li>
     </ul>
 
-    <p>De twee knoppen zijn gesimuleerde <strong>eindeloopschakelaars</strong>: in een echt rolluik zit er zo eentje boven en eentje onder, en die vertellen de sturing dat het luik op het einde van zijn baan zit. Precies zoals de drukknop in de vorige oefening, waar een druk betekende "je bent aan het einde".</p>
+    <p>De twee knoppen zijn gesimuleerde <strong>eindeloopschakelaars</strong>. In een echt rolluik zit er zo'n schakelaar boven en onder, en die vertellen de sturing dat het luik op het einde van zijn baan zit. Dat is dezelfde rol als de drukknop in de vorige oefening, waar een druk betekende "je bent aan het einde".</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Traag betekent hier PWM</div>
-        <p>"Traag omlaag" regel je met <code>analogWrite()</code> op de enable van je H-brug, precies zoals in <a href="SnelheidEnRichtingMetL293.html">Zacht omkeren met de L293D</a>. Een rolluik dat aan volle snelheid tegen zijn eindaanslag knalt, is een rolluik dat je één keer bouwt.</p>
+        <p>"Traag omlaag" regel je met <code>analogWrite()</code> op de enable van je H-brug, zoals in <a href="SnelheidEnRichtingMetL293.html">Zacht omkeren met de L293D</a>. Een rolluik dat aan volle snelheid tegen zijn eindaanslag knalt, gaat stuk.</p>
     </div>
 
     <h2 id="hysteresis">Hysteresis: waarom één drempel niet volstaat</h2>
@@ -65,11 +65,11 @@
         </table>
     </div>
 
-    <p>Het luik dat omlaag ging, blijft nu omlaag tot de meting écht boven de 550 komt. Kleine schommelingen rond de 500 halen die grens niet, en je sturing blijft rustig. Dat heet <strong>hysteresis</strong>: de drempel waarop je iets aanzet ligt niet op dezelfde plaats als de drempel waarop je het weer uitzet.</p>
+    <p>Het luik dat omlaag ging, blijft nu omlaag tot de meting écht boven de 550 komt. Kleine schommelingen rond de 500 halen die grens niet. Dat heet <strong>hysteresis</strong>, en het betekent dat de drempel waarop je iets aanzet niet op dezelfde plaats ligt als de drempel waarop je het weer uitzet.</p>
 
     <div class="info-box remark">
         <div class="info-title remark">Je kent dit al van je thermostaat</div>
-        <p>Zet je die op 20 graden, dan slaat de verwarming aan bij 19,5 en pas weer af bij 20,5. Zonder die marge zou de brander elke minuut aan- en uitspringen. Exact hetzelfde principe, en exact dezelfde reden.</p>
+        <p>Zet je die op 20 graden, dan slaat de verwarming aan bij 19,5 en pas weer af bij 20,5. Zonder die marge zou de brander elke minuut aan- en uitspringen.</p>
     </div>
 
     <h2 id="draadbreukbeveiliging">Wat als een knop stukgaat?</h2>
@@ -80,11 +80,11 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: wat gaat er dan mis?</button>
         <div class="spoiler-content solution-content">
             <p>De sturing krijgt nooit het signaal dat het luik beneden is, dus de motor blijft draaien. Het luik loopt tegen zijn aanslag, de motor blijft trekken en trekt daarbij zijn blokkeerstroom, en er begint iets te scheuren of te branden.</p>
-            <p>Het gevaarlijke zit hem hierin: een <strong>gebroken draad ziet er voor je programma precies hetzelfde uit als een knop die niet ingedrukt is</strong>. Je sturing heeft geen enkele manier om die twee uit elkaar te houden, en gaat dus vrolijk door.</p>
+            <p>Het gevaarlijke is dat een <strong>gebroken draad er voor je programma hetzelfde uitziet als een knop die niet ingedrukt is</strong>. Je sturing heeft geen enkele manier om die twee uit elkaar te houden, en blijft dus doorlopen.</p>
         </div>
     </div>
 
-    <p>De oplossing zit niet in je code maar in je bedrading. Sluit een eindeloopschakelaar aan als <strong>verbreekcontact</strong>: in rust is het contact <em>gesloten</em>, en het gaat <em>open</em> wanneer het luik erop duwt.</p>
+    <p>De oplossing zit niet in je code maar in je bedrading. Sluit een eindeloopschakelaar aan als <strong>verbreekcontact</strong>. In rust is het contact <em>gesloten</em>, en het gaat <em>open</em> wanneer het luik erop duwt.</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -148,9 +148,9 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>De sturing houdt in <code>toestand</code> bij wat het luik aan het doen is. Dat is de kern: je beslist niet elke lus opnieuw vanaf nul, je hebt drie toestanden waar je tussen wisselt. Zo kan je hysteresis toepassen, want "blijf doen wat je deed" heeft alleen betekenis als je weet wát je deed.</p>
+            <p>De sturing houdt in <code>toestand</code> bij wat het luik aan het doen is. Je beslist dus niet elke lus opnieuw vanaf nul, maar wisselt tussen drie toestanden. Zo kan je hysteresis toepassen, want "blijf doen wat je deed" heeft alleen betekenis als je weet wát je deed.</p>
             <p>De twee drempels doen de rest. Alleen onder <code>drempelDonker</code> of boven <code>drempelLicht</code> verandert er iets van toestand. In de zone ertussen blijft <code>toestand</code> onaangeroerd.</p>
-            <p>De eindeloopschakelaars zijn verbreekcontacten op <code>INPUT_PULLUP</code>, dus in rust lezen ze LOW omdat het gesloten contact ze aan de massa legt. Spreekt de schakelaar aan, of breekt de draad, dan trekt de pull-up de ingang HIGH en stopt de motor. Precies wat je wil.</p>
+            <p>De eindeloopschakelaars zijn verbreekcontacten op <code>INPUT_PULLUP</code>, dus in rust lezen ze LOW omdat het gesloten contact ze aan de massa legt. Spreekt de schakelaar aan, of breekt de draad, dan trekt de pull-up de ingang HIGH en stopt de motor.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
 #include &lt;LiquidCrystal_I2C.h&gt;
@@ -293,7 +293,7 @@ void loop()
             <div class="info-box remark">
                 <div class="info-title remark">Twee dingen aan het scherm</div>
                 <p><strong>De spaties achter de tekst.</strong> Een LCD wist zichzelf niet. Schrijf je "Het is licht" over "Het is donker" heen, dan blijft de r van donker staan en lees je "Het is lichtr". Door elke regel aan te vullen tot de volle breedte overschrijf je wat er stond.</p>
-                <p><strong>De twee variabelen <code>getoondLicht</code> en <code>getoondeToestand</code>.</strong> Die houden bij wat er al op het scherm staat, zodat je alleen schrijft als er echt iets verandert. Dat is dezelfde reden als in labo 4, waar de tekst in de <code>setup()</code> stond: een LCD dat je blijft herschrijven gaat flikkeren. Hier kan de tekst wel veranderen, dus verhuist de regel van "schrijf één keer" naar "schrijf alleen bij verandering".</p>
+                <p><strong>De twee variabelen <code>getoondLicht</code> en <code>getoondeToestand</code>.</strong> Die houden bij wat er al op het scherm staat, zodat je alleen schrijft als er echt iets verandert. Dat is dezelfde reden als in labo 4, waar de tekst in de <code>setup()</code> stond, want een LCD dat je blijft herschrijven gaat flikkeren. Hier kan de tekst wel veranderen, dus verhuist de regel van "schrijf één keer" naar "schrijf alleen bij verandering".</p>
             </div>
         </div>
     </div>

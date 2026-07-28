@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <p>Aan je schakeling verandert er bijna niets: je hebt dezelfde vier leds en dezelfde L293D als in <a href="StappenmotorInFullStep.html">Stappenmotor laten draaien in full step</a>. Er komt alleen een schuifschakelaar bij. Het nieuwe zit helemaal in de stappentabel.</p>
+    <p>Aan je schakeling verandert er bijna niets, want je hebt dezelfde vier leds en dezelfde L293D als in <a href="StappenmotorInFullStep.html">Stappenmotor laten draaien in full step</a>. Er komt alleen een schuifschakelaar bij. Het nieuwe zit helemaal in de stappentabel.</p>
 
     <h2 id="wat-is-half-step">Wat is half step?</h2>
 
@@ -31,17 +31,17 @@
         </figure>
     </div>
 
-    <p>De volledige tabel met de acht stappen staat op <a href="../Reference/Stappenmotor.html#half-step">De stappenmotor</a>. Kijk vooral eens naar stap 1, 3, 5 en 7: dat zijn precies de vier stappen van full step. Half step is dus full step met er telkens eentje tussen.</p>
+    <p>De volledige tabel met de acht stappen staat op <a href="../Reference/Stappenmotor.html#half-step">De stappenmotor</a>. Kijk vooral naar stap 1, 3, 5 en 7, want dat zijn de vier stappen van full step. Half step is dus full step met er telkens een stand tussen.</p>
 
-    <p>Aan je leds zie je het verschil goed: bij half step brandt er afwisselend één led en dan twee leds samen.</p>
+    <p>Aan je leds zie je het verschil goed. Bij half step brandt er afwisselend één led en dan twee leds samen.</p>
 
     <h2 id="de-schakelaar">De schakelaar</h2>
 
-    <p>Hang een schuifschakelaar aan een vrije digitale pin, bijvoorbeeld <strong>pin 6</strong>. Denk aan de <a href="../../Labo0/Reference/PullUpPullDown.html">pull-up of pull-down weerstand</a>: een ingang die nergens aan hangt zweeft, en dan leest je programma willekeurige waarden.</p>
+    <p>Hang een schuifschakelaar aan een vrije digitale pin, bijvoorbeeld <strong>pin 6</strong>. Denk aan de <a href="../../Labo0/Reference/PullUpPullDown.html">pull-up of pull-down weerstand</a>. Een ingang die nergens aan hangt zweeft, en dan leest je programma willekeurige waarden.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Een schuifschakelaar hoef je niet te debouncen</div>
-        <p><a href="../../Labo0/Reference/Debouncen.html">Contactdender</a> speelt hier geen rol, want je reageert niet op het <em>moment</em> van omschakelen maar op de <em>stand</em>. Lees de schakelaar gewoon elke ronde uit en gebruik die waarde. Bij de drukknop in de volgende oefening ligt dat anders.</p>
+        <p><a href="../../Labo0/Reference/Debouncen.html">Contactdender</a> speelt hier geen rol, want je reageert niet op het <em>moment</em> van omschakelen maar op de <em>stand</em>. Lees de schakelaar elke ronde uit en gebruik die waarde. Bij de drukknop in de volgende oefening ligt dat anders.</p>
     </div>
 
     <h2 id="twee-tabellen-in-een-programma">Twee tabellen in één programma</h2>
@@ -49,10 +49,10 @@
     <p>Je hebt nu twee stappentabellen die niet even lang zijn: vier rijen tegenover acht. Dat betekent dat je bij het wisselen ook moet oppassen dat je stapteller niet buiten zijn tabel wijst.</p>
 
     <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: hoe hou je dat netjes uit elkaar?</button>
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: hoe hou je dat uit elkaar?</button>
         <div class="spoiler-content solution-content">
             <p>Je kan met twee aparte arrays werken en met een <code>if</code> kiezen uit welke je leest. Dat werkt, maar dan staat die <code>if</code> overal.</p>
-            <p>Eenvoudiger: gebruik alleen de <strong>half-steptabel</strong> van acht rijen. Full step is diezelfde tabel, maar dan met stappen van twee in plaats van één. Zo heb je één tabel, en verandert de schakelaar enkel de grootte van je stap.</p>
+            <p>Het kan eenvoudiger. Gebruik alleen de <strong>half-steptabel</strong> van acht rijen. Full step is diezelfde tabel, maar dan met stappen van twee in plaats van één. Zo heb je één tabel, en verandert de schakelaar enkel de grootte van je stap.</p>
         </div>
     </div>
 
@@ -80,8 +80,8 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>Er is maar één tabel nodig: die van half step, met acht rijen. De schakelaar bepaalt of je er met stappen van 1 doorheen gaat (half step) of met stappen van 2 (full step, want dan sla je de tussenstanden over).</p>
-            <p>Dat is meteen de reden waarom omschakelen tijdens het draaien geen probleem geeft: je blijft in dezelfde tabel en op dezelfde positie, je zet alleen grotere of kleinere sprongen. De <code>%</code> zorgt dat je altijd binnen de acht rijen blijft, ook als je er twee tegelijk opschuift.</p>
+            <p>Er is maar één tabel nodig, die van half step met acht rijen. De schakelaar bepaalt of je er met stappen van 1 doorheen gaat (half step) of met stappen van 2 (full step, want dan sla je de tussenstanden over).</p>
+            <p>Dat is meteen de reden waarom omschakelen tijdens het draaien geen probleem geeft. Je blijft in dezelfde tabel en op dezelfde positie, en zet alleen grotere of kleinere sprongen. De <code>%</code> zorgt dat je altijd binnen de acht rijen blijft, ook als je er twee tegelijk opschuift.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int motorPinnen[] = {2, 3, 4, 5}; // 1A, 2A, 3A, 4A van de L293D
 const int modusPin = 6;                 // schuifschakelaar: full of half step

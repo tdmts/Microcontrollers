@@ -67,7 +67,7 @@
             <li><label><input type="checkbox" class="form-check-input me-2"> De teller telt op met knop 1 en af met knop 2, telkens per seconde</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Knop 3 pauzeert, en een tweede druk herneemt op dezelfde waarde</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Een knop ingedrukt houden zorgt niet voor herhaald schakelen</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Boven 99 en onder 0 loopt de teller netjes door in plaats van vast te lopen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Boven 99 en onder 0 loopt de teller door in plaats van vast te lopen</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
@@ -84,7 +84,7 @@
 
             <p>De onderste helft is letterlijk die van labo 3: <code>cijferPatronen</code>, <code>schuifCijfer()</code> en <code>toonGetal()</code> schuiven twee cijfers na elkaar uit en latchen pas op het einde, zodat beide displays tegelijk omspringen.</p>
             <p>Nieuw is de knoppenlogica. <code>~knoppen &amp; vorigeKnoppen</code> levert een byte waarin enkel de bits staan die <em>deze doorloop</em> van 1 naar 0 gegaan zijn, dus de knoppen die net ingedrukt werden. Zo blijft een knop die je vasthoudt maar één keer tellen, wat vooral voor de pauzeknop belangrijk is.</p>
-            <p><code>richting</code> begint op 0, dus na het opstarten staat de teller stil tot je een richting kiest. Het tellen zelf gebeurt met <code>millis()</code>, want met een <code>delay(1000)</code> zou je een knopdruk van een halve seconde gewoon missen.</p>
+            <p><code>richting</code> begint op 0, dus na het opstarten staat de teller stil tot je een richting kiest. Het tellen zelf gebeurt met <code>millis()</code>, want met een <code>delay(1000)</code> zou je een knopdruk van een halve seconde missen.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
 

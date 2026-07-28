@@ -27,7 +27,7 @@
 
     <div class="info-box remark">
         <div class="info-title remark">Waarom pin 9 en niet zomaar een andere?</div>
-        <p>Het mag eigenlijk elke digitale pin zijn: de Servo-bibliotheek maakt de pulsen zelf en heeft geen <code>~</code>-pin nodig. Pin 9 is gewoon de pin die op dit schema gebruikt wordt. Wel het omgekeerde onthouden: zodra er een servo actief is, werkt <code>analogWrite()</code> niet meer op pin 9 en pin 10.</p>
+        <p>Het mag elke digitale pin zijn, want de Servo-bibliotheek maakt de pulsen zelf en heeft geen <code>~</code>-pin nodig. Pin 9 is de pin die op dit schema gebruikt wordt. Onthoud wel het omgekeerde. Zodra er een servo actief is, werkt <code>analogWrite()</code> niet meer op pin 9 en pin 10.</p>
     </div>
 
     <h2 id="van-knop-naar-hoek">Van knop naar hoek</h2>
@@ -36,7 +36,7 @@
 
     <div class="info-box tip">
         <div class="info-title tip">Maak het jezelf makkelijk</div>
-        <p>Daar heb je in labo 2 een functie voor gezien die precies dit doet: <a href="../../Labo2/Reference/map.html">map()</a>. Reken het niet met de hand uit.</p>
+        <p>Daar heb je in labo 2 een functie voor gezien die dit doet: <a href="../../Labo2/Reference/map.html">map()</a>. Reken het niet met de hand uit.</p>
     </div>
 
     <hr>
@@ -62,8 +62,8 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>De hele oefening past in vier regels <code>loop()</code>: uitlezen, herschalen, schrijven, even wachten.</p>
-            <p>Die <code>delay(15)</code> op het einde is geen opvulling. Zonder pauze stuur je de servo honderden keren per seconde een nieuwe hoek, ook als je de knop niet aanraakt, en dan begint hij te trillen op de kleine schommelingen van de meting. Vijftien milliseconden is ongeveer de tijd die de as nodig heeft om één graad af te leggen.</p>
+            <p>De hele oefening past in vier regels <code>loop()</code>: uitlezen, herschalen, schrijven, wachten.</p>
+            <p>Zonder die <code>delay(15)</code> op het einde stuur je de servo honderden keren per seconde een nieuwe hoek, ook als je de knop niet aanraakt, en dan begint hij te trillen op de kleine schommelingen van de meting. Vijftien milliseconden is ongeveer de tijd die de as nodig heeft om één graad af te leggen.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Servo.h&gt;
 

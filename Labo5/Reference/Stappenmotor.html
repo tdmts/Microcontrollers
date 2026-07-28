@@ -11,9 +11,9 @@
 <body>
 <div class="container">
     <h1>De stappenmotor</h1>
-    <p class="lead">Een stappenmotor draait niet vanzelf rond. Hij zet één <strong>stap</strong> per keer, en enkel wanneer jij de spoelen in de juiste volgorde bekrachtigt. Doe je niets, dan blijft hij precies staan waar hij staat.</p>
+    <p class="lead">Een stappenmotor zet één <strong>stap</strong> per keer, en alleen wanneer je de spoelen in de juiste volgorde bekrachtigt. Doe je niets, dan blijft hij staan waar hij staat.</p>
 
-    <p>Dat maakt hem het tegenovergestelde van een <a href="DCMotor.html">DC motor</a>. Een DC motor zet je aan en dan draait hij, maar je weet nooit hoe ver. Een stappenmotor beweegt alleen als jij hem stap voor stap voortduwt, en dus weet je exact hoe ver hij gedraaid heeft: je hebt de stappen zelf geteld. Daarom zitten ze in printers, plotters en 3D-printers, overal waar een positie moet kloppen zonder dat er een sensor aan te pas komt.</p>
+    <p>Dat maakt hem het tegenovergestelde van een <a href="DCMotor.html">DC motor</a>. Een DC motor zet je aan en dan draait hij, maar je weet nooit hoe ver. Een stappenmotor beweegt alleen als jij hem stap voor stap voortduwt, en dus weet je exact hoe ver hij gedraaid heeft, want je hebt de stappen zelf geteld. Daarom zitten ze in printers, plotters en 3D-printers, overal waar een positie moet kloppen zonder dat er een sensor aan te pas komt.</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -49,11 +49,11 @@
 
     <p>Binnenin zitten twee spoelen, die we <strong>A</strong> en <strong>B</strong> noemen, en daartussen een magnetische rotor. Bekrachtig je spoel A, dan draait de rotor naar spoel A toe en blijft daar hangen. Bekrachtig je vervolgens spoel B, dan draait hij een kwartslag verder naar B. Zo trek je hem stap voor stap rond.</p>
 
-    <p>Elke spoel kan je in <strong>twee richtingen</strong> bekrachtigen, want de stroom kan er twee kanten door. Dat geeft vier standen om naartoe te trekken: A in de ene richting, B in de ene richting, A in de andere, B in de andere. En omdat je per spoel de stroomrichting moet kunnen kiezen, heb je per spoel een <a href="HBrug.html">H-brug</a> nodig. Twee spoelen, twee bruggen, en dat is precies wat er in één L293D zit.</p>
+    <p>Elke spoel kan je in <strong>twee richtingen</strong> bekrachtigen, want de stroom kan er twee kanten door. Dat geeft vier standen om naartoe te trekken: A in de ene richting, B in de ene richting, A in de andere, B in de andere. En omdat je per spoel de stroomrichting moet kunnen kiezen, heb je per spoel een <a href="HBrug.html">H-brug</a> nodig. Twee spoelen vragen dus twee bruggen, en die zitten allebei in één L293D.</p>
 
     <h2 id="in-tinkercad">In TinkerCAD: vier leds in plaats van een motor</h2>
 
-    <p>TinkerCAD heeft geen bruikbaar model van een stappenmotor. We vervangen de motor daarom door <strong>vier leds</strong>, twee per twee <strong>anti-parallel</strong> geschakeld: elk paar staat op de plaats van één spoel.</p>
+    <p>TinkerCAD heeft geen bruikbaar model van een stappenmotor. We vervangen de motor daarom door <strong>vier leds</strong>, twee per twee <strong>anti-parallel</strong> geschakeld, waarbij elk paar op de plaats van één spoel staat.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
@@ -61,10 +61,10 @@
         </figure>
     </div>
 
-    <p>Anti-parallel wil zeggen: naast elkaar, maar omgekeerd. Loopt de stroom de ene kant op door het paar, dan brandt de ene led. Loopt hij de andere kant op, dan brandt de andere. Zo zie je aan welke led brandt niet alleen <em>of</em> een spoel bekrachtigd is, maar ook <strong>in welke richting</strong>. Een correct draaiende motor herken je aan leds die netjes in de rondte oplichten.</p>
+    <p>Anti-parallel wil zeggen dat ze naast elkaar staan, maar omgekeerd. Loopt de stroom de ene kant op door het paar, dan brandt de ene led. Loopt hij de andere kant op, dan brandt de andere. Zo zie je aan welke led brandt niet alleen <em>of</em> een spoel bekrachtigd is, maar ook <strong>in welke richting</strong>. Een correct draaiende motor herken je aan leds die in de rondte oplichten.</p>
 
     <div class="info-box remark">
-        <div class="info-title remark">Waarom niet gewoon vier losse leds?</div>
+        <div class="info-title remark">Waarom niet vier losse leds?</div>
         <p>Omdat een echte stappenmotor ook maar twee spoelen heeft, en dus maar vier draden. Met vier losse leds zou je vier onafhankelijke uitgangen simuleren die in de echte motor niet bestaan, en dan schrijf je code die op een echte motor niet werkt.</p>
     </div>
 
@@ -109,11 +109,11 @@
         </table>
     </div>
 
-    <p>De twee enable-pinnen (1,2EN en 3,4EN) hang je gewoon vast aan 5 V: bij een stappenmotor wil je de bruggen altijd actief hebben. Je regelt de snelheid hier immers niet met PWM maar met de tijd tussen twee stappen.</p>
+    <p>De twee enable-pinnen (1,2EN en 3,4EN) hang je vast aan 5 V, want bij een stappenmotor wil je de bruggen altijd actief hebben. Je regelt de snelheid hier niet met PWM maar met de tijd tussen twee stappen.</p>
 
     <h2 id="full-step">Full step</h2>
 
-    <p>De eenvoudigste manier om te sturen heet <strong>one phase, full step</strong>: je bekrachtigt telkens precies één spoel, in vier standen na elkaar.</p>
+    <p>De eenvoudigste manier om te sturen heet <strong>one phase, full step</strong>. Je bekrachtigt telkens één spoel, in vier standen na elkaar.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
@@ -175,12 +175,12 @@
 
     <div class="info-box warning">
         <div class="info-title warning">De volgorde is A, B, A, B en niet A, A, B, B</div>
-        <p>Kijk goed naar de tabel: je wisselt telkens van spoel. Zou je eerst spoel A in beide richtingen doen en dan pas spoel B, dan springt de rotor van 0 naar 180 graden en weer terug naar 90. Hij draait dan niet rond, hij trilt alleen maar heen en weer. Dat is de klassieke fout, en aan je leds zie je het meteen: die moeten <strong>in de rondte</strong> oplichten, niet om de beurt van links naar rechts.</p>
+        <p>Kijk goed naar de tabel. Je wisselt telkens van spoel. Zou je eerst spoel A in beide richtingen doen en dan pas spoel B, dan springt de rotor van 0 naar 180 graden en weer terug naar 90. Hij draait dan niet rond maar trilt heen en weer. Dat is de klassieke fout, en aan je leds zie je het meteen. Die moeten <strong>in de rondte</strong> oplichten en niet om de beurt van links naar rechts.</p>
     </div>
 
     <h2 id="half-step">Half step</h2>
 
-    <p>Bij full step trek je de rotor telkens een hele stap verder. Je kan hem ook <strong>halverwege</strong> laten stoppen, door twee spoelen tegelijk te bekrachtigen: de rotor gaat dan tussen die twee in staan. Wissel je die twee soorten standen af, dan krijg je <strong>acht</strong> standen in plaats van vier, en dus twee keer zoveel stappen per omwenteling.</p>
+    <p>Bij full step trek je de rotor telkens een hele stap verder. Je kan hem ook <strong>halverwege</strong> laten stoppen door twee spoelen tegelijk te bekrachtigen, want dan gaat de rotor tussen die twee in staan. Wissel je die twee soorten standen af, dan krijg je <strong>acht</strong> standen in plaats van vier, en dus twee keer zoveel stappen per omwenteling.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
@@ -272,12 +272,12 @@
 
     <div class="info-box tip">
         <div class="info-title tip">De full-steptabel zit erin verstopt</div>
-        <p>Vergelijk stap 1, 3, 5 en 7 van half step met de vier stappen van full step. Het zijn dezelfde. Half step is dus gewoon full step met tussen elke twee stappen een extra stand waarin beide spoelen aan staan.</p>
+        <p>Vergelijk stap 1, 3, 5 en 7 van half step met de vier stappen van full step. Het zijn dezelfde. Half step is dus full step met tussen elke twee stappen een extra stand waarin beide spoelen aan staan.</p>
     </div>
 
     <h2 id="de-stappentabel-in-code">De stappentabel in code</h2>
 
-    <p>Die tabellen kan je letterlijk overnemen als <a href="../../Labo1/Reference/Arrays.html">array</a>. Elke rij is één stap, en per rij staat er voor elke motorpin een 1 of een 0. Dat leest een pak beter dan twintig <code>digitalWrite()</code>-regels onder elkaar, en het maakt de volgende oefeningen bijna gratis.</p>
+    <p>Die tabellen kan je letterlijk overnemen als <a href="../../Labo1/Reference/Arrays.html">array</a>. Elke rij is één stap, en per rij staat er voor elke motorpin een 1 of een 0. Dat leest veel beter dan twintig <code>digitalWrite()</code>-regels onder elkaar.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int motorPinnen[] = {2, 3, 4, 5};
 
@@ -289,7 +289,7 @@ const int fullStep[4][4] = {
   {0, 0, 0, 1}  // spoel B, andere richting
 };</code></pre>
 
-    <p>Eén stap zetten wordt dan een lusje over de vier pinnen:</p>
+    <p>Eén stap zetten wordt dan een lus over de vier pinnen:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>void zetStap(int stap)
 {
@@ -304,7 +304,7 @@ const int fullStep[4][4] = {
     <ul>
         <li><strong>Draaien</strong> is de stap ophogen en weer bij 0 beginnen na de laatste rij. De <a href="../../Labo0/Reference/WiskundigeOperatoren.html">restoperator</a> <code>%</code> doet dat in één regel.</li>
         <li><strong>Van richting veranderen</strong> is de tabel de andere kant op doorlopen, dus aftellen in plaats van optellen.</li>
-        <li><strong>Sneller of trager</strong> is de wachttijd tussen twee stappen aanpassen. Meer moet dat niet zijn.</li>
+        <li><strong>Sneller of trager</strong> is de wachttijd tussen twee stappen aanpassen.</li>
     </ul>
 
     <div class="info-box remark">

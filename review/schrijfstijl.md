@@ -25,8 +25,8 @@ nodig.
 | Labo 1 | 11 | 0 | **klaar** |
 | Labo 2 | 14 | 0 | **klaar** |
 | Labo 3 | 7 | 0 | **klaar** |
-| Labo 4 | 9 | 2 | open |
-| Labo 5 | 14 | 14 | open |
+| Labo 4 | 9 | 0 | **klaar** |
+| Labo 5 | 14 | 0 | **klaar** |
 | Labo 6 | 12 | 5 | open |
 | Labo 7 | 13 | 28 | open |
 | Test1 + Test2 | 6 | 1 | open |
@@ -37,6 +37,10 @@ uit de oorspronkelijke cursustekst, die deze patronen veel minder heeft.
 
 Labo 0 laat wel zien dat de greppable teller een vloer is en geen lijst: hij stond op 7 en de
 doorloop vond er ongeveer dertig, verspreid over vijftien pagina's.
+
+De teller van labo 5 stond sinds de doorloop van labo 4 op 16 en niet meer op 14. Dat was geen
+achteruitgang: `stapjes?` is tijdens de doorloop van labo 3 aan `DIMINUTIVES` toegevoegd en sloeg
+twee keer aan in labo 5, wat toen wel in de tekst maar niet in deze tabel terechtkwam.
 
 ## Afgesproken bereik
 
@@ -236,6 +240,128 @@ Alle drie zijn beslist. Ze blijven staan omdat een volgende doorloop ze anders o
 | `<strong>TLDR:</strong>` | `Dubbel7SegmentDisplay.html`, boven het kader "Waarom werkt dat?" | **Blijft.** De informele toon is hier bedoeld. Het enige voorkomen in de repo, het is geen van de dertien patronen, en de dubbele punt erna kondigt een samenvatting aan en geen pointe. Niet opnieuw voorleggen. |
 | "terwijl je maar drie pinnen van je Arduino <strong>opoffert</strong>" | `Schuifregister.html`, `lead` | **Naar `gebruikt`.** De lead is verder feitelijk, en één beeldend werkwoord erin valt op als opsmuk. Dat de pinnen bezet blijven, staat verderop op de pagina toch al. |
 | Kop "Stijgende flank?" | `Enkel7SegmentDisplay.html`, `<h3>` boven `risingEdge()` | **Naar "Wat is een stijgende flank?".** Een half fragment met een vraagteken leest als een aarzeling; een hele vraag stelt de vraag die de paragraaf erna beantwoordt. De vraagvorm zelf blijft dus, en dit is geen patroon 3: de kop is geen overgang maar een onderwerp. |
+
+## Labo 4
+
+Klaar. Vijf oefeningen plus vier theoriepagina's; `dashboard.html` en `reference.html` hebben alleen
+een boilerplate `lead` en zijn ongewijzigd gebleven. Eén pagina bleef helemaal ongemoeid:
+`I2CAdres.html` stond al goed.
+
+Twee dingen vallen op aan dit labo. Het eerste is de dubbele punt als aankondiging (patroon 4): die
+kwam vijf keer terug, altijd in dezelfde vorm, namelijk een bewering gevolgd door de reden ervan
+("Je kan dus niet één led apart aansturen: je schrijft altijd het hele patroon"). Elke keer was `want`
+of een komma het antwoord. Het tweede is `PCF8574.html`, waar vijf hele zinnen vetgedrukt stonden.
+Dat is patroon 10 in zijn duidelijkste vorm: vet hoort op een term of een waarde, niet op een zin.
+De vetgedrukte losse woorden op diezelfde pagina (**0x20**, **A2, A1 en A0**, **quasi-bidirectioneel**)
+zijn dus gebleven.
+
+| Pagina | Wat er veranderde |
+|---|---|
+| [LedsAansturen.html](../Labo4/Exercises/LedsAansturen.html) | `deftig` naar `goed` (zie hieronder), vulwoord `gewoon` weg (13), "maar dan geldt er een voorwaarde:" naar een gewone bijzin (4), "Onthoud dus vooral het verband:" weg voor de zin die daarna toch het verband geeft (4), en de dubbele punt in "niet één led apart aansturen: je schrijft altijd het hele patroon" naar `want` (4). |
+| [DrukknoppenInlezen.html](../Labo4/Exercises/DrukknoppenInlezen.html) | Vulwoorden `eigenlijk` en `gewoon` weg (13), en de dubbele punt bij de ontdendering naar `want` (4). |
+| [TekstOpI2CLcd.html](../Labo4/Exercises/TekstOpI2CLcd.html) | Eén dubbele punt naar `want` (4). De rest van de pagina stond goed. |
+| [VolloperMetDrukknoppen.html](../Labo4/Exercises/VolloperMetDrukknoppen.html) | De zwaarste pagina van het labo. "Het is geen slecht idee om ... te plaatsen" naar "Plaats best een weerstand ..." (6), `eentje` twee keer naar "de ene / de andere" (11), kadertitel "Geen deftige oplossing" naar "Werkt, maar volledig sequentieel" (zie hieronder, en meteen patroon 6), "Het mag duidelijk zijn dat dit al een veel betere oplossing is" naar de bewering zelf, "Je hebt alles wat je nodig hebt:" weg voor de opsomming die daarna toch volgt (4), en de vulwoorden `even` (2x), `eigenlijk` en `precies` weg (13). |
+| [TellerMetI2CDrukknoppen.html](../Labo4/Exercises/TellerMetI2CDrukknoppen.html) | Vulwoorden `netjes` (in een checklistregel) en `gewoon` weg (13). |
+| [Bits.html](../Labo4/Reference/Bits.html) | De dubbele punt in de `lead` naar `want` (4), "en dat is geen toeval" weg (1), "compileert vaak gewoon, en dan zoek je lang" naar een mededeling over de fout (1), "waardoor je programma denkt dat je tientallen keren per seconde drukt" naar "registreert" (7), "Een laatste patroon dat je tegenkomt:" naar een gewone zin (4), vulwoord `natuurlijk` weg (13), en een kommasplitsing bij de drie schrijfwijzen. |
+| [Bibliotheken.html](../Labo4/Reference/Bibliotheken.html) | Alleen het vulwoord `natuurlijk` (13). |
+| [PCF8574.html](../Labo4/Reference/PCF8574.html) | Vijf hele zinnen ontvet (10), "Dat is geen keuze die je zelf maakt: ..." naar "Je kiest die pinnen niet zelf, want ..." (4 en 6), en de vulwoorden `uiteraard` en `gewoon` weg (13). |
+| [I2CAdres.html](../Labo4/Reference/I2CAdres.html) | Niets. De pagina stond al goed. |
+
+Woorden toegevoegd aan `scripts/check-content.sh`, allebei eerst gemeten:
+
+- `FILLERS`: `uiteraard` en `natuurlijk`. Samen drie voorkomens in de hele repo, alle drie in labo 4
+  en alle drie pure vulling, dus de lijst staat na deze doorloop repo-breed op nul. `uiteraard`
+  wordt in SCHRIJFSTIJL.md 13 met naam genoemd. De `\b` aan beide kanten is wat `natuurlijk` veilig
+  maakt: het bijvoeglijke `natuurlijke` slaat niet aan.
+
+Niet toegevoegd, hoewel SCHRIJFSTIJL.md 13 het in dezelfde alinea noemt: `eigenlijk`. Van de acht
+resterende voorkomens zijn er vier het bijvoeglijk naamwoord ("de eigenlijke werking",
+"de eigenlijke ontdendering"), en drie staan in een echte vraag aan de student ("Hoeveel stroom kan
+een pin van de Arduino eigenlijk leveren?", "Welke spanning meet je eigenlijk?"), waar het de vraag
+als terzijde markeert in plaats van vulling te zijn. Eén ervan staat bovendien in labo 0, dat al op
+klaar staat. De lijst zou dus vooral niet-bevindingen melden.
+
+### Twijfelgevallen
+
+| Wat | Waar | Beslissing |
+|---|---|---|
+| `deftig` | `LedsAansturen.html` ("een led deftig doen branden") en de kadertitel "Geen deftige oplossing" op `VolloperMetDrukknoppen.html` | **Weg, allebei.** Dit is de spiegel van patroon 12: geen Noord-Nederlands woord, maar Belgische spreektaal voor "behoorlijk", en SCHRIJFSTIJL.md 12 vraagt uitdrukkelijk standaardtaal en geen gewestelijke woordkeuze. Twee voorkomens in de hele repo, allebei in labo 4. Niet aan `NOORD_NL` toegevoegd, want die lijst meldt "reads as Netherlandic" en dat is hier het omgekeerde; voor Belgicismen is er geen lijst, net zoals bij "op het eerste zicht" in labo 0. |
+| De vetgedrukte deelzinnen | `PCF8574.html`, o.a. "**Per PCF8574 krijg je 8 extra I/O-lijnen**" en "**P0 tot en met P7 zijn de 8 extra I/O-aansluitingen**" | **Blijven, voorlopig.** Alleen de vijf hele zinnen zijn ontvet. Deze markeren een feit midden in een zin en staan dichter bij "vet om een waarde te markeren" dan bij "vet om een zin te laten landen". Zie de vraag hieronder. |
+
+Voorgelegd, nog te beslissen:
+
+| Wat | Waar | De vraag |
+|---|---|---|
+| "Elke goede bibliotheek (ja, er zijn er ook slechte) bevat een aantal voorbeeldprogramma's." | `Bibliotheken.html` | Het terzijde is een knipoog, en geen van de dertien patronen dekt het. In labo 0 ging de enige emoji van de cursus weg om dezelfde reden. Weg, of blijft dit de stem van de auteur? |
+| Kadertitel "Het gevaar zit in het bitpatroon, niet in de draad" | `LedsAansturen.html` | De titel zegt iets, en kadertitels die iets zeggen zijn beschermd. Maar hij is als tegenstelling gebouwd, wat leest als een pointe. Vervangen door iets als "Hoe je een pin bedraadt, bepaalt welke bit je stuurt"? |
+| Kadertitel "Reken op een gebruiker die rare dingen doet" boven "Ga er altijd van uit dat een gebruiker domme dingen gaat doen." | `VolloperMetDrukknoppen.html` | Titel en eerste zin zeggen hetzelfde, met twee verschillende woorden voor de gebruiker. Eén van de twee schrappen, of de zin laten beginnen bij het geval zelf ("Een gebruiker kan bijvoorbeeld beide knoppen tegelijk indrukken")? |
+| De vetgedrukte deelzinnen | `PCF8574.html` | Ook ontvetten, of is de grens bij hele zinnen de juiste? |
+
+## Labo 5
+
+Klaar. Negen oefeningen plus vijf theoriepagina's; `dashboard.html` en `reference.html` hebben alleen
+een boilerplate `lead` en zijn ongewijzigd gebleven. Geen enkele pagina bleef ongemoeid, en dat was te
+verwachten: labo 5 is samen met labo 7 het recentst geschreven, en dus het zwaarst opgevoerd. Zestien
+greppable meldingen, en de doorloop vond er ongeveer honderd.
+
+Eén patroon overheerst zo sterk dat het het labo tekent: de **dubbele punt als aankondiging**
+(patroon 4) kwam meer dan dertig keer terug, op elke pagina, altijd in dezelfde vorm van een bewering
+gevolgd door haar reden ("Met een transistor los je dat op: een kleine stroom uit je pin schakelt een
+veel grotere"). `want`, een punt of een bijzin was telkens het antwoord. Daarna volgen de slotzin die
+moet blijven hangen (patroon 1) en `gewoon`/`precies` als vulling (patroon 13), elk zo'n vijftien keer.
+
+Twee zinnen uit dit labo staan met naam in SCHRIJFSTIJL.md als voorbeeld en zijn nu weg: de `lead` van
+`Stappenmotor.html` ("Een stappenmotor draait niet vanzelf rond.", patroon 6, letterlijk het "Na" van
+het regeldocument overgenomen) en de eindaanslagzin op `RolluikMetLdrEnEindeloopschakelaars.html`
+(patroon 1).
+
+| Pagina | Wat er veranderde |
+|---|---|
+| [ServoMetPotentiometer.html](../Labo5/Exercises/ServoMetPotentiometer.html) | Vulwoorden `eigenlijk`, `gewoon`, `precies` en `even` weg (13), de dubbele punt bij de pinkeuze naar `want` (4), de werkwoordloze "Wel het omgekeerde onthouden:" naar een gewone zin, en "Die `delay(15)` is geen opvulling." weg voor de zin die daarna toch uitlegt wat er zonder gebeurt (6). |
+| [DCMotorMetTransistor.html](../Labo5/Exercises/DCMotorMetTransistor.html) | "Van stilstand tot voluit, en alles ertussen." uit de `lead` samengevoegd (5), drie dubbele punten naar `want` of een punt (4), `flink` naar `ruim` (12), "Dat hoort zo." samengevoegd met de zin ervoor (5), en de vulwoorden `gewoon` en `precies` weg (13). |
+| [DraairichtingMetL293.html](../Labo5/Exercises/DraairichtingMetL293.html) | "Eén knop, twee richtingen." uit de `lead` (5), de dubbele punt bij de transistor naar `want` (4), `eentje` naar "Pin 3 heeft een `~`" (11), en "en de `if` leest als een zin" weg (1). |
+| [SnelheidEnRichtingMetL293.html](../Labo5/Exercises/SnelheidEnRichtingMetL293.html) | De `lead` begon op "Je vorige programma werkt, en toch deugt het niet." (1), wat de kop eronder toch al vraagt. Verder "Je H-brug krijgt die rekening." naar een mededeling (1), `stapje` twee keer naar `stap` (11), "Niet op 1A of 2A:" naar wat die twee wél doen (4 en 6), `vrolijk` bij de compiler weg (7), en `gewoon` en `precies` weg (13). |
+| [DCMotorMetL298N.html](../Labo5/Exercises/DCMotorMetL298N.html) | `hobbymotortje` naar `hobbymotor` (11, zie hieronder), drie dubbele punten naar een punt (4), "want een H-brug is een H-brug" weg (1), een kommasplitsing bij het pinnummer, en `gewoon`, `precies` en `eentje` weg (11, 13). |
+| [StappenmotorInFullStep.html](../Labo5/Exercises/StappenmotorInFullStep.html) | `netjes` twee keer weg, ook in een checklistregel (13), drie dubbele punten naar een punt (4), "Dat gaat hier niet met PWM." naar wat snelheid bij een stappenmotor wél is (6), de kadertitel "Te snel is echt te snel" naar "Te snel draaien laat de motor stappen overslaan" (10), "en gebeurt er van alles behalve wat je bedoelde" naar een mededeling (1), en "is de rest van het programma bijna leeg" weg (1). |
+| [StappenmotorInHalfStep.html](../Labo5/Exercises/StappenmotorInHalfStep.html) | Zes dubbele punten naar `want` of een punt (4), `eentje` naar "een stand" (11), `netjes` uit het hintlabel en `gewoon` uit de tekst (13), en "Eenvoudiger:" naar een hele zin (4). |
+| [StappenmotorRichtingMetDrukknop.html](../Labo5/Exercises/StappenmotorRichtingMetDrukknop.html) | De `lead` eindigde op een tegenstelling met dubbele punt en kommasplitsing ("hij meldt niet ..., hij meldt ...", 1 en 4), de kadertitel "Werkt het niet meteen? Bouw het in twee stappen" naar de mededeling alleen (3), de kadertitel "Die `delay()` is eigenlijk al te veel" naar "Met `millis()` mis je geen enkele druk" (13), `rustig` en `gewoon` weg (7, 13), en "dat ziet er precies uit als "hij doet soms niets"" naar een gewone vergelijking (13). |
+| [RolluikMetLdrEnEindeloopschakelaars.html](../Labo5/Exercises/RolluikMetLdrEnEindeloopschakelaars.html) | "is een rolluik dat je één keer bouwt" naar "gaat stuk" (1, zie de vraag hieronder), `eentje` twee keer naar "zo'n schakelaar" (11), "Precies zoals de drukknop ..." en "Precies wat je wil." als werkwoordloze zinnen weg of samengevoegd (5), "Exact hetzelfde principe, en exact dezelfde reden." weg (5 en 10), vier dubbele punten naar een punt of `want` (4), en `vrolijk` en `rustig` weg (7). |
+| [Servo.html](../Labo5/Reference/Servo.html) | `duwtje` naar "wanneer je tegen de as duwt" en `stapjes` naar `stappen` (11), "Je zou het verwachten, maar het klopt niet." weg (1), "ook maar één servo" naar "één servo" (10, zoals "zonder ook maar één extra pin" in labo 3), de kadertitel "Twee voedingen? Verbind de massa's!" naar "Twee voedingen delen hun massa" (3 en 10), en `letterlijk` en `perfect` als nadruk weg (13). |
+| [DCMotor.html](../Labo5/Reference/DCMotor.html) | `prima` naar "zonder problemen" (12), "een pak meer" naar "veel meer" (zie hieronder), de dubbele punt in de `lead` naar een punt (4), "Wat hij *niet* weet, is waar hij staat." naar wat hij wél doet (6), "Dat hoef je niet te gokken." naar "Meet het, in plaats van te gokken." (6), en `gewoon` weg (13). |
+| [TransistorAlsSchakelaar.html](../Labo5/Reference/TransistorAlsSchakelaar.html) | De zwaarste pagina van het labo. Zeven dubbele punten naar `want` of een punt (4), "De vraag is dus: hoe groot moet ze zijn?" weg (3), "En hier komt de stap die je niet mag overslaan." weg (1), "die staat daar niet toevallig" en "Dat is trouwens geen toeval" weg (1), "Dat is te krap." samengevoegd (5), `flink` naar `ruim` (12), `eentje` naar "een weg" en `tikje` naar `iets` (11), `pootjes` naar `aansluitingen` (11, zie hieronder), `streepje` naar `streep` zoals de rest van de repo het zegt, en `gewoon`, `precies` en `rustig` weg (13). |
+| [HBrug.html](../Labo5/Reference/HBrug.html) | "in plaats van met je vingers" weg (1), "zonder ook maar één draad te verleggen" naar "zonder een draad te verleggen" (10), "De reden is eenvoudig:" weg voor de reden zelf (4), "Je gaat geen H-brug uit losse transistoren bouwen:" naar wat je wél doet (6), vier andere dubbele punten naar een punt of `want` (4), "is een dure manier om een motor te slopen" naar "dan maak je hem stuk" (1), en `netjes`, `gewoon` en `precies` weg (13). |
+| [Stappenmotor.html](../Labo5/Reference/Stappenmotor.html) | De `lead` is het "Na"-voorbeeld van patroon 6 uit SCHRIJFSTIJL.md geworden. Verder "Twee spoelen, twee bruggen, en dat is precies wat er in één L293D zit." naar een mededeling (1), "Anti-parallel wil zeggen: naast elkaar, maar omgekeerd." naar een hele zin (4, exact de vorm uit het regeldocument), vijf andere dubbele punten (4), `lusje` naar `lus` en `netjes` weg (11, 13), "een pak beter" naar "veel beter" en "maakt de volgende oefeningen bijna gratis" weg (1), "Meer moet dat niet zijn." weg (5), een kommasplitsing bij de trillende rotor, en `gewoon` en `precies` weg (13). |
+| [reference.js](../reference.js) | De blurb van *De DC motor* had dezelfde dubbele punt als de `lead` van die pagina (4). |
+
+Woorden toegevoegd aan `scripts/check-content.sh`: **geen**. `flink`, `prima`, `netjes`, `eentje`,
+`stapje` en `duwtje` stonden er al en vingen precies de zestien meldingen die er stonden. Twee dingen
+zijn wel gemeten en bewust niet toegevoegd:
+
+- `hobbymotortje` (`DCMotorMetL298N.html`) glipte door `DIMINUTIVES` omdat `motortje` daar met `\b`
+  aan beide kanten staat en de samenstelling dus niet aanslaat. Na deze doorloop staat de repo op nul
+  samenstellingen met een verkleinwoord erin (gemeten op `motortje`, `lampje`, `knopje`, `blokje`,
+  `schermpje` en `draadje`), dus er is niets om te vangen. De `\b` oprekken tot `\w*motortje` zou een
+  regel toevoegen die vandaag nergens iets meldt.
+- `een pak` als versterker. Twee voorkomens hier, twee in labo 7 (`Interruptpinnen.html`,
+  `VolatileEnVlaggen.html`). Die van labo 5 zijn `veel` geworden; die van labo 7 blijven staan tot dat
+  labo aan de beurt is, tenzij je hieronder anders beslist. Niet in `NOORD_NL` gezet, want het is
+  Belgische spreektaal en die lijst meldt het omgekeerde, net zoals bij `deftig` in labo 4.
+
+### Twijfelgevallen
+
+| Wat | Waar | Beslissing |
+|---|---|---|
+| `pootjes` bij een transistor | `TransistorAlsSchakelaar.html` ("Een NPN-transistor heeft drie pootjes") | **Naar `aansluitingen`.** SCHRIJFSTIJL.md 11 beschermt `pootjes` als vakterm, maar dat gaat over de buitenste pootjes van een potentiometer, en het ijkpunt `WatIsEenMicrocontroller.html` zette "een rij pootjes" om naar "een rij aansluitingen". Gemeten: de vijf overblijvende `pootjes` in de repo slaan allemaal op een potentiometer. Bovendien heten ze op deze pagina zelf al "aansluitingen", in de kop en in de tabel erboven. |
+| `streepje` | `TransistorAlsSchakelaar.html` | **Naar `streep`.** De oefening en het kader op dezelfde pagina zeggen allebei al "met de streep naar de plus". Consistentie, geen nieuwe regel. |
+
+Voorgelegd, nog te beslissen:
+
+| Wat | Waar | De vraag |
+|---|---|---|
+| "Een rolluik dat aan volle snelheid tegen zijn eindaanslag knalt, **gaat stuk**." | `RolluikMetLdrEnEindeloopschakelaars.html` | De oude slotzin ("is een rolluik dat je één keer bouwt") staat in SCHRIJFSTIJL.md als voorbeeld van patroon 1 en moest dus weg. Wat er nu staat is mijn parafrase van wat die zin impliceerde. Klopt "gaat stuk", of is het preciezer om te zeggen wát er stukgaat (de aanslag, de tandwielkast, de motor)? Dat is een feit dat ik niet heb. |
+| "een pak beter / een pak meer" | Labo 5 (gedaan), `Labo7/Reference/Interruptpinnen.html` en `VolatileEnVlaggen.html` (nog niet) | Belgische spreektaal, dezelfde categorie als `deftig` in labo 4. In labo 5 naar `veel`. Meteen repo-breed doortrekken naar labo 7, of wachten tot dat labo aan de beurt is? |
+| "Toon antwoord: waarom is die code slecht? Stel je een motor voor die aan 10000 toeren draait..." | `SnelheidEnRichtingMetL293.html`, label van de spoilerknop | Blijven staan. Het label stelt een echte vraag aan de student (patroon 3 laat die toe) maar eindigt op een beletselteken dat spanning opbouwt. De andere spoilerknoppen in dit labo zeggen gewoon waar het antwoord over gaat. Het beletselteken schrappen, of is de aanzet hier didactisch bedoeld? |
+| Kop "De volgorde is het hele punt" | `StappenmotorInFullStep.html` | Blijven staan. De kop zegt iets, en dat is beschermd, maar hij is gebouwd als een pointe in plaats van als een onderwerp. Vervangen door "De volgorde van de stappen", of is de nadruk hier terecht, gezien het kader eronder net die fout behandelt? |
 
 ## Repo-brede ingrepen
 

@@ -13,11 +13,11 @@
     <h1>Dezelfde motor op een L298N-module</h1>
     <p class="lead">Bouw de vorige oefening opnieuw, maar nu met een L298N-module in plaats van een L293D. Je code mag ongewijzigd blijven. Het enige wat je moet uitzoeken is welke pin van de module overeenkomt met welke pin van het IC.</p>
 
-    <p>Dat klinkt als flauw werk, en toch is dit het soort opdracht dat je later het vaakst krijgt: een schakeling die werkt, en een component dat vervangen moet worden door een ander merk of type. Je krijgt dan geen nieuw schema, je krijgt een <a href="../../datasheets/l293d.pdf">datasheet</a> en de vraag of je het even wil aanpassen.</p>
+    <p>Dat klinkt als flauw werk, en toch is dit het soort opdracht dat je later het vaakst krijgt. Er ligt een schakeling die werkt, en er moet een component vervangen worden door een ander merk of type. Je krijgt dan geen nieuw schema, je krijgt een <a href="../../datasheets/l293d.pdf">datasheet</a> en de vraag of je het even wil aanpassen.</p>
 
     <h2 id="waarom-een-andere-driver">Waarom een andere driver?</h2>
 
-    <p>De L293D kan ongeveer 600 mA per kanaal aan. Dat volstaat voor een klein hobbymotortje, maar niet voor iets dat echt moet trekken. De <strong>L298N</strong> doet precies hetzelfde werk en kan er een veelvoud van hebben. Je koopt hem zelden als los IC: meestal krijg je een kant-en-klare module met de koelplaat, de vrijloopdiodes en schroefklemmen er al op.</p>
+    <p>De L293D kan ongeveer 600 mA per kanaal aan. Dat volstaat voor een kleine hobbymotor, maar niet voor iets dat echt moet trekken. De <strong>L298N</strong> doet hetzelfde werk en kan er een veelvoud van hebben. Je koopt hem zelden als los IC. Meestal krijg je een kant-en-klare module met de koelplaat, de vrijloopdiodes en schroefklemmen er al op.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
@@ -31,7 +31,7 @@
 
     <div class="info-box warning">
         <div class="info-title warning">De klem waar "12V" op staat krijgt geen 12 V</div>
-        <p>Dat is gewoon de voeding voor de motoren, de Vcc2 van de L293D. Jouw motor werkt op 5 V, dus daar zet je 5 V op. Je mag daar de 5 V van de Arduino voor gebruiken, of een aparte voeding nemen. Zet er niet 12 V op omdat het er staat.</p>
+        <p>Dat is de voeding voor de motoren, de Vcc2 van de L293D. Jouw motor werkt op 5 V, dus daar zet je 5 V op. Je mag daar de 5 V van de Arduino voor gebruiken, of een aparte voeding nemen. Zet er niet 12 V op omdat het er staat.</p>
     </div>
 
     <h2 id="het-schema">Het schema</h2>
@@ -54,7 +54,7 @@
 
     <div class="info-box remark">
         <div class="info-title remark">Waarom pin 3 in het midden?</div>
-        <p>ENA is de pin waar je met <code>analogWrite()</code> de snelheid op regelt, dus die moet op een pin met een <code>~</code>. Van pin 2, 3 en 4 is alleen pin 3 er zo eentje. Vandaar dat de enable in het midden zit en de twee richtingspinnen ernaast.</p>
+        <p>ENA is de pin waar je met <code>analogWrite()</code> de snelheid op regelt, dus die moet op een pin met een <code>~</code>. Van pin 2, 3 en 4 is alleen pin 3 zo'n pin. Vandaar dat de enable in het midden zit en de twee richtingspinnen ernaast.</p>
     </div>
 
     <hr>
@@ -81,8 +81,8 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>Dat is het hele punt van deze oefening: onder de drie constanten bovenaan verandert er niets. De <code>loop()</code> is regel voor regel dezelfde als in de vorige oefening, want een H-brug is een H-brug.</p>
-            <p>Merk op dat de commentaar bij de constanten wel mee verandert. Een pinnummer zegt niets, de naam van de aansluiting waar hij aan hangt wel.</p>
+            <p>Dat is het hele punt van deze oefening. Onder de drie constanten bovenaan verandert er niets, en de <code>loop()</code> is regel voor regel dezelfde als in de vorige oefening.</p>
+            <p>Merk op dat de commentaar bij de constanten wel mee verandert. Een pinnummer zegt op zich niets, maar de naam van de aansluiting waar hij aan hangt wel.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int enablePin = 3; // ENA van de L298N, moet een PWM-pin zijn
 const int in1Pin = 2;    // IN1

@@ -142,7 +142,7 @@ window.LAB_REFERENCE = {
                 name: 'Soorten motoren',
                 topics: [
                     { id: 'servo', name: 'De servomotor', href: 'Servo.html', blurb: 'Een motor die een hoek aanneemt in plaats van rond te draaien, met de Servo-bibliotheek en de pulsen waar ze op draait.' },
-                    { id: 'dcmotor', name: 'De DC motor', href: 'DCMotor.html', blurb: 'De eenvoudigste motor die er is: spanning erop en hij draait. Waarom je hem nooit rechtstreeks aan een uitgangspin hangt.' },
+                    { id: 'dcmotor', name: 'De DC motor', href: 'DCMotor.html', blurb: 'De eenvoudigste motor die er is. Spanning erop en hij draait, en waarom je hem nooit rechtstreeks aan een uitgangspin hangt.' },
                     { id: 'stappenmotor', name: 'De stappenmotor', href: 'Stappenmotor.html', blurb: 'Een motor die je stap voor stap voortduwt en dus zijn positie kent, met de stappentabellen voor full step en half step.' }
                 ]
             },

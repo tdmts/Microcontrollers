@@ -11,9 +11,9 @@
 <body>
 <div class="container">
     <h1>DC motor regelen met een transistor</h1>
-    <p class="lead">Stuur een DC motor aan via een transistor, en regel zijn snelheid met een potentiometer. Van stilstand tot voluit, en alles ertussen. Onderweg reken je zelf uit welke basisweerstand je nodig hebt.</p>
+    <p class="lead">Stuur een DC motor aan via een transistor, en regel zijn snelheid met een potentiometer, van stilstand tot voluit. Onderweg reken je zelf uit welke basisweerstand je nodig hebt.</p>
 
-    <p>Een motor kan je niet rechtstreeks aan een uitgangspin hangen: hij trekt te veel stroom. Waarom dat zo is staat op <a href="../Reference/DCMotor.html">De DC motor</a>, en hoe je dat met een transistor oplost op <a href="../Reference/TransistorAlsSchakelaar.html">De transistor als schakelaar</a>. Die twee pagina's heb je hier allebei nodig, dus lees ze eerst.</p>
+    <p>Een motor kan je niet rechtstreeks aan een uitgangspin hangen, want hij trekt te veel stroom. Waarom dat zo is staat op <a href="../Reference/DCMotor.html">De DC motor</a>, en hoe je dat met een transistor oplost op <a href="../Reference/TransistorAlsSchakelaar.html">De transistor als schakelaar</a>. Die twee pagina's heb je hier allebei nodig, dus lees ze eerst.</p>
 
     <p>Deze oefening werk je uit in TinkerCAD. De motor is daar de <strong>Hobby motorreductor</strong>, en de transistor de <strong>2N2222</strong> (een NPN).</p>
 
@@ -25,24 +25,24 @@
         </figure>
     </div>
 
-    <p>De potentiometer zit op <strong>A0</strong>, de basis van de transistor hangt via de basisweerstand aan <strong>pin 3</strong>, en de motor krijgt zijn stroom uit een aparte voeding. Let op het vraagteken bij de basisweerstand: die waarde is precies wat je zelf moet uitrekenen.</p>
+    <p>De potentiometer zit op <strong>A0</strong>, de basis van de transistor hangt via de basisweerstand aan <strong>pin 3</strong>, en de motor krijgt zijn stroom uit een aparte voeding. Bij de basisweerstand staat een vraagteken, want die waarde reken je zelf uit.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">De diode over de motor hoort erbij</div>
-        <p>Je ziet op het schema een diode dwars over de motor staan, met de streep naar de plus. Dat is de <strong>vrijloopdiode</strong>, en die is niet optioneel. Een motor is een spoel, en die stuurt bij het uitschakelen een spanningspiek terug die je transistor kapotmaakt. Waarom precies, staat op <a href="../Reference/TransistorAlsSchakelaar.html">De transistor als schakelaar</a>. Teken ze mee, ook al doet TinkerCAD zonder die diode niet moeilijk.</p>
+        <p>Je ziet op het schema een diode dwars over de motor staan, met de streep naar de plus. Dat is de <strong>vrijloopdiode</strong>, en die is niet optioneel. Een motor is een spoel, en die stuurt bij het uitschakelen een spanningspiek terug die je transistor kapotmaakt. Waarom dat zo is, staat op <a href="../Reference/TransistorAlsSchakelaar.html">De transistor als schakelaar</a>. Teken ze mee, ook al doet TinkerCAD zonder die diode niet moeilijk.</p>
     </div>
 
     <h2 id="stappenplan">Stappenplan</h2>
 
     <ol>
         <li>
-            <p><strong>Meet hoeveel stroom je motor trekt.</strong> Hang de motor even rechtstreeks aan de voeding en meet de stroom. In TinkerCAD kan dat met een multimeter, of je leest de waarde gewoon af op de voeding zelf. Die stroom is je <strong>Ic</strong>, de collectorstroom die de transistor straks moet doorlaten.</p>
+            <p><strong>Meet hoeveel stroom je motor trekt.</strong> Hang de motor even rechtstreeks aan de voeding en meet de stroom. In TinkerCAD kan dat met een multimeter, of je leest de waarde af op de voeding zelf. Die stroom is je <strong>Ic</strong>, de collectorstroom die de transistor straks moet doorlaten.</p>
         </li>
         <li>
             <p><strong>Zoek Vbe en hFE op in de datasheet.</strong> Beide staan in de <a href="../../datasheets/p2n2222a.pdf">datasheet van de transistor</a>. Vbe is de spanning over de basis-emitterjunctie, hFE de stroomversterkingsfactor.</p>
         </li>
         <li>
-            <p><strong>Neem marge op de hFE.</strong> Reken niet met de waarde uit de datasheet zelf. Deel ze flink door, zodat de transistor zeker <strong>voluit</strong> schakelt en de nodige collectorstroom hoe dan ook kan leveren. Op de referentiepagina staat uitgelegd waarom, en met welke factor.</p>
+            <p><strong>Neem marge op de hFE.</strong> Reken niet met de waarde uit de datasheet zelf. Deel ze ruim door, zodat de transistor zeker <strong>voluit</strong> schakelt en de nodige collectorstroom hoe dan ook kan leveren. Op de referentiepagina staat uitgelegd waarom, en met welke factor.</p>
         </li>
         <li>
             <p><strong>Bereken Rb.</strong> Eerst <code>Ib = Ic / hFE</code>, dan <code>Rb = (Vcc - Vbe) / Ib</code>. Rond af naar een weerstand die echt bestaat.</p>
@@ -57,7 +57,7 @@
 
     <div class="info-box remark">
         <div class="info-title remark">Welke spanning meet je eigenlijk?</div>
-        <p>Pin 3 staat bij <code>analogWrite()</code> nooit op een vaste tussenspanning: hij springt heen en weer tussen 0 V en 5 V. Wat je multimeter je toont is het <strong>gemiddelde</strong> daarvan, en dat is precies waar PWM op neerkomt. Zet je er 128 op, dan staat de pin ongeveer de helft van de tijd hoog en meet je ongeveer 2,5 V. Reken in je programma dus met datzelfde gemiddelde: <code>spanning = waarde * 5.0 / 255</code>.</p>
+        <p>Pin 3 springt bij <code>analogWrite()</code> heen en weer tussen 0 V en 5 V, in plaats van op een vaste tussenspanning te staan. Wat je multimeter je toont is het <strong>gemiddelde</strong> daarvan, en dat is waar PWM op neerkomt. Zet je er 128 op, dan staat de pin ongeveer de helft van de tijd hoog en meet je ongeveer 2,5 V. Reken in je programma dus met datzelfde gemiddelde: <code>spanning = waarde * 5.0 / 255</code>.</p>
     </div>
 
     <hr>
@@ -92,8 +92,8 @@
                 <li><code>Ib</code> = 0,08 A / 40 = 2 mA.</li>
                 <li><code>Rb</code> = (5 V - 0,7 V) / 0,002 A = 2150 Ω, dus we nemen <strong>2,2 kΩ</strong>.</li>
             </ul>
-            <p>Meet jouw motor een andere stroom, dan komt er een andere weerstand uit. Dat hoort zo.</p>
-            <p>In de code herschaal je de 0 tot 1023 van de potentiometer naar de 0 tot 255 van <code>analogWrite()</code>. De spanning die je afdrukt is het gemiddelde van het PWM-signaal, dus de ingestelde waarde gedeeld door 255 maal 5 V. Let op het punt in <code>5.0</code>: laat je dat weg, dan deelt de Arduino met gehele getallen en krijg je altijd 0 te zien.</p>
+            <p>Meet jouw motor een andere stroom, dan komt er een andere weerstand uit, en dat hoort zo.</p>
+            <p>In de code herschaal je de 0 tot 1023 van de potentiometer naar de 0 tot 255 van <code>analogWrite()</code>. De spanning die je afdrukt is het gemiddelde van het PWM-signaal, dus de ingestelde waarde gedeeld door 255 maal 5 V. Let op het punt in <code>5.0</code>. Laat je dat weg, dan deelt de Arduino met gehele getallen en krijg je altijd 0 te zien.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int motorPin = 3; // via de basisweerstand naar de basis
 const int potPin = A0;

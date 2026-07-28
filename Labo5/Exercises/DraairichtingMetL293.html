@@ -11,9 +11,9 @@
 <body>
 <div class="container">
     <h1>Draairichting omkeren met de L293D</h1>
-    <p class="lead">Lees de potentiometer uit en stuur een L293D zodanig aan dat de motor naar links draait bij een waarde kleiner dan 512, en naar rechts vanaf 512. Eén knop, twee richtingen.</p>
+    <p class="lead">Lees de potentiometer uit en stuur een L293D zodanig aan dat de motor naar links draait bij een waarde kleiner dan 512, en naar rechts vanaf 512.</p>
 
-    <p>Met de transistor uit de vorige oefening kwam je niet verder dan aan en uit: die ene transistor laat de stroom maar op één manier door de motor. Om te keren moet je de twee draden kunnen omwisselen, en daar dient een <a href="../Reference/HBrug.html">H-brug</a> voor. Lees die pagina door voor je begint, want je hebt er de pinout van de L293D bij nodig.</p>
+    <p>Met de transistor uit de vorige oefening kwam je niet verder dan aan en uit, want die ene transistor laat de stroom maar op één manier door de motor. Om te keren moet je de twee draden kunnen omwisselen, en daar dient een <a href="../Reference/HBrug.html">H-brug</a> voor. Lees die pagina door voor je begint, want je hebt er de pinout van de L293D bij nodig.</p>
 
     <p>Deze oefening werk je uit in TinkerCAD.</p>
 
@@ -63,7 +63,7 @@
 
     <div class="info-box tip">
         <div class="info-title tip">Hang de enable op pin 3 en laat hem daar staan</div>
-        <p>Voor deze oefening volstaat een gewone <code>digitalWrite(HIGH)</code> op de enable, dus je zou er elke pin voor kunnen nemen. Pin 3 is er eentje met een <code>~</code>, en dat heb je in de volgende oefening nodig om er met <code>analogWrite()</code> de snelheid mee te regelen. Zet hem dus meteen goed, dan hoef je straks geen draad te verleggen.</p>
+        <p>Voor deze oefening volstaat een gewone <code>digitalWrite(HIGH)</code> op de enable, dus je zou er elke pin voor kunnen nemen. Pin 3 heeft een <code>~</code>, en dat heb je in de volgende oefening nodig om er met <code>analogWrite()</code> de snelheid mee te regelen. Zet hem dus meteen goed, dan hoef je straks geen draad te verleggen.</p>
     </div>
 
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
@@ -95,7 +95,7 @@
 
         <div class="spoiler-content solution-content">
             <p>De enable gaat één keer hoog in de <code>setup()</code> en blijft daar. In de <code>loop()</code> hoef je dan alleen nog te kiezen welke van de twee ingangen hoog staat.</p>
-            <p>De grenswaarde 512 staat als constante bovenaan. Zo hoef je maar op één plaats te zoeken als je ze wil verleggen, en de <code>if</code> leest als een zin.</p>
+            <p>De grenswaarde 512 staat als constante bovenaan. Zo hoef je maar op één plaats te zoeken als je ze wil verleggen.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int enablePin = 3; // 1,2EN van de L293D
 const int in1Pin = 4;    // 1A

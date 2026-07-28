@@ -19,7 +19,7 @@
 
     <div class="info-box remark">
         <div class="info-title remark">Waar zitten SDA en SCL op de UNO?</div>
-        <p>Op de Arduino UNO liggen SDA en SCL vast: <strong>SDA is A4</strong> en <strong>SCL is A5</strong>. Op een UNO R3 zijn diezelfde twee lijnen ook nog eens apart uitgebracht naast de AREF-pin, dus je mag ze daar even goed aansluiten. Dat is geen keuze die je zelf maakt: de I²C-hardware in de chip hangt nu eenmaal aan die pinnen. Op een Leonardo, die je in sommige schema's hier ziet staan, zijn het pinnen 2 en 3.</p>
+        <p>Op de Arduino UNO liggen SDA en SCL vast: <strong>SDA is A4</strong> en <strong>SCL is A5</strong>. Op een UNO R3 zijn diezelfde twee lijnen ook nog eens apart uitgebracht naast de AREF-pin, dus je mag ze daar even goed aansluiten. Je kiest die pinnen niet zelf, want de I²C-hardware in de chip hangt eraan vast. Op een Leonardo, die je in sommige schema's hier ziet staan, zijn het pinnen 2 en 3.</p>
     </div>
 
     <p>Op deze bus kan je de PCF8574 aansluiten. <strong>Per PCF8574 krijg je 8 extra I/O-lijnen</strong>, en er kunnen tot 8 exemplaren van deze chip op dezelfde bus geplaatst worden. Met 2 pinnen van de Arduino beschik je dus over maximaal 64 extra in- en uitgangen.</p>
@@ -38,9 +38,9 @@
 
     <h2 id="het-adres-van-de-chip">Het adres van de chip</h2>
 
-    <p><strong>Elk I²C-component heeft een eigen ingebouwd adres dat het uniek maakt op de bus.</strong> Aan de hand van dat adres kan de master naar die component schrijven of ervan lezen.</p>
+    <p>Elk I²C-component heeft een eigen ingebouwd adres dat het uniek maakt op de bus. Aan de hand van dat adres kan de master naar die component schrijven of ervan lezen.</p>
 
-    <p><strong>Er zijn twee versies van de PCF8574.</strong> De ene heeft basisadres <strong>0x20</strong>, de andere (de A-versie, herkenbaar aan de <strong>A</strong> in de typenaam zoals PCF8574AN) heeft basisadres <strong>0x38</strong>. De lijnen <strong>A2, A1 en A0</strong> zijn verbonden met de <strong>laagste 3 bits van dat adres</strong>. Nemen we als voorbeeld de versie met basisadres 0x38, dan is het adres zo opgebouwd:</p>
+    <p>Er zijn twee versies van de PCF8574. De ene heeft basisadres <strong>0x20</strong>, de andere (de A-versie, herkenbaar aan de <strong>A</strong> in de typenaam zoals PCF8574AN) heeft basisadres <strong>0x38</strong>. De lijnen <strong>A2, A1 en A0</strong> zijn verbonden met de <strong>laagste 3 bits van dat adres</strong>. Nemen we als voorbeeld de versie met basisadres 0x38, dan is het adres zo opgebouwd:</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -70,7 +70,7 @@
         </table>
     </div>
 
-    <p><strong>Met die drie lijnen A2, A1 en A0 kan je 8 verschillende adressen instellen.</strong> Staan ze alle drie op 0, dan krijg je het basisadres 0x38. Zet je A0 op 1, dan heeft de chip adres 0x39. Door die drie lijnen elke mogelijke combinatie te geven kan je 8 PCF8574's op dezelfde bus gebruiken, goed voor 64 extra lijnen.</p>
+    <p>Met die drie lijnen A2, A1 en A0 kan je 8 verschillende adressen instellen. Staan ze alle drie op 0, dan krijg je het basisadres 0x38. Zet je A0 op 1, dan heeft de chip adres 0x39. Door die drie lijnen elke mogelijke combinatie te geven kan je 8 PCF8574's op dezelfde bus gebruiken, goed voor 64 extra lijnen.</p>
 
     <p>Gebruik je daarnaast ook nog de versie met basisadres 0x20, dan kan je er nog eens 8 chips bij plaatsen, wat het totaal op 128 extra I/O-lijnen brengt.</p>
 
@@ -120,7 +120,7 @@
 
     <h3>Schrijven naar de bus</h3>
 
-    <p><strong>Het <em>schrijven</em> naar de I²C bus gebeurt in 3 stappen.</strong></p>
+    <p>Het <em>schrijven</em> naar de I²C bus gebeurt in 3 stappen.</p>
 
     <p><strong>Eerst</strong> wordt de communicatie geïnitialiseerd:</p>
 
@@ -140,11 +140,11 @@
 
     <h3>Lezen van de bus</h3>
 
-    <p><strong>Het <em>lezen</em> gebeurt op een net iets andere manier.</strong> Om een byte te lezen van de I/O-lijnen begin je met:</p>
+    <p>Het <em>lezen</em> gebeurt op een net iets andere manier. Om een byte te lezen van de I/O-lijnen begin je met:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.requestFrom(adres, aantal);</code></pre>
 
-    <p>Het adres is uiteraard dat van het IC. <code>aantal</code> geeft aan hoeveel bytes informatie je verwacht. Bij een PCF8574 is dat altijd 1, maar er bestaan ook I²C-sensoren die meerdere bytes na elkaar versturen.</p>
+    <p>Het adres is dat van het IC. <code>aantal</code> geeft aan hoeveel bytes informatie je verwacht. Bij een PCF8574 is dat altijd 1, maar er bestaan ook I²C-sensoren die meerdere bytes na elkaar versturen.</p>
 
     <p><strong>Vervolgens</strong> kijk je of er een byte klaarstaat om van de PCF8574 naar de master te gaan:</p>
 
@@ -155,7 +155,7 @@
 
     <div class="info-box warning">
         <div class="info-title warning">Een uitgang die laag staat, lees je niet</div>
-        <p>De pinnen van de PCF8574 zijn <strong>quasi-bidirectioneel</strong>: er is geen aparte instelling voor ingang of uitgang. Een pin die je wil <em>lezen</em>, moet in zijn uitgangslatch een <strong>1</strong> hebben staan. Bij het opstarten staan alle pinnen hoog, dus meestal merk je hier niets van. Maar heb je er eerder een 0 naar geschreven, dan lees je die 0 gewoon terug en lijkt je knop permanent ingedrukt. Schrijf in je <code>setup()</code> dus een 1 naar elke pin die je als ingang gebruikt.</p>
+        <p>De pinnen van de PCF8574 zijn <strong>quasi-bidirectioneel</strong>: er is geen aparte instelling voor ingang of uitgang. Een pin die je wil <em>lezen</em>, moet in zijn uitgangslatch een <strong>1</strong> hebben staan. Bij het opstarten staan alle pinnen hoog, dus meestal merk je hier niets van. Maar heb je er eerder een 0 naar geschreven, dan lees je die 0 terug en lijkt je knop permanent ingedrukt. Schrijf in je <code>setup()</code> dus een 1 naar elke pin die je als ingang gebruikt.</p>
     </div>
 
     <p>Voor de volledige specificaties, zoals hoeveel stroom een uitgang kan leveren of opnemen, kan je terecht in de <a href="../../datasheets/datasheet-pcf8574.pdf" target="_blank" rel="noopener">datasheet</a>.</p>

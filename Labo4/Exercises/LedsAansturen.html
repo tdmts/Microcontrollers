@@ -49,19 +49,19 @@
 
     <div class="info-box warning">
         <div class="info-title warning">De leds staan actief laag</div>
-        <p>Een uitgang van de PCF8574 kan maar ongeveer 4 mA <strong>leveren</strong>, te weinig om een led deftig te doen branden. Opnemen kan hij wel veel meer. Daarom hangen de leds met hun weerstand aan de <strong>plus</strong>, en niet aan de massa. Een <strong>0</strong> op de uitgang doet de led branden, een <strong>1</strong> laat ze gedoofd.</p>
+        <p>Een uitgang van de PCF8574 kan maar ongeveer 4 mA <strong>leveren</strong>, te weinig om een led goed te doen branden. Opnemen kan hij wel veel meer. Daarom hangen de leds met hun weerstand aan de <strong>plus</strong>, en niet aan de massa. Een <strong>0</strong> op de uitgang doet de led branden, een <strong>1</strong> laat ze gedoofd.</p>
     </div>
 
-    <p>Blijft de vraag wat je doet met P2 tot P7, die je hier niet gebruikt. Je mag ze gewoon <strong>open</strong> laten hangen, en dat is wat deze oefening doet. Je mag ze ook aan <strong>GND</strong> leggen, zoals verderop in dit labo bij de volloper gebeurt, maar dan geldt er een voorwaarde: zo'n pin moet dan in <em>elk</em> bitpatroon dat je uitstuurt laag blijven. Stuur je er een 1 naartoe, dan probeert de uitgang een pin hoog te trekken die vastligt aan de massa. Een weerstand tussen de pin en GND vangt dat op.</p>
+    <p>Blijft de vraag wat je doet met P2 tot P7, die je hier niet gebruikt. Je mag ze <strong>open</strong> laten hangen, en dat is wat deze oefening doet. Je mag ze ook aan <strong>GND</strong> leggen, zoals verderop in dit labo bij de volloper gebeurt, maar dan moet zo'n pin in <em>elk</em> bitpatroon dat je uitstuurt laag blijven. Stuur je er een 1 naartoe, dan probeert de uitgang een pin hoog te trekken die vastligt aan de massa. Een weerstand tussen de pin en GND vangt dat op.</p>
 
     <div class="info-box remark">
         <div class="info-title remark">Het gevaar zit in het bitpatroon, niet in de draad</div>
-        <p>Onthoud dus vooral het verband: hoe je een ongebruikte pin bedraadt, bepaalt welke waarde je die bit moet geven. Open laten hangen is het veiligst zolang je nog aan het uitproberen bent, want dan kan geen enkel patroon kwaad.</p>
+        <p>Hoe je een ongebruikte pin bedraadt, bepaalt dus welke waarde je die bit moet geven. Open laten hangen is het veiligst zolang je nog aan het uitproberen bent, want dan kan geen enkel patroon kwaad.</p>
     </div>
 
     <h2 id="wat-stuur-je-uit">Wat stuur je uit?</h2>
 
-    <p>Je stuurt telkens één byte naar de chip, en die byte bevat de toestand van alle acht de pinnen tegelijk. Je kan dus niet één led apart aansturen: je schrijft altijd het hele patroon. Hoe je zo'n patroon opbouwt en leest, staat op <a href="../Reference/Bits.html">Werken met bits</a>.</p>
+    <p>Je stuurt telkens één byte naar de chip, en die byte bevat de toestand van alle acht de pinnen tegelijk. Je kan dus niet één led apart aansturen, want je schrijft altijd het hele patroon. Hoe je zo'n patroon opbouwt en leest, staat op <a href="../Reference/Bits.html">Werken met bits</a>.</p>
 
     <div class="solution-container">
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: hoe ziet dat patroon eruit?</button>
