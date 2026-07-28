@@ -11,9 +11,9 @@
 <body>
 <div class="container">
     <h1>De Arduino aansturen vanaf je pc</h1>
-    <p class="lead">Een programma op je computer zet een led op je Arduino aan en uit, en vraagt er een sensorwaarde aan op. Niet via de seri&euml;le monitor, maar via een venster met knoppen dat je zelf kan aanpassen.</p>
+    <p class="lead">Een programma op je computer zet een led op je Arduino aan en uit, en vraagt er een sensorwaarde aan op. Dat gebeurt via een venster met knoppen dat je zelf kan aanpassen.</p>
 
-    <p>De seri&euml;le monitor is uiteindelijk ook maar een programma dat de COM-poort openzet. Er is niets dat je tegenhoudt om dat zelf te doen. In deze oefening krijg je een klein C#-programma dat precies dat doet, en schrijf je de Arduino-kant erbij.</p>
+    <p>De seri&euml;le monitor is ook maar een programma dat de COM-poort openzet, en dat kan je zelf ook. In deze oefening krijg je een klein C#-programma dat precies dat doet, en schrijf je de Arduino-kant erbij.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Deze oefening doe je op echte hardware</div>
@@ -22,7 +22,7 @@
 
     <h2 id="het-schema">Het schema</h2>
 
-    <p>Er is maar &eacute;&eacute;n Arduino nodig, en er komt geen enkele draad op pin 0 of pin 1. De verbinding met je pc loopt gewoon over de USB-kabel, en die hangt intern al aan Rx en Tx.</p>
+    <p>Er is maar &eacute;&eacute;n Arduino nodig, en er komt geen enkele draad op pin 0 of pin 1. De verbinding met je pc loopt over de USB-kabel, en die hangt intern al aan Rx en Tx.</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -81,12 +81,12 @@ string antwoord = serialPort.ReadLine(); // ontvangen</code></pre>
             <tbody>
                 <tr>
                     <td>led Aan</td>
-                    <td><code>led:1</code></td>
+                    <td><code>LED:1</code></td>
                     <td>niets</td>
                 </tr>
                 <tr>
                     <td>led Uit</td>
-                    <td><code>led:0</code></td>
+                    <td><code>LED:0</code></td>
                     <td>niets</td>
                 </tr>
                 <tr>
@@ -99,7 +99,7 @@ string antwoord = serialPort.ReadLine(); // ontvangen</code></pre>
     </div>
 
     <div class="info-box warning">
-        <div class="info-title warning">Twee programma's kunnen niet samen aan dezelfde poort</div>
+        <div class="info-title warning">De COM-poort is voor &eacute;&eacute;n programma tegelijk</div>
         <p>Staat de seri&euml;le monitor van de Arduino IDE open, dan is de COM-poort bezet en krijgt het C#-programma ze niet open. Sluit de monitor voor je op Connect klikt. En sluit het C#-programma weer af voor je een nieuwe sketch uploadt, want ook het uploaden heeft die poort nodig.</p>
     </div>
 
@@ -113,13 +113,13 @@ string antwoord = serialPort.ReadLine(); // ontvangen</code></pre>
     <p>Schrijf de sketch die aan de andere kant van die lijn zit:</p>
 
     <ol>
-        <li>Bij <code>led:1</code> gaat de led aan, bij <code>led:0</code> gaat ze uit.</li>
+        <li>Bij <code>LED:1</code> gaat de led aan, bij <code>LED:0</code> gaat ze uit.</li>
         <li>Bij <code>SENSOR:?</code> lees je je sensor uit en stuur je het antwoord terug in dezelfde vorm, dus <code>SENSOR:</code> gevolgd door de waarde.</li>
     </ol>
 
-    <p>Het uitpluizen van de boodschap is exact hetzelfde als in de twee vorige oefeningen. Dat is ook het punt: het maakt je Arduino niet uit of er een tweede Arduino aan de lijn hangt of een pc.</p>
+    <p>Het uitpluizen van de boodschap is hetzelfde als in de twee vorige oefeningen, want het maakt je Arduino niet uit of er een tweede Arduino aan de lijn hangt of een pc.</p>
 
-    <p>Wil je verder gaan: breid het uit met een tweede led, of laat de Arduino uit zichzelf elke seconde een <code>SENSOR:</code>-boodschap sturen in plaats van te wachten tot er gevraagd wordt. In het C#-programma kan je daarvoor een <code>Timer</code> gebruiken.</p>
+    <p>Wil je verder gaan, breid het dan uit met een tweede led, of laat de Arduino uit zichzelf elke seconde een <code>SENSOR:</code>-boodschap sturen in plaats van te wachten tot er gevraagd wordt. In het C#-programma kan je daarvoor een <code>Timer</code> gebruiken.</p>
 
     <hr>
 
@@ -194,10 +194,10 @@ void loop()
 }</code></pre>
 
             <div class="info-box remark">
-                <div class="info-title remark">Twee details in het C#-programma die het waard zijn</div>
+                <div class="info-title remark">Drie details in het C#-programma</div>
                 <p><code>serialPort.DtrEnable = false;</code> houdt tegen dat je Arduino opnieuw opstart op het moment dat je verbinding maakt. Standaard doet hij dat wel, want dat is precies hoe het uploaden werkt. Zonder die regel begint je sketch dus telkens opnieuw als je op Connect klikt.</p>
                 <p><code>serialPort.NewLine = "\r\n";</code> zorgt ervoor dat C# een lijn op dezelfde manier afsluit als <code>Serial.println()</code> dat doet. Vergeet je dat, dan blijft er een onzichtbare <code>\r</code> aan het antwoord plakken en staat er rommel op je scherm.</p>
-                <p><code>serialPort.ReadTimeout = 2000;</code> is je vangnet. Antwoordt je Arduino niet, bijvoorbeeld omdat je sketch de sleutel <code>SENSOR</code> nog niet kent, dan blijft <code>ReadLine()</code> anders eindeloos wachten en hangt het venster vast.</p>
+                <p><code>serialPort.ReadTimeout = 2000;</code> begrenst hoelang C# op een antwoord wacht. Antwoordt je Arduino niet, bijvoorbeeld omdat je sketch de sleutel <code>SENSOR</code> nog niet kent, dan blijft <code>ReadLine()</code> anders eindeloos wachten en hangt het venster vast.</p>
             </div>
         </div>
     </div>

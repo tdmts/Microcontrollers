@@ -27,8 +27,8 @@ nodig.
 | Labo 3 | 7 | 0 | **klaar** |
 | Labo 4 | 9 | 0 | **klaar** |
 | Labo 5 | 14 | 0 | **klaar** |
-| Labo 6 | 12 | 5 | open |
-| Labo 7 | 13 | 28 | open |
+| Labo 6 | 12 | 0 | **klaar** |
+| Labo 7 | 15 | 0 | **klaar** |
 | Test1 + Test2 | 6 | 1 | open |
 
 De openstaande meldingen zitten scheef verdeeld: labo 5 en labo 7 zijn samen twee derde,
@@ -50,6 +50,66 @@ twee keer aan in labo 5, wat toen wel in de tekst maar niet in deze tabel terech
 - **Twijfelgevallen worden wel voorgelegd**, per doorloop, onderaan het verslag en hieronder.
 - **Geïmporteerde Brightspace-tekst wordt gelijk behandeld.** De site moet als één stem klinken,
   ongeacht wie wat schreef. Enkel stijl: de opbouw en de inhoud van die pagina's blijven.
+- **Taalfouten vallen erbuiten** (sinds 28 juli 2026). Een kommasplitsing of een spelfout wordt
+  verzameld en apart voorgelegd, niet meegenomen in dezelfde diff. In labo 0 tot 4 gebeurde dat nog
+  wel; die correcties blijven staan.
+
+## Herziening van 28 juli 2026
+
+SCHRIJFSTIJL.md liet op vijftien plaatsen een oordeel over dat het zelf niet uitsprak, en negen
+daarvan botsten met elkaar of met een eerdere beslissing. Alles is in één gesprek beslist en staat nu
+in het regeldocument zelf. Wat hier hoort is enkel wat het voor dit register betekent.
+
+| Beslissing | Gevolg voor de doorlopen |
+|---|---|
+| Bereik: overal waar een student meeleest | Koppen, kadertitels, checklistregels, spoilerlabels, `alt`, `figcaption` en manifest-blurbs vallen uitdrukkelijk onder de patronen. De doorlopen deden dit al, nu staat het er. |
+| Patroon 5 toetst op de persoonsvorm, en alleen in lopende tekst | De labo 0-uitzondering voor "Nog een denkoefening." vervalt. Die zin krijgt een werkwoord in plaats van een vrijstelling, zodat de toets mechanisch blijft. |
+| Patroon 6 zonder uitzondering, en strenger in koppen | Geen `geen` of `niet` in een kop, ook niet middenin. 14 koppen in de repo voldoen niet. |
+| Patroon 10 tot op woordniveau | Ook vetgedrukte deelzinnen worden ontvet. Dat beslist de openstaande vraag van labo 4. |
+| Patroon 12 keert om: liever een Belgicisme dan een Hollandisme | De grens ligt tussen schrijftaal en spreektaal. Twee correcties uit labo 0 worden herroepen, twee ingrepen blijven. Zie hieronder. |
+| Patroon 13 zonder woordenlijst in het document | De lijst leeft in `FILLERS`. `gewoon` en `precies` komen er nooit in. |
+| Patroon 14: geen terzijde als knipoog | Beslist de openstaande vraag van labo 4 over "(ja, er zijn er ook slechte)". `TLDR:` in labo 3 blijft: dat is register, geen knipoog. |
+| Patroon 15: beeldspraak alleen waar het gewone woord ontbreekt | Een beeld gaat enkel weg wanneer het letterlijke woord al op de pagina staat. Vraagt het een feit, dan is het een vraag en geen ingreep. |
+| `men` én `we` naar de je-vorm | De labo 0-beslissing dat `we` blijft, is herroepen. Repo-breed, nog niet uitgevoerd. |
+| Taalfouten buiten de ronde | Zie hierboven. |
+| De regels gelden niet voor de documentatie van de repo | SCHRIJFSTIJL.md, CONTRIBUTING.md, CLAUDE.md en dit register mogen werkwoordloze en ontkennende titels houden. |
+| `dashboard.html` en `reference.html` doen wel mee | Zestien overzichten met dezelfde boilerplate-`lead` krijgen elk een eigen lead. Ze staan in elke labotabel hierboven als "ongewijzigd gebleven". |
+
+### Herroepen
+
+| Wat | Waar | Nu |
+|---|---|---|
+| "op het eerste zicht" → "op het eerste gezicht" (2x) en "verderzetten" → "voortzetten" | `Labo0/Reference/Iteraties.html` | **Terugdraaien.** Allebei gewone Vlaamse schrijftaal, en patroon 12 kiest die nu boven de noordelijke vorm. |
+| `deftig` → `goed` | `Labo4/Exercises/LedsAansturen.html`, `VolloperMetDrukknoppen.html` | **Blijft weg.** "Een led deftig doen branden" is spreektaal, en dat is de grens die de nieuwe regel trekt. |
+| "een pak beter/meer" → "veel" | Labo 5 | **Blijft.** Zelfde grond als `deftig`. De twee voorkomens in labo 7 gaan mee weg wanneer dat labo aan de beurt komt. |
+| `we` blijft staan | Labo 0 | **Herroepen.** Gaat alsnog naar de je-vorm, repo-breed. |
+| "Nog een denkoefening." blijft | `Labo0/Exercises/BegeleideOefening.html` | **Herroepen.** Wordt "Denk hier eerst zelf na." De functie blijft, de uitzondering verdwijnt. |
+
+### Achterstand
+
+Uit te voeren in één opruimronde over de afgewerkte labo's, of labo per labo mee te nemen. De
+doorloop van labo 6 heeft het deel dat in dat labo viel meegenomen: de twee leads van
+`dashboard.html` en `reference.html`, en de vier `we`-vormen.
+
+- Koppen met `geen` of `niet` in labo 2, 4 en 5. Die van labo 7 zijn gedaan: de parallelreeks op
+  [InterruptServiceRoutine.html](../Labo7/Reference/InterruptServiceRoutine.html) is parallel
+  gebleven, zie hieronder.
+- De vetgedrukte deelzinnen op [PCF8574.html](../Labo4/Reference/PCF8574.html).
+- Drie koppen die als pointe gebouwd zijn: "Het gevaar zit in het bitpatroon, niet in de draad"
+  ([LedsAansturen.html](../Labo4/Exercises/LedsAansturen.html), meteen ook een ontkenning),
+  "De volgorde is het hele punt" ([StappenmotorInFullStep.html](../Labo5/Exercises/StappenmotorInFullStep.html)),
+  en de dubbeling tussen titel en eerste zin op
+  [VolloperMetDrukknoppen.html](../Labo4/Exercises/VolloperMetDrukknoppen.html).
+- Het terzijde "(ja, er zijn er ook slechte)" op [Bibliotheken.html](../Labo4/Reference/Bibliotheken.html).
+- Het beletselteken in het spoilerlabel op
+  [SnelheidEnRichtingMetL293.html](../Labo5/Exercises/SnelheidEnRichtingMetL293.html).
+- De rolluikzin op [RolluikMetLdrEnEindeloopschakelaars.html](../Labo5/Exercises/RolluikMetLdrEnEindeloopschakelaars.html):
+  geen beeld meer, maar wat de eindeloopschakelaar doet.
+- De twee herroepen Belgicismen in labo 0, en "Nog een denkoefening." plus "Opnieuw eerst zelf
+  redeneren." in dezelfde map.
+- 12 leads op de dashboards en de referentiehubs. Die van labo 6 en labo 7 zijn gedaan.
+- `we` naar de je-vorm, repo-breed. Labo 6 (vier voorkomens) en labo 7 (&eacute;&eacute;n in lopende
+  tekst) zijn gedaan.
 
 ## Labo 0
 
@@ -288,7 +348,10 @@ klaar staat. De lijst zou dus vooral niet-bevindingen melden.
 | `deftig` | `LedsAansturen.html` ("een led deftig doen branden") en de kadertitel "Geen deftige oplossing" op `VolloperMetDrukknoppen.html` | **Weg, allebei.** Dit is de spiegel van patroon 12: geen Noord-Nederlands woord, maar Belgische spreektaal voor "behoorlijk", en SCHRIJFSTIJL.md 12 vraagt uitdrukkelijk standaardtaal en geen gewestelijke woordkeuze. Twee voorkomens in de hele repo, allebei in labo 4. Niet aan `NOORD_NL` toegevoegd, want die lijst meldt "reads as Netherlandic" en dat is hier het omgekeerde; voor Belgicismen is er geen lijst, net zoals bij "op het eerste zicht" in labo 0. |
 | De vetgedrukte deelzinnen | `PCF8574.html`, o.a. "**Per PCF8574 krijg je 8 extra I/O-lijnen**" en "**P0 tot en met P7 zijn de 8 extra I/O-aansluitingen**" | **Blijven, voorlopig.** Alleen de vijf hele zinnen zijn ontvet. Deze markeren een feit midden in een zin en staan dichter bij "vet om een waarde te markeren" dan bij "vet om een zin te laten landen". Zie de vraag hieronder. |
 
-Voorgelegd, nog te beslissen:
+Voorgelegd, en alle vier beslist in de herziening van 28 juli 2026: het terzijde gaat weg (patroon
+14), de twee pointe-koppen worden herschreven tot ze hun onderwerp noemen, en de vetgedrukte
+deelzinnen gaan er ook uit (patroon 10 tot op woordniveau). Ze staan in de achterstand hierboven; de
+vragen blijven staan omdat ze tonen waar het regeldocument tekortschoot.
 
 | Wat | Waar | De vraag |
 |---|---|---|
@@ -354,7 +417,10 @@ zijn wel gemeten en bewust niet toegevoegd:
 | `pootjes` bij een transistor | `TransistorAlsSchakelaar.html` ("Een NPN-transistor heeft drie pootjes") | **Naar `aansluitingen`.** SCHRIJFSTIJL.md 11 beschermt `pootjes` als vakterm, maar dat gaat over de buitenste pootjes van een potentiometer, en het ijkpunt `WatIsEenMicrocontroller.html` zette "een rij pootjes" om naar "een rij aansluitingen". Gemeten: de vijf overblijvende `pootjes` in de repo slaan allemaal op een potentiometer. Bovendien heten ze op deze pagina zelf al "aansluitingen", in de kop en in de tabel erboven. |
 | `streepje` | `TransistorAlsSchakelaar.html` | **Naar `streep`.** De oefening en het kader op dezelfde pagina zeggen allebei al "met de streep naar de plus". Consistentie, geen nieuwe regel. |
 
-Voorgelegd, nog te beslissen:
+Voorgelegd, en alle vier beslist in de herziening van 28 juli 2026: de rolluikzin wordt herschreven
+zonder beeld, tot wat de eindeloopschakelaar doet (patroon 15, en het feit dat ik niet had is dan
+niet meer nodig); "een pak" blijft weg als spreektaal, ook in labo 7; het beletselteken in het
+spoilerlabel gaat weg; en de kop "De volgorde is het hele punt" noemt voortaan zijn onderwerp.
 
 | Wat | Waar | De vraag |
 |---|---|---|
@@ -362,6 +428,163 @@ Voorgelegd, nog te beslissen:
 | "een pak beter / een pak meer" | Labo 5 (gedaan), `Labo7/Reference/Interruptpinnen.html` en `VolatileEnVlaggen.html` (nog niet) | Belgische spreektaal, dezelfde categorie als `deftig` in labo 4. In labo 5 naar `veel`. Meteen repo-breed doortrekken naar labo 7, of wachten tot dat labo aan de beurt is? |
 | "Toon antwoord: waarom is die code slecht? Stel je een motor voor die aan 10000 toeren draait..." | `SnelheidEnRichtingMetL293.html`, label van de spoilerknop | Blijven staan. Het label stelt een echte vraag aan de student (patroon 3 laat die toe) maar eindigt op een beletselteken dat spanning opbouwt. De andere spoilerknoppen in dit labo zeggen gewoon waar het antwoord over gaat. Het beletselteken schrappen, of is de aanzet hier didactisch bedoeld? |
 | Kop "De volgorde is het hele punt" | `StappenmotorInFullStep.html` | Blijven staan. De kop zegt iets, en dat is beschermd, maar hij is gebouwd als een pointe in plaats van als een onderwerp. Vervangen door "De volgorde van de stappen", of is de nadruk hier terecht, gezien het kader eronder net die fout behandelt? |
+
+## Labo 6
+
+Klaar. Acht oefeningen plus vier theoriepagina's; `dashboard.html` en `reference.html` hebben deze
+keer wél een eigen `lead` gekregen, want dat is de eerste doorloop sinds de herziening van 28 juli
+2026 die dat vraagt. Geen enkele pagina bleef ongemoeid.
+
+Twee patronen tekenen dit labo. De **dubbele punt als aankondiging** (patroon 4) kwam ruim twintig
+keer terug, altijd als een bewering gevolgd door haar reden ("Aan Arduino 2 hangt niets: die schrijft
+alleen naar zijn eigen monitor"), en `want` of een punt was telkens het antwoord. Daarnaast staan
+hier zeven **kadertitels met een ontkenning**, veel meer dan in eender welk ander labo: dit labo legt
+graag uit wat er misgaat, en zette dat in de titel.
+
+Drie zinnen uit dit labo staan met naam in SCHRIJFSTIJL.md als voorbeeld en zijn nu weg: "Serieel
+betekent: achter elkaar." (patroon 4, de `lead` van `SerieelKanaal.html`, letterlijk het "Na" van het
+regeldocument overgenomen), "Verbind je Tx met Tx, dan zitten twee zenders tegen elkaar te roepen en
+luistert er niemand." (patroon 1, dezelfde pagina) en "Over een seriële lijn gaan geen getallen."
+(patroon 6, de `lead` van `TekensEnGetallen.html`).
+
+| Pagina | Wat er veranderde |
+|---|---|
+| [LedSchakelenVanuitDeMonitor.html](../Labo6/Exercises/LedSchakelenVanuitDeMonitor.html) | Het klemtoonaccent uit "náár de Arduino" (10), "Niets nieuws: één led ..." naar wat je wél nodig hebt (4 en 6), kadertitel "Vergeet de trim() niet" naar "Roep trim() op voor je vergelijkt" (6 in een kop), "zonder ook maar één foutmelding" naar "zonder foutmelding" (10), "De `else` onderaan is geen versiering." omgedraaid naar de reden zelf (6), en `gewoon` (3x) en `even` weg (13). |
+| [GetalNaarTweedeArduino.html](../Labo6/Exercises/GetalNaarTweedeArduino.html) | Kadertitel "Kruisen, niet recht doorverbinden" naar "De draden gaan gekruist" (6 in een kop), de roepende zenders eruit (1 en 7, zie hierboven), "Er verandert verrassend weinig: ..." naar een bijzin (4), "Nu leest Arduino 2 geen lijn meer, maar ..." naar wat hij wél leest (6), "Dat is ook het punt: zenden is het gemakkelijke deel" naar een mededeling (4), "het is niet omdat iets in een monitor staat, dat ..." naar de bewering zelf (4 en 6), en `Precies die twee` naar `Die twee` (10). |
+| [DrukknopHierLedDaar.html](../Labo6/Exercises/DrukknopHierLedDaar.html) | De `lead` eindigde op de werkwoordloze "Alleen de seriële lijn." na een ontkenning (5 en 6), "Dat is precies wat serieel communiceren in de praktijk zo bruikbaar maakt." weg (1), twee klemtoonaccenten ("veránder", "dóór", 10), kadertitel "De lijn is niet oneindig snel" naar "De lijn heeft een beperkte snelheid" (6 in een kop), en de slotzin "Dat is de kracht van een afspraak over wat er op de lijn staat." weg (1). |
+| [PotentiometerwaardeDoorsturen.html](../Labo6/Exercises/PotentiometerwaardeDoorsturen.html) | "en dat is iets anders: ..." naar een punt, met het accent uit "hóé vaak" (4 en 10), en `gewoon` weg plus "daar gaan we er iets aan doen" naar de je-vorm (13). |
+| [DrieGetallenOptellen.html](../Labo6/Exercises/DrieGetallenOptellen.html) | "duikt er een nieuw probleem op: ..." naar `want` (4), "In de volgende lossen we het op" naar de je-vorm, "`random()` is niet echt willekeurig: ..." naar wat het wél doet (4 en 6), kadertitel "random(0, 1000) geeft geen 1000" naar "De bovengrens van random() valt erbuiten" (6 in een kop), "Dat is precies het probleem waar de volgende oefening een antwoord op geeft." weg (1, de inleiding zegt het al), "En dat is meteen de zwakke plek." naar de bewering zelf (1), en `gewoon` (2x), `eigenlijk`, `exact` en `letterlijk` weg (13). |
+| [BoodschappenMetEenSleutel.html](../Labo6/Exercises/BoodschappenMetEenSleutel.html) | `perfect` als nadruk weg uit de `lead` (13), "liep vast op één punt: ..." naar `want` (4), "We spreken af dat ..." naar de je-vorm, "Aan Arduino 2 hangt niets: ..." omgedraaid (4), kadertitel "Vang op wat je niet verwacht" naar "Controleer eerst wat er binnenkomt" (6 in een kop), "Dát is wat je met een sleutel wint." weg (1 en 10), en de slotalinea van de oplossing zonder "Het mooie aan ..." en zonder de tegenstelling op het einde (1 en 4). |
+| [WeerstationOpLcd.html](../Labo6/Exercises/WeerstationOpLcd.html) | `schermpje` naar `scherm` (11), "Arduino 1 verandert niet." naar "blijft zoals hij was" (6), kadertitel "Een LCD wist zichzelf niet" naar "Wis het scherm voor je nieuwe tekst zet" (6 in een kop), "en kan je hem dus ook maar één keer vergeten" weg (1), "Dat hoeft ook niet: ..." naar `want` (4), het accent uit "wél nodig" (10), en `gewoon` (2x) en `even` weg (13). |
+| [ArduinoAansturenVanafPc.html](../Labo6/Exercises/ArduinoAansturenVanafPc.html) | De `lead` begon zijn tweede zin op een ontkenning zonder werkwoord (5 en 6), "Er is niets dat je tegenhoudt om dat zelf te doen." naar "en dat kan je zelf ook" (6), kadertitel "Twee programma's kunnen niet samen aan dezelfde poort" naar "De COM-poort is voor één programma tegelijk" (6 in een kop), "Dat is ook het punt: ..." naar `want` (4), "Wil je verder gaan: ..." naar een gewone bijzin (4), kadertitel "Twee details in het C#-programma die het waard zijn" naar "Drie details in het C#-programma" (het kader beschrijft er drie, zie hieronder), en `uiteindelijk` en `gewoon` weg (13). |
+| [SerieelKanaal.html](../Labo6/Reference/SerieelKanaal.html) | De `lead` is het "Na"-voorbeeld van patroon 4 uit SCHRIJFSTIJL.md geworden. Verder "Wat je toen niet zag: ..." naar de bewering zelf (4 en 6), de roepende zenders eruit (1 en 7), "zijn Rx en Tx geen aparte connectoren: het zijn gewoon ..." naar wat ze wél zijn (4, 6, 13), "Dat is meteen de reden waarom ..." naar `Daarom` (1), kadertitel "vecht pin 0 en 1 met je USB-kabel" naar "deelt je USB-kabel pin 0 en 1" (15), "kost het je anders een uur zoeken" weg (1), "de ontvanger weet niet uit zichzelf ...: hij gaat er gewoon van uit" naar wat hij wél doet (4, 6, 13), de werkwoordloze "Precies hetzelfde als wanneer ..." samengevoegd (5), en "Dat is geen fout, dat is handig: ..." naar "Dat is handig, want ..." (4 en 6). |
+| [TekensEnGetallen.html](../Labo6/Reference/TekensEnGetallen.html) | De `lead` opende op de ontkenning uit SCHRIJFSTIJL.md 6 en dreigde daarna ("begrijp je nooit waarom"). Verder "Precies wat je verwacht: honderd, in bits." naar een hele zin (4 en 5), "dan komt er geen enkele byte 01100100 binnen" naar de drie die er wél komen (6), kadertitel "Het teken '1' is niet het getal 1" naar "Het teken '1' heeft de waarde 49" (6 in een kop), "lijken een detail, maar ze zijn het niet" weg (8), "is er geen mens die daar nog 12, 13 en 17 uit haalt" naar een mededeling (1), "Doe je het niet, dan raak je vroeg of laat het spoor bijster." weg (8), en "dat we in dit labo gebruiken" in een tabelcel naar de je-vorm. |
+| [BoodschappenLezen.html](../Labo6/Reference/BoodschappenLezen.html) | "Binnenkomende bytes blijven niet hangen tot jij er tijd voor hebt: ..." naar wat er wél gebeurt (4 en 6), "want de bytes wachten op je" naar "blijven in de buffer staan" (7, exact het voorbeeld uit SCHRIJFSTIJL.md 13), "Veel handiger: ..." naar een hele zin (4 en 5), "De `trim()` is geen overbodige luxe." naar "is nodig" (6), kadertitel "Gebruik altijd het teken '\n', nooit "\r\n"" naar "Geef readStringUntil() één teken" (6 in een kop), de dubbele punt uit de `lead` (4), en `netjes` weg (13). |
+| [Strings.html](../Labo6/Reference/Strings.html) | `eentje` naar `een` en `functietje` naar `functie` (11), "dat is geen typfout maar de naam van het type" naar de bewering zelf (6), kadertitel "Een punt, geen komma" naar "toFloat() verwacht een decimale punt" (6 in een kop), "In dit labo spreken we af ..." naar de je-vorm, "Waarom die `if (scheiding > 0)`?" naar een mededeling (3), "daarom doen we het hier niet: ..." naar een punt en de je-vorm (4), zes andere dubbele punten (4), twee klemtoonaccenten ("vrágen", "dáárna", 10), "zonder ook maar één foutmelding" naar "zonder foutmelding" (10), en `gewoon` (4x) en `netjes` weg (13). |
+| [dashboard.html](../Labo6/Exercises/dashboard.html) en [reference.html](../Labo6/Reference/reference.html) | Allebei een eigen `lead` in plaats van de boilerplate (9). Het uitroepteken op het dashboard ging mee weg (10). |
+| [exercises.js](../exercises.js) en [reference.js](../reference.js) | De blurb van *Drie soorten boodschappen uit elkaar houden* eindigde op "je ontvanger raakt nooit meer in de war" (1 en 7); die van *Het seriële kanaal* op pinnen die "met je USB-kabel vechten" (15), zoals de kadertitel op die pagina. |
+
+Woorden toegevoegd aan `scripts/check-content.sh`: **geen**. `schermpje`, `eentje`, `functietje` en
+`netjes` stonden er al en vingen precies de vijf meldingen die er stonden.
+
+### Twee dingen die geen stijl zijn
+
+Allebei komen ze uit de repo-brede doorloop `LED` → `led` van na labo 1, die in de lopende tekst geen
+onderscheid kon maken tussen het woord *led* en de protocolsleutel `LED` van dit labo. Ze zijn hier
+rechtgezet, want de pagina's spraken hun eigen code tegen.
+
+- `Strings.html` zei "Hoofdletters tellen mee, dus `"led"` is niet hetzelfde als `"led"`". De eerste
+  is weer `"LED"`, zoals in het codevoorbeeld eronder (`if (sleutel == "LED")`). Ook
+  `sleutel.equals("led")` in dezelfde alinea is weer `equals("LED")`.
+- De sleutel van het pc-protocol stond op vijf plaatsen in lopende tekst als `led:1` / `led:0`,
+  terwijl het meegeleverde C#-project `WriteLine("LED:1")` stuurt en de sketch op `"LED"` vergelijkt.
+  Rechtgezet op `ArduinoAansturenVanafPc.html` (tabel en opgave), `BoodschappenLezen.html` en
+  `Strings.html`.
+
+### Taalfout, blijven staan
+
+Volgens het bereik sinds 28 juli 2026 gaat een taalfout niet mee in de diff van een stijlronde.
+
+- "Waarom zenden zonder pauze mis loopt" (`PotentiometerwaardeDoorsturen.html`, kadertitel):
+  `misloopt` is één woord.
+
+### Twijfelgevallen
+
+| Wat | Waar | Beslissing |
+|---|---|---|
+| Kadertitel "Twee details in het C#-programma die het waard zijn" | `ArduinoAansturenVanafPc.html` | **"Drie details in het C#-programma".** De staart was opsmuk, en het kader beschrijft er drie (`DtrEnable`, `NewLine`, `ReadTimeout`). Zelfde ingreep als "Twee grensgevallen" → "Drie grensgevallen" in labo 2. |
+| Kop "Het recept: SLEUTEL:WAARDE" | `Strings.html` | **Blijft.** Dezelfde afweging als "De oplossing: multiplexing" in labo 1: de dubbele punt noemt hier het onderwerp en kondigt geen pointe aan. |
+| `pootjes` van de potentiometer | `PotentiometerwaardeDoorsturen.html` | **Blijft.** SCHRIJFSTIJL.md 11 beschermt dit als de vakterm voor de buitenste aansluitingen van een potentiometer, en dat is precies het gebruik hier. |
+
+Voorgelegd, en alle drie meteen beslist en uitgevoerd. De rode draad in de drie beslissingen: het
+letterlijke woord hoefde niet verzonnen te worden, het stond telkens al elders op de pagina, en dan
+is het volgens patroon 15 een stijlingreep en geen inhoudelijke wijziging.
+
+| Wat | Waar | De beslissing |
+|---|---|---|
+| "`serialPort.ReadTimeout = 2000;` is je **vangnet**." | `ArduinoAansturenVanafPc.html` | **"begrenst hoelang C# op een antwoord wacht".** Beeldspraak (15). "Beveiliging tegen een Arduino die niet antwoordt" was het alternatief, maar dat herhaalt de zin erna letterlijk; wat de regel dóét stond nog nergens. |
+| "de veiligste weg is om `String` helemaal **links te laten liggen**" | `Strings.html` | **"dan laat je `String` beter achterwege".** Vaste uitdrukking, maar wel een beeld (15), en de zin was met "de veiligste weg is om" bovendien omslachtig. |
+| "Ergens tussen twintig en vijftig keer per seconde **voelt goed**." | `PotentiometerwaardeDoorsturen.html` | **"is ruim genoeg".** Geen van de vijftien patronen, maar de oplossing en het codecommentaar op dezelfde pagina zeggen allebei al "ruim genoeg" en "ruim binnen wat de lijn aankan". Nu kiest het labo een zendfrequentie op dezelfde grond als het ze verantwoordt. |
+
+## Labo 7
+
+Klaar. Acht oefeningen plus vijf theoriepagina's, en `dashboard.html` en `reference.html` met een
+eigen `lead` in plaats van de boilerplate. Geen enkele pagina bleef ongemoeid. Samen met labo 5 is
+dit het recentst geschreven labo, en dat is te zien: 28 greppable meldingen, en de doorloop vond er
+ruim honderdvijftig.
+
+Drie patronen tekenen dit labo. Het **klemtoonaccent** (patroon 10) stond er dertig keer, veel meer
+dan in eender welk ander labo: `k&aacute;n`, `m&oacute;&eacute;t`, `w&aacute;&aacute;rom`,
+`r&eacute;&aacute;geert`, `bl&iacute;jft`. Alles is weg, behalve `&eacute;&eacute;n` en
+`v&oacute;&oacute;r`, waar het accent spelling is en geen nadruk. Daarnaast de **dubbele punt als
+aankondiging** (patroon 4), ruim veertig keer, en de **slotzin die moet blijven hangen** (patroon 1),
+waarvan er twee dezelfde levensles waren ("Weten w&aacute;&aacute;rom je iets doet, bepaalt of je het
+de volgende keer nog moet doen." op `DrukkenTellenZonderDender.html` en `LedsOpDeExpander.html`).
+
+Vier zinnen uit dit labo staan met naam in SCHRIJFSTIJL.md als voorbeeld en zijn nu weg, alle vier op
+de theoriepagina's: "Nu zet je er &eacute;&eacute;n regel bij. Eentje maar." (patroon 5,
+`PollenEnInterrupts.html`), "Waarom? Omdat de compiler slim is, en die slimheid hier tegen je werkt."
+en "denkt hij: die verandert hier toch nergens" (patroon 3 en 7, `VolatileEnVlaggen.html`), en
+"Vergeet je `volatile`, dan compileert alles netjes." plus "Regel: elke variabele ... Zonder
+uitzondering." (patroon 13, 4 en 5, dezelfde pagina). Ook "Het bericht wacht netjes in zijn
+ontvangstbuffer" op `NoodstopOverDeSerieleLijn.html` is het "Na" van patroon 13 geworden.
+
+| Pagina | Wat er veranderde |
+|---|---|
+| [LedAanMetEenInterrupt.html](../Labo7/Exercises/LedAanMetEenInterrupt.html) | De dubbele punt uit de `lead` (4), "Zes labo's lang stond alles ..." naar de terugkoppeling als feit, vier klemtoonaccenten (10), kadertitels "Probeer dit eens, het is de hele les van deze oefening", "Waarom FALLING en niet RISING?" en "Er staan geen haakjes achter ledAan" naar titels die hun onderwerp noemen (1 en 6 in een kop), "Dat is geen fout, dat is precies wat je geschreven hebt: ..." omgedraaid (4, 6, 13), `netjes` en `gerust` weg (13), en de slotzin "Dat is er dan nog eentje die je zelf kan oplossen." weg (1 en 11). |
+| [DrukkenTellenZonderDender.html](../Labo7/Exercises/DrukkenTellenZonderDender.html) | De `lead` bouwde op via "Klinkt eenvoudig." naar valkuilen die je "blijven achtervolgen" (5, 7), kadertitel "Print niet vanuit je ISR" naar "Het printen hoort in je loop()" (6 in een kop), "Waarom TinkerCAD hier liegt" naar "Een echte knop stuitert bij elke druk" (7), "De drukknop in TinkerCAD is perfect: ..." (4, 13), "Waarom laatsteDruk geen bescherming nodig heeft" en "En als je nu 200 keer per seconde moet kunnen tellen?" naar hun onderwerp (3 en 6 in een kop), "De vuistregel blijft: ..." (4), `netjes`, `gewoon` en een klemtoonaccent weg (10, 13), een checklistregel zonder "Je monitor wordt niet overspoeld" (4, 15), en de slotzin over w&aacute;&aacute;rom je iets doet weg (1). |
+| [LooplichtMetNoodstop.html](../Labo7/Exercises/LooplichtMetNoodstop.html) | "Dit is de oefening waarin de kernles van dit labo op zijn plaats valt." uit de `lead` (1, 15), "Netjes kort, precies zoals het hoort." samengevoegd (5, 13), `looplichtje` en `lusje` naar `looplicht` en `lus` (11), `zinnetje` naar `zin` (11) met drie klemtoonaccenten (10), "Een noodstop die "straks" stopt, is geen noodstop." weg (1), `doodleuk` bij de `loop()` weg (7), "Onschuldig." tot een zin gemaakt (5), de kadertitel "Waarom noodstop geen noInterrupts() nodig heeft" naar "Waarom &eacute;&eacute;n byte altijd volledig gelezen wordt" (6 in een kop), en "Een noodstop hoeft niet elegant te zijn, hij moet werken." weg (1). |
+| [MotorMetNoodstop.html](../Labo7/Exercises/MotorMetNoodstop.html) | "De noodstop. Altijd." samengevoegd (5), "Dat is geen regeltje uit dit vak, ... waarvoor te laat gelijkstaat aan te laat." naar het criterium zelf (1, 4, 6, 11), `flink` naar `ruim` en de wij-vorm naar de je-vorm (12), kadertitels "Reken niet met de hFE uit de datasheet zelf", "De startknop is tien seconden lang doof", "Het kan netter, en dat is een keuze" en "Had het ook anders gekund?" naar titels die hun onderwerp noemen (3, 6 in een kop, 15), "Dat is geen bug." weg (6), drie klemtoonaccenten (10), `precies` twee keer weg (13), en de slotzin over "een noodstop die werkt <em>en</em> het meldt" weg (1). |
+| [KnoppenOpDePCF8574.html](../Labo7/Exercises/KnoppenOpDePCF8574.html) | "Vanaf nu belt hij jou op. En je botst meteen op de scherpste regel van dit labo." uit de `lead` naar wat die regel is (1, 7), `zinnetje` naar `zin` en `streepje` naar `streep` (11, zoals in labo 5), kop "Valkuil 1: je mag de expander niet uitlezen in je ISR" naar "de expander uitlezen hoort in je loop()" en kadertitel "Je hebt die weerstand niet nodig" naar "De pull-up zit al in je Arduino" (6 in een kop), "ze zijn alle drie het soort waar je een halve avond op kan zoeken" ingekort (1), "Geen foutmelding, geen timeout: gewoon een dood bord." naar een mededeling (4, 5, 13), "En nee, je lost dit niet op ..." zonder de aanspreking (14), vier andere dubbele punten (4), "en lijkt hij dood" naar "en zie je er niets van" (7), en `gewoon` en `precies` weg (13). |
+| [VierKnoppenTweeLeds.html](../Labo7/Exercises/VierKnoppenTweeLeds.html) | "Tijd om te leren welke knop welke is." uit de `lead` (5), `eentje` naar `&eacute;&eacute;n` (11), de dubbele punt bij de interruptpin naar `want` (4), kadertitels "Test op netIngedrukt, niet op knoppen" en "Waarom de test niet == B00000001 is" naar hun onderwerp (6 in een kop), en "Dat lijkt haarkloverij tot je twee knoppen tegelijk aanraakt" naar wat er dan gebeurt (1). |
+| [LedsOpDeExpander.html](../Labo7/Exercises/LedsOpDeExpander.html) | `flinke` naar `grote` (12), `chipje` naar `chip` en `eentje` naar "een bus" (11), drie klemtoonaccenten (10), kadertitels "Neem hier 470 &Omega; of 1 k&Omega;, geen 220 &Omega;", "Dat maakt deze oefening op &eacute;&eacute;n punt makkelijker", "Die i + 4 is de hele oefening" en "Waar is de vlag eigenlijk nog goed voor?" naar titels die hun onderwerp noemen (1, 3, 6 in een kop, 13), "je loopt er gegarandeerd in" weg (1), de tweede levensles weg (1, zie hierboven), "Geen vorigeKnoppen, geen flankdetectie, geen ontdendering: ... en meer moet dat niet zijn" naar een mededeling (4, 5), `platleggen` naar "laag zetten" en `ademruimte` naar "ruimte overhoudt" (15), "Kort, en volstrekt onleesbaar" tot een zin gemaakt (5), en `exact`, `gewoon` en `precies` weg (13). |
+| [NoodstopOverDeSerieleLijn.html](../Labo7/Exercises/NoodstopOverDeSerieleLijn.html) | De vechtende kruisdraden eruit (15, zoals in labo 6), koppen "De eerste valkuil: niet zenden vanuit je ISR" en "De tweede valkuil: en dan komt hij toch te laat aan" naar hun onderwerp (6 in een kop), kadertitels "Je interrupt heeft je hier niets opgeleverd" en "Kon Arduino 1 dan zelf geen interrupt gebruiken?" idem, "Het bericht wacht netjes in zijn ontvangstbuffer" naar het "Na" van patroon 13, "Zit de ontvanger vast, dan sta je nergens." weg (1), "Precies zoals bij de expander." samengevoegd (5, 10), "Het recept:" weg (4), zeven klemtoonaccenten (10), `eentje` twee keer, "of er post is" naar "of er iets binnengekomen is" en "doof te maken" naar "te missen" (7, 11, 15), `perfect` weg (13), en de slotzin over "het werkt meestal" naar "het werkt altijd op tijd" weg (1). |
+| [PollenEnInterrupts.html](../Labo7/Reference/PollenEnInterrupts.html) | De `lead` opende op "Zes labo's lang" en op "Hier zie je waar die manier van werken stukloopt" (9), met `prima` (12) en een klemtoonaccent (10). Verder "Eentje maar." weg (5, het voorbeeld uit het regeldocument), "Die manier van werken heeft een naam:" (4), kop "Een noodstop die niet stopt" naar "Een noodstop die tien seconden te laat komt" en kadertitel "Een interrupt is geen "heel snel pollen"" naar wat hij w&eacute;l doet (6 in een kop), "Dat is geen noodstop. Dat is een suggestie." naar "Zo'n noodstop is onbruikbaar." (1, 6), "Het probleem is niet dat je code fout is." omgedraaid (6), "Niet afgewerkt, niet netjes afgerond: middenin gepauzeerd." naar een zin (4, 5, 13), `zinnetje` en `woordje` naar `zin` en `woord` (11), `perfect` en `gewoon` weg (13), en de kop "En nu?" naar "Verder lezen" (3). |
+| [Interruptpinnen.html](../Labo7/Reference/Interruptpinnen.html) | De dubbele punt uit de `lead` (4), "hoe graag je het ook wil" weg (14), kadertitel "Een verkeerde pin geeft geen foutmelding" naar "Op een verkeerde pin gebeurt er nooit iets" (6 in een kop), "De hardware in de chip kent je pinnummers niet." omgedraaid (6), "Het voordeel is meer dan cosmetisch:" weg (4, 10), "een pak minder logisch" naar "veel minder logisch" en de wij-vorm naar de je-vorm, "zonder ook maar &eacute;&eacute;n waarschuwing" naar "zonder waarschuwing" en "Dat is precies waarom" naar "Daarom" (10), "En nog iets om in je achterhoofd te houden:" weg (4), twee andere dubbele punten (4), een klemtoonaccent (10), en "En nu?" naar "Verder lezen" (3). |
+| [InterruptServiceRoutine.html](../Labo7/Reference/InterruptServiceRoutine.html) | De drie parallelle koppen "Geen delay()", "Geen Wire, dus geen I&sup2;C" en "Geen Serial.print()" naar "delay() blijft hangen", "Wire hangt je bord op" en "Serial vertraagt alles" (6 in een kop). De parallellie blijft, en het is nu exact de formulering van de blurb in `reference.js`. Verder de kadertitel "Nee, je lost dit niet op met interrupts() bovenaan je ISR" naar "Waarom interrupts() in je ISR gevaarlijk is" (6, 14), de vetgedrukte deelzinnen "alle andere interrupts staan ook uit" en "geen enkele I&sup2;C-opdracht in een ISR" ontvet (10), "Je bord is dood" naar "Je bord hangt" (15), de vraagvorm "zet ik ze toch gewoon weer aan ...?" naar een mededeling (3), "Dat werkt. En daarom is het gevaarlijk." samengevoegd (5), "De oplossing is niet de interrupts aanzetten." omgedraaid (4, 6), "je probeert het, het lijkt te werken, en je gelooft de waarschuwing niet meer" ingekort (2), `prima` naar `kan` en `heel even` naar `kort` (12, 13), en `gewoon`, `precies` en "oneindig veel" weg (10, 13). |
+| [VolatileEnVlaggen.html](../Labo7/Reference/VolatileEnVlaggen.html) | De zwaarste pagina van het labo, en de pagina waar het regeldocument zijn voorbeelden vandaan haalde. "Hier lees je" uit de `lead` (9), "Waarom? Omdat de compiler slim is" naar het "Na" van patroon 3, "denkt hij: die verandert hier toch nergens" naar het "Na" van patroon 7, "Vergeet je volatile, dan compileert alles netjes" naar het "Na" van patroon 13, "Regel: ... Zonder uitzondering." naar &eacute;&eacute;n zin (4, 5), "Het idee:" weg (4), kadertitels "Je krijgt hier geen waarschuwing over" en "Raak je zo geen drukken kwijt?" naar hun onderwerp (6 in een kop), "een pak beter" naar "veel beter" en `eventjes` naar `kort` (12), "gesloopt" naar "stukgemaakt" en `razendsnel` weg (10, 15), "Niet 255, niet 256, maar ..." ingekort (2), `stiekem` bij het optellen weg (7), en "En nu?" naar "Verder lezen" (3). |
+| [DenderenBijEenInterrupt.html](../Labo7/Reference/DenderenBijEenInterrupt.html) | `rommeltje` naar `rommel` in een `figcaption` (11), "maakt hij niet netjes &eacute;&eacute;n keer contact: ..." naar wat hij w&eacute;l doet (4, 6, 13), "Het idee:" weg (4), "Dat is precies wat je wil: de goedkoopst mogelijke manier" naar &eacute;&eacute;n zin (4, 13), "Goeie vraag, want" weg (14), "De drukknop in TinkerCAD is perfect:" (4, 13), "Snel gefikst" naar "Dat is snel gedaan" (5), twee klemtoonaccenten (10), en drie andere dubbele punten (4). |
+| [dashboard.html](../Labo7/Exercises/dashboard.html) en [reference.html](../Labo7/Reference/reference.html) | Allebei een eigen `lead` in plaats van de boilerplate (9). Het uitroepteken op het dashboard ging mee weg (10). |
+| [exercises.js](../exercises.js) en [reference.js](../reference.js) | De blurb van *Een led die aangaat zonder loop* eindigde op "Vanaf nu wacht je niet meer, je wordt geroepen" (1, 4); die van *Noodstop op je looplicht* op een noodknop "die dwars door een delay heen snijdt" plus "De les van dit labo in &eacute;&eacute;n sketch." (5, 15). In `reference.js` de blurb van *Van pollen naar interrupts* (10, 13) en die van de PCF8574-datasheet (4). |
+
+Woorden toegevoegd aan `scripts/check-content.sh`: **geen**. De achttien meldingen kwamen allemaal uit
+woorden die er al stonden. Twee dingen zijn wel gemeten en bewust niet toegevoegd:
+
+- Het klemtoonaccent (`k&aacute;n`, `w&eacute;l`, `m&iacute;st`). Dertig voorkomens in labo 7 en nul
+  in de rest van de repo na deze doorloop, dus een regel erop zou vandaag nergens iets melden. Een
+  grep zou bovendien `&eacute;&eacute;n` en `v&oacute;&oacute;r` moeten uitzonderen, waar het accent
+  spelling is, en dat is precies het soort filter dat volgens CLAUDE.md fout gaat.
+- `perfect` als versterker ("de drukknop in TinkerCAD is perfect", "ook al is de knop zelf perfect").
+  Vier voorkomens hier, allemaal weg, maar het woord betekent elders in de repo gewoon wat het zegt.
+
+### Twijfelgevallen
+
+| Wat | Waar | Beslissing |
+|---|---|---|
+| De drie "Geen ..."-koppen | `InterruptServiceRoutine.html` | **Herschreven met behoud van de parallellie.** De achterstandslijst hield er rekening mee dat de reeks haar parallellie zou verliezen; dat hoefde niet, want de blurb in `reference.js` gaf de drie werkwoorden al ("blijft hangen", "hangt je bord op", "vertraagt alles"). |
+| Kadertitel "In TinkerCAD zie je hier niets van" | `DenderenBijEenInterrupt.html` | **Blijft.** Patroon 6 verbiedt in koppen `geen` en `niet`, en dit is geen van beide: de kop noemt zijn onderwerp (de simulator) en de zin loopt. Op `DrukkenTellenZonderDender.html`, waar hetzelfde kader over de knop gaat in plaats van over TinkerCAD, is het w&eacute;l "Een echte knop stuitert bij elke druk" geworden. |
+| Kop "En nu?" | Drie theoriepagina's | **Naar "Verder lezen".** Een vraag als kop mag (labo 3, "Wat is een stijgende flank?"), maar dan als onderwerp van wat eronder staat. "En nu?" is een overgang, en dat is patroon 3. Het enige voorkomen in de repo, dus er is niets om consistent mee te blijven. |
+
+### Taalfouten, blijven staan
+
+Volgens het bereik sinds 28 juli 2026 gaat een taalfout niet mee in de diff van een stijlronde.
+
+- `wel&eacute;&eacute;rste` (`VierKnoppenTweeLeds.html`, onder de maskertabel): "want je ziet meteen
+  wel&eacute;&eacute;rste bit je bedoelt". Dat is geen woord, en ik kan niet raden wat er stond
+  ("welk", "welke", "het hoeveelste"). Het klemtoonaccent erin zou onder patroon 10 vallen, maar
+  wegnemen laat een even onleesbaar `weleerste` staan, dus de hele zin wacht op jou.
+- "Waar je dit labo op neerkomt" (`NoodstopOverDeSerieleLijn.html`, kadertitel): het onderwerp is
+  *dit labo* en niet *je*, dus "Waar dit labo op neerkomt".
+- Kommasplitsing in "De bovenste vier bits van `knoppen` zijn geen ingangen, daar lees je terug wat
+  je er zelf op gezet hebt" (`LedsOpDeExpander.html`).
+
+### E&eacute;n melding die blijft staan
+
+`DrukkenTellenZonderDender.html` draagt `<!-- audit-skip: vulwoord -->`. De `heel even` die `--audit`
+daar meldt, staat in een **codecommentaar** ("Dus: heel even niet storen, kopie maken, klaar"), en een
+stijlronde raakt geen code aan, ook geen commentaar. De woordenlijsten van `--audit` zijn regelgewijs
+en zien geen `<pre>`-grenzen, dus alleen een `audit-skip` kan dit stilleggen. Dit is de eerste keer
+in acht doorlopen dat dat nodig was.
 
 ## Repo-brede ingrepen
 

@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Vier knoppen, twee leds</h1>
-    <p class="lead">Je expander stuurt je &eacute;&eacute;n byte per keer, en daar zitten vier knoppen in verstopt. Tijd om te leren welke knop welke is.</p>
+    <p class="lead">Je expander stuurt je &eacute;&eacute;n byte per keer, en daarin zit de stand van alle vier de knoppen. Nu ga je uitzoeken welk bit bij welke knop hoort.</p>
 
     <p>Vertrek van je vorige oefening. De vier knoppen blijven waar ze zijn, je zet er een tweede led bij.</p>
 
@@ -52,8 +52,8 @@
 
     <div class="info-box remark">
         <div class="info-title remark">Pin 3 als gewone uitgang</div>
-        <p>Pin 3 is de tweede interruptpin van je UNO, en hier gebruik je hem als doodgewone uitgang. Dat mag: een pin is pas een interruptpin wanneer je er een <code>attachInterrupt()</code> op zet.</p>
-        <p>Hou het wel in je achterhoofd wanneer je zelf een schakeling ontwerpt. Je hebt er maar twee, en met deze verdeling is er nog eentje vrij.</p>
+        <p>Pin 3 is de tweede interruptpin van je UNO, en hier gebruik je hem als doodgewone uitgang. Dat mag, want een pin is pas een interruptpin wanneer je er een <code>attachInterrupt()</code> op zet.</p>
+        <p>Hou het wel in je achterhoofd wanneer je zelf een schakeling ontwerpt. Je hebt er maar twee, en met deze verdeling is er nog &eacute;&eacute;n vrij.</p>
     </div>
 
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
@@ -134,8 +134,8 @@
     <p>Met <code>&amp;</code> test je of een bepaald bit aanstaat. De binaire schrijfwijze is hier veruit de duidelijkste, want je ziet meteen wel&eacute;&eacute;rste bit je bedoelt. Zie <a href="../../Labo4/Reference/Bits.html">Bits</a>.</p>
 
     <div class="info-box tip">
-        <div class="info-title tip">Test op netIngedrukt, niet op knoppen</div>
-        <p>De valkuil uit de vorige oefening geldt hier nog steeds: <code>knoppen</code> vertelt je welke knoppen op dit moment ingedrukt <em>zijn</em>, en /INT gaat ook af wanneer je loslaat. Bereken dus eerst <code>netIngedrukt</code> en test daarop.</p>
+        <div class="info-title tip">Bereken netIngedrukt voor je test</div>
+        <p>De valkuil uit de vorige oefening geldt hier nog steeds, want <code>knoppen</code> vertelt je welke knoppen op dit moment ingedrukt <em>zijn</em>, en /INT gaat ook af wanneer je loslaat. Bereken dus eerst <code>netIngedrukt</code> en test daarop.</p>
         <p>Doe je het op <code>knoppen</code>, dan gebeurt er ook iets bij het loslaten, en op &eacute;&eacute;n of andere manier lijkt de helft van je knoppen dan niet te werken.</p>
     </div>
 
@@ -262,10 +262,10 @@ void loop()
 }</code></pre>
 
             <div class="info-box remark">
-                <div class="info-title remark">Waarom de test niet <code>== B00000001</code> is</div>
+                <div class="info-title remark">Het verschil tussen <code>&amp;</code> en <code>==</code> in deze test</div>
                 <p>Er staat <code>if (netIngedrukt &amp; B00000001)</code> en niet <code>if (netIngedrukt == B00000001)</code>. Dat verschil is belangrijk.</p>
                 <p>Met <code>&amp;</code> vraag je: <em>staat dit ene bit aan?</em> De rest van de byte laat je met rust. Met <code>==</code> zou je vragen of de hele byte precies gelijk is aan 1, en dat is alleen zo als er verder geen enkele andere knop tegelijk ingedrukt werd.</p>
-                <p>Dat lijkt haarkloverij tot je twee knoppen tegelijk aanraakt en er ineens niets meer werkt.</p>
+                <p>Raak je twee knoppen tegelijk aan, dan werkt de test met <code>==</code> dus niet meer.</p>
             </div>
         </div>
     </div>

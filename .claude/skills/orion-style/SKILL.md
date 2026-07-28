@@ -7,8 +7,15 @@ description: Bring one lab's existing prose in line with SCHRIJFSTIJL.md - strip
 
 [`SCHRIJFSTIJL.md`](../../../SCHRIJFSTIJL.md) in the repo root is the rule. **Read it
 in full before touching anything** - this skill is the procedure, that file is the
-content, and it is the single source of truth. Thirteen patterns: eleven about
-ornament, two about word choice.
+content, and it is the single source of truth. Fifteen patterns: 1 to 11 about
+ornament, 12 and 13 about word choice, 14 and 15 added later (both ornament).
+
+They apply everywhere a student reads, including headings, box titles, checklist
+lines, spoiler labels, `alt`, `figcaption` and the manifest `name`/`blurb`, and not to
+the repo's own documentation. Two consequences are easy to get backwards: the
+verbless test of pattern 5 is **body text only** (a heading is a noun phrase by
+nature), while the negation ban of pattern 6 is **stricter** in a heading, where no
+`geen` or `niet` may appear at all.
 
 One lab per pass, in course order. Labo 0 first, then 1, 2, and so on, with the
 `TestN/` folders last. The pass **rewrites** rather than proposes, because the rules
@@ -27,6 +34,10 @@ else.
   This pass never adds an explanation, never reorders a page, never splits an
   exercise. If you notice a didactic gap, write it in the ledger under "Voor
   orion-review" and move on.
+- **Not a proofreading pass.** Comma splices, spelling and agreement errors are not
+  style. Collect them, list them in the closing report and the ledger, and leave them
+  in the file, so the diff of a style pass holds one kind of change. This is a change
+  from how labo 0 to 4 were done, where such fixes rode along.
 - **Not a content edit.** No new facts, no new claims, no changed numbers. Rewriting
   "een pin kan maar een kleine stroom leveren" into "een pin mag maximaal 40 mA
   leveren" is out of scope even when the number is right, because a style pass that
@@ -70,10 +81,14 @@ skimmed, which is exactly the failure this skill exists to prevent.
 bash scripts/check-content.sh --audit
 ```
 
-Filter the output to the lab you are working on. Five of the thirteen patterns are
+Filter the output to the lab you are working on. Five of the fifteen patterns are
 greppable and will appear here: stock `lead` opener (9), decorative diminutive (11),
 Netherlandic word choice (12), filler adverb (13), and the `u`-vorm. Treat this as a
 floor, not a list: it is roughly a third of what a pass finds.
+
+The `NOORD_NL` list runs one way only. A Belgicism is not a finding: pattern 12 now
+prefers the Belgian word to the Netherlandic one, and only spoken-register words
+(`deftig`, `een pak beter`) go.
 
 ### 3. Read every page of the lab in full
 

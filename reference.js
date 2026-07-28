@@ -169,7 +169,7 @@ window.LAB_REFERENCE = {
             {
                 name: 'De seriële verbinding',
                 topics: [
-                    { id: 'serieelkanaal', name: 'Het seriële kanaal', href: 'SerieelKanaal.html', blurb: 'De drie draden tussen twee Arduino\'s, waarom Tx en Rx gekruist moeten, dat het pin 0 en 1 zijn, en waarom die op echte hardware met je USB-kabel vechten.' }
+                    { id: 'serieelkanaal', name: 'Het seriële kanaal', href: 'SerieelKanaal.html', blurb: 'De drie draden tussen twee Arduino\'s, waarom Tx en Rx gekruist moeten, dat het pin 0 en 1 zijn, en waarom je ze op echte hardware moet vrijmaken om te uploaden.' }
                 ]
             },
             {
@@ -195,7 +195,7 @@ window.LAB_REFERENCE = {
             {
                 name: 'Onderbreken in plaats van wachten',
                 topics: [
-                    { id: 'polleneninterrupts', name: 'Van pollen naar interrupts', href: 'PollenEnInterrupts.html', blurb: 'Waarom een knop uitlezen in je loop je knop doet missen zodra er ook maar iets anders moet gebeuren, en wat een interrupt daar precies aan verandert.' },
+                    { id: 'polleneninterrupts', name: 'Van pollen naar interrupts', href: 'PollenEnInterrupts.html', blurb: 'Waarom een knop uitlezen in je loop je drukken doet missen zodra er iets anders moet gebeuren, en wat een interrupt daaraan verandert.' },
                     { id: 'interruptpinnen', name: 'attachInterrupt en de interruptpinnen', href: 'Interruptpinnen.html', blurb: 'Alleen pin 2 en pin 3 van je UNO kunnen dit. Hoe je een functie aan een pin koppelt, en wat het verschil is tussen RISING, FALLING en CHANGE.' }
                 ]
             },
@@ -210,7 +210,7 @@ window.LAB_REFERENCE = {
             {
                 name: 'Datasheets',
                 topics: [
-                    { id: 'datasheetpcf8574', name: 'PCF8574', href: '../../datasheets/datasheet-pcf8574.pdf', blurb: 'De datasheet van de I/O-expander. Kijk hier naar de /INT-pin: hij is een open-collectoruitgang, en dat bepaalt hoe je hem aansluit.' }
+                    { id: 'datasheetpcf8574', name: 'PCF8574', href: '../../datasheets/datasheet-pcf8574.pdf', blurb: 'De datasheet van de I/O-expander. Kijk hier naar de /INT-pin, want die is een open-collectoruitgang, en dat bepaalt hoe je hem aansluit.' }
                 ]
             }
         ]

@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>volatile en de vlagvariabele</h1>
-    <p class="lead">Je ISR moet kort blijven, maar er moet w&eacute;l iets gebeuren. De oplossing is dat je ISR alleen een boodschap achterlaat en je <code>loop()</code> het echte werk doet. Hier lees je hoe je die boodschap doorgeeft zonder ze onderweg kwijt te spelen.</p>
+    <p class="lead">Je ISR moet kort blijven, maar er moet wel iets gebeuren. De oplossing is dat je ISR alleen een boodschap achterlaat en je <code>loop()</code> het echte werk doet. Om die boodschap onderweg niet kwijt te spelen, heb je het woord <code>volatile</code> nodig.</p>
 
     <h2 id="waarom-volatile">Waarom volatile</h2>
 
@@ -19,25 +19,23 @@
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>volatile bool knopGedrukt = false;</code></pre>
 
-    <p>Waarom? Omdat de compiler slim is, en die slimheid hier tegen je werkt.</p>
+    <p>De reden zit in de compiler. Wanneer die ziet dat je in je <code>loop()</code> steeds opnieuw dezelfde variabele uitleest, houdt hij die waarde bij in de processor zelf in plaats van hem telkens uit het geheugen te halen, omdat dat sneller is. Vaak is dat de juiste beslissing.</p>
 
-    <p>Wanneer de compiler ziet dat je in je <code>loop()</code> steeds opnieuw dezelfde variabele uitleest, denkt hij: die verandert hier toch nergens, ik hou hem gewoon even bij in de processor zelf, dat is sneller dan hem telkens uit het geheugen te halen. Vaak is dat precies de juiste beslissing.</p>
+    <p>Maar jouw variabele verandert wel degelijk, namelijk in je ISR. En die ISR staat nergens in je <code>loop()</code>, dus de compiler ziet het verband niet. Het gevolg is een <code>loop()</code> die een verouderde kopie blijft lezen en nooit merkt dat de knop ingedrukt is.</p>
 
-    <p>Maar jouw variabele verandert wel degelijk: in je ISR. En die ISR staat nergens in je <code>loop()</code>, dus de compiler ziet het verband niet. Het gevolg is een <code>loop()</code> die eeuwig naar een verouderde kopie zit te kijken en nooit merkt dat de knop ingedrukt is.</p>
-
-    <p><code>volatile</code> is jouw manier om te zeggen: <em>ga er niet van uit dat je weet wanneer dit verandert, haal hem elke keer opnieuw op</em>.</p>
+    <p>Met <code>volatile</code> zeg je dat de compiler die variabele elke keer opnieuw uit het geheugen moet halen, omdat hij niet kan weten wanneer ze verandert.</p>
 
     <div class="info-box warning">
-        <div class="info-title warning">Je krijgt hier geen waarschuwing over</div>
-        <p>Vergeet je <code>volatile</code>, dan compileert alles netjes. Erger nog: het werkt vaak ook gewoon, tot je iets kleins verandert en de compiler ineens besluit om w&eacute;l een kopie bij te houden. Dan lijkt het alsof een onschuldige aanpassing je programma gesloopt heeft.</p>
-        <p>Regel: elke variabele die je in een ISR aanraakt, krijgt <code>volatile</code>. Zonder uitzondering.</p>
+        <div class="info-title warning">De compiler waarschuwt hier nooit voor</div>
+        <p>Vergeet je <code>volatile</code>, dan compileert alles. Erger nog is dat het vaak ook werkt, tot je iets kleins verandert en de compiler ineens besluit om wel een kopie bij te houden. Dan lijkt het alsof een onschuldige aanpassing je programma stukgemaakt heeft.</p>
+        <p>Elke variabele die je in een ISR aanraakt, krijgt <code>volatile</code>, zonder uitzondering.</p>
     </div>
 
     <h2 id="het-vlagpatroon">Het vlagpatroon</h2>
 
     <p>Dit is het belangrijkste patroon van het hele labo, en je gaat het in bijna elke oefening gebruiken.</p>
 
-    <p>Het idee: je ISR doet niets anders dan een <code>bool</code> op <code>true</code> zetten. Zo'n variabele heet een <strong>vlag</strong>. Je <code>loop()</code> kijkt of die vlag omhoog staat, doet dan het echte werk, en zet ze weer omlaag.</p>
+    <p>Je ISR doet niets anders dan een <code>bool</code> op <code>true</code> zetten. Zo'n variabele heet een <strong>vlag</strong>. Je <code>loop()</code> kijkt of die vlag omhoog staat, doet dan het echte werk, en zet ze weer omlaag.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 const int ledPin = 8;
@@ -80,7 +78,7 @@ void loop()
     <div class="info-box tip">
         <div class="info-title tip">Haal de vlag neer v&oacute;&oacute;r je aan het werk gaat</div>
         <p>Zet <code>knopGedrukt = false;</code> bovenaan, niet onderaan. Doe je het op het einde, dan wis je ook een druk die net tijdens je werk binnenkwam, en die druk is dan voorgoed weg.</p>
-        <p>Zet je ze bovenaan en komt er tijdens je werk een nieuwe druk binnen, dan zet de ISR de vlag gewoon opnieuw en handel je die de volgende ronde af. In het slechtste geval doe je &eacute;&eacute;n keer overbodig werk. Dat is een pak beter dan iets missen.</p>
+        <p>Zet je ze bovenaan en komt er tijdens je werk een nieuwe druk binnen, dan zet de ISR de vlag opnieuw en handel je die de volgende ronde af. In het slechtste geval doe je &eacute;&eacute;n keer overbodig werk. Dat is veel beter dan iets missen.</p>
     </div>
 
     <h2 id="grote-getallen">Een getal van vier bytes heeft meer nodig</h2>
@@ -97,10 +95,10 @@ void loop()
             <li>De ISR slaat toe en telt op. De onderste byte wordt 0, de bovenste wordt 1.</li>
             <li>Je <code>loop()</code> leest de bovenste byte: 1.</li>
         </ol>
-        <p>Je <code>loop()</code> plakt die twee samen tot <strong>511</strong>. Niet 255, niet 256, maar een getal dat op geen enkel moment in je programma bestaan heeft. En het gebeurt maar zelden, dus je vindt het pas na een halve dag zoeken.</p>
+        <p>Je <code>loop()</code> plakt die twee samen tot <strong>511</strong>, een getal dat op geen enkel moment in je programma bestaan heeft. Het gebeurt maar zelden, dus je vindt het pas na een halve dag zoeken.</p>
     </div>
 
-    <p>De oplossing is de interrupts heel eventjes uitzetten terwijl je het getal ophaalt:</p>
+    <p>De oplossing is de interrupts kort uitzetten terwijl je het getal ophaalt:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 
@@ -136,22 +134,22 @@ void loop()
   }
 }</code></pre>
 
-    <p>Je maakt dus razendsnel een <strong>kopie</strong>, en werkt daarna verder met die kopie. Tussen <code>noInterrupts()</code> en <code>interrupts()</code> staan zo weinig mogelijk regels: zet je er je <code>Serial.println()</code> ook nog tussen, dan heb je precies het probleem gemaakt dat je wou vermijden.</p>
+    <p>Je maakt dus een <strong>kopie</strong>, en werkt daarna verder met die kopie. Tussen <code>noInterrupts()</code> en <code>interrupts()</code> staan zo weinig mogelijk regels. Zet je er je <code>Serial.println()</code> ook nog tussen, dan maak je net het probleem dat je wou vermijden.</p>
 
     <div class="info-box remark">
-        <div class="info-title remark">Raak je zo geen drukken kwijt?</div>
-        <p>Nee. Drukt iemand op de knop terwijl de interrupts uitstaan, dan onthoudt de hardware dat. Zodra <code>interrupts()</code> uitgevoerd is, gaat je ISR alsnog af. Je verliest hoogstens een paar microseconden.</p>
+        <div class="info-title remark">Drukken tijdens noInterrupts() blijven bewaard</div>
+        <p>Drukt iemand op de knop terwijl de interrupts uitstaan, dan onthoudt de hardware dat. Zodra <code>interrupts()</code> uitgevoerd is, gaat je ISR alsnog af. Je verliest hoogstens een paar microseconden.</p>
     </div>
 
     <h2 id="wie-schrijft-wat">E&eacute;n vuistregel om alles simpel te houden</h2>
 
     <div class="info-box tip">
         <div class="info-title tip">Alleen de ISR schrijft, de loop leest</div>
-        <p>Zorg dat je gedeelde variabelen maar op &eacute;&eacute;n plaats aangepast worden. De ISR telt op, de <code>loop()</code> kijkt alleen. Ga je in je <code>loop()</code> ook <code>aantalDrukken++</code> schrijven, dan heb je hetzelfde probleem opnieuw, want optellen is stiekem drie stappen: ophalen, plus &eacute;&eacute;n, terugzetten. En daar kan de ISR net zo goed tussen springen.</p>
+        <p>Zorg dat je gedeelde variabelen maar op &eacute;&eacute;n plaats aangepast worden. De ISR telt op, de <code>loop()</code> kijkt alleen. Ga je in je <code>loop()</code> ook <code>aantalDrukken++</code> schrijven, dan heb je hetzelfde probleem opnieuw, want optellen is in werkelijkheid drie stappen: ophalen, plus &eacute;&eacute;n, terugzetten. En daar kan de ISR net zo goed tussen springen.</p>
         <p>De enige uitzondering is een vlag die je in de <code>loop()</code> neerhaalt. Dat is &eacute;&eacute;n byte, dus &eacute;&eacute;n instructie, en dus veilig.</p>
     </div>
 
-    <h2 id="en-nu">En nu?</h2>
+    <h2 id="en-nu">Verder lezen</h2>
 
     <ul>
         <li><a href="DenderenBijEenInterrupt.html">Denderen bij een interrupt</a>: waarom je teller sneller loopt dan je drukt.</li>

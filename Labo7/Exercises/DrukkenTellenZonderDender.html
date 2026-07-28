@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Drukken tellen zonder dender</h1>
-    <p class="lead">Je led moet nu <em>omschakelen</em> bij elke druk, en je wil weten hoeveel keer er gedrukt is. Klinkt eenvoudig. Het is de oefening waarin je twee valkuilen tegenkomt die je de rest van dit labo blijven achtervolgen.</p>
+    <p class="lead">Je led moet nu <em>omschakelen</em> bij elke druk, en je wil weten hoeveel keer er gedrukt is. Daarbij kom je twee valkuilen tegen die in de rest van dit labo terugkomen.</p>
 
     <p>Vertrek van je vorige oefening. Dezelfde bedrading, alleen de code verandert.</p>
 
@@ -44,24 +44,24 @@
     <ol>
         <li>Elke druk op de knop schakelt de led om: brandt hij, dan gaat hij uit, en omgekeerd.</li>
         <li>Je houdt bij hoeveel keer er gedrukt is.</li>
-        <li>Je <code>loop()</code> print dat aantal naar de seri&euml;le monitor, maar alleen wanneer het ver&aacute;nderd is.</li>
+        <li>Je <code>loop()</code> print dat aantal naar de seri&euml;le monitor, maar alleen wanneer het veranderd is.</li>
     </ol>
 
     <div class="info-box warning">
-        <div class="info-title warning">Print niet vanuit je ISR</div>
-        <p>Het is verleidelijk om die <code>Serial.println()</code> gewoon in je ISR te zetten, want daar weet je toch dat er gedrukt is. Doe het niet. Printen duurt bij 9600 baud makkelijk tientallen milliseconden, en zolang je ISR bezig is staat je hele controller stil.</p>
+        <div class="info-title warning">Het printen hoort in je loop()</div>
+        <p>Het is verleidelijk om die <code>Serial.println()</code> in je ISR te zetten, want daar weet je toch dat er gedrukt is. Doe het niet. Printen duurt bij 9600 baud makkelijk tientallen milliseconden, en zolang je ISR bezig is staat je hele controller stil.</p>
         <p>De teller ophogen doe je in de ISR, het printen in je <code>loop()</code>. Zie <a href="../Reference/InterruptServiceRoutine.html">De regels van een ISR</a>.</p>
     </div>
 
     <h2 id="probeer-eerst-de-simpele-versie">Probeer eerst de simpele versie</h2>
 
-    <p>Schrijf je programma eerst zonder je zorgen te maken over de details. Dus: ISR schakelt de led om en telt op, <code>loop()</code> print. Upload het, en druk vijf keer.</p>
+    <p>Schrijf je programma eerst zonder je zorgen te maken over de details. Je ISR schakelt de led om en telt op, je <code>loop()</code> print. Upload het, en druk vijf keer.</p>
 
-    <p>Werk je op een echt bord, dan zie je waarschijnlijk iets als 3, 9, 14, 21. Werk je in TinkerCAD, dan zie je netjes 1, 2, 3, 4, 5.</p>
+    <p>Werk je op een echt bord, dan zie je waarschijnlijk iets als 3, 9, 14, 21. Werk je in TinkerCAD, dan zie je 1, 2, 3, 4, 5.</p>
 
     <div class="info-box remark">
-        <div class="info-title remark">Waarom TinkerCAD hier liegt</div>
-        <p>De drukknop in TinkerCAD is perfect: hij maakt precies &eacute;&eacute;n keer contact. Een echte knop is een stuk veerend metaal en stuitert bij het indrukken vijf tot twintig keer heen en weer. Elk van die stuiteringen is een dalende flank, en je interrupt mist er geen enkele.</p>
+        <div class="info-title remark">Een echte knop stuitert bij elke druk</div>
+        <p>De drukknop in TinkerCAD maakt precies &eacute;&eacute;n keer contact. Een echte knop is een stuk veerend metaal en stuitert bij het indrukken vijf tot twintig keer heen en weer. Elk van die stuiteringen is een dalende flank, en je interrupt mist er geen enkele.</p>
         <p>Je moet die ontdendering dus schrijven, ook al zie je in de simulator het probleem niet. Anders ontdek je op het labo dat je teller nergens op slaat. Lees <a href="../Reference/DenderenBijEenInterrupt.html">Denderen bij een interrupt</a>.</p>
     </div>
 
@@ -90,7 +90,7 @@
             <li><label><input type="checkbox" class="form-check-input me-2"> Alle variabelen die je ISR aanraakt zijn <code>volatile</code></label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je teller wordt gekopieerd tussen <code>noInterrupts()</code> en <code>interrupts()</code></label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Er staat niets tussen die twee regels dat er niet echt moet staan</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Je monitor wordt niet overspoeld: er verschijnt alleen een lijn als het aantal veranderd is</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er verschijnt alleen een lijn wanneer het aantal veranderd is</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
@@ -100,8 +100,9 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>Twee dingen om op te letten. In de ISR staat een <code>return</code> die er meteen weer uitstapt zodra blijkt dat het gestuiter is: dat is de goedkoopste manier om een flank weg te gooien. En in de <code>loop()</code> staan precies twee regels tussen <code>noInterrupts()</code> en <code>interrupts()</code>, niet meer.</p>
+            <p>Twee dingen om op te letten. In de ISR staat een <code>return</code> die er meteen weer uitstapt zodra blijkt dat het gestuiter is, en dat is de goedkoopste manier om een flank weg te gooien. In de <code>loop()</code> staan precies twee regels tussen <code>noInterrupts()</code> en <code>interrupts()</code>, niet meer.</p>
 
+            <!-- audit-skip: vulwoord --> <!-- "heel even niet storen" staat in een codecommentaar, en een stijlronde raakt geen code aan -->
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 const int ledPin = 8;
 
@@ -164,15 +165,15 @@ void loop()
 }</code></pre>
 
             <div class="info-box remark">
-                <div class="info-title remark">Waarom laatsteDruk geen bescherming nodig heeft</div>
-                <p><code>laatsteDruk</code> is ook vier bytes groot, en toch staat er nergens een <code>noInterrupts()</code> omheen. Dat komt omdat alleen de ISR eraan komt, en een ISR kan zichzelf niet onderbreken: zolang ze draait, staan alle interrupts uit.</p>
-                <p>De vuistregel blijft: bescherming is nodig zodra je <code>loop()</code> &eacute;n je ISR allebei aan dezelfde variabele van meer dan &eacute;&eacute;n byte komen.</p>
+                <div class="info-title remark">Waarom alleen de ISR aan laatsteDruk komt</div>
+                <p><code>laatsteDruk</code> is ook vier bytes groot, en toch staat er nergens een <code>noInterrupts()</code> omheen. Dat komt omdat alleen de ISR eraan komt, en een ISR kan zichzelf niet onderbreken, want zolang ze draait staan alle interrupts uit.</p>
+                <p>De vuistregel is dat bescherming nodig is zodra je <code>loop()</code> &eacute;n je ISR allebei aan dezelfde variabele van meer dan &eacute;&eacute;n byte komen.</p>
             </div>
 
             <div class="info-box remark">
-                <div class="info-title remark">En als je nu 200 keer per seconde moet kunnen tellen?</div>
-                <p>Dan werkt deze vergrendeling niet meer, want ze gooit alles binnen 200 ms weg. Bij een toerenteller of een debietmeter, waar de pulsen van een sensor komen in plaats van van een vinger, laat je de ontdendering dus gewoon weg: elektronica stuitert niet.</p>
-                <p>Ontdenderen is er voor mechanische contacten. Weten w&aacute;&aacute;rom je iets doet, bepaalt of je het de volgende keer nog moet doen.</p>
+                <div class="info-title remark">Als je 200 keer per seconde moet tellen</div>
+                <p>Dan werkt deze vergrendeling niet meer, want ze gooit alles binnen 200 ms weg. Bij een toerenteller of een debietmeter, waar de pulsen van een sensor komen in plaats van van een vinger, laat je de ontdendering dus weg, want elektronica stuitert niet.</p>
+                <p>Ontdenderen is er voor mechanische contacten.</p>
             </div>
         </div>
     </div>

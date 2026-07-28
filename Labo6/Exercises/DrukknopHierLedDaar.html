@@ -11,9 +11,9 @@
 <body>
 <div class="container">
     <h1>Een drukknop hier, een led daar</h1>
-    <p class="lead">De drukknop zit op Arduino 1, de led op Arduino 2, en er loopt geen enkele draad tussen de knop en de led. Alleen de seri&euml;le lijn.</p>
+    <p class="lead">De drukknop zit op Arduino 1, de led op Arduino 2, en de enige verbinding tussen de knop en de led is de seri&euml;le lijn.</p>
 
-    <p>Tot nu toe stuurde je gegevens door om ze te t&oacute;nen. Hier stuur je een <em>opdracht</em>: de ene Arduino zegt de andere wat die moet doen. Dat is precies wat serieel communiceren in de praktijk zo bruikbaar maakt.</p>
+    <p>Tot nu toe stuurde je gegevens door om ze te tonen. Hier stuur je een <em>opdracht</em>, waarbij de ene Arduino de andere zegt wat die moet doen.</p>
 
     <p>Deze oefening werk je uit in TinkerCAD. Vertrek van de bedrading uit de vorige oefening.</p>
 
@@ -59,10 +59,10 @@
         <li><strong>Arduino 2</strong> leest die lijn en schakelt de led.</li>
     </ol>
 
-    <p>Stuur je bij elke ronde van de <code>loop()</code> de stand van de knop door, dan gaan er duizenden boodschappen per seconde over de lijn, terwijl er hoogstens een paar keer per seconde iets ver&aacute;ndert. Stuur dus alleen iets d&oacute;&oacute;r wanneer de knop van stand verandert. Daarvoor moet je onthouden wat de vorige stand was.</p>
+    <p>Stuur je bij elke ronde van de <code>loop()</code> de stand van de knop door, dan gaan er duizenden boodschappen per seconde over de lijn, terwijl er hoogstens een paar keer per seconde iets verandert. Stuur dus alleen iets door wanneer de knop van stand verandert. Daarvoor moet je onthouden wat de vorige stand was.</p>
 
     <div class="info-box warning">
-        <div class="info-title warning">De lijn is niet oneindig snel</div>
+        <div class="info-title warning">De lijn heeft een beperkte snelheid</div>
         <p>Bij 9600 baud passen er ongeveer 960 tekens per seconde over de draad. Een <code>loop()</code> draait duizenden keren per seconde. Blijf je maar zenden, dan loopt de ontvangstbuffer van 64 bytes over en gaan er boodschappen verloren, terwijl je led een halve seconde achterloopt op je vinger. Zenden bij verandering lost dat allebei op.</p>
     </div>
 
@@ -160,7 +160,7 @@ void loop()
   }
 }</code></pre>
 
-            <p>Merk op dat het programma van Arduino 2 bijna letterlijk dat van de eerste oefening is. Voor de ontvanger maakt het niets uit of die <code>1</code> door jou getypt is of door een andere Arduino gestuurd. Dat is de kracht van een afspraak over wat er op de lijn staat.</p>
+            <p>Merk op dat het programma van Arduino 2 bijna letterlijk dat van de eerste oefening is. Voor de ontvanger maakt het niets uit of die <code>1</code> door jou getypt is of door een andere Arduino gestuurd.</p>
         </div>
     </div>
 </div>

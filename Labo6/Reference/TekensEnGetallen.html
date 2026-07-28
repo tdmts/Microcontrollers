@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Tekens en getallen</h1>
-    <p class="lead">Over een seri&euml;le lijn gaan geen getallen. Er gaan bytes, en die bytes stellen <em>tekens</em> voor. Als je dat niet doorhebt, begrijp je nooit waarom de andere kant 49 leest terwijl jij 1 verstuurde.</p>
+    <p class="lead">Over een seri&euml;le lijn gaan bytes, en die bytes stellen <em>tekens</em> voor. Dat verklaart waarom de andere kant 49 leest terwijl jij 1 verstuurde.</p>
 
     <h2 id="een-getal-in-het-geheugen">Een getal in het geheugen</h2>
 
@@ -19,7 +19,7 @@
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte waarde = 100;</code></pre>
 
-    <p>dan staat er in het geheugen &eacute;&eacute;n byte, die er binair uitziet als <code>01100100</code>. Precies wat je verwacht: honderd, in bits.</p>
+    <p>dan staat er in het geheugen &eacute;&eacute;n byte, die er binair uitziet als <code>01100100</code>. Dat is honderd, in bits.</p>
 
     <h2 id="hetzelfde-getal-op-de-lijn">Hetzelfde getal op de lijn</h2>
 
@@ -27,7 +27,7 @@
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>Serial.print(100);</code></pre>
 
-    <p>dan komt er aan de andere kant geen enkele byte <code>01100100</code> binnen. Er komen er <strong>drie</strong>, namelijk de tekens <code>'1'</code>, <code>'0'</code> en <code>'0'</code>. <code>Serial.print()</code> zet je getal eerst om naar tekst, en verstuurt die tekst teken per teken.</p>
+    <p>dan komen er aan de andere kant <strong>drie</strong> bytes binnen in plaats van de ene byte <code>01100100</code>, namelijk de tekens <code>'1'</code>, <code>'0'</code> en <code>'0'</code>. <code>Serial.print()</code> zet je getal eerst om naar tekst, en verstuurt die tekst teken per teken.</p>
 
     <p>Welke byte bij welk teken hoort, ligt vast in de <strong>ASCII-tabel</strong>. Dit zijn de rijen die je in dit labo nodig hebt:</p>
 
@@ -63,7 +63,7 @@
                 <tr>
                     <td><code>':'</code></td>
                     <td>58</td>
-                    <td>Het scheidingsteken dat we in dit labo gebruiken.</td>
+                    <td>Het scheidingsteken dat je in dit labo gebruikt.</td>
                 </tr>
                 <tr>
                     <td><code>'\r'</code></td>
@@ -89,7 +89,7 @@
     </div>
 
     <div class="info-box remark">
-        <div class="info-title remark">Het teken '1' is niet het getal 1</div>
+        <div class="info-title remark">Het teken '1' heeft de waarde 49</div>
         <p>Dit is het klassieke struikelblok. Stuur je <code>Serial.print(1)</code> en lees je aan de andere kant met <code>Serial.read()</code>, dan krijg je <strong>49</strong> te zien, niet 1. Je hebt het teken ontvangen, niet de waarde. Om er weer een getal van te maken moet je het omrekenen, en daar dient <a href="Strings.html">het String-type</a> voor.</p>
     </div>
 
@@ -122,11 +122,11 @@
         </table>
     </div>
 
-    <p>Die twee extra tekens lijken een detail, maar ze zijn het niet. Ze zijn het enige waaraan de ontvanger kan zien <em>waar je boodschap ophoudt</em>. Stuur je met <code>print()</code> drie getallen na elkaar, dan komt er aan de andere kant <code>121317</code> binnen en is er geen mens die daar nog 12, 13 en 17 uit haalt.</p>
+    <p>Die twee extra tekens zijn het enige waaraan de ontvanger kan zien <em>waar je boodschap ophoudt</em>. Stuur je met <code>print()</code> drie getallen na elkaar, dan komt er aan de andere kant <code>121317</code> binnen en valt daar 12, 13 en 17 niet meer uit af te leiden.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">De regel van dit labo</div>
-        <p>De zender gebruikt <strong>altijd</strong> <code>Serial.println()</code>, dus &eacute;&eacute;n boodschap per lijn. De ontvanger leest <strong>altijd</strong> een volledige lijn tegelijk. Hou je je daaraan, dan werkt alles in dit labo. Doe je het niet, dan raak je vroeg of laat het spoor bijster.</p>
+        <p>De zender gebruikt <strong>altijd</strong> <code>Serial.println()</code>, dus &eacute;&eacute;n boodschap per lijn. De ontvanger leest <strong>altijd</strong> een volledige lijn tegelijk. Hou je je daaraan, dan werkt alles in dit labo.</p>
         <p>Hoe je zo'n lijn uitleest, staat op <a href="BoodschappenLezen.html">Boodschappen lezen</a>.</p>
     </div>
 </div>

@@ -2,11 +2,32 @@
 
 Hoe het proza op deze pagina's klinkt. Dit is de enige plek waar die regels staan:
 [CLAUDE.md](CLAUDE.md), [CONTRIBUTING.md](CONTRIBUTING.md) en de `orion-convert`-skill verwijzen
-hierheen in plaats van de lijst te herhalen.
+hierheen in plaats van de lijst te herhalen. De woordenlijsten waarmee `--audit` een deel ervan
+afdwingt, staan wel in `scripts/check-content.sh`: die groeien per doorloop, en dit document geeft
+dan het criterium in plaats van de woorden.
 
 Het gaat hier **alleen over de vorm van de tekst**. Wat een pagina moet uitleggen is een didactische
 vraag en hoort bij de `orion-review`-skill; of een pagina correct aan elkaar hangt is een technische
 vraag en hoort bij `scripts/check-content.sh`.
+
+**Waar het geldt: overal waar een student meeleest.** Lopende tekst, koppen en kadertitels, de
+`lead`, checklistregels, labels van spoilerknoppen, `alt`-teksten, `figcaption`s, en de `name` en
+`blurb` in `exercises.js` en `reference.js`. De site hoort als één stem te klinken, en een blurb op
+een dashboardkaart is even goed tekst als een alinea.
+
+Op één drieslag na: de `name` in het manifest, de `<h1>` en de `<title>` van een oefening horen aan
+elkaar gelijk te zijn, regel 6 van `check-content.sh` bewaakt dat, en ze veranderen alleen wanneer de
+oefening zelf hernoemd wordt. Een stijlronde blijft daar dus af. De `blurb` ernaast valt er wel
+onder.
+
+**Waar het niet geldt: de documentatie van de repo zelf.** SCHRIJFSTIJL.md, CONTRIBUTING.md,
+CLAUDE.md en de bestanden in `review/` zijn werkmateriaal voor wie hier schrijft. De patroontitels
+hieronder zijn zelf werkwoordloos en ontkennend, en dat blijft zo: ze zijn de naam van een regel en
+worden ook zo geciteerd ("patroon 6").
+
+**Taalfouten vallen er buiten.** Een kommasplitsing, een spatiefout, een verkeerd onderwerp bij het
+werkwoord: dat is geen stijl. Een doorloop verzamelt ze en legt ze apart voor, zodat de diff van een
+stijlronde één soort wijziging bevat.
 
 De aanleiding: de tekst die vanaf labo 5 en op de theoriepagina's van labo 0 geschreven is, legt
 inhoudelijk goed uit, maar leest kunstmatig. Niet omdat er te veel of te weinig staat, maar omdat
@@ -31,16 +52,20 @@ schrijven.
   beste voorbeeld is, dan is de wasmachine belangrijk genoeg voor een eigen zin.
 - **De kruislinks** naar de theoriepagina's, waar de student het kan nalezen.
 - **De je-vorm**, warm en niet formeel. De warmte komt uit de je-vorm en uit het uitleggen van het
-  waarom, niet uit ritme of woordkeuze.
-- **Kadertitels die iets zeggen** ("De Arduino is niet de microcontroller") in plaats van
-  "Belangrijk". Dat is winst tegenover de oorspronkelijke tekst en dat blijft.
+  waarom, niet uit ritme of woordkeuze. `men` en `we` gaan allebei naar de je-vorm: `men` is formeel,
+  en de inclusieve `we` schuift de student weg van wat hij zelf doet.
+- **Kadertitels die iets zeggen** ("PWM werkt alleen op de pinnen met een `~`") in plaats van
+  "Belangrijk". Dat is winst tegenover de oorspronkelijke tekst en dat blijft. Een kop noemt wel zijn
+  onderwerp en niet zijn pointe, en bevat geen `geen` of `niet`: zie patroon 6.
 - **Volledige sketches** in de oplossing, geen fragmenten.
 
 ## Wat eruit gaat
 
-Dertien patronen, elk met een echt voorbeeld uit deze repo. Geen enkel patroon is op zich fout: het
-probleem is dat ze allemaal samen, op elke pagina, van uitleg een voordracht maken. De eerste elf gaan
-over opsmuk, de laatste twee over woordkeuze.
+Vijftien patronen, elk met een echt voorbeeld uit deze repo. Geen enkel patroon is op zich fout: het
+probleem is dat ze allemaal samen, op elke pagina, van uitleg een voordracht maken. Patroon 1 tot 11
+gaan over opsmuk, 12 en 13 over woordkeuze, en 14 en 15 kwamen er later bij (allebei opsmuk). De
+nummers liggen vast, ook al loopt de indeling daardoor niet meer netjes door: het register in
+`review/` citeert ze.
 
 ### 1. Geen slotzin die moet blijven hangen
 
@@ -97,8 +122,18 @@ gewoon interpunctie en blijft.
 >
 > **Na:** Nu zet je er één regel bij.
 
-Ook zo: "Zonder uitzondering.", "Een pin is dat allemaal niet.", "Eén kern." Voeg ze samen met de
-zin ervoor of laat ze weg.
+Ook zo: "Zonder uitzondering.", "Terecht.", "Eén kern." Voeg ze samen met de zin ervoor of laat ze
+weg. "Een pin is dat allemaal niet." gaat ook weg, maar onder patroon 6: daar staat wel een
+persoonsvorm in.
+
+De toets is de persoonsvorm. Een zin zonder werkwoord ("Eentje maar.", "Eén kern.", "Terecht.") gaat
+weg of gaat op in de zin ervoor; een korte zin mét persoonsvorm blijft, ook wanneer hij nadruk legt.
+Hier zijn geen uitzonderingen op, want dan wordt het opnieuw een oordeel. Een vaste aankondiging die
+je wil houden, krijgt gewoon een werkwoord: "Nog een denkoefening." wordt "Denk hier eerst zelf na."
+
+**Alleen in lopende tekst.** Koppen, kadertitels, `alt`-teksten, `figcaption`s, blurbs,
+checklistregels en labels zijn van nature naamwoordgroepen ("Het probleem", "In code", "Oplossing").
+Daar is een fragment de normale vorm en geen effectbejag.
 
 ### 6. Geen ontkennende opening
 
@@ -110,6 +145,17 @@ Begin bij wat het ding wél is, niet bij wat het niet is.
 > volgorde bekrachtigt.
 
 Ook zo: "Over een seriële lijn gaan geen getallen." en "Impedantie is geen ander soort onderdeel."
+
+Hier is geen uitzondering op, ook niet wanneer de zin een misvatting corrigeert die de student echt
+heeft. De correctie komt dan in dezelfde alinea, na de bewering: niet "Een led is geen weerstand",
+maar "Een led heeft een vaste doorlaatspanning, dus je kan hem niet doorrekenen als een weerstand."
+
+**In koppen geldt dit strenger.** Een kop of kadertitel bevat helemaal geen `geen` of `niet`, ook
+niet in het midden. "Gebruik geen `delay()`" wordt "Vervang `delay()` door `millis()`", en "Waarom je
+`shiftOut()` hier niet gebruikt" wordt "Waarom je het schuiven zelf schrijft". Een beschrijvend
+`zonder` valt er niet onder: "Drukken tellen zonder dender" is de naam van de oefening en zegt wat ze
+maakt. De `id` van een kop blijft ongewijzigd wanneer de tekst verandert, want andere pagina's linken
+ernaar.
 
 ### 7. Geen bemenste machines
 
@@ -138,6 +184,10 @@ dat gewoon de eerste feitelijke zin van het onderwerp.
 
 `scripts/check-content.sh --audit` meldt de bekende stockopeningen, vrijblijvend.
 
+Dit geldt ook voor `dashboard.html` en `reference.html`. Die zijn in de doorlopen tot nu toe
+overgeslagen omdat hun `lead` boilerplate is, maar zestien keer dezelfde openingszin is precies waar
+dit patroon over gaat. Elk overzicht krijgt een `lead` die bij dát labo past.
+
 ### 10. Geen theatrale nadruk
 
 Vet en cursief zijn om een **term**, een pinnaam of een componentnaam te markeren, niet om een zin
@@ -148,6 +198,10 @@ te laten landen.
 >
 > **Na:** De ATmega328P heeft **2 kB** werkgeheugen en **32 kB** programmageheugen. Dat is geen
 > schrijffout.
+
+Een vetgedrukte **deelzin** valt hier ook onder ("**Per PCF8574 krijg je 8 extra I/O-lijnen**"). De
+grens ligt niet bij hele zinnen: vet komt om een woord, een term, een pinnaam of een getal, nooit om
+een zinsdeel.
 
 ### 11. Geen verkleinwoorden als opsmuk
 
@@ -180,7 +234,7 @@ lijst is opzettelijk kort en mag groeien; er staat geen enkele vakterm in.
 
 ### 12. Belgisch-Nederlands, geen Noord-Nederlandse woordkeuze
 
-De studenten zijn Vlaams, en de cursus is dat ook. Schrijf dus **standaardtaal zoals ze in Vlaanderen
+De studenten zijn Vlaams, en de cursus is dat ook. Schrijf dus **Nederlands zoals het in Vlaanderen
 geschreven wordt**, en vermijd woorden die typisch Noord-Nederlands aanvoelen.
 
 > **Voor:** Met `map()` kun je een waarde van het ene bereik omzetten naar een ander.
@@ -199,15 +253,20 @@ en het werkwoord, en toch is het dezelfde vorm. De Vlaamse standaardvorm is `kan
 onderwerp ook staat.
 
 Wat er verder in de lijst staat: `flink` (deel ze flink door) wordt `ruim` of `stevig`, `prima`
-(dat werkt prima) wordt `goed` of `zonder problemen`, en `eventjes` wordt `even` of `kort`. Verder
+(dat werkt prima) wordt `goed` of `zonder problemen`, en `eventjes` wordt `even` of `kort`, of het
+gaat helemaal weg wanneer de zin het niet nodig heeft (patroon 13). Verder
 preventief `hartstikke`, `gaaf`, `lekker` als versterker, en `hoor` of `nou` als toevoegsel aan het
 einde van een zin.
 
 **Twee waarschuwingen, en dit is waar zo'n regel misgaat.**
 
-Ten eerste: het doel is standaardtaal, **geen Belgicismen**. "Neem daarvoor best een weerstand van
-10 k&Omega;" is goed Belgisch Nederlands en blijft staan; "vijs" in plaats van schroef, of "kuisen"
-in plaats van schoonmaken, is dat niet. Vlaamser schrijven betekent niet gewestelijker schrijven.
+Ten eerste: bij twijfel **wint het Belgische woord**. De scheidslijn ligt niet tussen Belgisch en
+standaard, maar tussen schrijftaal en spreektaal. Wat je in een Vlaamse cursus- of krantentekst
+geschreven ziet, blijft staan, ook wanneer een woordenboek er "in België" bij zet: "neem daarvoor
+best een weerstand van 10 k&Omega;", "op het eerste zicht", "verderzetten". Wat alleen in een
+gesprek voorkomt, gaat weg: "deftig" voor behoorlijk, "een pak beter", "vijs", "kuisen", "de linkse
+knop". Liever een Belgicisme dan een Hollandisme, dus wanneer je moet kiezen tussen twee woorden die
+allebei kunnen, neem je het Vlaamse.
 
 Ten tweede: er zijn woorden die alleen Noord-Nederlands *lijken*. `netjes` is gewoon Nederlands en
 wordt in Vlaanderen even goed gebruikt, dus dat is geen regionale fout (het is er wel vaak een van
@@ -232,6 +291,45 @@ Die tweede laat goed zien waarom dit meer is dan een woord te veel: "wacht netje
 buffer een braaf wezen, en dat is patroon 7. Let ook op `heel even` (een verzachter op een
 verzachter), en kijk met dezelfde blik naar `eigenlijk` en `uiteraard`. `letterlijk` in
 "`digitalWrite()` zet letterlijk 5 V op een pin" blijft, want daar betekent het echt iets.
+
+Hier staat met opzet **geen woordenlijst**, anders dan bij patroon 11 en 12. De toets is één vraag:
+verliest de zin iets wanneer je het bijwoord schrapt? De gemeten lijst leeft in `FILLERS` in
+`scripts/check-content.sh`, want die groeit per doorloop en hoort bij het gereedschap. `gewoon` en
+`precies` staan er niet in en komen er ook niet in: die betekenen vaak wel iets ("een gewone digitale
+uitgang", "precies even breed"), en toch zijn ze samen het vaakst geschrapte vulwoord van de repo.
+Die twee vragen dus een lezer.
+
+### 14. Geen terzijde als knipoog
+
+Een grapje tussen haakjes dat niets uitlegt, gaat weg. Een emoji ook.
+
+> **Voor:** Elke goede bibliotheek (ja, er zijn er ook slechte) bevat een aantal voorbeeldprogramma's.
+>
+> **Na:** Elke goede bibliotheek bevat een aantal voorbeeldprogramma's.
+
+Dezelfde grond als patroon 1: het staat er om te charmeren en niet om te informeren. Een terzijde dat
+wél iets zegt, is geen knipoog en blijft, al staat het meestal beter in de hoofdzin (zie de proef
+hieronder). De enige emoji van de cursus stond in labo 0 en is weg.
+
+Informele opmaak is iets anders dan een knipoog. `TLDR:` boven een samenvatting kondigt aan wat er
+komt en blijft dus staan.
+
+### 15. Beeldspraak alleen waar het gewone woord ontbreekt
+
+Bestaat er een letterlijk woord voor wat je bedoelt, dan schrijf je dat.
+
+> **Voor:** ... terwijl je maar drie pinnen van je Arduino opoffert.
+>
+> **Na:** ... terwijl je maar drie pinnen van je Arduino gebruikt.
+
+Een beeld dat een mechanisme uitlegt, is uitleg en valt onder *Wat blijft*. Het verschil zit in wat er
+gebeurt als je het beeld schrapt: verdwijnt er alleen kleur, dan was het opsmuk; verdwijnt er begrip,
+dan hoort het er.
+
+Een stijlronde vervangt een beeld **alleen wanneer de letterlijke formulering al op de pagina staat**,
+zoals `opoffert` naast `gebruikt`. Vraagt de vervanging een technisch feit dat er nog niet staat, dan
+is het geen stijlingreep meer en gaat de zin naar de vragenlijst van die doorloop. Zo blijft overeind
+dat een stijlronde nooit verzint wat een pagina beweert.
 
 ### Spelling: `led`, niet `LED`
 
@@ -270,6 +368,7 @@ Bij twijfel over een alinea, drie vragen:
    een dubbele punt staat, staat het op de verkeerde plaats.
 
 [Labo0/Reference/WatIsEenMicrocontroller.html](Labo0/Reference/WatIsEenMicrocontroller.html) is het
-ijkpunt: die pagina is volledig volgens dit document herschreven en had eerder elf van de dertien
+ijkpunt: die pagina is volledig volgens dit document herschreven en had eerder elf van de toen dertien
 patronen (12 en 13 stonden er niet in, die pagina gebruikte al "kan je" en geen vulwoorden). Leg de
-twee versies naast elkaar als je wil zien wat dit in de praktijk betekent.
+twee versies naast elkaar als je wil zien wat dit in de praktijk betekent. Patroon 14 en 15 zijn er
+later bij gekomen en zijn dus niet aan die pagina getoetst.

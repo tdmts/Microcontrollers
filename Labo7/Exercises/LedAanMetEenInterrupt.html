@@ -11,9 +11,9 @@
 <body>
 <div class="container">
     <h1>Een led die aangaat zonder loop</h1>
-    <p class="lead">Je eerste interrupt, en meteen het bewijs dat hij werkt: je <code>loop()</code> blijft helemaal leeg, en toch reageert je led op de knop.</p>
+    <p class="lead">Je eerste interrupt. Je <code>loop()</code> blijft helemaal leeg, en toch reageert je led op de knop.</p>
 
-    <p>Zes labo's lang stond alles wat er moest gebeuren in je <code>loop()</code>. Deze keer laat je die met opzet leeg. Werkt je programma toch, dan weet je zeker dat de interrupt het werk gedaan heeft, want er is niets anders dat het gedaan k&aacute;n hebben.</p>
+    <p>Tot nu toe stond alles wat er moest gebeuren in je <code>loop()</code>. Deze keer laat je die met opzet leeg. Werkt je programma toch, dan weet je zeker dat de interrupt het werk gedaan heeft, want er is niets anders dat het gedaan kan hebben.</p>
 
     <p>Deze oefening werk je uit in TinkerCAD.</p>
 
@@ -42,8 +42,8 @@
     </div>
 
     <div class="info-box warning">
-        <div class="info-title warning">De knop m&oacute;&eacute;t op pin 2 of pin 3</div>
-        <p>Op een Arduino UNO kunnen maar twee pinnen een interrupt opwekken. Zet je je knop ergens anders, dan compileert alles netjes en gebeurt er nooit iets. Zie <a href="../Reference/Interruptpinnen.html">attachInterrupt en de interruptpinnen</a>.</p>
+        <div class="info-title warning">De knop moet op pin 2 of pin 3</div>
+        <p>Op een Arduino UNO kunnen maar twee pinnen een interrupt opwekken. Zet je je knop ergens anders, dan compileert alles en gebeurt er nooit iets. Zie <a href="../Reference/Interruptpinnen.html">attachInterrupt en de interruptpinnen</a>.</p>
     </div>
 
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
@@ -60,12 +60,12 @@
 
     <p>Bij het opstarten gebeurt er niets. Druk je op de knop, dan gaat de led aan. En dan blijft hij aan.</p>
 
-    <p>Dat is geen fout, dat is precies wat je geschreven hebt: er staat nergens iets dat de led weer uitzet. Druk je nog eens, dan gaat je ISR opnieuw af, maar je ziet er niets van omdat de led al brandt. Wil je opnieuw beginnen, druk dan op de resetknop van je Arduino.</p>
+    <p>Dat is wat je geschreven hebt, want er staat nergens iets dat de led weer uitzet. Druk je nog eens, dan gaat je ISR opnieuw af, maar je ziet er niets van omdat de led al brandt. Wil je opnieuw beginnen, druk dan op de resetknop van je Arduino.</p>
 
     <div class="info-box tip">
-        <div class="info-title tip">Probeer dit eens, het is de hele les van deze oefening</div>
+        <div class="info-title tip">De interrupt gaat af terwijl je loop in een delay zit</div>
         <p>Zet als proef een <code>delay(5000)</code> in je <code>loop()</code>. Je programma zit nu vijf seconden per keer niets te doen.</p>
-        <p>Druk nu op de knop. De led gaat nog altijd meteen aan, ook al zit je <code>loop()</code> midden in die vijf seconden vast. Precies dat kon je met <code>digitalRead()</code> nooit voor elkaar krijgen.</p>
+        <p>Druk nu op de knop. De led gaat nog altijd meteen aan, ook al zit je <code>loop()</code> midden in die vijf seconden vast. Dat kon je met <code>digitalRead()</code> nooit voor elkaar krijgen.</p>
         <p>Haal die <code>delay()</code> daarna weer weg voor je indient.</p>
     </div>
 
@@ -83,7 +83,7 @@
             <li><label><input type="checkbox" class="form-check-input me-2"> Je knop zit op pin 2 of pin 3, want geen enkele andere pin kan dit</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je gebruikt <code>digitalPinToInterrupt()</code> en geen ruw interruptnummer</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je ISR is <code>void</code> en heeft niets tussen de haakjes staan</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> In <code>attachInterrupt()</code> staat de naam van je functie z&oacute;nder haakjes erachter</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> In <code>attachInterrupt()</code> staat de naam van je functie zonder haakjes erachter</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De <code>pinMode()</code> van je knop staat v&oacute;&oacute;r de <code>attachInterrupt()</code></label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De pinnummers staan als const int bovenaan en niet als losse getallen in je code</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
@@ -125,15 +125,15 @@ void loop()
 }</code></pre>
 
             <div class="info-box remark">
-                <div class="info-title remark">Waarom FALLING en niet RISING?</div>
-                <p>Met <code>INPUT_PULLUP</code> staat de pin hoog zolang je niets doet. Druk je, dan verbindt de knop hem met de massa en gaat hij naar laag. De flank op het moment van indrukken is dus een d&aacute;lende flank.</p>
-                <p>Schrijf je <code>RISING</code>, dan gaat je led pas branden op het moment dat je de knop weer <em>loslaat</em>. Probeer het gerust eens, het maakt het verschil meteen duidelijk.</p>
+                <div class="info-title remark">FALLING hoort bij een knop met INPUT_PULLUP</div>
+                <p>Met <code>INPUT_PULLUP</code> staat de pin hoog zolang je niets doet. Druk je, dan verbindt de knop hem met de massa en gaat hij naar laag. De flank op het moment van indrukken is dus een dalende flank.</p>
+                <p>Schrijf je <code>RISING</code>, dan gaat je led pas branden op het moment dat je de knop weer <em>loslaat</em>. Probeer het eens, dan zie je het verschil meteen.</p>
             </div>
 
             <div class="info-box remark">
-                <div class="info-title remark">Er staan geen haakjes achter ledAan</div>
+                <div class="info-title remark">De naam van je functie staat zonder haakjes</div>
                 <p>In <code>attachInterrupt(digitalPinToInterrupt(knopPin), ledAan, FALLING)</code> staat <code>ledAan</code> zonder haakjes. Je roept de functie hier niet op: je geeft door <em>welke</em> functie er later opgeroepen moet worden.</p>
-                <p>Schrijf je <code>ledAan()</code> met haakjes, dan probeert de compiler het resultaat van de functie door te geven. Die geeft niets terug, dus krijg je een foutmelding. Dat is er dan nog eentje die je zelf kan oplossen.</p>
+                <p>Schrijf je <code>ledAan()</code> met haakjes, dan probeert de compiler het resultaat van de functie door te geven. Die geeft niets terug, dus krijg je een foutmelding.</p>
             </div>
         </div>
     </div>

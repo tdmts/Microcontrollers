@@ -306,10 +306,21 @@ it. `CONTRIBUTING.md` and the `orion-convert` skill point at it rather than rest
 
 The short version: **keep the didactics, drop the theatre.** The pages written from labo 5 onward (and
 labo 0's theory pages) explain well but read manufactured, because nearly every paragraph builds
-toward a pointe and closes on a line meant to land. Thirteen patterns are named there: eleven about
-ornament (the closing punchline, the rhetorical tricolon, the rhetorical question as a transition, the
-colon-as-pointe, the stock `lead` opener and the decorative diminutive do the most damage) and two
-about word choice, namely Netherlandic vocabulary in a course for Flemish students and filler adverbs.
+toward a pointe and closes on a line meant to land. Fifteen patterns are named there: patterns 1 to 11
+are about ornament (the closing punchline, the rhetorical tricolon, the rhetorical question as a
+transition, the colon-as-pointe, the stock `lead` opener and the decorative diminutive do the most
+damage), 12 and 13 are about word choice, namely Netherlandic vocabulary in a course for Flemish
+students and filler adverbs, and 14 (the wink in parentheses) and 15 (decorative metaphor) were added
+later. The numbers are fixed even though the grouping no longer runs in order, because the ledgers in
+`review/` cite them.
+
+Three rules cut across all fifteen. They apply **everywhere a student reads** (body text, headings and
+box titles, the `lead`, checklist lines, spoiler labels, `alt`, `figcaption`, and `name`/`blurb` in the
+manifests) and **not** to the repo's own documentation. Language errors are **out of scope**: a comma
+splice is not style, so a pass collects them and puts them to the user rather than fixing them in the
+same diff. And a heading may never open on, or contain, a `geen` or `niet`, while a verbless heading
+("Het probleem", "In code") is perfectly fine, because the verbless test of pattern 5 applies to body
+text only.
 What stays is everything didactic: the *why* in plain
 declarative sentences, the callback to prior labs stated as fact, concrete examples in the main clause
 instead of in parentheses, the cross-links, the je-vorm, and box titles that say something.
@@ -320,7 +331,7 @@ to fix. Terser is not the goal; unperformed is.
 
 Six of those rules are greppable and live in `--audit` (see the content check above); the sixth is the
 spelling rule `led` rather than `LED`, which the document carries alongside the em-dash ban because it
-is not one of the thirteen patterns. The rest is a
+is not one of the fifteen patterns. The rest is a
 reading judgement, so [`Labo0/Reference/WatIsEenMicrocontroller.html`](Labo0/Reference/WatIsEenMicrocontroller.html)
 is kept as the worked specimen: it had eleven of the thirteen and was rewritten against the document.
 

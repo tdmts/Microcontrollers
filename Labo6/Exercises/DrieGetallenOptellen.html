@@ -13,7 +13,7 @@
     <h1>Drie getallen doorsturen en optellen</h1>
     <p class="lead">Arduino 1 verzint drie willekeurige getallen en stuurt ze door. Arduino 2 leest ze in, telt ze op, en toont de drie getallen met hun som in de seri&euml;le monitor.</p>
 
-    <p>Tot nu toe stond er altijd maar &eacute;&eacute;n soort waarde op de lijn. Zodra er meerdere waarden achter elkaar komen, duikt er een nieuw probleem op: de ontvanger moet weten welke van de drie hij aan het lezen is. Deze oefening laat je dat probleem zelf tegenkomen. In de volgende lossen we het op.</p>
+    <p>Tot nu toe stond er altijd maar &eacute;&eacute;n soort waarde op de lijn. Zodra er meerdere waarden achter elkaar komen, duikt er een nieuw probleem op, want de ontvanger moet weten welke van de drie hij aan het lezen is. Deze oefening laat je dat probleem zelf tegenkomen. In de volgende oefening los je het op.</p>
 
     <p>Deze oefening werk je uit in TinkerCAD. Je hebt alleen de drie seri&euml;le draden nodig, verder geen componenten.</p>
 
@@ -37,12 +37,12 @@
 
     <div class="info-box tip">
         <div class="info-title tip">random() begint elke keer op dezelfde plaats</div>
-        <p><code>random()</code> is niet echt willekeurig: het rekent een reeks uit die altijd dezelfde is als je op hetzelfde punt begint. Na elke reset krijg je dus exact dezelfde drie getallen. Met <code>randomSeed()</code> in je <code>setup()</code> geef je die reeks een ander vertrekpunt. De klassieke truc is <code>randomSeed(analogRead(A5))</code> met een pin waar niets aan hangt, want die pikt ruis op.</p>
+        <p><code>random()</code> rekent een reeks uit die altijd dezelfde is als je op hetzelfde punt begint. Na elke reset krijg je dus dezelfde drie getallen. Met <code>randomSeed()</code> in je <code>setup()</code> geef je die reeks een ander vertrekpunt. De klassieke truc is <code>randomSeed(analogRead(A5))</code> met een pin waar niets aan hangt, want die pikt ruis op.</p>
         <p>In TinkerCAD levert zo'n losse pin soms wel elke keer dezelfde waarde op, en dan blijft je reeks toch hetzelfde. Dat is geen fout in je programma, en voor deze oefening maakt het niets uit.</p>
     </div>
 
     <div class="info-box remark">
-        <div class="info-title remark">random(0, 1000) geeft geen 1000</div>
+        <div class="info-title remark">De bovengrens van random() valt erbuiten</div>
         <p>De bovengrens die je meegeeft doet zelf niet mee. <code>random(0, 1000)</code> geeft je dus een getal van 0 tot en met 999. Wil je 1000 er wel bij, dan schrijf je <code>random(0, 1001)</code>.</p>
     </div>
 
@@ -50,9 +50,7 @@
 
     <p>Als je programma werkt, doe dan nog deze proef. Laat de twee borden lopen en druk halverwege een reeks op de <strong>resetknop van Arduino 2</strong>, of start alleen de ontvanger opnieuw op.</p>
 
-    <p>Kijk daarna goed naar wat er in de monitor verschijnt. De kans is groot dat de som niet meer klopt met de getallen die de zender verstuurt, en dat het zo blijft. De ontvanger telt gewoon verder in de veronderstelling dat het volgende getal het eerste van een nieuwe reeks is, terwijl hij eigenlijk in het midden ingestapt is. Hij merkt daar zelf niets van.</p>
-
-    <p>Dat is precies het probleem waar de volgende oefening een antwoord op geeft.</p>
+    <p>Kijk daarna goed naar wat er in de monitor verschijnt. De kans is groot dat de som niet meer klopt met de getallen die de zender verstuurt, en dat het zo blijft. De ontvanger telt verder in de veronderstelling dat het volgende getal het eerste van een nieuwe reeks is, terwijl hij in het midden ingestapt is. Hij merkt daar zelf niets van.</p>
 
     <hr>
 
@@ -78,7 +76,7 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>Bij de ontvanger staat het lezen van &eacute;&eacute;n getal in een aparte functie. Zo blijft de <code>loop()</code> leesbaar: er staat letterlijk "lees a, lees b, lees c". Zonder die functie zou je driemaal hetzelfde blok code onder elkaar hebben staan.</p>
+            <p>Bij de ontvanger staat het lezen van &eacute;&eacute;n getal in een aparte functie. Zo blijft de <code>loop()</code> leesbaar, want er staat "lees a, lees b, lees c". Zonder die functie zou je driemaal hetzelfde blok code onder elkaar hebben staan.</p>
 
             <p>Die functie blijft wachten tot er iets binnenkomt. Dat mag hier, want de ontvanger heeft toch niets anders te doen.</p>
 
@@ -135,7 +133,7 @@ void loop()
   Serial.println(a + b + c);
 }</code></pre>
 
-            <p>En dat is meteen de zwakke plek. Nergens in dit programma staat welk getal het eerste van een reeks is. De ontvanger neemt gewoon aan dat het volgende dat binnenkomt de <code>a</code> is. Stap hij op het verkeerde moment in, dan schuift alles &eacute;&eacute;n plaats op en blijft dat zo, want er is niets dat hem ooit weer op het juiste spoor zet.</p>
+            <p>Dit programma heeft &eacute;&eacute;n zwakke plek. Nergens staat welk getal het eerste van een reeks is. De ontvanger neemt aan dat het volgende dat binnenkomt de <code>a</code> is. Stap hij op het verkeerde moment in, dan schuift alles &eacute;&eacute;n plaats op en blijft dat zo, want er is niets dat hem ooit weer op het juiste spoor zet.</p>
         </div>
     </div>
 </div>

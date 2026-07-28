@@ -11,17 +11,17 @@
 <body>
 <div class="container">
     <h1>Werken met een String</h1>
-    <p class="lead">Een <code>String</code> is een variabele met tekst erin, net zoals een <code>int</code> er een geheel getal in heeft. Je hebt er in dit labo eentje nodig, want een boodschap die binnenkomt is tekst voor je er een getal van maakt.</p>
+    <p class="lead">Een <code>String</code> is een variabele met tekst erin, net zoals een <code>int</code> er een geheel getal in heeft. Je hebt er in dit labo een nodig, want een boodschap die binnenkomt is tekst voor je er een getal van maakt.</p>
 
-    <p>Je maakt er een aan zoals elke andere variabele. Let op de hoofdletter S, dat is geen typfout maar de naam van het type.</p>
+    <p>Je maakt er een aan zoals elke andere variabele. Let op de hoofdletter S, want dat is de naam van het type.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>String commando = Serial.readStringUntil('\n');</code></pre>
 
     <h2 id="wat-je-ermee-kan">Wat je ermee kan</h2>
 
-    <p>Een String kan meer dan een gewone variabele: je kan hem van alles vr&aacute;gen. Dat doe je met een punt achter de naam, net zoals bij <code>Serial.print()</code>.</p>
+    <p>Een String kan meer dan een gewone variabele, want je kan hem van alles vragen. Dat doe je met een punt achter de naam, net zoals bij <code>Serial.print()</code>.</p>
 
-    <p>Dit zijn de functies die je in dit labo nodig hebt. Hieronder staan ze allemaal in &eacute;&eacute;n programma dat je gewoon kan uploaden. Typ in de seri&euml;le monitor een boodschap met een dubbelepunt erin, bijvoorbeeld <code>led:1</code>, en je ziet van elke instructie het resultaat verschijnen. Achter elke regel staat in commentaar wat je krijgt als je precies <code>led:1</code> typt.</p>
+    <p>Dit zijn de functies die je in dit labo nodig hebt. Hieronder staan ze allemaal in &eacute;&eacute;n programma dat je kan uploaden. Typ in de seri&euml;le monitor een boodschap met een dubbelepunt erin, bijvoorbeeld <code>LED:1</code>, en je ziet van elke instructie het resultaat verschijnen. Achter elke regel staat in commentaar wat je krijgt als je precies <code>LED:1</code> typt.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
 {
@@ -79,35 +79,35 @@ void loop()
   }
 }</code></pre>
 
-    <p>Die drie laatste zijn de moeite om te onthouden. <code>toInt()</code> en <code>toFloat()</code> geven je nooit een foutmelding: lukt het omzetten niet, dan krijg je gewoon 0 terug. Je kan dus niet zien of er echt een 0 binnenkwam of iets wat helemaal geen getal was.</p>
+    <p>Die drie laatste zijn de moeite om te onthouden. <code>toInt()</code> en <code>toFloat()</code> geven je nooit een foutmelding. Lukt het omzetten niet, dan krijg je 0 terug. Je kan dus niet zien of er echt een 0 binnenkwam of iets wat helemaal geen getal was.</p>
 
     <div class="info-box warning">
-        <div class="info-title warning">Een punt, geen komma</div>
+        <div class="info-title warning">toFloat() verwacht een decimale punt</div>
         <p><code>toFloat()</code> verwacht een decimale <strong>punt</strong>, zoals in <code>20.12</code>. Stuur je <code>20,12</code> door, dan stopt hij bij de komma en houd je 20 over. Schrijf je zender dus altijd met een punt, ook al zeg je in het Nederlands "twintig komma twaalf".</p>
     </div>
 
     <h2 id="vergelijken">Twee Strings vergelijken</h2>
 
-    <p>Met <code>==</code> vergelijk je de inhoud, precies zoals je zou verwachten. Hoofdletters tellen mee, dus <code>"led"</code> is niet hetzelfde als <code>"led"</code>.</p>
+    <p>Met <code>==</code> vergelijk je de inhoud, precies zoals je zou verwachten. Hoofdletters tellen mee, dus <code>"LED"</code> is niet hetzelfde als <code>"led"</code>.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>if (sleutel == "LED")
 {
   // ...
 }</code></pre>
 
-    <p>Er bestaat ook <code>sleutel.equals("led")</code>. Dat doet exact hetzelfde: de <code>==</code> van een String roept intern gewoon <code>equals()</code> op. Neem gerust <code>==</code>, dat leest het vlotst. Wil je hoofdletters negeren, dan is er <code>equalsIgnoreCase()</code>.</p>
+    <p>Er bestaat ook <code>sleutel.equals("LED")</code>. Dat doet exact hetzelfde, want de <code>==</code> van een String roept intern <code>equals()</code> op. Neem gerust <code>==</code>, dat leest het vlotst. Wil je hoofdletters negeren, dan is er <code>equalsIgnoreCase()</code>.</p>
 
     <div class="info-box remark">
         <div class="info-title remark">Als je Java kent, vergeet die regel hier</div>
-        <p>In Java moet je <code>equals()</code> gebruiken, want daar vergelijkt <code>==</code> of het twee keer dezelfde plaats in het geheugen is en niet of er hetzelfde in staat. In Arduino is dat niet zo: de String-klasse heeft een eigen <code>==</code> die de inhoud vergelijkt. Hier zijn de twee dus echt inwisselbaar.</p>
-        <p>Waar het w&eacute;l misgaat is bij tekst die geen String is. Vergelijk je twee <code>char*</code> met <code>==</code>, dan vergelijk je adressen en krijg je bijna altijd <code>false</code>. Zolang minstens &eacute;&eacute;n van de twee kanten een String is, zoals hier, zit je goed.</p>
+        <p>In Java moet je <code>equals()</code> gebruiken, want daar vergelijkt <code>==</code> of het twee keer dezelfde plaats in het geheugen is en niet of er hetzelfde in staat. In Arduino heeft de String-klasse een eigen <code>==</code> die de inhoud vergelijkt. Hier zijn de twee dus echt inwisselbaar.</p>
+        <p>Waar het wel misgaat is bij tekst die geen String is. Vergelijk je twee <code>char*</code> met <code>==</code>, dan vergelijk je adressen en krijg je bijna altijd <code>false</code>. Zolang minstens &eacute;&eacute;n van de twee kanten een String is, zoals hier, zit je goed.</p>
     </div>
 
     <h2 id="sleutel-en-waarde">Het recept: SLEUTEL:WAARDE</h2>
 
-    <p>In dit labo spreken we af dat elke boodschap er zo uitziet: eerst een sleutel die zegt <em>waarover</em> het gaat, dan een dubbelepunt, dan de waarde. Dus <code>TEMP:20.12</code>, <code>HUMIDITY:40</code> of <code>MODE:AUTO</code>.</p>
+    <p>In dit labo ziet elke boodschap er zo uit: eerst een sleutel die zegt <em>waarover</em> het gaat, dan een dubbelepunt, dan de waarde. Dus <code>TEMP:20.12</code>, <code>HUMIDITY:40</code> of <code>MODE:AUTO</code>.</p>
 
-    <p>De ontvanger zoekt de dubbelepunt, knipt de lijn daar in twee, kijkt met een <code>if</code> welke sleutel het is, en zet pas d&aacute;&aacute;rna de waarde om naar het juiste type. Dat laatste kan je pas als je de sleutel kent: bij <code>TEMP</code> hoort een kommagetal, bij <code>HUMIDITY</code> een geheel getal, en bij <code>MODE</code> helemaal geen getal.</p>
+    <p>De ontvanger zoekt de dubbelepunt, knipt de lijn daar in twee, kijkt met een <code>if</code> welke sleutel het is, en zet pas daarna de waarde om naar het juiste type. Dat laatste kan je pas als je de sleutel kent, want bij <code>TEMP</code> hoort een kommagetal, bij <code>HUMIDITY</code> een geheel getal, en bij <code>MODE</code> helemaal geen getal.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
 {
@@ -146,7 +146,7 @@ void loop()
   }
 }</code></pre>
 
-    <p>Waarom die <code>if (scheiding &gt; 0)</code>? Omdat <code>indexOf()</code> je -1 geeft als er geen dubbelepunt in staat. Zou je dan toch verder doen, dan rekent <code>substring(0, -1)</code> met onzin. Er komt vroeg of laat rommel binnen op een seri&euml;le lijn, dus vang dat op.</p>
+    <p>Die <code>if (scheiding &gt; 0)</code> staat er omdat <code>indexOf()</code> je -1 geeft als er geen dubbelepunt in staat. Zou je dan toch verder doen, dan rekent <code>substring(0, -1)</code> met onzin. Er komt vroeg of laat rommel binnen op een seri&euml;le lijn, dus vang dat op.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Waarom een sleutel de moeite waard is</div>
@@ -156,7 +156,7 @@ void loop()
 
     <h2 id="string-en-geheugen">String en het geheugen van je UNO</h2>
 
-    <p>Een String past zijn lengte aan terwijl je programma draait. Hij vraagt daarvoor telkens een stuk geheugen, en geeft het weer vrij als hij niet meer nodig is. Een UNO heeft daar 2 kB voor. Vraag en geef je lang genoeg stukken van wisselende grootte, dan raakt dat geheugen versnipperd: er is nog genoeg vrij, maar nergens een aaneengesloten stuk dat groot genoeg is. Je programma loopt dan vast zonder ook maar &eacute;&eacute;n foutmelding.</p>
+    <p>Een String past zijn lengte aan terwijl je programma draait. Hij vraagt daarvoor telkens een stuk geheugen, en geeft het weer vrij als hij niet meer nodig is. Een UNO heeft daar 2 kB voor. Vraag en geef je lang genoeg stukken van wisselende grootte, dan raakt dat geheugen versnipperd, waardoor er nog wel genoeg vrij is maar nergens een aaneengesloten stuk dat groot genoeg is. Je programma loopt dan vast zonder foutmelding.</p>
 
     <p>Dat klinkt erger dan het voor jou is. Het patroon dat je in dit labo gebruikt, is net het veilige:</p>
 
@@ -165,7 +165,7 @@ regel.trim();
 // ... hier gebruik je hem ...
                                              // en aan het einde van de loop weer opgeruimd</code></pre>
 
-    <p>Er leeft hier altijd maar &eacute;&eacute;n String tegelijk, en die wordt aan het einde van elke ronde weer vrijgegeven. Het stuk dat vrijkomt is precies het laatst gevraagde, dus het sluit netjes weer aan bij de rest. Zo blijft er niets versnipperd achter.</p>
+    <p>Er leeft hier altijd maar &eacute;&eacute;n String tegelijk, en die wordt aan het einde van elke ronde weer vrijgegeven. Het stuk dat vrijkomt is precies het laatst gevraagde, dus het sluit weer aan bij de rest. Zo blijft er niets versnipperd achter.</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -187,7 +187,7 @@ regel.trim();
                 </tr>
                 <tr>
                     <td>Lange zinnen aan elkaar plakken met <code>+</code> om ze daarna te tonen</td>
-                    <td>Gewoon meerdere keren <code>Serial.print()</code> of <code>lcd.print()</code></td>
+                    <td>Meerdere keren <code>Serial.print()</code> of <code>lcd.print()</code></td>
                 </tr>
             </tbody>
         </table>
@@ -195,7 +195,7 @@ regel.trim();
 
     <div class="info-box tip">
         <div class="info-title tip">Wil je zien hoeveel er nog vrij is?</div>
-        <p>Met dit functietje meet je hoeveel geheugen er nog tussen je variabelen en je stack zit. Print het elke paar seconden: blijft het getal stabiel, dan zit je goed. Zakt het traag maar zeker, dan lekt er iets.</p>
+        <p>Met deze functie meet je hoeveel geheugen er nog tussen je variabelen en je stack zit. Print het elke paar seconden. Blijft het getal stabiel, dan zit je goed. Zakt het traag maar zeker, dan lekt er iets.</p>
         <pre class="code-wrapper language-cpp linenumbers show-language"><code>int vrijGeheugen()
 {
   extern int __heap_start, *__brkval;
@@ -205,7 +205,7 @@ regel.trim();
 }</code></pre>
     </div>
 
-    <p>Bouw je ooit iets dat weken aan een stuk moet draaien, dan is de veiligste weg om <code>String</code> helemaal links te laten liggen en je tekens in een vaste <code>char</code>-array te lezen. Die heeft altijd dezelfde grootte, dus er valt niets te versnipperen. Het kost meer regels code, en daarom doen we het hier niet: voor de oefeningen van dit labo, en voor zowat alles wat je in dit vak bouwt, is <code>String</code> de juiste keuze.</p>
+    <p>Bouw je ooit iets dat weken aan een stuk moet draaien, dan laat je <code>String</code> beter achterwege en lees je je tekens in een vaste <code>char</code>-array. Die heeft altijd dezelfde grootte, dus er valt niets te versnipperen. Het kost meer regels code, en daarom blijft dat hier achterwege. Voor de oefeningen van dit labo, en voor zowat alles wat je in dit vak bouwt, is <code>String</code> de juiste keuze.</p>
 </div>
 
 <script src="../../reference.js"></script>

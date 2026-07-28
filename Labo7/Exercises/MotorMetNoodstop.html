@@ -65,12 +65,12 @@
 
     <p>Je hebt twee knoppen en de UNO heeft twee interruptpinnen. Dat lijkt te passen, maar pin 3 stuurt hier je transistor aan. Die is dus bezet, en er blijft maar &eacute;&eacute;n interruptpin over.</p>
 
-    <p>Dat dwingt je tot een keuze: welke van de twee knoppen krijgt de interrupt?</p>
+    <p>Dat dwingt je tot een keuze. Welke van de twee knoppen krijgt de interrupt?</p>
 
     <div class="info-box tip">
-        <div class="info-title tip">Het veiligheidskritische ding krijgt de interrupt</div>
-        <p>De noodstop. Altijd. Een startknop die je een halve seconde moet vasthouden is hinderlijk; een noodstop die een halve seconde te laat komt is gevaarlijk.</p>
-        <p>Dat is geen regeltje uit dit vak, dat is hoe je in de praktijk beslist welk signaal een interrupt verdient: niet het signaal dat het vaakst komt, maar het signaal waarvoor te laat gelijkstaat aan te laat.</p>
+        <div class="info-title tip">Het veiligheidskritische signaal krijgt de interrupt</div>
+        <p>De noodstop krijgt hem altijd. Een startknop die je een halve seconde moet vasthouden is hinderlijk; een noodstop die een halve seconde te laat komt is gevaarlijk.</p>
+        <p>Zo beslis je ook in de praktijk welk signaal een interrupt krijgt. Dat is niet het signaal dat het vaakst komt, maar het signaal waarbij te laat reageren gevaarlijk is.</p>
     </div>
 
     <h2 id="reken-eerst">Reken eerst je basisweerstand uit</h2>
@@ -83,13 +83,13 @@
         <div class="spoiler-content solution-content">
             <ul>
                 <li><code>Vbe</code> = 0,7 V volgens de datasheet.</li>
-                <li><code>hFE</code> = 200 volgens de datasheet, maar we rekenen net als in labo 5 met <strong>40</strong>, dus flink gedeeld, om zeker in saturatie te zitten.</li>
+                <li><code>hFE</code> = 200 volgens de datasheet, maar je rekent net als in labo 5 met <strong>40</strong>, dus ruim gedeeld, om zeker in saturatie te zitten.</li>
                 <li><code>Ib</code> = 0,08 A / 40 = 0,002 A</li>
                 <li><code>Rb</code> = (5 V - 0,7 V) / 0,002 A = 2150 &Omega;, dus je neemt <strong>2,2 k&Omega;</strong>.</li>
             </ul>
 
             <div class="info-box warning">
-                <div class="info-title warning">Reken niet met de hFE uit de datasheet zelf</div>
+                <div class="info-title warning">Reken met een hFE ver onder de typische waarde</div>
                 <p>Doe je dat wel, dan kom je op ongeveer 10 k&Omega; uit. Rekenkundig klopt dat, maar elektrisch niet. Die 200 is een typische waarde bij &eacute;&eacute;n bepaalde meting; een exemplaar uit je doos kan er ver onder zitten. Met 0,4 mA basisstroom schakelt je transistor dan niet volledig door, blijft er spanning over hem staan en wordt hij warm in plaats van dat hij schakelt.</p>
                 <p>In labo 5 dimde je met PWM, en dan is een transistor die niet helemaal doorschakelt vooral inefficient. Hier schakel je hard aan en uit, en dan is het net het punt van de hele schakeling. Neem de marge.</p>
             </div>
@@ -108,8 +108,8 @@
 
     <div class="info-box tip">
         <div class="info-title tip">Let straks op de seri&euml;le monitor</div>
-        <p>Start de motor, wacht twee seconden en druk dan op de noodstop. Kijk goed naar wat er gebeurt: de motor stopt meteen, maar de lijn "Motor gestopt" verschijnt pas <strong>acht seconden later</strong>.</p>
-        <p>Dat is geen bug. Dat is het bewijs dat je <code>loop()</code> al die tijd muurvast zat in zijn <code>delay()</code>, terwijl je motor allang stilstond. Precies daarom moest die <code>digitalWrite()</code> in je ISR staan en niet achter de vlag.</p>
+        <p>Start de motor, wacht twee seconden en druk dan op de noodstop. Kijk goed naar wat er gebeurt. De motor stopt meteen, maar de lijn "Motor gestopt" verschijnt pas <strong>acht seconden later</strong>.</p>
+        <p>Dat is het bewijs dat je <code>loop()</code> al die tijd in zijn <code>delay()</code> vastzat, terwijl je motor allang stilstond. Daarom moest die <code>digitalWrite()</code> in je ISR staan en niet achter de vlag.</p>
     </div>
 
     <hr>
@@ -139,7 +139,7 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>Let op de eerste regels van de <code>loop()</code>: die <code>return</code> zorgt ervoor dat de startknop na een noodstop niet meer bekeken wordt. Dat is het beleid dat de vlag afdwingt.</p>
+            <p>Let op de eerste regels van de <code>loop()</code>. Die <code>return</code> zorgt ervoor dat de startknop na een noodstop niet meer bekeken wordt. Dat is het beleid dat de vlag afdwingt.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int motorPin = 3;    // via de basisweerstand naar de basis van de transistor
 const int startPin = 4;    // gepold: pin 2 en 3 zijn al bezet
@@ -190,28 +190,28 @@ void loop()
 }</code></pre>
 
             <div class="info-box remark">
-                <div class="info-title remark">De startknop is tien seconden lang doof</div>
+                <div class="info-title remark">De startknop wordt tien seconden lang genegeerd</div>
                 <p>Terwijl de motor draait, zit je <code>loop()</code> in <code>delay(draaiTijd)</code>. Druk je in die tijd op de startknop, dan merkt je programma daar niets van. Dat is hier niet erg, want de motor draait toch al.</p>
-                <p>Maar het is w&eacute;l precies de reden waarom de noodstop een interrupt kreeg. Zet die knop eens als proef op pin 5 en lees hem uit met <code>digitalRead()</code>: je zal hem tien seconden lang moeten vasthouden voor er iets gebeurt. Dat is het probleem uit <a href="../Reference/PollenEnInterrupts.html">Van pollen naar interrupts</a>, en je voelt het hier aan een draaiende motor.</p>
+                <p>Maar het is wel de reden waarom de noodstop een interrupt kreeg. Zet die knop eens als proef op pin 5 en lees hem uit met <code>digitalRead()</code>. Je zal hem tien seconden lang moeten vasthouden voor er iets gebeurt. Dat is het probleem uit <a href="../Reference/PollenEnInterrupts.html">Van pollen naar interrupts</a>.</p>
             </div>
 
             <div class="info-box remark">
-                <div class="info-title remark">Het kan netter, en dat is een keuze</div>
-                <p>Wil je dat je programma ook meteen r&eacute;&aacute;geert in plaats van alleen de motor stil te leggen, dan vervang je die <code>delay(draaiTijd)</code> door een wachtlus die ondertussen naar de vlag kijkt:</p>
+                <div class="info-title remark">Je loop() kan ook meteen reageren</div>
+                <p>Wil je dat je programma ook meteen reageert in plaats van alleen de motor stil te leggen, dan vervang je die <code>delay(draaiTijd)</code> door een wachtlus die ondertussen naar de vlag kijkt:</p>
                 <pre class="code-wrapper language-cpp linenumbers show-language"><code>unsigned long start = millis();
 
 while (millis() - start &lt; draaiTijd &amp;&amp; noodstop == false)
 {
   // wachten, maar wel met de ogen open
 }</code></pre>
-                <p>Nu verschijnt "Motor gestopt" meteen. Merk op dat de motor daarmee geen milliseconde sneller stopt: dat deed de ISR al. Je wint alleen dat de rest van je programma niet blijft hangen. Bij een echte machine is dat het verschil tussen een noodstop die werkt en een noodstop die werkt <em>en</em> het meldt.</p>
-                <p>Dat is ook meteen de techniek die je in de laatste oefening van dit labo nodig hebt.</p>
+                <p>Nu verschijnt "Motor gestopt" meteen. Merk op dat de motor daarmee geen milliseconde sneller stopt, want dat deed de ISR al. Je wint alleen dat de rest van je programma niet blijft hangen.</p>
+                <p>Dit is de techniek die je in de laatste oefening van dit labo nodig hebt.</p>
             </div>
 
             <div class="info-box remark">
-                <div class="info-title remark">Had het ook anders gekund?</div>
-                <p>Ja. Pin 3 werd hier gebruikt voor de motor omdat labo 5 dat ook deed, niet omdat het moest. Verhuis je de motor naar pin 5, dan komt pin 3 vrij en kunnen b&eacute;ide knoppen een interrupt krijgen.</p>
-                <p>Dat is dus een keuze, geen beperking. Handig om te weten wanneer je zelf een schakeling ontwerpt: verdeel je pinnen zo dat de twee interruptpinnen overblijven voor de signalen die ze echt nodig hebben.</p>
+                <div class="info-title remark">Waarom de motor uitgerekend op pin 3 zit</div>
+                <p>Pin 3 werd hier gebruikt voor de motor omdat labo 5 dat ook deed, niet omdat het moest. Verhuis je de motor naar pin 5, dan komt pin 3 vrij en kunnen beide knoppen een interrupt krijgen.</p>
+                <p>Dat is dus een keuze en geen beperking. Wanneer je zelf een schakeling ontwerpt, verdeel je je pinnen zo dat de twee interruptpinnen overblijven voor de signalen die ze echt nodig hebben.</p>
             </div>
         </div>
     </div>

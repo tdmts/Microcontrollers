@@ -13,7 +13,7 @@
     <h1>Een potentiometerwaarde doorsturen en dimmen</h1>
     <p class="lead">De potentiometer zit op Arduino 1, de led op Arduino 2. Draai je aan de knop, dan verandert de helderheid van een led die aan een heel ander bord hangt.</p>
 
-    <p>De vorige oefening stuurde alleen aan of uit door. Nu stuur je een gemeten waarde, en dat is iets anders: een meting verandert voortdurend een klein beetje, dus je moet nadenken over h&oacute;&eacute; vaak je iets doorstuurt. Alles wat je hiervoor nodig hebt aan analoge in- en uitgangen ken je al uit <a href="../../Labo2/Reference/analogRead.html">analogRead()</a>, <a href="../../Labo2/Reference/analogWrite.html">analogWrite()</a> en <a href="../../Labo2/Reference/map.html">map()</a>.</p>
+    <p>De vorige oefening stuurde alleen aan of uit door. Nu stuur je een gemeten waarde. Een meting verandert voortdurend een klein beetje, dus je moet nadenken over hoe vaak je iets doorstuurt. Alles wat je hiervoor nodig hebt aan analoge in- en uitgangen ken je al uit <a href="../../Labo2/Reference/analogRead.html">analogRead()</a>, <a href="../../Labo2/Reference/analogWrite.html">analogWrite()</a> en <a href="../../Labo2/Reference/map.html">map()</a>.</p>
 
     <p>Deze oefening werk je uit in TinkerCAD. Vertrek van de bedrading uit de vorige oefening.</p>
 
@@ -64,7 +64,7 @@
 
     <p>Let op de twee bereiken. <code>analogRead()</code> geeft je 0 tot 1023, terwijl <code>analogWrite()</code> maar 0 tot 255 aankan. Die omrekening moet ergens gebeuren. Doe ze bij de ontvanger, want dan blijft er op de lijn staan wat er echt gemeten is en niet al een half verwerkt getal.</p>
 
-    <p>Kies zelf hoe vaak je zendt. Te traag en je led loopt zichtbaar achter op je vinger, te snel en je loopt de buffer over. Ergens tussen twintig en vijftig keer per seconde voelt goed.</p>
+    <p>Kies zelf hoe vaak je zendt. Te traag en je led loopt zichtbaar achter op je vinger, te snel en je loopt de buffer over. Ergens tussen twintig en vijftig keer per seconde is ruim genoeg.</p>
 
     <div class="info-box remark">
         <div class="info-title remark">Waarom zenden zonder pauze mis loopt</div>
@@ -141,7 +141,7 @@ void loop()
   }
 }</code></pre>
 
-            <p>Komt er ooit iets binnen dat geen getal is, dan geeft <code>toInt()</code> je gewoon 0 en gaat de led even uit. Dat is hier onschuldig. Vanaf de volgende oefening wordt het dat niet meer, en daar gaan we er dan ook iets aan doen.</p>
+            <p>Komt er ooit iets binnen dat geen getal is, dan geeft <code>toInt()</code> je 0 en gaat de led even uit. Dat is hier onschuldig. Vanaf de volgende oefening wordt het dat niet meer, en dan pak je het aan.</p>
         </div>
     </div>
 </div>

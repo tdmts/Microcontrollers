@@ -72,10 +72,12 @@ Er zitten ook zes opmerkingen over de tekst zelf bij, de enige zes uit
   dan mag je het toevoegen.
 - **Noord-Nederlandse woordkeuze** (`kun je`, `kunt`, `wilt`, `flink`, `prima`, `eventjes`). Onze
   studenten zijn Vlaams, en de repo is dat al bijna overal: `kan je` en `je kan` staan er 101 keer
-  tegen 6 keer `kun je`. Let op twee dingen. Het doel is standaardtaal zoals ze in Vlaanderen
-  geschreven wordt, **geen Belgicismen**: "je neemt best een weerstand van 10 k&Omega;" blijft
-  staan, "vijs" en "kuisen" horen er niet. En sommige woorden lijken alleen Noord-Nederlands:
-  `netjes` is gewoon Nederlands, en `best` in "je neemt best" is juist Belgisch.
+  tegen 6 keer `kun je`. Let op twee dingen. **Bij twijfel wint het Belgische woord**: de grens ligt
+  tussen schrijftaal en spreektaal, niet tussen Belgisch en standaard. "Je neemt best een weerstand
+  van 10 k&Omega;", "op het eerste zicht" en "verderzetten" blijven staan; "deftig" voor behoorlijk,
+  "een pak beter", "vijs" en "kuisen" horen er niet, want die schrijf je niet. En sommige woorden
+  lijken alleen Noord-Nederlands: `netjes` is gewoon Nederlands, en `best` in "je neemt best" is
+  juist Belgisch.
 - **Vulwoorden** (`netjes`, `heel even`). "Vergeet je `volatile`, dan compileert alles netjes" zegt
   precies hetzelfde zonder dat laatste woord.
 - **`LED` in kapitalen.** In de lopende tekst schrijf je `led` en `leds`, met een hoofdletter alleen
@@ -314,10 +316,13 @@ Deze niet, maar hou ze toch aan:
   [SCHRIJFSTIJL.md](SCHRIJFSTIJL.md) staat er helemaal over: kort gezegd leg je uit waarom iets zo
   is, in gewone mededelende zinnen, en laat je de opsmuk weg. Geen slotzin die moet blijven hangen,
   geen drie parallelle stellingen op een rij, geen retorische vraag als overgang, en geen
-  verkleinwoorden om een onderdeel gezellig te maken (het is een chip, geen blokje). Schrijf
-  standaardtaal zoals ze in Vlaanderen geschreven wordt, dus `kan je` en niet `kun je`, maar zonder
-  in Belgicismen te vervallen. Let op de omgekeerde fout: dit is geen vraag om korter of karig te
+  verkleinwoorden om een onderdeel gezellig te maken (het is een chip, geen blokje). Schrijf zoals in
+  Vlaanderen geschreven wordt, dus `kan je` en niet `kun je`, en bij twijfel liever het Belgische
+  woord dan het Noord-Nederlandse. Let op de omgekeerde fout: dit is geen vraag om korter of karig te
   schrijven, de uitleg blijft.
+- **Ook je koppen tellen mee.** Een kop of kadertitel zegt waar het stuk over gaat en niet wat de
+  pointe is, en bevat geen `geen` of `niet`: "Vervang `delay()` door `millis()`" in plaats van
+  "Gebruik geen `delay()`". Werkwoordloze koppen ("Het probleem", "In code") zijn wel gewoon goed.
 - **Volledige sketches** in de oplossing, geen fragmenten.
 - **Pinnummers van laag naar hoog.** Een gewone digitale uitgang begint bij 2, iets met
   `analogWrite()` bij de laagste PWM-pin, dus **3** (PWM op UNO en Leonardo: 3, 5, 6, 9, 10, 11).

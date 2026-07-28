@@ -13,7 +13,7 @@
     <h1>Weerstation op het LCD</h1>
     <p class="lead">Dezelfde drie boodschappen als in de vorige oefening, maar nu verschijnen ze op een LCD in plaats van in de seri&euml;le monitor. Bovenaan staat waarover het gaat, onderaan de waarde.</p>
 
-    <p>Je hebt nu alles wat je nodig hebt. Het uitpluizen van de boodschappen ken je uit de vorige oefening, en het LCD ken je uit <a href="../../Labo4/Exercises/TekstOpI2CLcd.html">Tekst op een I&sup2;C LCD display</a>. Wat overblijft is de twee samenbrengen, en nadenken over wat er op zo'n schermpje van twee regels past.</p>
+    <p>Je hebt nu alles wat je nodig hebt. Het uitpluizen van de boodschappen ken je uit de vorige oefening, en het LCD ken je uit <a href="../../Labo4/Exercises/TekstOpI2CLcd.html">Tekst op een I&sup2;C LCD display</a>. Wat overblijft is de twee samenbrengen, en nadenken over wat er op zo'n scherm van twee regels past.</p>
 
     <p>Deze oefening werk je uit in TinkerCAD.</p>
 
@@ -62,7 +62,7 @@
 
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
 
-    <p><strong>Arduino 1</strong> verandert niet. Je mag de zender uit de vorige oefening letterlijk overnemen.</p>
+    <p><strong>Arduino 1</strong> blijft zoals hij was. Je mag de zender uit de vorige oefening letterlijk overnemen.</p>
 
     <p><strong>Arduino 2</strong> leest de boodschappen zoals daarnet, maar zet het resultaat op het LCD:</p>
 
@@ -99,9 +99,9 @@
     <p>Elke keer dat er een nieuwe boodschap binnenkomt, vervang je wat er op het scherm staat.</p>
 
     <div class="info-box warning">
-        <div class="info-title warning">Een LCD wist zichzelf niet</div>
-        <p>Schrijf je <code>Rel. vochtigheid</code> over <code>Windrichting</code> heen, dan blijven de letters die uitsteken gewoon staan en lees je iets als <code>Rel. vochtighed</code>. Roep dus <code>lcd.clear()</code> aan voor je nieuwe tekst zet, of vul je regels aan met spaties tot precies 16 tekens.</p>
-        <p>Reken trouwens even na: <code>Rel. vochtigheid</code> is exact 16 tekens lang. Meer past er niet op een regel.</p>
+        <div class="info-title warning">Wis het scherm voor je nieuwe tekst zet</div>
+        <p>Schrijf je <code>Rel. vochtigheid</code> over <code>Windrichting</code> heen, dan blijven de letters die uitsteken staan en lees je iets als <code>Rel. vochtighed</code>. Roep dus <code>lcd.clear()</code> aan voor je nieuwe tekst zet, of vul je regels aan met spaties tot precies 16 tekens.</p>
+        <p><code>Rel. vochtigheid</code> is trouwens exact 16 tekens lang, en meer past er niet op een regel.</p>
     </div>
 
     <hr>
@@ -129,7 +129,7 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>Het uitpluizen van de lijn is woord voor woord hetzelfde als in de vorige oefening. Alleen wat er met het resultaat gebeurt, is anders. Daarom staat het tonen in een aparte functie <code>toon()</code>: die krijgt een titel en een waarde, en zet die op de twee regels. Zo staat de <code>lcd.clear()</code> op &eacute;&eacute;n plaats in plaats van drie keer, en kan je hem dus ook maar &eacute;&eacute;n keer vergeten.</p>
+            <p>Het uitpluizen van de lijn is woord voor woord hetzelfde als in de vorige oefening. Alleen wat er met het resultaat gebeurt, is anders. Daarom staat het tonen in een aparte functie <code>toon()</code>: die krijgt een titel en een waarde, en zet die op de twee regels. Zo staat de <code>lcd.clear()</code> op &eacute;&eacute;n plaats in plaats van drie keer.</p>
 
             <p><strong>Arduino 1</strong> is de zender uit de vorige oefening, ongewijzigd.</p>
 
@@ -202,7 +202,7 @@ void loop()
   }
 }</code></pre>
 
-            <p>Merk op dat de waarde hier nooit omgezet wordt naar een getal. Dat hoeft ook niet: op een scherm zet je tekst, en de zender heeft er al tekst van gemaakt. <code>waarde + " C"</code> plakt gewoon de eenheid erachter. Zou je iets met die waarde moeten <em>rekenen</em>, bijvoorbeeld een alarm bij meer dan 30 graden, dan heb je <code>toFloat()</code> w&eacute;l nodig.</p>
+            <p>Merk op dat de waarde hier nooit omgezet wordt naar een getal. Dat hoeft ook niet, want op een scherm zet je tekst en de zender heeft er al tekst van gemaakt. <code>waarde + " C"</code> plakt de eenheid erachter. Zou je iets met die waarde moeten <em>rekenen</em>, bijvoorbeeld een alarm bij meer dan 30 graden, dan heb je <code>toFloat()</code> wel nodig.</p>
         </div>
     </div>
 </div>

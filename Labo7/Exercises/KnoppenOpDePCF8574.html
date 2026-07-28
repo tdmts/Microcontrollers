@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>De PCF8574 laat van zich horen</h1>
-    <p class="lead">In labo 4 moest je je I/O-expander telkens opnieuw vragen of er al iets gebeurd was. Vanaf nu belt hij jou op. En je botst meteen op de scherpste regel van dit labo.</p>
+    <p class="lead">In labo 4 moest je je I/O-expander telkens opnieuw vragen of er al iets gebeurd was. Vanaf nu meldt hij het zelf, en tegelijk leer je waarom je in een ISR geen enkele I&sup2;C-opdracht mag geven.</p>
 
     <p>De PCF8574 heeft een pin die je in labo 4 niet gebruikt hebt: <strong>/INT</strong>. Zodra er op een van de acht I/O-lijnen iets verandert, trekt de chip die pin laag. Hang je hem aan een interruptpin van je Arduino, dan hoef je nooit meer uit jezelf te gaan kijken.</p>
 
@@ -26,12 +26,12 @@
         </figure>
     </div>
 
-    <p>Dat zinnetje in de datasheet is belangrijk. /INT is een <strong>open-collectoruitgang</strong>: de chip kan die pin wel naar de massa trekken, maar niet naar de plus duwen. Zonder pull-up zweeft hij dus, en meet je willekeurige rommel.</p>
+    <p>Die zin in de datasheet is belangrijk. /INT is een <strong>open-collectoruitgang</strong>. De chip kan die pin wel naar de massa trekken, maar niet naar de plus duwen. Zonder pull-up zweeft hij dus, en meet je willekeurige rommel.</p>
 
     <div class="info-box tip">
-        <div class="info-title tip">Je hebt die weerstand niet nodig</div>
-        <p>Zet de pin van je Arduino gewoon op <code>INPUT_PULLUP</code>. Dan zit de pull-up al in je Arduino en heb je aan de bedrading niets extra's.</p>
-        <p>Het streepje voor de naam, /INT, betekent trouwens <strong>actief laag</strong>: de melding is dat de pin naar 0 gaat, niet naar 1. Je interrupt gaat dus af op <code>FALLING</code>.</p>
+        <div class="info-title tip">De pull-up zit al in je Arduino</div>
+        <p>Zet de pin van je Arduino op <code>INPUT_PULLUP</code>. Dan zit de pull-up al in je Arduino en heb je aan de bedrading niets extra's.</p>
+        <p>De streep voor de naam, /INT, betekent trouwens <strong>actief laag</strong>. De melding is dat de pin naar 0 gaat, niet naar 1. Je interrupt gaat dus af op <code>FALLING</code>.</p>
     </div>
 
     <h2 id="het-schema">Het schema</h2>
@@ -73,36 +73,36 @@
         </table>
     </div>
 
-    <p>Het adres van je expander vind je met de scanner uit <a href="../../Labo4/Reference/I2CAdres.html">Het I&sup2;C adres vinden</a>. Ga er niet vanuit dat het hetzelfde is als bij je buur: het hangt af van hoe A0, A1 en A2 aangesloten zijn, en van welke versie van de chip je hebt.</p>
+    <p>Het adres van je expander vind je met de scanner uit <a href="../../Labo4/Reference/I2CAdres.html">Het I&sup2;C adres vinden</a>. Ga er niet vanuit dat het hetzelfde is als bij je buur, want het hangt af van hoe A0, A1 en A2 aangesloten zijn, en van welke versie van de chip je hebt.</p>
 
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
 
-    <p>Eenvoudige opdracht: <strong>elke druk op eender welke van de vier knoppen schakelt de led om</strong>. Brandt hij, dan gaat hij uit, en omgekeerd.</p>
+    <p>De opdracht is eenvoudig. <strong>Elke druk op eender welke van de vier knoppen schakelt de led om</strong>. Brandt hij, dan gaat hij uit, en omgekeerd.</p>
 
-    <p>Maar er zitten drie valkuilen in, en ze zijn alle drie het soort waar je een halve avond op kan zoeken.</p>
+    <p>Maar er zitten drie valkuilen in, en op elk ervan kan je lang zoeken.</p>
 
-    <h2 id="valkuil-1">Valkuil 1: je mag de expander niet uitlezen in je ISR</h2>
+    <h2 id="valkuil-1">Valkuil 1: de expander uitlezen hoort in je loop()</h2>
 
     <p>De opdracht zoals hij in het oude cursusmateriaal staat, luidt: lees in je ISR de knoppen uit, en houd je <code>loop()</code> volledig leeg. Dat kan niet. Probeer je het, dan hangt je bord vast en helpt alleen de resetknop nog.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Waarom een Wire-opdracht in een ISR je bord ophangt</div>
         <p>De I&sup2;C-hardware in je chip werkt byte per byte, en gebruikt <strong>zelf een interrupt</strong> om na elke byte verder te gaan. <code>Wire.requestFrom()</code> zet de overdracht in gang en blijft dan wachten tot die klaar is.</p>
-        <p>Maar in een ISR staan alle interrupts uit. Die hulp komt dus nooit, en <code>Wire.requestFrom()</code> blijft eeuwig wachten. Geen foutmelding, geen timeout: gewoon een dood bord.</p>
-        <p>En nee, je lost dit niet op door <code>interrupts()</code> bovenaan je ISR te zetten. Zie <a href="../Reference/InterruptServiceRoutine.html">De regels van een ISR</a> voor waarom dat nog erger is.</p>
+        <p>Maar in een ISR staan alle interrupts uit. Die hulp komt dus nooit, en <code>Wire.requestFrom()</code> blijft eeuwig wachten. Je krijgt geen foutmelding en geen timeout, en je bord doet niets meer.</p>
+        <p>Je lost dit ook niet op door <code>interrupts()</code> bovenaan je ISR te zetten. Zie <a href="../Reference/InterruptServiceRoutine.html">De regels van een ISR</a> voor waarom dat nog erger is.</p>
     </div>
 
-    <p>De oplossing is het <a href="../Reference/VolatileEnVlaggen.html">vlagpatroon</a>: je ISR zet alleen een <code>volatile bool</code> op <code>true</code>, en je <code>loop()</code> doet het I&sup2;C-werk. Je <code>loop()</code> blijft dus niet leeg, maar hij wordt wel heel kort.</p>
+    <p>De oplossing is het <a href="../Reference/VolatileEnVlaggen.html">vlagpatroon</a>. Je ISR zet alleen een <code>volatile bool</code> op <code>true</code>, en je <code>loop()</code> doet het I&sup2;C-werk. Je <code>loop()</code> blijft dus niet leeg, maar hij wordt wel heel kort.</p>
 
     <h2 id="valkuil-2">Valkuil 2: /INT blijft laag tot je leest</h2>
 
     <p>De expander laat /INT pas weer los wanneer jij hem uitleest. Doe je dat niet, dan blijft die pin laag hangen, komt er nooit meer een dalende flank, en gaat je interrupt precies &eacute;&eacute;n keer af in de hele levensduur van je programma.</p>
 
-    <p>Dat heeft ook een gevolg voor je <code>setup()</code>: lees de expander daar &eacute;&eacute;n keer uit <strong>voordat</strong> je <code>attachInterrupt()</code> oproept. Bij het opstarten staat /INT vaak al laag, en dan wacht je anders op een flank die al gepasseerd is.</p>
+    <p>Dat heeft ook een gevolg voor je <code>setup()</code>. Lees de expander daar &eacute;&eacute;n keer uit <strong>voordat</strong> je <code>attachInterrupt()</code> oproept. Bij het opstarten staat /INT vaak al laag, en dan wacht je anders op een flank die al gepasseerd is.</p>
 
     <h2 id="valkuil-3">Valkuil 3: /INT meldt ook het loslaten</h2>
 
-    <p>De expander meldt <em>elke</em> verandering, dus zowel het indrukken als het loslaten van een knop. Laat je je led bij elke melding omschakelen, dan schakelt hij twee keer per druk om en lijkt hij dood.</p>
+    <p>De expander meldt <em>elke</em> verandering, dus zowel het indrukken als het loslaten van een knop. Laat je je led bij elke melding omschakelen, dan schakelt hij twee keer per druk om en zie je er niets van.</p>
 
     <p>Je moet dus zelf uitzoeken welke bits van 1 naar 0 gegaan zijn. Dat idioom ken je al uit <a href="../../Labo4/Exercises/TellerMetI2CDrukknoppen.html">Teller met I&sup2;C-drukknoppen</a>:</p>
 
@@ -236,8 +236,8 @@ void loop()
 
             <div class="info-box remark">
                 <div class="info-title remark">Hier mag de delay() wel</div>
-                <p>Bovenaan de <code>loop()</code> staat een <code>delay(20)</code>, terwijl je net geleerd hebt dat <code>delay()</code> in een ISR verboden is. Dat klopt allebei: die <code>delay()</code> staat in je <code>loop()</code>, niet in je ISR.</p>
-                <p>Dat is precies wat het vlagpatroon je oplevert. Alles wat in een ISR niet mag, mag hier wel, omdat je het uit de ISR gehaald hebt.</p>
+                <p>Bovenaan de <code>loop()</code> staat een <code>delay(20)</code>, terwijl je net geleerd hebt dat <code>delay()</code> in een ISR verboden is. Dat klopt allebei, want die <code>delay()</code> staat in je <code>loop()</code> en niet in je ISR.</p>
+                <p>Dat is wat het vlagpatroon je oplevert. Alles wat in een ISR niet mag, mag hier wel, omdat je het uit de ISR gehaald hebt.</p>
             </div>
         </div>
     </div>

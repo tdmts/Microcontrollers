@@ -11,13 +11,13 @@
 <body>
 <div class="container">
     <h1>Boodschappen lezen</h1>
-    <p class="lead">Tot nu toe ging je seri&euml;le verkeer maar &eacute;&eacute;n richting uit: van de Arduino naar jouw scherm. Hier draait dat om. Je leert hoe je binnenkomende gegevens opvangt, en waarom je ze altijd per lijn leest.</p>
+    <p class="lead">Tot nu toe ging je seri&euml;le verkeer maar &eacute;&eacute;n richting uit, van de Arduino naar jouw scherm. Hier draait dat om. Je leert hoe je binnenkomende gegevens opvangt, en waarom je ze altijd per lijn leest.</p>
 
     <h2 id="de-ontvangstbuffer">De ontvangstbuffer</h2>
 
-    <p>Binnenkomende bytes blijven niet hangen tot jij er tijd voor hebt: ze worden automatisch opgeslagen in een stuk geheugen dat de <strong>buffer</strong> heet, 64 bytes groot. Jouw programma haalt ze daar op wanneer het uitkomt.</p>
+    <p>Binnenkomende bytes worden automatisch opgeslagen in een stuk geheugen dat de <strong>buffer</strong> heet, 64 bytes groot. Jouw programma haalt ze daar op wanneer het uitkomt.</p>
 
-    <p>Dat betekent twee dingen. Je moet <em>niet</em> exact op het juiste moment staan te kijken, want de bytes wachten op je. Maar je mag ook niet te lang wegblijven, want als er meer dan 64 bytes binnenkomen voor je iets ophaalt, valt het oudste eruit en ben je het kwijt.</p>
+    <p>Dat betekent twee dingen. Je moet <em>niet</em> exact op het juiste moment staan te kijken, want de bytes blijven in de buffer staan. Maar je mag ook niet te lang wegblijven, want als er meer dan 64 bytes binnenkomen voor je iets ophaalt, valt het oudste eruit en ben je het kwijt.</p>
 
     <h2 id="is-er-iets">Is er al iets binnen?</h2>
 
@@ -48,7 +48,7 @@
 
     <h2 id="een-lijn-tegelijk">Een lijn tegelijk met readStringUntil()</h2>
 
-    <p>Veel handiger: laat de Arduino zelf tekens verzamelen tot hij het einde van de lijn tegenkomt. Dat doet <code>Serial.readStringUntil('\n')</code>. Je krijgt alles wat er v&oacute;&oacute;r de <code>'\n'</code> stond terug als <a href="Strings.html">String</a>.</p>
+    <p>Veel handiger is dat de Arduino zelf tekens verzamelt tot hij het einde van de lijn tegenkomt. Dat doet <code>Serial.readStringUntil('\n')</code>. Je krijgt alles wat er v&oacute;&oacute;r de <code>'\n'</code> stond terug als <a href="Strings.html">String</a>.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
 {
@@ -61,16 +61,16 @@
   }
 }</code></pre>
 
-    <p>De <code>trim()</code> is geen overbodige luxe. De zender schrijft <code>println()</code> en zet er dus <code>'\r'</code> &eacute;n <code>'\n'</code> achter. <code>readStringUntil()</code> stopt bij de <code>'\n'</code>, dus die <code>'\r'</code> zit nog aan je tekst geplakt. Vergeet je de <code>trim()</code>, dan is <code>regel</code> gelijk aan <code>"led:1\r"</code> in plaats van <code>"led:1"</code>, en dan klopt je vergelijking niet meer.</p>
+    <p>De <code>trim()</code> is nodig. De zender schrijft <code>println()</code> en zet er dus <code>'\r'</code> &eacute;n <code>'\n'</code> achter. <code>readStringUntil()</code> stopt bij de <code>'\n'</code>, dus die <code>'\r'</code> zit nog aan je tekst geplakt. Vergeet je de <code>trim()</code>, dan is <code>regel</code> gelijk aan <code>"LED:1\r"</code> in plaats van <code>"LED:1"</code>, en dan klopt je vergelijking niet meer.</p>
 
     <div class="info-box warning">
-        <div class="info-title warning">Gebruik altijd het teken '\n', nooit "\r\n"</div>
+        <div class="info-title warning">Geef readStringUntil() &eacute;&eacute;n teken</div>
         <p><code>readStringUntil()</code> wil <strong>&eacute;&eacute;n</strong> teken, tussen enkele aanhalingstekens. Schrijf je <code>readStringUntil('\r\n')</code> met twee tekens ertussen, dan geeft de compiler een waarschuwing en doet je programma iets wat je niet bedoelde. Neem de <code>'\n'</code> en ruim de rest op met <code>trim()</code>.</p>
     </div>
 
     <h2 id="hoelang-wacht-hij">Hoelang wacht readStringUntil?</h2>
 
-    <p>Als de <code>'\n'</code> nooit komt, blijft <code>readStringUntil()</code> wachten, standaard &eacute;&eacute;n seconde. Zolang staat je <code>loop()</code> stil. Zolang de zender netjes <code>println()</code> gebruikt merk je daar niets van, want de <code>'\n'</code> komt altijd. Wil je die wachttijd korter, dan zet je in je <code>setup()</code>:</p>
+    <p>Als de <code>'\n'</code> nooit komt, blijft <code>readStringUntil()</code> wachten, standaard &eacute;&eacute;n seconde. Zolang staat je <code>loop()</code> stil. Zolang de zender <code>println()</code> gebruikt, merk je daar niets van, want de <code>'\n'</code> komt altijd. Wil je die wachttijd korter, dan zet je in je <code>setup()</code>:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>Serial.setTimeout(100); // wacht hoogstens 100 ms op het einde van een lijn</code></pre>
 

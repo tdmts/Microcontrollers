@@ -11,9 +11,9 @@
 <body>
 <div class="container">
     <h1>Noodstop op je looplicht</h1>
-    <p class="lead">Het looplicht uit labo 1 krijgt een noodknop. Die moet werken op het moment dat je drukt, niet wanneer het je programma uitkomt. Dit is de oefening waarin de kernles van dit labo op zijn plaats valt.</p>
+    <p class="lead">Het looplicht uit labo 1 krijgt een noodknop. Die moet werken op het moment dat je drukt, niet wanneer het je programma uitkomt.</p>
 
-    <p>Haal je <a href="../../Labo1/Exercises/Looplicht.html">Looplicht</a> uit labo 1 erbij. De bedrading blijft exact dezelfde: vier leds volgens <strong>sinking</strong> op de pinnen 3 tot en met 6. Je voegt er &eacute;&eacute;n drukknop aan toe.</p>
+    <p>Haal je <a href="../../Labo1/Exercises/Looplicht.html">Looplicht</a> uit labo 1 erbij. De bedrading blijft dezelfde: vier leds volgens <strong>sinking</strong> op de pinnen 3 tot en met 6. Je voegt er &eacute;&eacute;n drukknop aan toe.</p>
 
     <h2 id="wat-je-nodig-hebt">Wat je nodig hebt</h2>
 
@@ -62,21 +62,21 @@
   noodstop = true;   // en de loop lost het verder wel op
 }</code></pre>
 
-    <p>Netjes kort, precies zoals het hoort. Maar er is een probleem.</p>
+    <p>Die ISR is kort, zoals het hoort, maar er is een probleem.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Hoe lang duurt het voor je leds doven met deze ISR?</div>
         <p>Je <code>loop()</code> zit op het moment van de druk midden in een <code>delay(250)</code>. Pas als die afgelopen is, kijkt hij weer naar je vlag. In het slechtste geval brandt je led dus nog een kwart seconde na de noodstop.</p>
-        <p>Voor een looplichtje maakt dat niets uit. Voor een machine met een noodstop wel: een kwart seconde is een halve meter transportband. Een noodstop die "straks" stopt, is geen noodstop.</p>
+        <p>Voor een looplicht maakt dat niets uit. Voor een machine met een noodstop wel, want een kwart seconde is een halve meter transportband.</p>
     </div>
 
-    <p>Zet de leds dus <strong>in de ISR zelf</strong> uit. Dat mag hier: <code>digitalWrite()</code> is een paar microseconden werk en heeft geen enkele andere interrupt nodig om af te raken. Het is precies het soort dringend werk waarvoor een ISR bedoeld is.</p>
+    <p>Zet de leds dus <strong>in de ISR zelf</strong> uit. Dat mag hier, want <code>digitalWrite()</code> is een paar microseconden werk en heeft geen enkele andere interrupt nodig om af te raken. Het is het soort dringend werk waarvoor een ISR bedoeld is.</p>
 
-    <p>De vlag heb je nog altijd nodig, maar voor iets anders: om te verhinderen dat je <code>loop()</code> straks, wanneer zijn <code>delay()</code> eindelijk afgelopen is, doodleuk de volgende led aansteekt.</p>
+    <p>De vlag heb je nog altijd nodig, maar voor iets anders, namelijk om te verhinderen dat je <code>loop()</code> straks, wanneer zijn <code>delay()</code> afgelopen is, de volgende led aansteekt.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">De ISR doet het dringende werk, de vlag doet het beleid</div>
-        <p>Dit zinnetje uit <a href="../Reference/PollenEnInterrupts.html">Van pollen naar interrupts</a> is de hele les van dit labo, en hier zie je waarom je ze allebei nodig hebt. De ISR zorgt dat het n&uacute; stopt. De vlag zorgt dat het gest&oacute;pt bl&iacute;jft.</p>
+        <p>Deze zin uit <a href="../Reference/PollenEnInterrupts.html">Van pollen naar interrupts</a> is de kern van dit labo, en hier zie je waarom je ze allebei nodig hebt. De ISR zorgt dat het nu stopt. De vlag zorgt dat het gestopt blijft.</p>
     </div>
 
     <h2 id="uitproberen">Wat je moet zien</h2>
@@ -109,7 +109,7 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>De leds zitten hier in een array, zodat je ze in de ISR met &eacute;&eacute;n lusje allemaal tegelijk kan doven. Zie <a href="../../Labo1/Reference/Arrays.html">Arrays</a> als dat wat weggezakt is.</p>
+            <p>De leds zitten hier in een array, zodat je ze in de ISR met &eacute;&eacute;n lus allemaal tegelijk kan doven. Zie <a href="../../Labo1/Reference/Arrays.html">Arrays</a> als dat wat weggezakt is.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int leds[] = {3, 4, 5, 6};
 const int aantalLeds = 4;
@@ -166,15 +166,15 @@ void loop()
                     <li>Je <code>loop()</code> zit in <code>delay(250)</code>, met led 2 aan.</li>
                     <li>Je drukt. De ISR gaat af, dooft alle vier de leds en zet <code>noodstop</code> op <code>true</code>. Dat duurt een paar microseconden.</li>
                     <li>De <code>delay()</code> telt gewoon verder af alsof er niets gebeurd is, en loopt af.</li>
-                    <li><code>digitalWrite(leds[i], HIGH)</code> zet een led uit die al uit is. Onschuldig.</li>
+                    <li><code>digitalWrite(leds[i], HIGH)</code> zet een led uit die al uit is. Dat is onschuldig.</li>
                     <li>De lus gaat naar de volgende led, ziet de vlag staan, en stapt met <code>return</code> uit de <code>loop()</code>.</li>
                     <li>Vanaf nu wordt <code>loop()</code> nog duizenden keren per seconde opgeroepen, maar hij stapt er telkens meteen weer uit. Er gaat nooit nog een led aan.</li>
                 </ol>
-                <p>Merk op dat stap 4 iets doms doet, en dat dat niet erg is. Een noodstop hoeft niet elegant te zijn, hij moet werken.</p>
+                <p>Merk op dat stap 4 iets doms doet, en dat dat niet erg is.</p>
             </div>
 
             <div class="info-box remark">
-                <div class="info-title remark">Waarom noodstop geen noInterrupts() nodig heeft</div>
+                <div class="info-title remark">Waarom &eacute;&eacute;n byte altijd volledig gelezen wordt</div>
                 <p><code>noodstop</code> is een <code>bool</code>, dus &eacute;&eacute;n byte. Die haalt de processor met &eacute;&eacute;n instructie op, en een instructie kan niet halverwege onderbroken worden. Je leest hem dus altijd volledig of helemaal niet.</p>
                 <p>Bij de teller uit de vorige oefening lag dat anders, want die was vier bytes groot. Zie <a href="../Reference/VolatileEnVlaggen.html">volatile en de vlagvariabele</a>.</p>
             </div>

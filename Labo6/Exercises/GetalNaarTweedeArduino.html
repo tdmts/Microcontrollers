@@ -13,9 +13,9 @@
     <h1>Een getal doorsturen naar een tweede Arduino</h1>
     <p class="lead">Leg twee Arduino's aan elkaar en laat de ene elke seconde het getal 100 naar de andere sturen. Aan de overkant lees je het weer uit en toon je het in de seri&euml;le monitor.</p>
 
-    <p>In de vorige oefening zat jij aan het andere eind van de lijn. Nu wordt dat een tweede Arduino. Er verandert voor je programma verrassend weinig: het kanaal is hetzelfde, alleen de gesprekspartner is anders. Lees <a href="../Reference/SerieelKanaal.html">Het seri&euml;le kanaal</a> voor je de draden legt, want de bedrading luistert nauw.</p>
+    <p>In de vorige oefening zat jij aan het andere eind van de lijn. Nu wordt dat een tweede Arduino. Voor je programma verandert er weinig, want het kanaal is hetzelfde en alleen de gesprekspartner is anders. Lees <a href="../Reference/SerieelKanaal.html">Het seri&euml;le kanaal</a> voor je de draden legt, want de bedrading luistert nauw.</p>
 
-    <p>Deze oefening werk je uit in TinkerCAD. Sleep gewoon een tweede Arduino UNO op je werkblad.</p>
+    <p>Deze oefening werk je uit in TinkerCAD. Sleep een tweede Arduino UNO op je werkblad.</p>
 
     <h2 id="het-schema">Het schema</h2>
 
@@ -57,8 +57,8 @@
     </div>
 
     <div class="info-box warning">
-        <div class="info-title warning">Kruisen, niet recht doorverbinden</div>
-        <p>Tx naar Tx en Rx naar Rx lijkt het meest logische, maar dan zitten twee zenders naar elkaar te roepen en luistert er niemand. Wat de ene zendt moet de andere ontvangen, dus de draden gaan gekruist.</p>
+        <div class="info-title warning">De draden gaan gekruist</div>
+        <p>Tx naar Tx en Rx naar Rx lijkt het meest logische, maar dan hangen twee zenders aan elkaar en blijft elke ontvanger onaangesloten. Wat de ene zendt moet de andere ontvangen, dus de draden gaan gekruist.</p>
     </div>
 
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
@@ -78,11 +78,11 @@
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>int teken = Serial.read();
 Serial.println(teken);</code></pre>
 
-    <p>Nu leest Arduino 2 geen lijn meer, maar &eacute;&eacute;n byte per keer. Je zal geen 100 zien staan. In de plaats komen er vijf getallen voorbij. Zoek ze op in de tabel op <a href="../Reference/TekensEnGetallen.html">Tekens en getallen</a> en je begrijpt meteen wat er echt over die draad gaat, en waarom die laatste twee er ook bij horen.</p>
+    <p>Nu leest Arduino 2 &eacute;&eacute;n byte per keer in plaats van een volledige lijn. Er komen vijf getallen voorbij in plaats van een 100. Zoek ze op in de tabel op <a href="../Reference/TekensEnGetallen.html">Tekens en getallen</a>, dan zie je wat er over die draad gaat en waarom die laatste twee er ook bij horen.</p>
 
     <div class="info-box remark">
         <div class="info-title remark">Je ziet je eigen boodschap ook</div>
-        <p>Alles wat Arduino 2 naar zijn monitor schrijft, gaat langs diezelfde Tx-draad ook naar Arduino 1. Die doet er niets mee, dus dat stoort niet. Het is wel handig om te weten: het is niet omdat iets in een monitor staat, dat het daar alleen naartoe ging.</p>
+        <p>Alles wat Arduino 2 naar zijn monitor schrijft, gaat langs diezelfde Tx-draad ook naar Arduino 1. Die doet er niets mee, dus dat stoort niet. Wat in een monitor verschijnt, kan dus tegelijk ergens anders aankomen.</p>
     </div>
 
     <hr>
@@ -109,7 +109,7 @@ Serial.println(teken);</code></pre>
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <p>De zender is bijna te kort om een programma te noemen. Dat is ook het punt: zenden is het gemakkelijke deel, ontvangen is waar het werk zit.</p>
+            <p>De zender is kort, want zenden is het gemakkelijke deel. Het werk zit bij de ontvanger.</p>
 
             <p><strong>Arduino 1, de zender:</strong></p>
 
@@ -142,7 +142,7 @@ void loop()
   }
 }</code></pre>
 
-            <p>De vijf bytes uit de proef zijn <strong>49 48 48 13 10</strong>. De eerste drie zijn de tekens <code>'1'</code>, <code>'0'</code> en <code>'0'</code>, want een getal gaat als tekst over de lijn. De laatste twee zijn de <code>'\r'</code> en de <code>'\n'</code> die <code>println()</code> er zelf achter zet. Precies die twee laten de ontvanger weten waar je boodschap ophoudt.</p>
+            <p>De vijf bytes uit de proef zijn <strong>49 48 48 13 10</strong>. De eerste drie zijn de tekens <code>'1'</code>, <code>'0'</code> en <code>'0'</code>, want een getal gaat als tekst over de lijn. De laatste twee zijn de <code>'\r'</code> en de <code>'\n'</code> die <code>println()</code> er zelf achter zet. Die twee laten de ontvanger weten waar je boodschap ophoudt.</p>
         </div>
     </div>
 </div>
