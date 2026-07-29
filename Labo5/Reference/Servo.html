@@ -51,6 +51,12 @@
         <p>Je hebt in <a href="../../Labo2/Reference/analogWrite.html">analogWrite()</a> ook met pulsen gewerkt, maar dat signaal is hier onbruikbaar. <code>analogWrite()</code> stuurt ongeveer <strong>490 keer per seconde</strong> een puls, en je stelt er de <em>verhouding</em> aan/uit mee in, niet de breedte in milliseconden. Een servo wil precies 50 pulsen per seconde van 1 tot 2 ms. Dat zijn twee verschillende signalen die allebei toevallig "PWM" heten.</p>
     </div>
 
+    <div class="info-box remark">
+        <div class="info-title remark">Waar die 1 tot 2 milliseconden vandaan komen</div>
+        <p>Die maat komt uit de modelbouw. Een radiobestuurd vliegtuig heeft &eacute;&eacute;n zender en &eacute;&eacute;n ontvanger, maar meerdere servo's: een voor het richtingsroer, een voor de hoogteroeren, een voor het gas. De zender stuurt daarom om de 20 milliseconden een reeks pulsen door, &eacute;&eacute;n per kanaal na elkaar. De ontvanger knipt die reeks uiteen en geeft elke puls aan de servo waar ze bij hoort. De breedte van zo'n puls, tussen 1 en 2 ms, gaf de stand van de stuurknuppel weer.</p>
+        <p>Wat jij hier op je stuurdraad zet is dus &eacute;&eacute;n kanaal uit die radioreeks, en de 50 pulsen per seconde zijn de 20 milliseconden waarin al die kanalen samen pasten. Die afspraak dateert van de jaren 60 en is sindsdien niet meer aangepast, zodat een servo van gelijk welk merk en gelijk welk bouwjaar op hetzelfde signaal draait. Ook de Servo-bibliotheek werkt er nog mee: <code>write(0)</code> en <code>write(180)</code> worden intern 544 en 2400 microseconden, de uiterste pulsbreedtes die ze wil versturen.</p>
+    </div>
+
     <h2 id="de-servo-bibliotheek">De Servo-bibliotheek</h2>
 
     <p>Die pulsen zelf timen met <code>digitalWrite()</code> en <code>delayMicroseconds()</code> kan, maar dan is je programma de hele tijd bezig met tellen. Daarom gebruik je de <strong>Servo</strong>-bibliotheek. Hoe je een bibliotheek toevoegt lees je op <a href="../../Labo4/Reference/Bibliotheken.html">Bibliotheken gebruiken</a>.</p>

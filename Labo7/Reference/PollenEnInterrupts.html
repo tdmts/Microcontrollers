@@ -209,6 +209,18 @@ void loop()
         <p>Alles wat echt niet kan wachten en in een oogwenk klaar is, zet je in de ISR. Alles wat mag wachten tot je <code>loop()</code> weer aan de beurt is, laat je aan de <code>loop()</code> over. Bijna elke fout die je dit labo maakt, komt erop neer dat je te veel in de ISR gestopt hebt.</p>
     </div>
 
+    <div class="info-box remark">
+        <div class="info-title remark">Alarm 1202, tijdens de daling naar de maan</div>
+        <p>Tijdens de daling van Apollo 11 naar de maan, op 20 juli 1969, sloeg de boordcomputer alarm: 1202. De oorzaak was een radar die op dat moment niets te doen had en door een fout voortdurend pulsen opwekte. Elke puls kwam binnen als een interrupt, en de computer sprong telkens naar de routine die ze moest tellen. Zo'n sprong duurde kort, maar samen namen ze ongeveer 13 procent van de rekentijd in beslag, en net die tijd had de computer nodig om de landing te blijven berekenen. Dat het toch goed afliep, komt doordat elk stuk werk een prioriteit had meegekregen: de computer liet zijn taken met lage prioriteit vallen en bleef sturen.</p>
+        <p>In jouw programma gaat het om diezelfde rekentijd. Elke microseconde die je in je ISR doorbrengt, is een microseconde die je <code>loop()</code> niet krijgt. Daarom staan er in de ISR hierboven twee <code>digitalWrite()</code>'s en een vlag, en verder niets.</p>
+        <div class="my-4">
+            <figure class="figure w-100 text-center figure-zoom">
+                <img src="../../img/apollo-dsky-boordcomputer.jpg" class="img-fluid" alt="De DSKY van de Apollo-boordcomputer: links een paneel met waarschuwingslampen zoals PROG en GIMBAL LOCK, rechts drie vensters met cijfers, en daaronder een toetsenbord met de cijfers 0 tot 9 en de toetsen VERB en NOUN" width="1280" height="1004">
+                <figcaption>De DSKY, waarmee de bemanning de boordcomputer bediende. Bij een alarm lichtte links het venster PROG op, en het nummer las de bemanning af in de cijfervensters rechts. Bron: NASA</figcaption>
+            </figure>
+        </div>
+    </div>
+
     <h2 id="en-nu">Verder lezen</h2>
 
     <ul>

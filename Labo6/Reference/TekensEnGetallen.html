@@ -93,6 +93,12 @@
         <p>Dit is het klassieke struikelblok. Stuur je <code>Serial.print(1)</code> en lees je aan de andere kant met <code>Serial.read()</code>, dan krijg je <strong>49</strong> te zien, niet 1. Je hebt het teken ontvangen, niet de waarde. Om er weer een getal van te maken moet je het omrekenen, en daar dient <a href="Strings.html">het String-type</a> voor.</p>
     </div>
 
+    <div class="info-box remark">
+        <div class="info-title remark">Waarom uitgerekend 49</div>
+        <p>Toen ASCII in 1963 werd vastgelegd, kregen de tien cijfers hun plaats niet toevallig. Ze staan zo dat je het cijfer zelf terugvindt in de onderste helft van de byte. Schrijf 49 binair uit en je krijgt <code>00110001</code>: de vier bits achteraan zijn <code>0001</code>, en dat is 1.</p>
+        <p>Dat klopt voor alle tien de cijfers. <code>'0'</code> is 48 of <code>00110000</code>, en <code>'9'</code> is 57 of <code>00111001</code>. De bovenste vier bits zijn bij elk cijfer dezelfde, de onderste vier zijn de waarde. Apparatuur uit die tijd moest daardoor niets omrekenen om een cijfer af te drukken, en jij hebt er ook geen tabel voor nodig: <code>'1' - '0'</code> is 49 - 48, en dat is 1.</p>
+    </div>
+
     <h2 id="print-of-println">print of println</h2>
 
     <p><code>Serial.println()</code> doet exact hetzelfde als <code>Serial.print()</code>, maar plakt er achteraf twee extra tekens aan: <code>'\r'</code> (13) en <code>'\n'</code> (10). Samen betekenen die twee "nieuwe lijn", precies wat er gebeurt als je op Enter duwt.</p>
