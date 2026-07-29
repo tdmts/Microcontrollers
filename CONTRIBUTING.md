@@ -311,6 +311,48 @@ omzetten naar de Orion-opmaak en in `exercises.js` of `reference.js` zetten. `_i
 is je takenlijst, met onderaan een lijstje van de datasheets die erbij gekomen zijn. Vergeet
 `git add img/ datasheets/` niet, het controlescript aanvaardt enkel bestanden die in git zitten.
 
+## Een labo naar PDF exporteren
+
+Voor wie liever op papier werkt, of voor een examenkopie:
+
+```
+python scripts/export-pdf.py 6            # -> _export/Labo6.pdf
+python scripts/export-pdf.py 0 1 2        # meerdere labo's
+python scripts/export-pdf.py --all        # alle labo's
+```
+
+Je krijgt één PDF per labo: een cover, een inhoudstafel, dan eerst de naslag (per categorie, in de
+volgorde van `reference.js`) en daarna de oefeningen (op `order`, dus dezelfde volgorde als het
+dashboard). De pagina's worden statisch gemaakt: oplossingen en spoilers staan open, checkboxes
+worden lege vakjes, video's worden een zichtbare link en een JS-widget wordt een verwijzing naar de
+website. Links tussen pagina's van hetzelfde labo worden interne sprongen in de PDF, links naar
+buiten worden `tdmts.github.io`-adressen. Datasheets komen in de inhoudstafel te staan als *los
+document*: ze zitten niet in de PDF, want ze zijn geen pagina van dit vak.
+
+De tekst loopt over de volle breedte van het blad, met 12mm marge links en rechts. Dat is geen detail
+van smaak: orion.css laadt Bootstrap, en dat legt `.container` een maximum van 540px op terwijl een
+A4 bij het afdrukken ongeveer 697px breed is. Zonder die regel uit te schakelen krijg je een smalle
+kolom met een brede witte rand, en breken je tabellen en codeblokken af terwijl er plaats naast ligt.
+Wil je de marge anders, pas dan `PRINT_CSS` bovenaan het script aan.
+
+Het script drukt af met Chrome of Edge (het zoekt ze zelf; anders `--chrome PAD`). Het schrijft
+alleen in `_export/`, dat in `.gitignore` staat: de PDF is afgeleid materiaal, de pagina onder
+`LaboN/` blijft het origineel. Draai het opnieuw wanneer je een nieuwe versie nodig hebt.
+
+Wat je nog kan meegeven:
+
+| Optie | Wat het doet |
+| --- | --- |
+| `--no-solutions` | studentenversie: de Oplossing-secties gaan eruit, met hun titel |
+| `--exercises-first` | oefeningen voor de naslag in plaats van erna |
+| `--page-numbers` | de kop- en voettekst van Chrome mee afdrukken (datum, titel, paginanummer) |
+| `--html-only` | enkel de gebundelde HTML, geen PDF: handig om eerst in de browser te kijken |
+| `--out MAP` | een andere doelmap dan `_export` |
+
+Ontbreekt er een afbeelding (de `TODO-*`-tekeningen die nog getekend moeten worden), dan komt er een
+kader met de alt-tekst in de plaats en meldt het script het achteraf. Alle meldingen die je krijgt,
+zijn er om te lezen, niet om te negeren: ze zeggen precies wat er in de PDF anders is dan online.
+
 ## Huisregels
 
 Deze worden automatisch afgedwongen:

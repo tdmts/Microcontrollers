@@ -3,3 +3,7 @@
 # Raw Brightspace topics staged by scripts/import-brightspace.py, converted per
 # page with orion-convert. Never published; the converted page under LaboN/ is.
 _incoming/
+
+# PDF-exports van scripts/export-pdf.py. Afgeleid materiaal: de pagina onder
+# LaboN/ is het origineel, de PDF maak je opnieuw wanneer je er een nodig hebt.
+_export/

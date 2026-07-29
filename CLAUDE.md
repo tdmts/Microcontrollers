@@ -414,3 +414,44 @@ page — it encodes the full component-mapping rules, the checklist/QR conventio
 slugging, and the Brightspace-image self-hosting rule. Key points it enforces: keep the source
 language (don't translate), map to Orion components only on unambiguous matches (default to plain
 `<p>`/`<ul>`), and never add the QR auto-grading widget unless the user confirms a real assignment.
+
+### Exporting a lab to PDF
+
+[`scripts/export-pdf.py`](scripts/export-pdf.py) turns one lab into a single printable PDF
+(`python scripts/export-pdf.py 6`, or `--all`), for the students who work on paper and for an
+examination copy. The **orion-pdf** skill (`.claude/skills/orion-pdf/`) is the entry point; both are
+authoring tools, so like the importer they never run in CI or the hook and the fork-free constraint
+does not apply.
+
+The ordering is the manifests', not the filesystem's: reference topics category by category in
+`reference.js` array order, then exercises sorted by `order` with the same comparator as
+`dashboard.js` and `back-link.js`, so the printed order cannot drift from the dashboard. Each page is
+then made static — scripts stripped, solutions and spoilers and accordions forced open by print CSS
+(orion.css has no `@media print` of its own), checkboxes given a visible border because a native
+checkbox prints as empty white, iframes replaced by the link they embed, a page-local widget replaced
+by a note. Ids are namespaced with the section slug: `id="het-schema"` occurs on five pages of one
+lab, and in a merged document every link to it would otherwise land on the first. Links that resolve
+to a page in the same bundle become internal jumps, the rest become absolute
+`tdmts.github.io` URLs; images become absolute `file:` URLs so the bundle can be printed from
+anywhere. Everything not embedded (a datasheet, a `TODO-*` drawing that isn't drawn yet, a dead
+relative href, a widget) is reported per lab after the run.
+
+Output goes to `_export/` (gitignored, like `_incoming/`) — a PDF is derived material, so it is
+regenerated rather than committed. Printing is done by headless Chrome or Edge, discovered from the
+usual install paths, `$CHROME` or `--chrome`; `--html-only` skips that step entirely and leaves the
+bundled HTML to open in a browser. Two things it deliberately does not do: it has **no manifest to
+read for `TestN/`** (those hubs are hardcoded links by design, see Layout above), and `--no-solutions`
+is the only content variant, since anything else belongs in the page rather than in the exporter.
+
+The manifests are parsed with a small JS-literal scanner rather than a regex that swaps quote
+characters: half the blurbs contain an apostrophe (`twee Arduino's`), and the naive conversion breaks
+on exactly those entries.
+
+**The printed page uses its full width, and the trap there is not the page margin.** orion.css
+imports Bootstrap, which caps `.container` at `max-width: 540px` from the sm breakpoint up; a printed
+A4 lays out at roughly 697px, so the text sat in a 540px column with about 75px of white on each side
+*on top of* the 13mm margin. `PRINT_CSS` overrides that cap and its gutter padding, and the margins
+are 12mm left and right (enough to bind or staple), which takes the column from ~143mm to ~186mm.
+Tables, code blocks and info-boxes were the ones breaking lines while there was white beside them.
+Any future print stylesheet in this repo starts by killing that `max-width`; check the result by
+screenshotting the bundle at a 697px window width, which is the actual print layout width.
