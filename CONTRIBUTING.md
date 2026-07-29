@@ -344,6 +344,7 @@ Wat je nog kan meegeven:
 | Optie | Wat het doet |
 | --- | --- |
 | `--no-solutions` | studentenversie: de Oplossing-secties gaan eruit, met hun titel |
+| `--reference-only` | enkel de theorie, zonder de oefeningen; schrijft naar `LaboN-theorie.pdf` |
 | `--exercises-first` | oefeningen voor de naslag in plaats van erna |
 | `--page-numbers` | de kop- en voettekst van Chrome mee afdrukken (datum, titel, paginanummer) |
 | `--html-only` | enkel de gebundelde HTML, geen PDF: handig om eerst in de browser te kijken |
@@ -352,6 +353,23 @@ Wat je nog kan meegeven:
 Ontbreekt er een afbeelding (de `TODO-*`-tekeningen die nog getekend moeten worden), dan komt er een
 kader met de alt-tekst in de plaats en meldt het script het achteraf. Alle meldingen die je krijgt,
 zijn er om te lezen, niet om te negeren: ze zeggen precies wat er in de PDF anders is dan online.
+
+### De theorie die studenten downloaden
+
+Van elk labo staat de naslag als PDF in `downloads/`, en de naslaghub van dat labo linkt ze onder de
+categorie **Downloads**. Die bestanden zitten wél in git, want GitHub Pages serveert alleen wat
+gecommit is. Maak je ze opnieuw, dan is dit het commando:
+
+```
+python scripts/export-pdf.py --all --reference-only --out downloads
+```
+
+Alleen de theorie, dus zonder de oefeningen en zonder de oplossingen.
+
+Eén ding om te onthouden: **een PDF veroudert stil.** Herschrijf je een naslagpagina, dan blijft de
+PDF de oude tekst tonen en er is geen controle die dat opmerkt. `check-content.sh` kijkt of de link
+werkt, niet of de inhoud nog klopt. Draai de export dus opnieuw in dezelfde commit waarin je een
+naslagpagina aanpast, dan kan het niet uit elkaar lopen.
 
 ## Huisregels
 

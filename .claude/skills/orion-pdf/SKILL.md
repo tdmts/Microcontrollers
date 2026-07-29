@@ -36,6 +36,9 @@ derived material: regenerate it, never edit it, and never commit it.
 
 - `--no-solutions` &mdash; student handout; drops each `.solution-container`
   together with its own `Oplossing` heading.
+- `--reference-only` &mdash; theory bundle: the reference topics without the
+  exercises, written to `LaboN-theorie.pdf`. This is the variant students
+  download (see below), so keep it free of solutions.
 - `--exercises-first` &mdash; exercises before the reference section.
 - `--page-numbers` &mdash; Chrome's own header/footer (date, title, page number).
   Off by default because that footer also prints the temp path of the bundle.
@@ -54,6 +57,22 @@ and is meant to be read, not dismissed:
 - `link niet gevonden` &mdash; a relative href resolving to nothing. That is a real
   fault in the page, so fix it there (run `bash scripts/check-content.sh`), not here.
 - `interactief onderdeel` &mdash; a page-local widget that cannot print.
+
+## The copy students download
+
+`downloads/LaboN-theorie.pdf` is the published theory bundle, linked from each
+lab's reference hub through a `Downloads` category in `reference.js`. Unlike
+everything else this script writes, those files are committed &mdash; GitHub Pages
+serves only tracked files. Regenerate all eight with:
+
+```
+python scripts/export-pdf.py --all --reference-only --out downloads
+```
+
+A published PDF goes stale silently: `check-content.sh` checks that the link
+resolves, never that the content still matches the page. So when a rewrite
+touches `LaboN/Reference/`, re-run the export in that same commit, and
+`git add downloads/` or the check will call the href untracked.
 
 ## Scope
 

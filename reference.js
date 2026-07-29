@@ -46,6 +46,12 @@ window.LAB_REFERENCE = {
                     { id: 'debouncen', name: 'Debouncen', href: 'Debouncen.html', blurb: 'Hoe je het denderen van een mechanische schakelaar softwarematig opvangt.' },
                     { id: 'debuggen', name: 'Debuggen', href: 'Debuggen.html', blurb: 'Seriële communicatie gebruiken om te zien wat er in je programma gebeurt, want er is geen scherm of debugger.' }
                 ]
+            },
+            {
+                name: 'Downloads',
+                topics: [
+                    { id: 'pdfnaslag', name: 'De naslag als PDF', href: '../../downloads/Labo0-theorie.pdf', blurb: 'Alle naslagpagina\'s van dit labo in één document, om af te drukken of offline te lezen. De pagina\'s op de site blijven de actuele versie.' }
+                ]
             }
         ]
     },
@@ -64,6 +70,12 @@ window.LAB_REFERENCE = {
                 topics: [
                     { id: 'zevensegment', name: 'Het 7-segment display', href: 'ZevenSegmentDisplay.html', blurb: 'De segmenten a tot g, het verschil tussen common anode en common cathode, en hoe een cijfer een patroon wordt.' },
                     { id: 'multiplexing', name: 'Multiplexing', href: 'Multiplexing.html', blurb: 'Twee cijfers tonen met de pinnen van één display door er zo snel tussen te wisselen dat je oog het verschil niet ziet.' }
+                ]
+            },
+            {
+                name: 'Downloads',
+                topics: [
+                    { id: 'pdfnaslag', name: 'De naslag als PDF', href: '../../downloads/Labo1-theorie.pdf', blurb: 'Alle naslagpagina\'s van dit labo in één document, om af te drukken of offline te lezen. De pagina\'s op de site blijven de actuele versie.' }
                 ]
             }
         ]
@@ -88,6 +100,12 @@ window.LAB_REFERENCE = {
                     { id: 'datasheetlm35', name: 'LM35', href: '../../datasheets/lm35.pdf', blurb: 'De datasheet van de temperatuursensor uit je starterkit. Hierin vind je dat de uitgang 0 V geeft bij 0 graden en 10 mV per graad stijgt, anders dan bij de TMP36.' },
                     { id: 'datasheetldr', name: 'LDR 3190', href: '../../datasheets/ldr-3190.pdf', blurb: 'De datasheet van de lichtgevoelige weerstand, met de weerstandswaarde bij verschillende lichtsterktes.' }
                 ]
+            },
+            {
+                name: 'Downloads',
+                topics: [
+                    { id: 'pdfnaslag', name: 'De naslag als PDF', href: '../../downloads/Labo2-theorie.pdf', blurb: 'Alle naslagpagina\'s van dit labo in één document, om af te drukken of offline te lezen. De pagina\'s op de site blijven de actuele versie.' }
+                ]
             }
         ]
     },
@@ -105,6 +123,12 @@ window.LAB_REFERENCE = {
                 name: 'Datasheets',
                 topics: [
                     { id: 'datasheet74hc595', name: '74HC595 / 74HCT595', href: '../../datasheets/74hc595.pdf', blurb: 'De volledige datasheet van het schuifregister. Kijk vooral naar pinning information, functional description en limiting values.' }
+                ]
+            },
+            {
+                name: 'Downloads',
+                topics: [
+                    { id: 'pdfnaslag', name: 'De naslag als PDF', href: '../../downloads/Labo3-theorie.pdf', blurb: 'Alle naslagpagina\'s van dit labo in één document, om af te drukken of offline te lezen. De pagina\'s op de site blijven de actuele versie.' }
                 ]
             }
         ]
@@ -131,6 +155,12 @@ window.LAB_REFERENCE = {
                 name: 'Datasheets',
                 topics: [
                     { id: 'datasheetpcf8574', name: 'PCF8574', href: '../../datasheets/datasheet-pcf8574.pdf', blurb: 'De datasheet van de I/O-expander. Kijk vooral naar de pinout, de quasi-bidirectionele I/O en hoeveel stroom een uitgang kan leveren of opnemen.' }
+                ]
+            },
+            {
+                name: 'Downloads',
+                topics: [
+                    { id: 'pdfnaslag', name: 'De naslag als PDF', href: '../../downloads/Labo4-theorie.pdf', blurb: 'Alle naslagpagina\'s van dit labo in één document, om af te drukken of offline te lezen. De pagina\'s op de site blijven de actuele versie.' }
                 ]
             }
         ]
@@ -160,6 +190,12 @@ window.LAB_REFERENCE = {
                     { id: 'datasheetp2n2222a', name: 'P2N2222A (2N2222)', href: '../../datasheets/p2n2222a.pdf', blurb: 'De datasheet van de NPN-transistor. Hierin vind je de Vbe en de hFE die je nodig hebt om je basisweerstand te berekenen.' },
                     { id: 'datasheetl293d', name: 'L293D', href: '../../datasheets/l293d.pdf', blurb: 'De datasheet van de dubbele H-brug. Kijk vooral naar de pinout, de pinfuncties en hoeveel stroom één kanaal aankan.' }
                 ]
+            },
+            {
+                name: 'Downloads',
+                topics: [
+                    { id: 'pdfnaslag', name: 'De naslag als PDF', href: '../../downloads/Labo5-theorie.pdf', blurb: 'Alle naslagpagina\'s van dit labo in één document, om af te drukken of offline te lezen. De pagina\'s op de site blijven de actuele versie.' }
+                ]
             }
         ]
     },
@@ -184,6 +220,7 @@ window.LAB_REFERENCE = {
             {
                 name: 'Downloads',
                 topics: [
+                    { id: 'pdfnaslag', name: 'De naslag als PDF', href: '../../downloads/Labo6-theorie.pdf', blurb: 'Alle naslagpagina\'s van dit labo in één document, om af te drukken of offline te lezen. De pagina\'s op de site blijven de actuele versie.' },
                     { id: 'csharpproject', name: 'Serieel communiceren (C#-project)', href: '../../datasheets/serieel-communiceren-csharp.zip', blurb: 'Het Visual Studio-project waarmee je vanaf je pc met de Arduino praat. Je hebt het nodig voor de laatste oefening. Er zit een gebouwde versie in bin\\Debug.' }
                 ]
             }
@@ -212,6 +249,12 @@ window.LAB_REFERENCE = {
                 name: 'Datasheets',
                 topics: [
                     { id: 'datasheetpcf8574', name: 'PCF8574', href: '../../datasheets/datasheet-pcf8574.pdf', blurb: 'De datasheet van de I/O-expander. Kijk hier naar de /INT-pin, want die is een open-collectoruitgang, en dat bepaalt hoe je hem aansluit.' }
+                ]
+            },
+            {
+                name: 'Downloads',
+                topics: [
+                    { id: 'pdfnaslag', name: 'De naslag als PDF', href: '../../downloads/Labo7-theorie.pdf', blurb: 'Alle naslagpagina\'s van dit labo in één document, om af te drukken of offline te lezen. De pagina\'s op de site blijven de actuele versie.' }
                 ]
             }
         ]

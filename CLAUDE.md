@@ -209,6 +209,17 @@ hook timeout, versus ~2s now.
   `scripts/import-brightspace.py` fills this folder automatically, see below. Lecture slides stay on
   Brightspace; they are course-internal and large (the export's biggest is 200 MB, past GitHub's
   100 MB per-file hard limit).
+- `downloads/` — the one folder holding **derived** material that is published anyway: the theory
+  PDF per lab (`Labo3-theorie.pdf`), produced by `scripts/export-pdf.py --reference-only` and linked
+  from that lab's reference hub through a `Downloads` category in `reference.js`. It is committed
+  because GitHub Pages serves only tracked files, which is the whole point: a student downloads it
+  from the hub like a datasheet. Kept apart from `datasheets/` precisely because the two behave in
+  opposite ways: a datasheet comes from the manufacturer and is never touched again, while
+  everything here is regenerated from the pages under `LaboN/Reference/` and is stale the moment
+  those pages change. **Nothing checks that staleness** — `check-content.sh` asserts the link
+  resolves, not that the PDF matches today's text — so re-run the export in the same commit as a
+  reference-page rewrite. Only the theory goes here: the exercises with their solutions are not
+  published as a download.
 
 ## Two style/script origins (don't confuse them)
 
@@ -437,11 +448,23 @@ anywhere. Everything not embedded (a datasheet, a `TODO-*` drawing that isn't dr
 relative href, a widget) is reported per lab after the run.
 
 Output goes to `_export/` (gitignored, like `_incoming/`) — a PDF is derived material, so it is
-regenerated rather than committed. Printing is done by headless Chrome or Edge, discovered from the
+regenerated rather than committed. The one exception is the theory bundle that students download,
+which is generated straight into `downloads/` and *is* committed; see Layout above.
+Printing is done by headless Chrome or Edge, discovered from the
 usual install paths, `$CHROME` or `--chrome`; `--html-only` skips that step entirely and leaves the
-bundled HTML to open in a browser. Two things it deliberately does not do: it has **no manifest to
-read for `TestN/`** (those hubs are hardcoded links by design, see Layout above), and `--no-solutions`
-is the only content variant, since anything else belongs in the page rather than in the exporter.
+bundled HTML to open in a browser. One thing it deliberately does not do: it has **no manifest to
+read for `TestN/`** (those hubs are hardcoded links by design, see Layout above).
+
+The content variants are selections out of the manifests, never rewritten prose: `--no-solutions`
+drops each `.solution-container`, and `--reference-only` leaves the exercises out altogether, for
+a theory bundle to hand out or to read on paper. Each writes to its own filename, `-student` and
+`-theorie`, so neither can overwrite the full PDF of that lab: the theory bundle is the published
+one, and a full export landing on top of it would put every solution in `downloads/`. Anything
+beyond a selection belongs in the page rather than in the exporter.
+
+Any export also drops the one manifest entry that points at the file being written, because
+the hub lists that PDF as a download and a bundle that appears in its own table of contents reads as
+a fault. The match is on filename, so it holds wherever `--out` points.
 
 The manifests are parsed with a small JS-literal scanner rather than a regex that swaps quote
 characters: half the blurbs contain an apostrophe (`twee Arduino's`), and the naive conversion breaks

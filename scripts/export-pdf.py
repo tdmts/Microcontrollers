@@ -21,6 +21,9 @@ Opties:
     --out DIR         doelmap voor de PDF's (standaard _export)
     --no-solutions    studentenversie: knip de oplossingssecties eruit
     --exercises-first oefeningen voor de naslag in plaats van erna
+    --reference-only  alleen de theorie, zonder de oefeningen; schrijft naar
+                      LaboN-theorie.pdf, de versie die in downloads/ gepubliceerd
+                      wordt
     --page-numbers    laat Chrome zijn eigen kop- en voettekst zetten
                       (datum, titel, url, paginanummer)
     --html-only       schrijf alleen de gebundelde HTML, start Chrome niet
@@ -153,8 +156,13 @@ def slugify(text):
     return re.sub(r'-+', '-', re.sub(r'[^a-z0-9]+', '-', text.lower())).strip('-')
 
 
-def collect_pages(lab, exercises, reference, exercises_first):
-    """Alle pagina's van een labo, in de volgorde waarin ze in de PDF komen."""
+def collect_pages(lab, exercises, reference, exercises_first, reference_only=False, self_name=None):
+    """Alle pagina's van een labo, in de volgorde waarin ze in de PDF komen.
+
+    self_name is de bestandsnaam van de PDF die we net aan het maken zijn. De
+    naslaghub linkt die PDF zelf als download, en een bundel die in haar eigen
+    inhoudstafel staat leest als een fout; ze valt hier dus weg.
+    """
     ref_items, ex_items, notes = [], [], []
 
     ref_lab = reference.get(lab)
@@ -170,10 +178,12 @@ def collect_pages(lab, exercises, reference, exercises_first):
                     'path': path,
                 }
                 if path and path.lower().endswith(DOC_EXTS):
+                    if self_name and os.path.basename(path).lower() == self_name.lower():
+                        continue
                     item['document'] = True
                 ref_items.append(item)
 
-    ex_lab = exercises.get(lab)
+    ex_lab = None if reference_only else exercises.get(lab)
     if ex_lab:
         for ex in sorted(ex_lab.get('exercises', []), key=lambda e: e.get('order', 0)):
             ex_items.append({
@@ -464,15 +474,17 @@ def build_bundle(lab_title, items, report, keep_solutions):
              '<script>%s</script>' % PRINT_JS,
              '</head>', '<body>', '<div class="container">']
 
+    has_exercises = any(i['kind'] == 'exercise' for i in items)
+    subtitel = 'Naslag en oefeningen' if has_exercises else 'Naslag'
+    if has_exercises:
+        subtitel += ', met oplossingen' if keep_solutions else ''
     parts.append('<div class="pdf-cover">'
                  '<div class="pdf-course">Microcontrollers</div>'
                  '<h1>%s</h1>'
-                 '<div class="pdf-sub">Naslag en oefeningen%s</div>'
+                 '<div class="pdf-sub">%s</div>'
                  '<div class="pdf-meta">Gegenereerd op %s uit tdmts.github.io/Microcontrollers</div>'
                  '</div>'
-                 % (html_mod.escape(lab_title),
-                    ', met oplossingen' if keep_solutions else '',
-                    today))
+                 % (html_mod.escape(lab_title), subtitel, today))
 
     toc = ['<div class="pdf-toc"><h1>Inhoud</h1>']
     current = None
@@ -552,6 +564,7 @@ def main():
     ap.add_argument('--out', default='_export', help='doelmap (standaard _export)')
     ap.add_argument('--no-solutions', action='store_true', help='studentenversie zonder oplossingen')
     ap.add_argument('--exercises-first', action='store_true', help='oefeningen voor de naslag')
+    ap.add_argument('--reference-only', action='store_true', help='alleen de theorie, zonder de oefeningen')
     ap.add_argument('--page-numbers', action='store_true', help='kop- en voettekst van Chrome mee afdrukken')
     ap.add_argument('--html-only', action='store_true', help='alleen de bundel-HTML, geen PDF')
     ap.add_argument('--keep-html', action='store_true', help='bewaar de bundel-HTML naast de PDF')
@@ -586,7 +599,13 @@ def main():
             failures += 1
             continue
         lab_title = (exercises.get(lab) or reference.get(lab)).get('labTitle', lab)
-        items, notes = collect_pages(lab, exercises, reference, args.exercises_first)
+        stem = lab_title.replace(' ', '')
+        if args.reference_only:
+            stem += '-theorie'
+        if not keep_solutions:
+            stem += '-student'
+        items, notes = collect_pages(lab, exercises, reference, args.exercises_first,
+                                     args.reference_only, stem + '.pdf')
         pages = [i for i in items if not i.get('missing') and not i.get('document')]
         if not pages:
             print('%s heeft geen pagina\'s in de manifests' % lab_title)
@@ -596,7 +615,6 @@ def main():
         report = {'missing_images': [], 'unresolved': [], 'widgets': []}
         bundle_html = build_bundle(lab_title, items, report, keep_solutions)
 
-        stem = lab_title.replace(' ', '') + ('' if keep_solutions else '-student')
         pdf = out_dir / (stem + '.pdf')
         bundle_path = out_dir / (stem + '.html') if (args.html_only or args.keep_html) \
             else Path(tempfile.gettempdir()) / (stem + '-bundle.html')
