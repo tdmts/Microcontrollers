@@ -194,7 +194,7 @@
 
     <p>Je stuurt SHCP en STCP aan met gewone digitale uitgangen. Omdat de 74HC595 enkel op een <strong>stijgende flank</strong> reageert en <code>digitalWrite()</code> alleen vaste toestanden kent, schrijf je daar zelf een functie voor:</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void risingEdge(int pinNummer)
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);

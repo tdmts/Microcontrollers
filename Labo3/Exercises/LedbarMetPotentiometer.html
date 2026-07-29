@@ -93,7 +93,7 @@
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
 const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
 const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
-const int pinPot = A0; // Loper van de potentiometer
+const int potPin = A0; // Loper van de potentiometer
 
 const int aantalLeds = 8;
 
@@ -104,7 +104,7 @@ void setup()
   pinMode(pinSHCP, OUTPUT);
 }
 
-void risingEdge(int pinNummer)
+void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -113,16 +113,16 @@ void risingEdge(int pinNummer)
 void loop()
 {
   // 0..1023 gedeeld door 128 geeft 0..7, dus +1 geeft 1 t.e.m. 8 LEDs
-  int aantalAan = analogRead(pinPot) / 128 + 1;
+  int aantalAan = analogRead(potPin) / 128 + 1;
 
   // De laatst verschoven bit komt op Q0, dus we tellen af van Q7 naar Q0
   for (int led = aantalLeds; led &gt;= 1; led--)
   {
     digitalWrite(pinDS, led &lt;= aantalAan ? HIGH : LOW);
-    risingEdge(pinSHCP);
+    opgaandeFlank(pinSHCP);
   }
 
-  risingEdge(pinSTCP); // hele balk in één keer bijwerken
+  opgaandeFlank(pinSTCP); // hele balk in één keer bijwerken
 }</code></pre>
         </div>
     </div>

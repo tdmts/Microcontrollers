@@ -29,7 +29,7 @@ const int pinSHCP = 4;
 
 const bool patroon[8] = {1, 1, 0, 0, 0, 0, 0, 0};
 
-void risingEdge(int pinNummer)
+void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -55,10 +55,10 @@ void loop()
       digitalWrite(pinDS, LOW);
     }
 
-    risingEdge(pinSHCP);
+    opgaandeFlank(pinSHCP);
   }
 
-  risingEdge(pinSTCP);
+  opgaandeFlank(pinSTCP);
 }</code></pre>
 
     <p>Welke uitgangen staan er hoog?</p>
@@ -80,7 +80,7 @@ void loop()
 
             <p>Wil je dat de twee enen op Q0 en Q1 uitkomen, dan moet je de array in de omgekeerde volgorde doorlopen. Dat is precies waarom de oplossingen in labo 3 aftellen van led 8 naar led 1 in plaats van op te tellen.</p>
 
-            <p>Antwoord d) is een strikvraag: <code>risingEdge(pinSTCP)</code> hoort net wel buiten de lus. Zolang je enkel op SHCP klokt, verandert er niets aan de uitgangen. Die ene flank op STCP op het einde kopieert het schuifregister in één keer naar het storage register, en pas dan wordt alles tegelijk zichtbaar.</p>
+            <p>Antwoord d) is een strikvraag: <code>opgaandeFlank(pinSTCP)</code> hoort net wel buiten de lus. Zolang je enkel op SHCP klokt, verandert er niets aan de uitgangen. Die ene flank op STCP op het einde kopieert het schuifregister in één keer naar het storage register, en pas dan wordt alles tegelijk zichtbaar.</p>
 
             <p>Meer hierover: <a href="../Labo3/Reference/Schuifregister.html">Werking van het schuifregister</a>.</p>
         </div>
@@ -231,7 +231,7 @@ const int pinSHCP = 4;
 byte patroon = B00000001;
 byte vorigeKnoppen = 0xFF;
 
-void risingEdge(int pinNummer)
+void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -285,8 +285,8 @@ void loop()
       digitalWrite(pinDS, LOW);
     }
 
-    risingEdge(pinSHCP);
-    risingEdge(pinSTCP);
+    opgaandeFlank(pinSHCP);
+    opgaandeFlank(pinSTCP);
   }
 }</code></pre>
 
@@ -308,7 +308,7 @@ void loop()
 
             <p><strong>Fout 2: er wordt gelatcht na elke bit</strong></p>
 
-            <p><code>risingEdge(pinSTCP)</code> staat binnen de lus, dus na elke ingeschoven bit wordt het schuifregister naar het storage register gekopieerd. Elke tussenstand komt zo op de uitgangen terecht: acht zichtbare patronen in plaats van één. Omdat dat sneller gaat dan je oog kan volgen, zie je geen looplicht maar een aantal flauw brandende leds.</p>
+            <p><code>opgaandeFlank(pinSTCP)</code> staat binnen de lus, dus na elke ingeschoven bit wordt het schuifregister naar het storage register gekopieerd. Elke tussenstand komt zo op de uitgangen terecht: acht zichtbare patronen in plaats van één. Omdat dat sneller gaat dan je oog kan volgen, zie je geen looplicht maar een aantal flauw brandende leds.</p>
 
             <p>Oplossing: schuif eerst alle acht de bits in, en latch pas daarna één keer.</p>
 
@@ -323,10 +323,10 @@ void loop()
     digitalWrite(pinDS, LOW);
   }
 
-  risingEdge(pinSHCP);
+  opgaandeFlank(pinSHCP);
 }
 
-risingEdge(pinSTCP);</code></pre>
+opgaandeFlank(pinSTCP);</code></pre>
 
             <p>Meer hierover: <a href="../Labo4/Reference/PCF8574.html">Werken met de PCF8574</a> en <a href="../Labo3/Reference/Schuifregister.html">Werking van het schuifregister</a>.</p>
         </div>

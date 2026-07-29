@@ -30,23 +30,23 @@
     </ul>
 
     <h2 id="voorbeeld">Voorbeeld</h2>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinAnalogIn = A0;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int analogePin = A0;
 
 void setup()
 {
-  pinMode(pinAnalogIn, INPUT); // OPTIONEEL
+  pinMode(analogePin, INPUT); // OPTIONEEL
 
   Serial.begin(9600);
 }
 
 void loop()
 {
-  int value = analogRead(pinAnalogIn); // Een geheel getal tussen 0 en 1023
-  double voltage = value / 1023.0 * 5; // De overeenkomstige spanning tussen 0V en 5V
+  int waarde = analogRead(analogePin); // Een geheel getal tussen 0 en 1023
+  double spanning = waarde / 1023.0 * 5; // De overeenkomstige spanning tussen 0V en 5V
 
-  Serial.print(value);
+  Serial.print(waarde);
   Serial.print(" komt overeen met ");
-  Serial.print(voltage);
+  Serial.print(spanning);
   Serial.println(" V");
 
   delay(500); // anders overspoel je de seriële monitor

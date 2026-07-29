@@ -20,34 +20,34 @@
     </div>
 
     <h2 id="voorbeeld-enkelvoudige-selectie">Voorbeeld enkelvoudige selectie</h2>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 3;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 3;
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
+  pinMode(knopPin, INPUT);
 }
 
 void loop()
 {
-  int value = digitalRead(pinButton);
-  if(value == HIGH) // de voorwaarde is te herleiden tot true / false
+  int waarde = digitalRead(knopPin);
+  if(waarde == HIGH) // de voorwaarde is te herleiden tot true / false
   {
     // doe iets als de voorwaarde true is
   }
 }</code></pre>
 
     <h2 id="voorbeeld-tweevoudige-selectie">Voorbeeld tweevoudige selectie</h2>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 3;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 3;
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
+  pinMode(knopPin, INPUT);
 }
 
 void loop()
 {
-  int value = digitalRead(pinButton);
-  if(value == HIGH) // de voorwaarde is te herleiden tot true / false
+  int waarde = digitalRead(knopPin);
+  if(waarde == HIGH) // de voorwaarde is te herleiden tot true / false
   {
     // doe iets als de voorwaarde true is
   }
@@ -66,38 +66,38 @@ void loop()
     <p>Deze twee stukken code doen exact hetzelfde:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>// De volledige schrijfwijze
-if (value == HIGH)
+if (waarde == HIGH)
 {
-  digitalWrite(pinLed, HIGH);
+  digitalWrite(ledPin, HIGH);
 }
 else
 {
-  digitalWrite(pinLed, LOW);
+  digitalWrite(ledPin, LOW);
 }
 
 // Dezelfde keuze, in het kort
-digitalWrite(pinLed, value == HIGH ? HIGH : LOW);</code></pre>
+digitalWrite(ledPin, waarde == HIGH ? HIGH : LOW);</code></pre>
 
     <p>Het verschil met een gewone <code>if</code> is dat <code>?:</code> zelf een <strong>waarde oplevert</strong>. Je kan hem daarom rechtstreeks meegeven als argument van een functie, zoals hierboven, of in een toekenning zetten:</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>int helderheid = knopIngedrukt ? 255 : 0;</code></pre>
 
     <h2 id="voorbeeld-meervoudige-selectie">Voorbeeld meervoudige selectie</h2>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinSensor = A0;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int sensorPin = A0;
 
 void setup()
 {
-  pinMode(pinSensor, INPUT);
+  pinMode(sensorPin, INPUT);
 }
 
 void loop()
 {
-  int value = analogRead(pinSensor);
-  if(value &gt; 768)
+  int waarde = analogRead(sensorPin);
+  if(waarde &gt; 768)
   {
 
   }
-  else if (value &gt; 512)
+  else if (waarde &gt; 512)
   {
 
   }
@@ -112,25 +112,25 @@ void loop()
     </div>
 
     <h2 id="voorbeeld-meervoudige-selectie-met-logische-operatoren">Voorbeeld meervoudige selectie met logische operatoren</h2>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 3;
-const int pinSensor = A0;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 3;
+const int sensorPin = A0;
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
-  pinMode(pinSensor, INPUT);
+  pinMode(knopPin, INPUT);
+  pinMode(sensorPin, INPUT);
 }
 
 void loop()
 {
-  int value = analogRead(pinSensor);
-  int status = digitalRead(pinButton);
+  int waarde = analogRead(sensorPin);
+  int status = digitalRead(knopPin);
 
-  if(value &gt; 768 &amp;&amp; status == HIGH)
+  if(waarde &gt; 768 &amp;&amp; status == HIGH)
   {
 
   }
-  else if (value &gt; 512 || status == LOW)
+  else if (waarde &gt; 512 || status == LOW)
   {
 
   }

@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <p>Het schuifregister hangt aan dezelfde drie pinnen als in de vorige oefeningen: DS op pin 2, STCP op pin 3 en SHCP op pin 4. Alleen wat er aan de uitgangen hangt verandert: acht leds in plaats van een 7 segment display. De <code>risingEdge()</code>-functie en de regel dat de laatst ingeschoven bit op Q0 belandt, kan je nalezen op <a href="../Reference/Schuifregister.html">Werking van het schuifregister</a>.</p>
+    <p>Het schuifregister hangt aan dezelfde drie pinnen als in de vorige oefeningen: DS op pin 2, STCP op pin 3 en SHCP op pin 4. Alleen wat er aan de uitgangen hangt verandert: acht leds in plaats van een 7 segment display. De <code>opgaandeFlank()</code>-functie en de regel dat de laatst ingeschoven bit op Q0 belandt, kan je nalezen op <a href="../Reference/Schuifregister.html">Werking van het schuifregister</a>.</p>
 
     <h2 id="stap-1-schuiven">Stap 1: schuiven</h2>
     <p>Begin met een miniversie van het looplicht waarbij je drie leds afwisselend laat branden. Schrijf het dus eerst uit als een sequentie, zonder lus. Zo zie je welke stappen je telkens herhaalt.</p>
@@ -94,7 +94,7 @@ void setup()
   pinMode(pinSHCP, OUTPUT);
 }
 
-void risingEdge(int pinNummer)
+void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -103,7 +103,7 @@ void risingEdge(int pinNummer)
 void schuifBit(bool waarde)
 {
   digitalWrite(pinDS, waarde ? HIGH : LOW);
-  risingEdge(pinSHCP);
+  opgaandeFlank(pinSHCP);
 }
 
 void loop()
@@ -125,7 +125,7 @@ void loop()
       schuifBit(false);
     }
 
-    risingEdge(pinSTCP); // alle 8 LEDs tegelijk bijwerken
+    opgaandeFlank(pinSTCP); // alle 8 LEDs tegelijk bijwerken
     delay(1000);
   }
 }</code></pre>

@@ -23,7 +23,7 @@
 
     <p>Je leest een potentiometer uit en zet de waarde om naar een spanning. Op het moment van de meting geeft <code>analogRead()</code> de waarde <strong>614</strong> terug.</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinPotentiometer = A0;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int potPin = A0;
 
 void setup()
 {
@@ -32,9 +32,9 @@ void setup()
 
 void loop()
 {
-  int value = analogRead(pinPotentiometer);
-  double voltage = value / 1023 * 5;
-  Serial.println(voltage);
+  int waarde = analogRead(potPin);
+  double spanning = waarde / 1023 * 5;
+  Serial.println(spanning);
   delay(500);
 }</code></pre>
 
@@ -53,11 +53,11 @@ void loop()
         <div class="spoiler-content solution-content">
             <p><strong>Antwoord: b) 0.00</strong></p>
 
-            <p>Zowel <code>value</code> als <code>1023</code> is een <code>int</code>, dus de Arduino maakt hier een <strong>gehele deling</strong>. 614 gedeeld door 1023 is 0 met rest, en die rest wordt weggegooid. Daarna wordt 0 nog eens maal 5 gedaan, wat 0 blijft. Dat het resultaat in een <code>double</code> terechtkomt, verandert daar niets aan: de deling is al gebeurd voor de toekenning.</p>
+            <p>Zowel <code>waarde</code> als <code>1023</code> is een <code>int</code>, dus de Arduino maakt hier een <strong>gehele deling</strong>. 614 gedeeld door 1023 is 0 met rest, en die rest wordt weggegooid. Daarna wordt 0 nog eens maal 5 gedaan, wat 0 blijft. Dat het resultaat in een <code>double</code> terechtkomt, verandert daar niets aan: de deling is al gebeurd voor de toekenning.</p>
 
             <p>Je lost het op door van minstens één van de twee getallen een kommagetal te maken:</p>
 
-            <pre class="code-wrapper language-cpp linenumbers show-language"><code>double voltage = value / 1023.0 * 5;</code></pre>
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>double spanning = waarde / 1023.0 * 5;</code></pre>
 
             <p>Dan krijg je 614 / 1023.0 = 0,6002 en maal 5 geeft ongeveer <strong>3,00 V</strong>, wat antwoord a) zou zijn geweest als de code juist stond.</p>
 
@@ -184,18 +184,18 @@ void loop()
 
     <p>Een student wil met een potentiometer de helderheid van een led regelen. De schakeling is correct gebouwd volgens de code, maar de led springt gewoon van uit naar volle sterkte in plaats van mooi te dimmen.</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinPotentiometer = A0;
-const int pinLed = 7;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int potPin = A0;
+const int ledPin = 7;
 
 void setup()
 {
-  pinMode(pinLed, OUTPUT);
+  pinMode(ledPin, OUTPUT);
 }
 
 void loop()
 {
-  int value = analogRead(pinPotentiometer);
-  analogWrite(pinLed, value);
+  int waarde = analogRead(potPin);
+  analogWrite(ledPin, waarde);
 }</code></pre>
 
     <p>Er zitten twee fouten in. Welke, en hoe los je ze op?</p>
@@ -216,19 +216,19 @@ void loop()
 
             <p>Oplossing: herschaal met <code>map()</code>, of deel door 4 (1024 / 256 = 4).</p>
 
-            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinPotentiometer = A0;
-const int pinLed = 3; // PWM-pin
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int potPin = A0;
+const int ledPin = 3; // PWM-pin
 
 void setup()
 {
-  pinMode(pinLed, OUTPUT);
+  pinMode(ledPin, OUTPUT);
 }
 
 void loop()
 {
-  int value = analogRead(pinPotentiometer);
-  int brightness = map(value, 0, 1023, 0, 255);
-  analogWrite(pinLed, brightness);
+  int waarde = analogRead(potPin);
+  int helderheid = map(waarde, 0, 1023, 0, 255);
+  analogWrite(ledPin, helderheid);
 }</code></pre>
 
             <p>Meer hierover: <a href="../Labo2/Reference/analogWrite.html">analogWrite()</a> en <a href="../Labo2/Reference/map.html">map()</a>.</p>

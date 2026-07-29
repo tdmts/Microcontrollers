@@ -173,6 +173,8 @@ const int intPin = 2;
 const int ledLinks = 3;
 const int ledRechts = 4;
 
+const unsigned long ontdenderTijd = 50;
+
 volatile bool expanderVeranderd = false;
 
 byte vorigeKnoppen = 0xFF;
@@ -254,7 +256,7 @@ void loop()
 
   if (netIngedrukt != 0)
   {
-    delay(20); // dendering laten uitsterven
+    delay(ontdenderTijd); // dendering laten uitsterven
 
     expanderVeranderd = false;
     vorigeKnoppen = leesExpander();

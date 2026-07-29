@@ -85,13 +85,31 @@ times, `flink`, `prima`, `eventjes`); filler adverbs (`netjes`, 19 uses and near
 `LED` in capitals where the house spelling is `led`.
 
 That last one is spelling rather than ornament, and it is the only rule here that has to reason about
-where in the file it is looking. `LED` belongs in code: `pinLED` is an identifier, and in labo 6 the
+where in the file it is looking. `LED` belongs in code: in labo 6 the
 string `"LED"` is the protocol key between the pc and the Arduino (`WriteLine("LED:1")`). Those all
 sit inside a `<pre>`, which a line-based grep cannot see, so the match is filtered the other way
 round: the line must carry a prose tag and must not be the `<pre ...><code>` opening line, where labo
 6 happens to put its `if (sleutel == "LED")`. Code lines carry no tag and drop out. It errs toward
 missing a violation rather than inventing one, which is the right way round for an advisory rule, and
 `<!-- audit-skip: led-spelling -->` is there for the day a page spells out Light Emitting Diode.
+
+A seventh rule, `identifier-taal`, is the mirror image of that one and is about code rather than
+prose. **Identifiers are Dutch, and a compound puts the head noun last**: `ledPin`, `knopPin`,
+`potPin`, `ontdenderTijd`. That is the ordinary Dutch closed compound ("de ledpin") in camelCase and
+the English word order at the same time, which is why those names came through the July 2026
+conversion untouched while `pinLed`, `pinButton` and `pinPotentiometer` did not. The reasoning is in
+[`CONTRIBUTING.md`](CONTRIBUTING.md): the Arduino API supplies the English vocabulary that actually
+transfers, and the names an author picks are bench words the assignment already uses, so keeping them
+Dutch removes a translation step in a course where working memory is the scarce resource. Datasheet
+labels (`pinDS`, `pinSHCP`, `in1Pin`, `segA`) and the API's own parameter names are the exceptions,
+the latter recorded with `<!-- audit-skip: identifier-taal -->` in
+[`Labo2/Reference/map.html`](Labo2/Reference/map.html). Because an identifier lives in a `<pre>`, the
+filter is inverted: the line must **not** carry a prose tag. Matching `<p` alone would have excluded
+`<pre ...><code>`, which is exactly where a sketch's first constant sits, so the paragraph tag is
+matched as `<p>` or `<p ` and `<pre ` slips past. The word list holds compounds only &mdash; bare
+`value` and `state` are the likelier slip but are also `value="0"` in an attribute and `.value` in
+the shift-register widget's JavaScript, and an advisory rule that cries wolf is worse than one that
+occasionally misses.
 
 The other five are word lists rather than clever patterns, and the reason is worth keeping. The obvious
 `-je`/`-tje` suffix regex for diminutives also catches "haakjes", "netjes", "oranje" and "vrije", and
@@ -137,7 +155,7 @@ the sketch most worth compiling. Filling the blanks in to make it build would ha
 A page can record that a deviation is deliberate with `<!-- audit-skip: oplossing -->` (comma-separate
 several; valid rules are `lead`, `figure`, `indienen`, `oplossing`, `code-class`,
 `checklist-driven`, `lead-opener`, `u-vorm`, `verkleinwoord`, `noord-nederlands`, `vulwoord`,
-`led-spelling`). Skipped deviations are still listed, under "Deviations recorded in the page
+`led-spelling`, `identifier-taal`). Skipped deviations are still listed, under "Deviations recorded in the page
 itself", just not as findings, and an unrecognised rule name is reported rather than silently
 ignoring nothing. Put the reason in a comment next to the marker: see
 [`Labo0/Exercises/BegeleideOefening.html`](Labo0/Exercises/BegeleideOefening.html), a guided
@@ -306,7 +324,7 @@ it. `CONTRIBUTING.md` and the `orion-convert` skill point at it rather than rest
 
 The short version: **keep the didactics, drop the theatre.** The pages written from labo 5 onward (and
 labo 0's theory pages) explain well but read manufactured, because nearly every paragraph builds
-toward a pointe and closes on a line meant to land. Fifteen patterns are named there: patterns 1 to 11
+toward a pointe and closes on a line meant to land. Seventeen patterns are named there: patterns 1 to 11
 are about ornament (the closing punchline, the rhetorical tricolon, the rhetorical question as a
 transition, the colon-as-pointe, the stock `lead` opener and the decorative diminutive do the most
 damage), 12 and 13 are about word choice, namely Netherlandic vocabulary in a course for Flemish
@@ -314,7 +332,18 @@ students and filler adverbs, and 14 (the wink in parentheses) and 15 (decorative
 later. The numbers are fixed even though the grouping no longer runs in order, because the ledgers in
 `review/` cite them.
 
-Three rules cut across all fifteen. They apply **everywhere a student reads** (body text, headings and
+**16 and 17 sit a level above the rest**: they are about the shape of a paragraph rather than a
+sentence, which is why every individual sentence survives the other fifteen and the page still reads
+written. 16 (*stel vast, beoordeel niet*) is the habit of stating a fact and then telling the reader
+how bad or important it is, in three forms: the ranking ("Dit is de gevaarlijkste van de drie"), the
+announcement ("Twee dingen zijn de moeite om apart te bekijken") and the closing appraisal. Unlike
+pattern 1 the fix is usually a move rather than a deletion: the weight goes into the statement. 17
+(*bekend materiaal krijgt minder plaats*) is the flip side of the callback rule: explaining
+everything to the same depth is itself performance, so what an earlier lab already taught gets one
+line and a reference. Both carry the same brake as 15 &mdash; a pass may only compress what an earlier
+lab demonstrably covers, otherwise the paragraph goes on the question list.
+
+Three rules cut across all seventeen. They apply **everywhere a student reads** (body text, headings and
 box titles, the `lead`, checklist lines, spoiler labels, `alt`, `figcaption`, and `name`/`blurb` in the
 manifests) and **not** to the repo's own documentation. Language errors are **out of scope**: a comma
 splice is not style, so a pass collects them and puts them to the user rather than fixing them in the
@@ -331,7 +360,7 @@ to fix. Terser is not the goal; unperformed is.
 
 Six of those rules are greppable and live in `--audit` (see the content check above); the sixth is the
 spelling rule `led` rather than `LED`, which the document carries alongside the em-dash ban because it
-is not one of the fifteen patterns. The rest is a
+is not one of the seventeen patterns. The rest is a
 reading judgement, so [`Labo0/Reference/WatIsEenMicrocontroller.html`](Labo0/Reference/WatIsEenMicrocontroller.html)
 is kept as the worked specimen: it had eleven of the thirteen and was rewritten against the document.
 

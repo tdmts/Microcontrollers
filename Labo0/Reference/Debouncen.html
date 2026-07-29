@@ -20,62 +20,118 @@
         </figure>
     </div>
 
-    <p>Dit is een ongewenst fenomeen. We willen een perfecte overgang tussen het ene niveau en het andere niveau. Om dat te bereiken kan je het signaal "debouncen", met andere woorden het denderen van de contacten tegenwerken.</p>
-    <p>Het denderen zelf gebeurt in een fractie van een seconde. De duur ervan zal altijd minder zijn dan een tiende van een seconde, meestal zelfs nog korter. Een mogelijke debounce-oplossing is dan ook om het ingangssignaal te "pollen" (= constant na elkaar uitlezen) en, zodra een ander niveau gedetecteerd is, een pauze in het pollen in te lassen van 100 ms. Na deze pauze is het denderen zeker voorbij en kan de nu stabiele ingang gelezen worden. Dit heeft wel de beperking dat het signaal niet sneller dan binnen 100 ms mag wisselen.</p>
+    <h2 id="de-dender-zichtbaar-maken">De dender zichtbaar maken</h2>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
+    <p>Onderstaande sketch telt hoe vaak je op de knop drukt, en gaat ervan uit dat &eacute;&eacute;n overgang van hoog naar laag &eacute;&eacute;n druk is. Dat is de gewone manier om een druk te detecteren.</p>
+
+    <p>Laad ze op, open de seri&euml;le monitor en druk tien keer rustig op de knop.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+
+int vorigeStand = HIGH;
+int aantalDrukken = 0;
 
 void setup()
 {
-	pinMode(pinButton, INPUT_PULLUP);
+  pinMode(knopPin, INPUT_PULLUP);
+  Serial.begin(9600);
 }
 
 void loop()
 {
-  if(digitalRead(pinButton) == LOW)
+  int stand = digitalRead(knopPin);
+
+  if (stand == LOW &amp;&amp; vorigeStand == HIGH)
+  {
+    aantalDrukken++;
+    Serial.println(aantalDrukken);
+  }
+
+  vorigeStand = stand;
+}</code></pre>
+
+    <p>De teller staat daarna meestal hoger dan 10, en bij sommige drukken springt hij twee of drie tellen vooruit. Tel opnieuw en je komt op een ander totaal uit.</p>
+
+    <div class="info-box">
+        <div class="info-title remark">Waarom de teller vooruitspringt</div>
+        <p>Tijdens de milliseconden dat de contacten denderen, gaat de ingang meerdere keren van hoog naar laag en terug. Je code doet precies wat er staat: ze telt elke overgang, en voor jouw ene druk zijn dat er meerdere geweest. Hoeveel er dat zijn, hangt af van de knop en van hoe je duwt, en verschilt van druk tot druk.</p>
+    </div>
+
+    <!-- TODO: screenshot van de seri&euml;le monitor waarin de teller bij tien drukken
+         voorbij de 10 springt, met een paar sprongen van meer dan 1 zichtbaar -->
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-debounce-teller-springt.png" class="img-fluid" alt="TODO: seri&euml;le monitor waarin de drukteller bij tien drukken tot ver boven de 10 loopt">
+            <figcaption>Tien drukken op de knop, geteld zonder debouncing.</figcaption>
+        </figure>
+    </div>
+
+    <h2 id="debouncen-met-een-korte-pauze">Debouncen met een korte pauze</h2>
+
+    <p>Dit is een ongewenst fenomeen. We willen een perfecte overgang tussen het ene niveau en het andere niveau. Om dat te bereiken kan je het signaal "debouncen", met andere woorden het denderen van de contacten tegenwerken.</p>
+    <p>Het denderen zelf gebeurt in een fractie van een seconde. De duur ervan zal altijd minder zijn dan een tiende van een seconde, meestal zelfs nog korter. Een mogelijke debounce-oplossing is dan ook om het ingangssignaal te "pollen" (= constant na elkaar uitlezen) en, zodra een ander niveau gedetecteerd is, een pauze in het pollen in te lassen van 50 ms. Na deze pauze is het denderen zeker voorbij en kan de nu stabiele ingang gelezen worden. Dit heeft wel de beperking dat het signaal niet sneller dan binnen 50 ms mag wisselen.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Waarom 50 ms</div>
+        <p>In deze cursus staat de ontdendertijd bij het pollen overal op 50 ms. Dat is ruim meer dan de paar milliseconden dat een knop echt dendert, en tegelijk kort genoeg dat twee drukken na elkaar allebei nog meetellen. Kies je 200 ms, dan werkt het ontdenderen even goed, maar begint je knop traag aan te voelen.</p>
+    </div>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const unsigned long ontdenderTijd = 50;
+
+void setup()
+{
+	pinMode(knopPin, INPUT_PULLUP);
+}
+
+void loop()
+{
+  if(digitalRead(knopPin) == LOW)
   {
     // do something
-	delay(100); // debounce
+	delay(ontdenderTijd); // debounce
   }
 }</code></pre>
 
     <p>Een tweede mogelijkheid is het gebruik van een externe schakeling zoals een flipflop. Zie daarvoor de cursus "digitale elektronica" uit het eerste jaar.</p>
+    <h2 id="debouncen-zonder-te-blokkeren">Debouncen zonder te blokkeren</h2>
+
     <p>Bovenstaande code is een heel eenvoudige manier om het debounceprobleem op te lossen, maar ze heeft een belangrijk nadeel: het gebruik van <code>delay()</code>. Die functie blokkeert de Arduino volledig, zodat er geen andere instructie meer uitgevoerd wordt. Wil je dat niet omdat de uitvoering van je programma tijdskritisch is, dan kan je onderstaande oplossing gebruiken. Deze kan je ook terugvinden in de Arduino-documentatie.</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
-const unsigned long debounceDelay = 50;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const unsigned long ontdenderTijd = 50;
 
-int lastReading = HIGH;
-int buttonState = HIGH;
-unsigned long lastDebounceTime = 0;
+int vorigeMeting = HIGH;
+int knopStand = HIGH;
+unsigned long laatsteVerandering = 0;
 
 void setup()
 {
-  pinMode(pinButton, INPUT_PULLUP);
+  pinMode(knopPin, INPUT_PULLUP);
 }
 
 void loop()
 {
-  int reading = digitalRead(pinButton);
+  int meting = digitalRead(knopPin);
 
-  if (reading != lastReading)
+  if (meting != vorigeMeting)
   {
-    lastDebounceTime = millis();   // toestand veranderde -> timer resetten
+    laatsteVerandering = millis();   // toestand veranderde -> timer resetten
   }
 
-  if (millis() - lastDebounceTime > debounceDelay)
+  if (millis() - laatsteVerandering > ontdenderTijd)
   {
-    if (reading != buttonState)
+    if (meting != knopStand)
     {
-      buttonState = reading;
-      if (buttonState == LOW)
+      knopStand = meting;
+      if (knopStand == LOW)
       {
         // do something -> vuurt exact één keer per druk
       }
     }
   }
 
-  lastReading = reading;
+  vorigeMeting = meting;
 }</code></pre>
 </div>
 

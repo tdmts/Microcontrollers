@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Theoretische voorbeeldtest</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Theoretische voorbeeldtest</h1>
+    <p class="lead">Theorievragen over de leerinhouden van labo 5, labo 6 en labo 7, zodat je weet of je klaar bent voor het theoriegedeelte.</p>
+
+    <div class="info-box">
+        <p>Tijdens het derde evaluatiemoment is er ook een <strong>praktische test</strong>. Hoe die eruitziet, zie je op de <a href="PraktischeVoorbeeldtest.html">praktische voorbeeldtest</a>.</p>
+    </div>
+
+    <h2 id="vragen">Vragen</h2>
+
+    <h3 id="vraag-1">Vraag 1: de stappentabel (meerkeuze)</h3>
+
+    <p>Een student stuurt een stappenmotor aan in full step. De twee spoelen hangen elk over één brug van een L293D, en in TinkerCAD staan er vier anti-parallelle leds op de plaats van de spoelen. Zijn stappentabel ziet er zo uit.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int motorPinnen[] = {2, 3, 4, 5};
+
+const int volleStap[4][4] = {
+  {1, 0, 0, 0}, // spoel A, ene richting
+  {0, 1, 0, 0}, // spoel A, andere richting
+  {0, 0, 1, 0}, // spoel B, ene richting
+  {0, 0, 0, 1}  // spoel B, andere richting
+};
+
+void zetStap(int stap)
+{
+  for (int pin = 0; pin &lt; 4; pin++)
+  {
+    digitalWrite(motorPinnen[pin], volleStap[stap][pin]);
+  }
+}</code></pre>
+
+    <p>Hij doorloopt die vier rijen na elkaar en begint dan opnieuw. Wat ziet hij aan zijn vier leds?</p>
+
+    <ol type="a">
+        <li>De leds lichten in de rondte op. De motor draait zoals het hoort.</li>
+        <li>De leds lichten om de beurt van links naar rechts op. De rotor trilt heen en weer in plaats van rond te draaien.</li>
+        <li>Er brandt nooit een led, want er staat per rij maar één 1.</li>
+        <li>Alle vier de leds branden flauw, want de rijen volgen elkaar te snel op.</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Antwoord: b) De rotor trilt heen en weer.</strong></p>
+
+            <p>De volgorde van de rijen klopt niet. Deze tabel doet eerst spoel A in beide richtingen en daarna spoel B in beide richtingen, terwijl je bij full step telkens <strong>van spoel moet wisselen</strong>: A, B, A, B.</p>
+
+            <p>Reken de standen na. Spoel A in de ene richting trekt de rotor naar 0 graden, spoel A in de andere richting naar 180 graden, spoel B in de ene richting naar 90 en spoel B in de andere naar 270. Deze tabel stuurt de rotor dus naar 0, dan 180, dan 90, dan 270. Hij springt heen en weer over de as in plaats van een rondje te maken.</p>
+
+            <p>De juiste tabel wisselt om de stap van spoel.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int volleStap[4][4] = {
+  {1, 0, 0, 0}, // spoel A, ene richting
+  {0, 0, 1, 0}, // spoel B, ene richting
+  {0, 1, 0, 0}, // spoel A, andere richting
+  {0, 0, 0, 1}  // spoel B, andere richting
+};</code></pre>
+
+            <p>Antwoord c) klopt niet, want één 1 per rij is juist wat one phase full step betekent: er staat telkens één spoel onder spanning. Bij half step staan er in de helft van de rijen twee enen, en dan gaat de rotor tussen twee standen in staan.</p>
+
+            <p>Meer hierover: <a href="../Labo5/Reference/Stappenmotor.html">De stappenmotor</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-2">Vraag 2: interrupts en de ISR (meerdere juiste antwoorden)</h3>
+
+    <p>Welke van onderstaande uitspraken zijn <strong>juist</strong>? Er zijn er meerdere juist.</p>
+
+    <ol type="a">
+        <li>Op een Arduino UNO kunnen alleen pin 2 en pin 3 een interrupt opwekken.</li>
+        <li>Een variabele die je zowel in je ISR als in je <code>loop()</code> gebruikt, moet <code>volatile</code> zijn.</li>
+        <li><code>delay(500)</code> in een ISR wacht een halve seconde en gaat daarna gewoon verder.</li>
+        <li><code>millis()</code> lezen in een ISR levert een bruikbare waarde op, ook al staat de klok stil zolang je erin zit.</li>
+        <li>Een <code>Wire.requestFrom()</code> in een ISR geeft je een foutmelding of een timeout, zodat je het probleem meteen ziet.</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Antwoord: a, b en d zijn juist. c en e zijn fout.</strong></p>
+
+            <ul>
+                <li><strong>a) juist.</strong> De rest van je pinnen kan het niet. Zet je je knop toch elders, dan geeft <code>digitalPinToInterrupt()</code> de waarde <code>NOT_AN_INTERRUPT</code> terug en negeert <code>attachInterrupt()</code> dat stilzwijgend. Je code compileert, uploadt en doet nooit iets.</li>
+                <li><strong>b) juist.</strong> Zonder <code>volatile</code> mag de compiler de waarde in de processor bijhouden in plaats van ze telkens uit het geheugen te halen. Hij ziet je ISR nergens opgeroepen worden, dus hij ziet het verband niet, en je <code>loop()</code> blijft een verouderde kopie lezen. De compiler waarschuwt daar nooit voor.</li>
+                <li><strong>c) fout.</strong> Je bord hangt. <code>delay()</code> telt de tijd af met een timer die zelf een interrupt gebruikt, en die staat uit zolang jouw ISR draait. De tijd staat dus stil en <code>delay()</code> raakt nooit klaar. Alleen de resetknop helpt nog.</li>
+                <li><strong>d) juist.</strong> Je krijgt de waarde van vlak voor de onderbreking, en dat is nauwkeurig genoeg voor een vraag als "is het al 200 ms geleden?". Daar draait de ontdendering van een interrupt op. Een tijdsduur meten binnen één ISR lukt er niet mee, want tussen twee oproepen zit dan geen tijd.</li>
+                <li><strong>e) fout.</strong> Dit is de gemeenste van allemaal, want er komt geen enkele melding. De I²C-hardware gebruikt zelf een interrupt om na elke byte verder te gaan, en die staat uit. <code>Wire.requestFrom()</code> blijft dus eeuwig op hulp wachten die nooit komt, zonder timeout. Zet in plaats daarvan een vlag en doe je I²C-werk in de <code>loop()</code>.</li>
+            </ul>
+
+            <p>Meer hierover: <a href="../Labo7/Reference/Interruptpinnen.html">attachInterrupt en de interruptpinnen</a>, <a href="../Labo7/Reference/InterruptServiceRoutine.html">De regels van een ISR</a> en <a href="../Labo7/Reference/VolatileEnVlaggen.html">volatile en de vlagvariabele</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-3">Vraag 3: een boodschap over de lijn (open vraag)</h3>
+
+    <p>Een Arduino die de temperatuur meet, stuurt zijn meting door naar een tweede Arduino met deze regel.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Serial.println("TEMP:21");</code></pre>
+
+    <ol>
+        <li>Hoeveel bytes gaan er over de lijn, en welke waarden hebben ze? Gebruik dat <code>'0'</code> gelijk is aan 48 en <code>'A'</code> aan 65.</li>
+        <li>Schrijf de code waarmee de ontvanger daar de sleutel <code>TEMP</code> en het getal 21 uit haalt.</li>
+        <li>Waarom hoort daar een <code>trim()</code> in, en waarom een test op het resultaat van <code>indexOf()</code>?</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>1. Negen bytes</strong></p>
+
+            <p>De tekst zelf is zeven tekens lang, en <code>println()</code> plakt er nog <code>'\r'</code> (13) en <code>'\n'</code> (10) achter.</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <caption>Wat er echt over de lijn gaat</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Teken</th>
+                            <th scope="col">T</th>
+                            <th scope="col">E</th>
+                            <th scope="col">M</th>
+                            <th scope="col">P</th>
+                            <th scope="col">:</th>
+                            <th scope="col">2</th>
+                            <th scope="col">1</th>
+                            <th scope="col">\r</th>
+                            <th scope="col">\n</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Waarde</th>
+                            <td>84</td><td>69</td><td>77</td><td>80</td><td>58</td><td>50</td><td>49</td><td>13</td><td>10</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>De hoofdletters staan op een rij vanaf <code>'A'</code> = 65, dus T is de twintigste letter en komt op 65 + 19 = 84. De cijfers staan op een rij vanaf <code>'0'</code> = 48, dus <code>'2'</code> is 50 en <code>'1'</code> is 49. Merk op dat het getal 21 als <strong>twee tekens</strong> vertrekt en niet als de byte 21.</p>
+
+            <p><strong>2. De ontvanger</strong></p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
+{
+  if (Serial.available() &gt; 0)
+  {
+    String regel = Serial.readStringUntil('\n');
+    regel.trim();
+
+    int scheiding = regel.indexOf(':');
+
+    if (scheiding &gt; 0)
+    {
+      String sleutel = regel.substring(0, scheiding);
+      String waarde = regel.substring(scheiding + 1);
+
+      if (sleutel == "TEMP")
+      {
+        int temperatuur = waarde.toInt();
+
+        Serial.println(temperatuur);
+      }
+    }
+  }
+}</code></pre>
+
+            <p><strong>3. De twee vangnetten</strong></p>
+
+            <p><code>readStringUntil('\n')</code> leest tot en met de line feed, maar de <strong>carriage return</strong> die daarvoor stond zit nog in je String. Zonder <code>trim()</code> is je waarde dus <code>"21\r"</code>. Bij <code>toInt()</code> valt dat toevallig weg, maar een vergelijking als <code>waarde == "AAN"</code> mislukt dan zonder dat je ziet waarom.</p>
+
+            <p><code>indexOf()</code> geeft <strong>-1</strong> terug wanneer het teken er niet in staat. Ga je dan toch verder, dan rekent <code>substring(0, -1)</code> met onzin. Op een seriële lijn komt er vroeg of laat rommel binnen, dus die test is geen luxe. Er staat <code>&gt; 0</code> en niet <code>&gt;= 0</code>, want een lijn die met een dubbelepunt begint heeft wel een scheidingsteken maar geen sleutel.</p>
+
+            <p>Meer hierover: <a href="../Labo6/Reference/TekensEnGetallen.html">Tekens en getallen</a> en <a href="../Labo6/Reference/Strings.html">Werken met een String</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-4">Vraag 4: de basisweerstand berekenen (numeriek)</h3>
+
+    <p>Je schakelt een DC motor met een P2N2222A. De motor trekt <strong>120 mA</strong>. In de datasheet lees je een hFE van ongeveer 200 en een V<sub>be</sub> van 0,7 V. Je stuurt de transistor vanaf een gewone uitgangspin, die 5 V geeft.</p>
+
+    <ol>
+        <li>Met welke hFE reken je verder, en waarom die en niet de 200 uit de datasheet?</li>
+        <li>Bereken de basisstroom I<sub>b</sub>.</li>
+        <li>Bereken de basisweerstand R<sub>b</sub> en kies er een standaardwaarde bij.</li>
+        <li>Leg uit waarom deze motor sowieso niet rechtstreeks aan een uitgangspin mag.</li>
+    </ol>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>1. hFE = 40</strong></p>
+
+            <p>Je deelt de hFE uit de datasheet ruim door, hier door 5. Reken je met 200, dan stuur je precies genoeg basisstroom om die 120 mA te halen als alles meezit, en dat is te krap: de hFE verschilt sterk van exemplaar tot exemplaar, zakt bij hogere stroom en verandert met de temperatuur. Bovendien wil je dat de transistor in <strong>saturatie</strong> gaat en dus volledig openstaat, want een transistor die maar half openstaat verstookt het verschil als warmte.</p>
+
+            <p><strong>2. I<sub>b</sub> = 3 mA</strong></p>
+
+            <p>De collectorstroom is de stroom door je motor, dus 120 mA of 0,12 A.</p>
+
+            <p>I<sub>b</sub> = 0,12 A / 40 = 0,003 A = <strong>3 mA</strong></p>
+
+            <p><strong>3. R<sub>b</sub> = 1433 Ω, dus 1,5 kΩ</strong></p>
+
+            <p>Over de basisweerstand staat de spanning van je pin min de spanning over de basis-emitterjunctie, dus 5 V min 0,7 V = 4,3 V.</p>
+
+            <p>R<sub>b</sub> = 4,3 V / 0,003 A = <strong>1433 Ω</strong></p>
+
+            <p>Die waarde bestaat niet als standaardweerstand. De dichtstbijzijnde is <strong>1,5 kΩ</strong>. Je rondt daarmee naar boven af en stuurt dus iets minder basisstroom dan berekend, en dat mag, want in die 3 mA zat al een marge van factor 5. Zit je twijfelachtig dicht bij de grens, kies dan de kleinere weerstand: te veel basisstroom is zelden een probleem, te weinig wel.</p>
+
+            <p><strong>4. Drie keer over de grens</strong></p>
+
+            <p>Een pin van de UNO levert veilig zo'n 20 mA en mag er absoluut maximaal 40 aan. Die 120 mA is daar het drievoud van, dus de pin gaat stuk voor de motor draait. Daarnaast zit er nog een tweede reden: een motor is een spoel, en op het moment dat je hem uitschakelt wekt die een spanningspiek op die de pin evengoed vernielt. Daarvoor staat de vrijloopdiode over de motor.</p>
+
+            <p>Meer hierover: <a href="../Labo5/Reference/TransistorAlsSchakelaar.html">De transistor als schakelaar</a>, <a href="../Labo5/Reference/DCMotor.html">De DC motor</a> en <a href="../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
+        </div>
+    </div>
+
+    <h3 id="vraag-5">Vraag 5: zoek de drie fouten (code)</h3>
+
+    <p>Een student telt hoe vaak er op een knop gedrukt wordt. De knop hangt met een pull-upweerstand aan de Arduino en trekt de pin laag bij een druk. De schakeling is correct gebouwd, en met een gewone <code>digitalRead()</code> in de <code>loop()</code> werkte alles.</p>
+
+    <p>Sinds hij op interrupts is overgestapt, gebeurt er helemaal niets meer. De monitor blijft leeg, hoe vaak hij ook drukt.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 7;
+const int ledPin = 8;
+
+bool knopGedrukt = false;
+
+int aantal = 0;
+
+void knopISR()
+{
+  knopGedrukt = true;
+
+  Serial.println("Er is gedrukt");
+}
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  pinMode(knopPin, INPUT_PULLUP);
+
+  Serial.begin(9600);
+
+  attachInterrupt(digitalPinToInterrupt(knopPin), knopISR, FALLING);
+}
+
+void loop()
+{
+  if (knopGedrukt == true)
+  {
+    knopGedrukt = false;
+
+    aantal++;
+
+    digitalWrite(ledPin, aantal % 2);
+
+    Serial.println(aantal);
+  }
+}</code></pre>
+
+    <p>Er zitten drie fouten in. Welke, en hoe los je ze op?</p>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p><strong>Fout 1: de knop hangt op pin 7</strong></p>
+
+            <p>Op een UNO kunnen alleen pin 2 en pin 3 een interrupt opwekken. Voor pin 7 geeft <code>digitalPinToInterrupt()</code> de waarde <code>NOT_AN_INTERRUPT</code> terug, en <code>attachInterrupt()</code> negeert die zonder iets te zeggen. Dat verklaart precies wat de student ziet: alles compileert en uploadt, en er gebeurt nooit iets.</p>
+
+            <p>Oplossing: verhuis de knop naar pin 2 of pin 3.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;</code></pre>
+
+            <p>Zolang die ISR nooit afgaat, merk je ook niets van wat erin staat. De twee andere fouten komen dus pas boven zodra deze opgelost is.</p>
+
+            <p><strong>Fout 2: knopGedrukt is geen volatile</strong></p>
+
+            <p>De variabele wordt in de ISR geschreven en in de <code>loop()</code> gelezen, dus ze moet <code>volatile</code> zijn. Zonder dat woord mag de compiler de waarde in de processor bijhouden in plaats van ze telkens opnieuw uit het geheugen te halen, want hij ziet nergens dat die ISR opgeroepen wordt. Je <code>loop()</code> blijft dan naar een verouderde kopie kijken.</p>
+
+            <p>Dit is de gevaarlijkste van de drie: er komt geen waarschuwing, en het werkt vaak wel tot je iets kleins verandert en de compiler anders beslist.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>volatile bool knopGedrukt = false;</code></pre>
+
+            <p><strong>Fout 3: er wordt geprint vanuit de ISR</strong></p>
+
+            <p><code>Serial.println()</code> hoort niet thuis in een ISR. Bij 9600 baud duurt één teken ruim een milliseconde, en normaal geeft je Arduino die tekens beetje bij beetje weg terwijl je programma verder loopt. In een ISR kan dat niet, dus zit je vast te schrijven terwijl alles stilligt: je mist knopdrukken en je klok loopt achter.</p>
+
+            <p>Oplossing: haal die regel weg. De <code>loop()</code> print het aantal toch al, en daar dient het vlagpatroon voor.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>void knopISR()
+{
+  knopGedrukt = true;
+}</code></pre>
+
+            <div class="info-box remark">
+                <div class="info-title remark">Op echte hardware blijft er nog werk over</div>
+                <p>Ook met deze drie fouten weg telt de teller op een fysieke knop te snel, want een drukknop stuitert en je ISR gaat dan vijf tot twintig keer af per druk. Daar zet je een vergrendeling van 200 ms tegen. In TinkerCAD zie je dat probleem nooit, want de knop daar maakt precies één keer contact.</p>
+            </div>
+
+            <p>Meer hierover: <a href="../Labo7/Reference/Interruptpinnen.html">attachInterrupt en de interruptpinnen</a>, <a href="../Labo7/Reference/VolatileEnVlaggen.html">volatile en de vlagvariabele</a>, <a href="../Labo7/Reference/InterruptServiceRoutine.html">De regels van een ISR</a> en <a href="../Labo7/Reference/DenderenBijEenInterrupt.html">Denderen bij een interrupt</a>.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../back-link.js"></script>
+<script src="../solution-reveal.js"></script>
+</body>
+</html>

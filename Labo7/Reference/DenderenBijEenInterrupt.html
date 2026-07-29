@@ -44,10 +44,17 @@
 
     <p>Een mens kan onmogelijk vijf keer per seconde bewust drukken, dus je verliest niets. Het gestuiter is na een paar milliseconden voorbij, dus je vangt alles op.</p>
 
+    <div class="info-box remark">
+        <div class="info-title remark">Waarom hier 200 ms en bij het pollen 50 ms</div>
+        <p>Bij het pollen vergelijk je de huidige stand met de vorige. Indrukken is HIGH naar LOW, loslaten is LOW naar HIGH, en dat zijn twee verschillende overgangen. Je <code>delay()</code> hoeft daar dus alleen het gestuiter zelf te overleven, en 50 ms is daarvoor ruim genoeg.</p>
+        <p>Hier telt je vergrendeling vanaf het <em>indrukken</em>, terwijl ook het loslaten dalende flanken oplevert. Ze moet dus de hele beweging overbruggen, en een gewone tik duurt al snel meer dan 100 ms. Vandaar het hogere getal.</p>
+        <p>De twee constanten heten daarom anders. Bij het pollen gebruik je <code>ontdenderTijd</code> van 50 ms, de constante die je uit <a href="../../Labo0/Reference/Debouncen.html">Debouncen</a> kent. Bij een interrupt gebruik je <code>vergrendelTijd</code> van 200 ms.</p>
+    </div>
+
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 const int ledPin = 8;
 
-const unsigned long denderTijd = 200; // zolang negeren we nieuwe flanken
+const unsigned long vergrendelTijd = 200; // zolang negeren we nieuwe flanken
 
 volatile bool ledBrandt = false;
 volatile unsigned long laatsteDruk = 0;
@@ -56,7 +63,7 @@ void knopIngedrukt()
 {
   unsigned long nu = millis();
 
-  if (nu - laatsteDruk &lt; denderTijd)
+  if (nu - laatsteDruk &lt; vergrendelTijd)
   {
     return; // dit is gestuiter, geen nieuwe druk
   }

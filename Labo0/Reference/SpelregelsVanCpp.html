@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>De spelregels van C++</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>De spelregels van C++</h1>
+    <p class="lead">De compiler leest je sketch letterlijk. Eén hoofdletter verkeerd of één puntkomma te weinig en je programma compileert niet. Hieronder staan de vormregels waar C++ op staat, telkens aangewezen op de blink-sketch die je al hebt geüpload.</p>
+
+    <p>Dit is de sketch waar de hele pagina naar verwijst. Hij zet de ingebouwde led op pin 13 elke seconde aan en uit.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
+{
+  pinMode(13, OUTPUT);      // pin 13 wordt een uitgang
+}
+
+void loop()
+{
+  digitalWrite(13, HIGH);   // led aan
+  delay(1000);              // een seconde wachten
+  digitalWrite(13, LOW);    // led uit
+  delay(1000);              // een seconde wachten
+}</code></pre>
+
+    <p>Wat <code>setup()</code> en <code>loop()</code> precies doen, staat op <a href="SetupLoop.html">Setup en loop</a>. Deze pagina gaat over de vorm van de code, niet over wat ze uitvoert.</p>
+
+    <h2 id="de-puntkomma">De puntkomma</h2>
+    <p>Elke instructie eindigt op een puntkomma. Voor de compiler is dat het teken dat de instructie af is. In de sketch hierboven staat er dus een achter <code>pinMode(13, OUTPUT);</code>, achter elke <code>digitalWrite(...)</code> en achter elke <code>delay(1000);</code>.</p>
+    <p>Achter een accolade komt er geen puntkomma. <code>void setup()</code> met het blok eronder is een functiedefinitie en geen instructie, dus daar sluit de sluitende accolade het geheel af.</p>
+    <p>Vergeet je een puntkomma, dan leest de compiler jouw regel en de volgende als één instructie. De fout die hij meldt, staat daarom vaak op de regel <em>onder</em> de regel waar je de puntkomma vergeten bent.</p>
+
+    <div class="info-box">
+        <div class="info-title warning">Een puntkomma achter if of while</div>
+        <p>Een puntkomma op zichzelf is een geldige instructie: een lege. Zet je er een achter de voorwaarde van een <code>if</code>, dan is dat de volledige instructie die de <code>if</code> uitvoert. Het blok eronder staat er dan los van en wordt altijd uitgevoerd.</p>
+        <pre class="code-wrapper language-cpp linenumbers show-language"><code>if (aantal == 5);
+{
+  digitalWrite(13, HIGH);   // gebeurt ook als aantal 3 is
+}</code></pre>
+        <p>Bij een <code>while</code> wordt die lege instructie de lus zelf. Is de voorwaarde waar, dan herhaalt je Arduino eindeloos niets en blijft je programma op die ene regel hangen.</p>
+        <pre class="code-wrapper language-cpp linenumbers show-language"><code>while (aantal &lt; 5);
+{
+  aantal++;                 // wordt nooit bereikt, aantal blijft staan
+}</code></pre>
+        <p>In beide gevallen is de vorm van je code correct, dus de compiler geeft je geen foutmelding. Je merkt het pas aan wat je programma doet. Zet in <strong>File &gt; Preferences</strong> de <strong>Compiler warnings</strong> op <strong>All</strong>, dan waarschuwt hij je hier wel voor.</p>
+        <p>Wat <code>if</code> en <code>while</code> zelf doen, lees je in <a href="Selecties.html">Selecties</a> en <a href="Iteraties.html">Iteraties</a>.</p>
+    </div>
+
+    <h2 id="de-accolades">De accolades</h2>
+    <p>Een paar accolades <code>{ }</code> bundelt instructies tot één blok. In de blink-sketch staan twee blokken: het blok van <code>setup()</code> met één instructie erin, en het blok van <code>loop()</code> met vier.</p>
+    <p>Elke openende accolade hoort bij precies één sluitende. Vergeet je er een, dan loopt de compiler verder tot het einde van het bestand voor hij merkt dat er iets mist, en meldt hij de fout dus ergens veel verder dan waar ze staat.</p>
+    <p>In dit vak zet je de openende accolade op een eigen regel, recht onder de regel waar het blok bij hoort. Zo staat ze in dezelfde kolom als de sluitende accolade die erbij hoort, en zie je in één oogopslag welke twee bij elkaar horen.</p>
+
+    <h2 id="hoofdletters-tellen-mee">Hoofdletters tellen mee</h2>
+    <p>C++ maakt verschil tussen hoofdletters en kleine letters. <code>digitalWrite</code> en <code>digitalwrite</code> zijn voor de compiler twee verschillende namen, en alleen de eerste bestaat. Schrijf je de tweede, dan meldt de compiler dat hij die naam nergens kent.</p>
+    <p>Hetzelfde geldt voor de waarden die je meegeeft. <code>OUTPUT</code>, <code>INPUT</code>, <code>HIGH</code> en <code>LOW</code> staan volledig in hoofdletters.</p>
+    <p>En het geldt voor de namen die je zelf verzint. Noem je bovenaan iets <code>ledPin</code> en schrijf je verderop <code>ledpin</code>, dan zoekt de compiler naar een naam die je nooit gemaakt hebt.</p>
+
+    <h2 id="namen-die-je-zelf-kiest">Namen die je zelf kiest</h2>
+    <p>Voor de namen van je eigen variabelen, constanten en functies gelden een paar regels:</p>
+    <ul>
+        <li>Een naam bestaat uit letters, cijfers en het liggende streepje <code>_</code>.</li>
+        <li>Een naam begint met een letter, nooit met een cijfer. <code>pin2</code> mag, <code>2pin</code> mag niet.</li>
+        <li>Er staan geen spaties in. <code>pin led</code> leest de compiler als twee losse namen.</li>
+        <li>Woorden die de taal zelf gebruikt, zijn bezet. <code>int</code>, <code>void</code>, <code>if</code> en <code>for</code> kan je niet als naam kiezen.</li>
+    </ul>
+    <p>Daarnaast is er de afspraak van dit vak: je schrijft namen in camelCase, met een kleine letter vooraan en een hoofdletter bij elk volgend woord. Zo wordt de pin van een led <code>ledPin</code> en niet <code>ledpin</code> of <code>led_pin</code>.</p>
+
+    <h2 id="waar-je-code-staat">Waar je code staat</h2>
+    <p>Instructies staan altijd binnen een functie. Een <code>digitalWrite(13, HIGH);</code> die los boven <code>setup()</code> zou staan, hoort bij niets en wordt door de compiler geweigerd.</p>
+    <p>Boven <code>setup()</code>, buiten elk blok, staat wat het hele programma nodig heeft: de <code>#include</code>-regels waarmee je een bibliotheek binnenhaalt, en de constanten en variabelen die meer dan één functie gebruikt. Wat je binnen een blok maakt, bestaat alleen daar. Dat verschil staat uitgewerkt in <a href="ConstantenVariabelenGegevenstypes.html#globaal-en-lokaal">Constanten, variabelen en gegevenstypes</a>.</p>
+
+    <h2 id="een-is-toekennen-twee-is-vergelijken">Eén = is toekennen, twee is vergelijken</h2>
+    <p>Met één isgelijkteken zet je een waarde in een variabele. <code>aantal = 5;</code> maakt van <code>aantal</code> een vijf.</p>
+    <p>Met twee isgelijktekens stel je een vraag. <code>aantal == 5</code> verandert niets en levert <code>true</code> of <code>false</code> op, naargelang er een vijf in zit.</p>
+    <p>De verwarring tussen die twee is de klassieke beginnersfout, en de compiler ziet ze meestal niet: <code>aantal = 5</code> is op zich geldige code, ze doet alleen iets anders dan je bedoelde. Je komt <code>==</code> voor het eerst echt tegen bij <a href="Selecties.html">Selecties</a>.</p>
+
+    <h2 id="commentaar">Commentaar</h2>
+    <p>Alles achter <code>//</code> slaat de compiler over, tot het einde van die regel. Dat is wat er in de blink-sketch achter <code>// led aan</code> gebeurt: de tekst is er voor jou, de Arduino ziet ze nooit.</p>
+    <p>Voor commentaar over meerdere regels gebruik je <code>/*</code> om te openen en <code>*/</code> om te sluiten:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>/*
+  Blink
+  Labo 0, eerste sketch
+*/
+digitalWrite(13, HIGH);   // led aan</code></pre>
+
+    <p>De skeletcode op <a href="SetupLoop.html">Setup en loop</a> bestaat volledig uit zulke commentaarregels. Er staat dus geen enkele instructie in, en toch compileert ze.</p>
+
+    <h2 id="inspringen-en-witruimte">Inspringen en witruimte</h2>
+    <p>Spaties, tabs en lege regels tellen niet mee voor de compiler. De hele blink-sketch op één lange regel zetten levert exact hetzelfde programma op. Voor wie de code leest, maakt het wel uit, en dat ben jij zelf zodra je sketch langer wordt dan een scherm.</p>
+    <p>De afspraak is: één instructie per regel, en per blok spring je een niveau in. Alles wat tussen de accolades van <code>loop()</code> staat, staat dus even ver van de kantlijn.</p>
+
+    <div class="info-box">
+        <div class="info-title tip">De IDE springt zelf in</div>
+        <p>Met <strong>Ctrl+T</strong> (of <strong>Tools &gt; Auto Format</strong>) laat je de Arduino IDE je hele sketch opnieuw uitlijnen. Loopt de inspringing daarna vreemd, dan is dat meestal het spoor van een accolade die je vergeten bent.</p>
+    </div>
+</div>
+
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+</body>
+</html>

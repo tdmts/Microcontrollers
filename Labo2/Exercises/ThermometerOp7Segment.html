@@ -60,12 +60,12 @@
 
 // Placeholder-pinnen: vervang door de pinnen uit jouw eigen schema
 const int segPins[] = {2, 3, 4, 5, 6, 7, 8}; // a,b,c,d,e,f,g
-const int pinDigitSelect = 10;
+const int cijferKiesPin = 10;
 
 // Pas aan op basis van je display: HIGH voor common cathode, LOW voor common anode
 const bool SEGMENT_AAN = HIGH;
 // Pas aan: welke stand van pin10 activeert het linkse display?
-const bool DIGIT_LINKS = HIGH;
+const bool CIJFER_LINKS = HIGH;
 
 const int MINTEKEN = 10; // index van het extra patroon hieronder
 
@@ -93,14 +93,14 @@ void setup()
   {
     pinMode(segPins[i], OUTPUT);
   }
-  pinMode(pinDigitSelect, OUTPUT);
+  pinMode(cijferKiesPin, OUTPUT);
   Serial.begin(9600);
 }
 
 int leesTemperatuur()
 {
-  int value = analogRead(sensorPin);        // 0..1023
-  double spanning = value * 5.0 / 1023.0;   // omrekenen naar volt
+  int waarde = analogRead(sensorPin);        // 0..1023
+  double spanning = waarde * 5.0 / 1023.0;   // omrekenen naar volt
 
   // 0,75 V komt overeen met 25 graden, en elke graad erbij is 0,01 V erbij
   double graden = (spanning - 0.75) / 0.01 + 25.0;
@@ -120,12 +120,12 @@ void toonPatroon(int index)
 void multiplexStap(int links, int rechts)
 {
   // Even kort het linkse cijfer tonen...
-  digitalWrite(pinDigitSelect, DIGIT_LINKS);
+  digitalWrite(cijferKiesPin, CIJFER_LINKS);
   toonPatroon(links);
   delay(5);
 
   // ...en dan kort het rechtse. Snel afwisselen = geen flikkering zichtbaar.
-  digitalWrite(pinDigitSelect, !DIGIT_LINKS);
+  digitalWrite(cijferKiesPin, !CIJFER_LINKS);
   toonPatroon(rechts);
   delay(5);
 }

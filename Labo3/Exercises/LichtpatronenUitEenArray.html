@@ -74,7 +74,7 @@
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
 const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
 const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
-const int pinPot = A0; // Loper van de potentiometer
+const int potPin = A0; // Loper van de potentiometer
 
 // Pas enkel deze array aan om andere patronen te tonen.
 // Elke rij is één patroon, van Q0 (links) tot Q7 (rechts).
@@ -95,7 +95,7 @@ void setup()
   pinMode(pinSHCP, OUTPUT);
 }
 
-void risingEdge(int pinNummer)
+void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -108,10 +108,10 @@ void toonPatroon(const bool patroon[])
   for (int i = aantalLeds - 1; i &gt;= 0; i--)
   {
     digitalWrite(pinDS, patroon[i] ? HIGH : LOW);
-    risingEdge(pinSHCP);
+    opgaandeFlank(pinSHCP);
   }
 
-  risingEdge(pinSTCP); // hele ledbar in één keer bijwerken
+  opgaandeFlank(pinSTCP); // hele ledbar in één keer bijwerken
 }
 
 void loop()
@@ -121,7 +121,7 @@ void loop()
     toonPatroon(patronen[p]);
 
     // Herschaal de stand van de potentiometer naar een wachttijd in ms
-    int wachttijd = map(analogRead(pinPot), 0, 1023, 50, 1000);
+    int wachttijd = map(analogRead(potPin), 0, 1023, 50, 1000);
     delay(wachttijd);
   }
 }</code></pre>

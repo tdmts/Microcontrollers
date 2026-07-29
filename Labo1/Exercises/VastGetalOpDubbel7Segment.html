@@ -67,7 +67,7 @@
         <div class="spoiler-content solution-content">
             <div class="info-box warning">
                 <div class="info-title warning">Pas de pinnen en de niveaus aan op jouw sjabloon</div>
-                <p>Welke pinnen je gebruikt, of je display common anode of common cathode is (<code>SEGMENT_AAN</code>), en welke stand van de selectiepin het linkse cijfer activeert (<code>DIGIT_LINKS</code>), hangt af van het sjabloon dat je gekopieerd hebt. Staan je cijfers verwisseld, keer dan <code>DIGIT_LINKS</code> om.</p>
+                <p>Welke pinnen je gebruikt, of je display common anode of common cathode is (<code>SEGMENT_AAN</code>), en welke stand van de selectiepin het linkse cijfer activeert (<code>CIJFER_LINKS</code>), hangt af van het sjabloon dat je gekopieerd hebt. Staan je cijfers verwisseld, keer dan <code>CIJFER_LINKS</code> om.</p>
             </div>
             <p>
                 <code>toonCijfer()</code> zet één cijferpatroon op de gedeelde
@@ -85,12 +85,12 @@
             </p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segPins[] = {2, 3, 4, 5, 6, 7, 8}; // a,b,c,d,e,f,g
-const int pinDigitSelect = 10;
+const int cijferKiesPin = 10;
 
 // Pas aan op basis van je display: LOW voor common anode, HIGH voor common cathode
 const bool SEGMENT_AAN = HIGH;
 // Pas aan: welke stand van de selectiepin activeert het linkse cijfer?
-const bool DIGIT_LINKS = HIGH;
+const bool CIJFER_LINKS = HIGH;
 
 const int teTonenGetal = 42;
 
@@ -115,7 +115,7 @@ void setup()
     pinMode(segPins[i], OUTPUT);
   }
 
-  pinMode(pinDigitSelect, OUTPUT);
+  pinMode(cijferKiesPin, OUTPUT);
 }
 
 void toonCijfer(int cijfer)
@@ -129,11 +129,11 @@ void toonCijfer(int cijfer)
 
 void multiplexStap(int links, int rechts)
 {
-  digitalWrite(pinDigitSelect, DIGIT_LINKS);
+  digitalWrite(cijferKiesPin, CIJFER_LINKS);
   toonCijfer(links);
   delay(5);
 
-  digitalWrite(pinDigitSelect, !DIGIT_LINKS);
+  digitalWrite(cijferKiesPin, !CIJFER_LINKS);
   toonCijfer(rechts);
   delay(5);
 }

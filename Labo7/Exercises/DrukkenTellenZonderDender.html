@@ -106,7 +106,7 @@
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 const int ledPin = 8;
 
-const unsigned long denderTijd = 200; // zolang negeren we nieuwe flanken
+const unsigned long vergrendelTijd = 200; // zolang negeren we nieuwe flanken
 
 volatile bool ledBrandt = false;
 volatile unsigned long aantalDrukken = 0;
@@ -121,7 +121,7 @@ void knopIngedrukt()
   // dat nauwkeurig genoeg, en bij de volgende druk staat de klok weer verder.
   unsigned long nu = millis();
 
-  if (nu - laatsteDruk &lt; denderTijd)
+  if (nu - laatsteDruk &lt; vergrendelTijd)
   {
     return; // dit is gestuiter, geen nieuwe druk
   }

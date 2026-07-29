@@ -222,6 +222,8 @@ void loop()
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int noodstopPin = 2;
 
+const unsigned long vergrendelTijd = 200;
+
 volatile bool noodstopGedrukt = false;
 
 // Alleen een vlag zetten. Zenden duurt milliseconden, en dat hoort niet
@@ -248,7 +250,7 @@ void loop()
 
     Serial.println("STOP");
 
-    delay(200);              // laat de dendering uitsterven
+    delay(vergrendelTijd);   // laat de dendering uitsterven
     noodstopGedrukt = false; // die dendering heeft de vlag intussen opnieuw gezet
   }
 }</code></pre>
@@ -256,7 +258,7 @@ void loop()
             <div class="info-box remark">
                 <div class="info-title remark">Waarom de vlag twee keer neergehaald wordt</div>
                 <p>De eerste keer volg je de gewone regel en haal je de vlag neer v&oacute;&oacute;r je aan het werk gaat, zodat je een druk die tijdens je werk binnenkomt niet kwijtspeelt.</p>
-                <p>Maar tijdens die <code>delay(200)</code> stuitert je knop, gaat je ISR nog een paar keer af, en staat de vlag er weer. Zonder die tweede regel stuur je dus alsnog vier keer <code>STOP</code>. Vandaar dat je hem nog eens neerhaalt, na het stuiteren.</p>
+                <p>Maar tijdens die <code>delay(vergrendelTijd)</code> stuitert je knop, gaat je ISR nog een paar keer af, en staat de vlag er weer. Zonder die tweede regel stuur je dus alsnog vier keer <code>STOP</code>. Vandaar dat je hem nog eens neerhaalt, na het stuiteren.</p>
             </div>
 
             <div class="info-box remark">

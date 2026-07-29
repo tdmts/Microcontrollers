@@ -651,7 +651,7 @@ if [ "$AUDIT" -eq 1 ]; then
   # The deviation is then listed as skipped rather than as a finding, so the
   # decision lives in the file that deviates and the audit output can reach
   # zero. An audit nobody can silence is an audit nobody reads.
-  VALID_SKIPS=" lead figure indienen oplossing code-class checklist-driven lead-opener u-vorm verkleinwoord noord-nederlands vulwoord led-spelling "
+  VALID_SKIPS=" lead figure indienen oplossing code-class checklist-driven lead-opener u-vorm verkleinwoord noord-nederlands vulwoord led-spelling identifier-taal "
   declare -A SKIP=()
   skip_notes=""
   while IFS= read -r hit; do
@@ -832,6 +832,42 @@ if [ "$AUDIT" -eq 1 ]; then
     skipped "$f" led-spelling && continue
     note "$f: 'LED' in the prose, the house spelling is 'led' (SCHRIJFSTIJL.md, spelling)"
   done < <(grep -nE '\bLEDs?\b' "${LED_TARGETS[@]}" 2>/dev/null)
+
+  # Identifiers are Dutch, and a compound puts the head noun last: ledPin,
+  # knopPin, potPin. That is correct Dutch (a closed compound, "de ledpin") and
+  # correct English at the same time, which is why those names survived the
+  # conversion untouched while pinLed and pinButton did not.
+  #
+  # This is the mirror image of the led-spelling rule above: there the match had
+  # to carry a prose tag, here it must not, because an identifier lives in a
+  # <pre>. The word list is deliberately made of compounds only. Bare `value`
+  # and `state` are the likelier slip, but they are also `value="0"` in an
+  # attribute and `.value` in the shift-register widget's JavaScript, and an
+  # advisory rule that cries wolf is worse than one that misses a case.
+  #
+  # The Arduino API keeps its own English names: Labo2/Reference/map.html
+  # documents map(value, fromLow, ...) and records an audit-skip for it, and
+  # Labo0's Blink exercise is the IDE's example sketch, not a house identifier.
+  ID_WORDS='pinLed|pinLED|pinButton|pinPot|pinPotentiometer|pinSensor|pinAnalogIn'
+  ID_WORDS="$ID_WORDS"'|pinNoodstop|pinDigitSelect|valuePotentiometer|potValue|ledValue'
+  ID_WORDS="$ID_WORDS"'|delayValue|buttonState|lastReading|currentMillis|previousMillis'
+  ID_WORDS="$ID_WORDS"'|risingEdge|brightness|isEnabled|fullStep|halfStep|blinkLed|voltage'
+  declare -A ID_SEEN=()
+  while IFS= read -r hit; do
+    [ -z "$hit" ] && continue
+    f="${hit%%:*}"; text="${hit#*:}"; text="${text#*:}"
+    [ -n "${ID_SEEN[$f]:-}" ] && continue
+    # `<p` would also match `<pre`, and the <pre ...><code> opening line is
+    # exactly where a sketch's first identifier sits, so the paragraph tag is
+    # matched with its delimiter and `<pre ` slips past.
+    case "$text" in
+      *'<p>'*|*'<p '*|*'<li'*|*'<td'*|*'<th'*|*'<h1'*|*'<h2'*|*'<h3'*|*'<title>'*|\
+      *'<caption>'*|*'<figcaption'*|*'alt="'*) continue ;;
+    esac
+    ID_SEEN["$f"]=1
+    skipped "$f" identifier-taal && continue
+    note "$hit  <- Engelse identifier, de huisregel is Nederlands met het hoofdwoord achteraan (ledPin, knopPin)"
+  done < <(grep -nE "(^|[^A-Za-z0-9_.])($ID_WORDS)\b" "${checked[@]}" 2>/dev/null)
 
   # The je-vorm has been a house rule since the first commit and nothing ever
   # checked it. Imported content is where it slips in. Advisory rather than

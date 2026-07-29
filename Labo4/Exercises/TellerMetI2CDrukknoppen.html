@@ -95,7 +95,7 @@ const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
 const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
 
 const unsigned long telInterval = 1000;
-const unsigned long ontdenderTijd = 20;
+const unsigned long ontdenderTijd = 50;
 
 // Volgorde van de segmenten: Q0=a, Q1=b, Q2=c, Q3=d, Q4=e, Q5=f, Q6=g, Q7=dp
 const bool cijferPatronen[10][8] = {
@@ -137,7 +137,7 @@ byte leesExpander()
   return 0xFF; // niets ontvangen: doe alsof geen enkele knop ingedrukt is
 }
 
-void risingEdge(int pinNummer)
+void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -150,7 +150,7 @@ void schuifCijfer(int cijfer)
   for (int i = 7; i &gt;= 0; i--)
   {
     digitalWrite(pinDS, cijferPatronen[cijfer][i] ? HIGH : LOW);
-    risingEdge(pinSHCP);
+    opgaandeFlank(pinSHCP);
   }
 }
 
@@ -163,7 +163,7 @@ void toonGetal(int waarde)
   schuifCijfer(eenheden);
   schuifCijfer(tientallen);
 
-  risingEdge(pinSTCP); // pas nu springen beide displays tegelijk om
+  opgaandeFlank(pinSTCP); // pas nu springen beide displays tegelijk om
 }
 
 void setup()

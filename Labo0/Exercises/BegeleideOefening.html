@@ -39,12 +39,12 @@
             <img src="../../img/pullup-breadboard-foto.png" class="img-fluid" alt="Breadboard met een pushbutton op pin 2 en een externe pull-upweerstand naar de +5 V">
         </figure>
     </div>
-    <p>Pas nu je programma aan. Maak bovenaan een <a href="../Reference/ConstantenVariabelenGegevenstypes.html">constante</a> <code>pinButton</code> met de waarde 2. Door met een naam te werken in plaats van het getal 2 blijft je code leesbaar en pas je het pinnummer later op &eacute;&eacute;n plaats aan. Omdat je zelf een externe pull-upweerstand plaatst, stel je de pin in <a href="../Reference/SetupLoop.html#setup"><code>setup()</code></a> in als gewone ingang met <a href="../Reference/pinMode.html#hoe-definieer-je-een-pin"><code>pinMode(pinButton, INPUT)</code></a>.</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
+    <p>Pas nu je programma aan. Maak bovenaan een <a href="../Reference/ConstantenVariabelenGegevenstypes.html">constante</a> <code>knopPin</code> met de waarde 2. Door met een naam te werken in plaats van het getal 2 blijft je code leesbaar en pas je het pinnummer later op &eacute;&eacute;n plaats aan. Omdat je zelf een externe pull-upweerstand plaatst, stel je de pin in <a href="../Reference/SetupLoop.html#setup"><code>setup()</code></a> in als gewone ingang met <a href="../Reference/pinMode.html#hoe-definieer-je-een-pin"><code>pinMode(knopPin, INPUT)</code></a>.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
+  pinMode(knopPin, INPUT);
 }
 
 void loop()
@@ -66,19 +66,19 @@ void loop()
     <h3>Stap 4: Je redenering testen via de Seri&euml;le monitor</h3>
     <p>Nu ga je controleren of je redenering klopt. Schrijf een kort debug-programma dat de status van de knop met <a href="../Reference/digitalReadDigitalWrite.html"><code>digitalRead</code></a> uitleest en naar de <a href="../Reference/Debuggen.html#in-arduino-ide">Seri&euml;le monitor</a> stuurt. Laad het daarna op met de knop <strong>Upload</strong> (zie <a href="../Reference/ProgrammaUploaden.html">Een programma uploaden</a> als je twijfelt).</p>
     <p>Open vervolgens de Seri&euml;le monitor en druk de knop enkele keren in. De waarde die je ziet (1 = hoog, 0 = laag) zou moeten overeenkomen met wat je in stap 3 had voorspeld. Komt het overeen? Dan snap je de pull-up. Zo niet, controleer dan rustig je bedrading en je <code>pinMode</code>.</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
+  pinMode(knopPin, INPUT);
   Serial.begin(9600);
 }
 
 void loop()
 {
-  int state = digitalRead(pinButton);
+  int toestand = digitalRead(knopPin);
   Serial.print("Status: ");
-  Serial.println(state);
+  Serial.println(toestand);
 }</code></pre>
     <div class="info-box">
         <div class="info-title tip">Tip: instellingen van de Seri&euml;le monitor</div>
@@ -170,30 +170,30 @@ void loop()
 
     <h3>Stap 10: De led laten reageren op de knop</h3>
     <p>Nu koppelen we knop en led aan elkaar. Breid je programma uit met een <a href="../Reference/digitalReadDigitalWrite.html"><code>digitalWrite</code></a> zodat de led aangaat wanneer je de knop indrukt en weer uitgaat wanneer je loslaat. Denk terug aan stap 3: bij een pull-up is de knop ingedrukt wanneer je <code>LOW</code> leest, dus daar test je met een <a href="../Reference/Selecties.html#voorbeeld-tweevoudige-selectie">tweevoudige selectie</a> (<code>if</code> / <code>else</code>) op.</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
-const int pinLED = 3;  // pinLED definiëren
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 3;  // ledPin definiëren
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
-  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  pinMode(knopPin, INPUT);
+  pinMode(ledPin, OUTPUT); // ledPin is een OUTPUT
   Serial.begin(9600);
 }
 
 void loop()
 {
-  int state = digitalRead(pinButton);
+  int toestand = digitalRead(knopPin);
   Serial.print("Status: ");
-  Serial.println(state);
+  Serial.println(toestand);
 
-  if(state == LOW)
+  if(toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
-    digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+    digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
   }
   else
   {
-    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
   }
 }</code></pre>
     <!-- TODO: voeg een breadboardfoto toe van de volledige schakeling (knop op pin 2, led + weerstand op pin 3) -->
@@ -205,201 +205,201 @@ void loop()
 
     <h3>Stap 11: Debouncing toevoegen</h3>
     <p>Een mechanische knop dendert kort bij het indrukken: de contacten maken en verbreken de verbinding een paar keer heel snel na elkaar voor ze stabiel blijven, waardoor de Arduino snel na elkaar meerdere drukken kan zien. Dat heet contactdender. Je lost het hier eenvoudig op met een korte <a href="../Reference/Debouncen.html">debouncing</a>: zodra je gedetecteerd hebt dat de knop ingedrukt is, wacht je even tot het denderen voorbij is. Zet de <code>delay</code> dus <strong>binnen</strong> de <code>if</code>, na wat je bij een druk wil doen.</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
-const int pinLED = 3;  // pinLED definiëren
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 3;  // ledPin definiëren
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
-  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  pinMode(knopPin, INPUT);
+  pinMode(ledPin, OUTPUT); // ledPin is een OUTPUT
   Serial.begin(9600);
 }
 
 void loop()
 {
-  int state = digitalRead(pinButton);
+  int toestand = digitalRead(knopPin);
   Serial.print("Status: ");
-  Serial.println(state);
+  Serial.println(toestand);
 
-  if(state == LOW)
+  if(toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
-    digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
-    delay(100); // debouncing: wacht tot het denderen voorbij is
+    digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+    delay(50); // debouncing: wacht tot het denderen voorbij is
   }
   else
   {
-    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
   }
 }</code></pre>
 
-    <h3>Stap 12: Een eigen blink()-functie maken</h3>
-    <p>Vanaf hier maken we je code netter met een <a href="../Reference/FunctiesParameters.html#eigen-functies-maken">eigen functie</a>. Schrijf een functie <code>blink()</code> die de led 3 keer na elkaar aan- en uitzet wanneer je de knop indrukt. Vergeet niet om de functie ook echt op te roepen in je <a href="../Reference/SetupLoop.html#loop"><code>loop()</code></a>.</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
-const int pinLED = 3;  // pinLED definiëren
+    <h3>Stap 12: Een eigen knipper()-functie maken</h3>
+    <p>Vanaf hier maken we je code netter met een <a href="../Reference/FunctiesParameters.html#eigen-functies-maken">eigen functie</a>. Schrijf een functie <code>knipper()</code> die de led 3 keer na elkaar aan- en uitzet wanneer je de knop indrukt. Vergeet niet om de functie ook echt op te roepen in je <a href="../Reference/SetupLoop.html#loop"><code>loop()</code></a>.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 3;  // ledPin definiëren
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
-  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  pinMode(knopPin, INPUT);
+  pinMode(ledPin, OUTPUT); // ledPin is een OUTPUT
   Serial.begin(9600);
 }
 
 void loop()
 {
-  int state = digitalRead(pinButton);
+  int toestand = digitalRead(knopPin);
   Serial.print("Status: ");
-  Serial.println(state);
+  Serial.println(toestand);
 
-  if(state == LOW)
+  if(toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
-    blink(); // verwijs naar de functie blink
-    delay(100); // debouncing: wacht tot het denderen voorbij is
+    knipper(); // verwijs naar de functie knipper
+    delay(50); // debouncing: wacht tot het denderen voorbij is
   }
   else
   {
-    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
   }
 }
 
-void blink()
+void knipper()
 {
-  digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+  digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
   delay(50);
-  digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
-  delay(50);
-
-  digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
-  delay(50);
-  digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
   delay(50);
 
-  digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+  digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
   delay(50);
-  digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+  delay(50);
+
+  digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+  delay(50);
+  digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
   delay(50);
 }</code></pre>
 
-    <h3>Stap 13: blink() vereenvoudigen met een iteratie</h3>
+    <h3>Stap 13: knipper() vereenvoudigen met een iteratie</h3>
     <p>Je hebt dezelfde regels nu drie keer gekopieerd, en dat kan korter. Vervang de herhaling door een <a href="../Reference/Iteraties.html#de-for-instructie">for-lus</a>, die het blok automatisch drie keer uitvoert. Kortere code die hetzelfde doet, is makkelijker te lezen en aan te passen.</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
-const int pinLED = 3;  // pinLED definiëren
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 3;  // ledPin definiëren
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
-  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  pinMode(knopPin, INPUT);
+  pinMode(ledPin, OUTPUT); // ledPin is een OUTPUT
   Serial.begin(9600);
 }
 
 void loop()
 {
-  int state = digitalRead(pinButton);
+  int toestand = digitalRead(knopPin);
   Serial.print("Status: ");
-  Serial.println(state);
+  Serial.println(toestand);
 
-  if(state == LOW)
+  if(toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
-    blink(); // verwijs naar de functie blink
-    delay(100); // debouncing: wacht tot het denderen voorbij is
+    knipper(); // verwijs naar de functie knipper
+    delay(50); // debouncing: wacht tot het denderen voorbij is
   }
   else
   {
-    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
   }
 }
 
-void blink()
+void knipper()
 {
   for(int i = 1; i &lt;= 3; i++)
   {
-    digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+    digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
     delay(50);
-    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
     delay(50);
   }
 }</code></pre>
 
     <h3>Stap 14: Het aantal knipperingen instelbaar maken</h3>
-    <p>Nu maken we de functie flexibeler met een <a href="../Reference/FunctiesParameters.html#uitleg">parameter</a>. Voeg een parameter <code>aantal</code> toe zodat je zelf kan kiezen hoe vaak de led knippert. Roep de functie daarna zo op dat de led 4 keer aan- en uitgaat: <code>blink(4)</code>.</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
-const int pinLED = 3;  // pinLED definiëren
+    <p>Nu maken we de functie flexibeler met een <a href="../Reference/FunctiesParameters.html#uitleg">parameter</a>. Voeg een parameter <code>aantal</code> toe zodat je zelf kan kiezen hoe vaak de led knippert. Roep de functie daarna zo op dat de led 4 keer aan- en uitgaat: <code>knipper(4)</code>.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 3;  // ledPin definiëren
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
-  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  pinMode(knopPin, INPUT);
+  pinMode(ledPin, OUTPUT); // ledPin is een OUTPUT
   Serial.begin(9600);
 }
 
 void loop()
 {
-  int state = digitalRead(pinButton);
+  int toestand = digitalRead(knopPin);
   Serial.print("Status: ");
-  Serial.println(state);
+  Serial.println(toestand);
 
-  if(state == LOW)
+  if(toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
-    blink(4); // verwijs naar de functie blink
-    delay(100); // debouncing: wacht tot het denderen voorbij is
+    knipper(4); // verwijs naar de functie knipper
+    delay(50); // debouncing: wacht tot het denderen voorbij is
   }
   else
   {
-    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
   }
 }
 
-void blink(int aantal)
+void knipper(int aantal)
 {
   for(int i = 1; i &lt;= aantal; i++)
   {
-    digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+    digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
     delay(50);
-    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
     delay(50);
   }
 }</code></pre>
 
     <h3>Stap 15: Ook de duurtijd instelbaar maken</h3>
-    <p>Als laatste stap maak je ook de snelheid instelbaar. Voeg een tweede parameter <code>duurtijd</code> toe die bepaalt hoe lang de led telkens aan en uit staat. Roep de functie zo op dat de led 4 keer knippert met een duurtijd van 100&nbsp;ms: <code>blink(4, 100)</code>. Je hebt daarmee een herbruikbare functie waarin je zelf het aantal en het tempo bepaalt.</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
-const int pinLED = 3;  // pinLED definiëren
+    <p>Als laatste stap maak je ook de snelheid instelbaar. Voeg een tweede parameter <code>duurtijd</code> toe die bepaalt hoe lang de led telkens aan en uit staat. Roep de functie zo op dat de led 4 keer knippert met een duurtijd van 100&nbsp;ms: <code>knipper(4, 100)</code>. Je hebt daarmee een herbruikbare functie waarin je zelf het aantal en het tempo bepaalt.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 3;  // ledPin definiëren
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
-  pinMode(pinLED, OUTPUT); // pinLED is een OUTPUT
+  pinMode(knopPin, INPUT);
+  pinMode(ledPin, OUTPUT); // ledPin is een OUTPUT
   Serial.begin(9600);
 }
 
 void loop()
 {
-  int state = digitalRead(pinButton);
+  int toestand = digitalRead(knopPin);
   Serial.print("Status: ");
-  Serial.println(state);
+  Serial.println(toestand);
 
-  if(state == LOW)
+  if(toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
-    blink(4, 100); // verwijs naar de functie blink
-    delay(100); // debouncing: wacht tot het denderen voorbij is
+    knipper(4, 100); // verwijs naar de functie knipper
+    delay(50); // debouncing: wacht tot het denderen voorbij is
   }
   else
   {
-    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
   }
 }
 
-void blink(int aantal, int duurtijd)
+void knipper(int aantal, int duurtijd)
 {
   for(int i = 1; i &lt;= aantal; i++)
   {
-    digitalWrite(pinLED, HIGH); // Sourcing -&gt; HIGH = de LED brandt
+    digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
     delay(duurtijd);
-    digitalWrite(pinLED, LOW); // Sourcing -&gt; LOW = de LED brandt niet
+    digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
     delay(duurtijd);
   }
 }</code></pre>
@@ -413,12 +413,12 @@ void blink(int aantal, int duurtijd)
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> Drukknop op pin 2 werkt met een externe pull-upweerstand (ongeveer 10&nbsp;k&Omega;) en <code>pinMode(pinButton, INPUT)</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Drukknop op pin 2 werkt met een externe pull-upweerstand (ongeveer 10&nbsp;k&Omega;) en <code>pinMode(knopPin, INPUT)</code></label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De status van de knop verschijnt correct in de Seri&euml;le monitor (1 = los, 0 = ingedrukt)</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> led op pin 3 is volgens sourcing aangesloten, met een gepaste voorschakelweerstand</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De led gaat aan bij het indrukken van de knop en uit bij het loslaten</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Debouncing is toegevoegd</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De functie <code>blink(aantal, duurtijd)</code> laat de led het gewenste aantal keer knipperen met instelbare duurtijd</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De functie <code>knipper(aantal, duurtijd)</code> laat de led het gewenste aantal keer knipperen met instelbare duurtijd</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>

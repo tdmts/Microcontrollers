@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Praktische voorbeeldtest</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Praktische voorbeeldtest</h1>
+    <p class="lead">Dit is de opgave voor de praktische voorbeeldtest van het derde evaluatiemoment. Zo weet je op voorhand hoe moeilijk de echte test wordt.</p>
+
+    <div class="info-box">
+        <p>Tijdens het derde evaluatiemoment is er ook een <strong>theoretische test</strong>. Die gaat over de leerinhouden van labo 5, labo 6 en labo 7. Oefen daarop met de <a href="TheoretischeVoorbeeldtest.html">theoretische voorbeeldtest</a>.</p>
+    </div>
+
+    <h2 id="opgave">Opgave</h2>
+
+    <p>Bouw een motorsturing die je vanaf je pc bedient en die een noodstop heeft. De motor hangt aan een L293D, de opdrachten komen binnen over de seriële monitor, en de noodknop hangt aan een interruptpin.</p>
+
+    <p>Gebruik deze pinnen, en wijk hier niet van af:</p>
+
+    <ul>
+        <li>1A van de L293D op pin 7</li>
+        <li>2A op pin 8</li>
+        <li>1,2EN op pin 6</li>
+        <li>De noodknop op pin 2</li>
+        <li>De led die de noodstop aangeeft op pin 12</li>
+    </ul>
+
+    <p>De motor hangt over 1Y en 2Y, op een eigen voeding, met de massa van die voeding aan de massa van je Arduino.</p>
+
+    <h3>De opdrachten uit de monitor</h3>
+
+    <p>Je typt opdrachten in de seriële monitor. Elke opdracht staat op een eigen lijn.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De vier opdrachten die je programma verstaat</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Wat je typt</th>
+                    <th scope="col">Wat er gebeurt</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>SNELHEID:0</code> tot <code>SNELHEID:255</code></td>
+                    <td>Zet de snelheid van de motor. 0 is stil, 255 is voluit.</td>
+                </tr>
+                <tr>
+                    <td><code>RICHTING:0</code> of <code>RICHTING:1</code></td>
+                    <td>Kiest de draairichting.</td>
+                </tr>
+                <tr>
+                    <td><code>STOP</code></td>
+                    <td>Zet de snelheid op 0. De richting blijft staan zoals ze stond.</td>
+                </tr>
+                <tr>
+                    <td><code>RESET</code></td>
+                    <td>Heft een actieve noodstop op.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <ul>
+        <li>Bevestig elke aanvaarde opdracht in de monitor, zodat je ziet dat ze aangekomen is.</li>
+        <li>Komt er iets binnen dat je niet verstaat, meld dat dan en laat de motor staan zoals hij stond. Een snelheid buiten 0 tot 255 hoort daar ook bij.</li>
+        <li>Vraag je een andere richting terwijl de motor draait, rem dan eerst af tot stilstand en keer pas daarna om.</li>
+    </ul>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Zet de monitor op een regeleinde</div>
+        <p>Stuurt je monitor geen regeleinde mee, dan wacht <code>readStringUntil()</code> een volledige seconde af of er nog iets komt. Reageert de motor pas een seconde na je Enter, dan komt het daarvan en niet van een fout in je programma. Vergeet ook de <code>trim()</code> niet, want anders vergelijk je <code>"STOP\r"</code> met <code>"STOP"</code>.</p>
+    </div>
+
+    <h3>De noodstop</h3>
+
+    <ul>
+        <li>Een druk op de noodknop legt de motor <strong>onmiddellijk</strong> stil, ook terwijl je programma aan het afremmen is.</li>
+        <li>De led op pin 12 brandt zolang de noodstop actief is.</li>
+        <li>De monitor meldt de noodstop <strong>één keer</strong> per druk.</li>
+        <li>Zolang de noodstop actief is, blijft de motor stil. Opdrachten mag je wel blijven aannemen, ze gaan pas in na <code>RESET</code>.</li>
+        <li>Ontdender de knop, zodat één druk ook één noodstop is.</li>
+    </ul>
+
+    <h2 id="fysiek">Fysiek bouwen</h2>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Belangrijk</div>
+        <p>Om je volledige punten te behalen moet je deze oefening fysiek maken, niet in TinkerCAD.</p>
+    </div>
+
+    <p>Welke componenten je daarvoor meebrengt, staat op de pagina <a href="AlgemeneInformatie.html#meebrengen">Algemene informatie</a>.</p>
+
+    <h2 id="oplossing-schema">Oplossing schema</h2>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../img/TODO-voorbeeldtest3-schema.png" alt="Aansluitschema met een DC motor op een L293D, de enable op pin 6, een noodknop op pin 2 en een led op pin 12" class="img-fluid">
+                </figure>
+            </div>
+        </div>
+    </div>
+
+    <h2 id="oplossing-code">Oplossing code</h2>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>Richting, snelheid en noodstop komen alle drie uit op dezelfde pin, de enable.</p>
+
+            <p>Richting en snelheid zijn die van labo 5: 1A en 2A staan altijd tegengesteld, en de snelheid is een <code>analogWrite()</code> op de enable, die daarom op een PWM-pin moet.</p>
+
+            <p>De noodstop trekt diezelfde enable met een <code>digitalWrite()</code> laag. Daardoor werkt hij ook midden in het afremmen, terwijl de <code>loop()</code> in een <code>delay()</code> staat: de interrupt onderbreekt die delay, en <code>digitalWrite()</code> mag in een ISR.</p>
+
+            <p>Het printen gebeurt in de <code>loop()</code>, want <code>Serial</code> hoort niet in een ISR. De ISR zet alleen de vlag <code>noodstop</code>. De <code>loop()</code> ziet aan <code>gemeld</code> of ze de melding al gestuurd heeft, en stuurt er zo één per druk.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pin1A = 7;       // richtingingang A van de L293D
+const int pin2A = 8;       // richtingingang B van de L293D
+const int enablePin = 6;   // 1,2EN op een PWM-pin, want hier regel je de snelheid
+const int noodstopPin = 2; // een van de twee interruptpinnen van de UNO
+const int ledPin = 12;     // brandt zolang de noodstop actief is
+
+const unsigned long vergrendelTijd = 200;
+
+volatile bool noodstop = false;
+volatile unsigned long laatsteDruk = 0;
+
+bool gemeld = false; // staat de noodstop al in de monitor?
+bool vooruit = true; // huidige draairichting
+int snelheid = 0;    // 0 tot en met 255
+
+void noodstopIngedrukt()
+{
+  unsigned long nu = millis();
+
+  if (nu - laatsteDruk &lt; vergrendelTijd)
+  {
+    return; // dit is gestuiter van de vorige druk
+  }
+
+  laatsteDruk = nu;
+
+  digitalWrite(enablePin, LOW); // de motor meteen stil, dit mag in een ISR
+  digitalWrite(ledPin, HIGH);
+
+  noodstop = true;
+}
+
+void stuurMotor()
+{
+  digitalWrite(pin1A, vooruit ? HIGH : LOW);
+  digitalWrite(pin2A, vooruit ? LOW : HIGH);
+
+  analogWrite(enablePin, snelheid);
+}
+
+// Remt af tot stilstand, en stopt zodra de noodknop ingedrukt wordt.
+void remAf()
+{
+  for (int pwm = snelheid; pwm &gt; 0; pwm -= 5)
+  {
+    if (noodstop == true)
+    {
+      return; // de ISR heeft de enable al laag gezet
+    }
+
+    analogWrite(enablePin, pwm);
+    delay(20);
+  }
+
+  analogWrite(enablePin, 0); // helemaal stil voor je omkeert
+}
+
+void verwerkOpdracht(String regel)
+{
+  if (regel == "RESET")
+  {
+    noodstop = false;
+    gemeld = false;
+
+    digitalWrite(ledPin, LOW);
+    stuurMotor();
+
+    Serial.println("Noodstop opgeheven");
+    return;
+  }
+
+  if (regel == "STOP")
+  {
+    snelheid = 0;
+
+    if (noodstop == false)
+    {
+      stuurMotor();
+    }
+
+    Serial.println("Motor gestopt");
+    return;
+  }
+
+  int scheiding = regel.indexOf(':');
+
+  if (scheiding &lt;= 0)
+  {
+    Serial.println("Onbekende opdracht");
+    return;
+  }
+
+  String sleutel = regel.substring(0, scheiding);
+  String waarde = regel.substring(scheiding + 1);
+
+  if (sleutel == "SNELHEID")
+  {
+    int gevraagd = waarde.toInt();
+
+    if (gevraagd &lt; 0 || gevraagd &gt; 255)
+    {
+      Serial.println("Snelheid ligt tussen 0 en 255");
+      return;
+    }
+
+    snelheid = gevraagd;
+
+    if (noodstop == false)
+    {
+      stuurMotor();
+    }
+
+    Serial.print("Snelheid: ");
+    Serial.println(snelheid);
+  }
+  else if (sleutel == "RICHTING")
+  {
+    bool nieuweRichting = (waarde.toInt() == 1);
+
+    if (nieuweRichting != vooruit &amp;&amp; noodstop == false)
+    {
+      remAf(); // eerst tot stilstand, dan pas omkeren
+    }
+
+    vooruit = nieuweRichting;
+
+    if (noodstop == false)
+    {
+      stuurMotor();
+    }
+
+    Serial.print("Richting: ");
+    Serial.println(vooruit ? 1 : 0);
+  }
+  else
+  {
+    Serial.println("Onbekende sleutel");
+  }
+}
+
+void setup()
+{
+  pinMode(pin1A, OUTPUT);
+  pinMode(pin2A, OUTPUT);
+  pinMode(enablePin, OUTPUT);
+  pinMode(ledPin, OUTPUT);
+
+  pinMode(noodstopPin, INPUT_PULLUP); // eerst de pull-up
+  attachInterrupt(digitalPinToInterrupt(noodstopPin), noodstopIngedrukt, FALLING);
+
+  Serial.begin(9600);
+
+  stuurMotor();
+
+  Serial.println("Klaar. SNELHEID:0-255, RICHTING:0 of 1, STOP, RESET");
+}
+
+void loop()
+{
+  if (noodstop == true &amp;&amp; gemeld == false)
+  {
+    gemeld = true;
+
+    Serial.println("NOODSTOP");
+  }
+
+  if (Serial.available() &gt; 0)
+  {
+    String regel = Serial.readStringUntil('\n');
+    regel.trim();
+
+    if (regel.length() &gt; 0)
+    {
+      verwerkOpdracht(regel);
+    }
+  }
+}</code></pre>
+
+            <p><code>STOP</code> en <code>RESET</code> worden opgevangen <strong>voor</strong> de <code>indexOf(':')</code>, want er staat geen dubbelepunt in. Zou je meteen splitsen, dan geeft <code>indexOf()</code> je -1 en rekent <code>substring()</code> met onzin. De test <code>scheiding &lt;= 0</code> vangt daarnaast ook een lijn op die met een dubbelepunt begint, want dan is er geen sleutel.</p>
+
+            <p>De <code>remAf()</code> kijkt bij elke stap of de vlag intussen omhoog staat. Zonder die test schrijft de lus na de noodstop een nieuwe PWM-waarde naar de enable en draait de motor kort verder, terwijl de ISR hem net stilgelegd heeft.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../back-link.js"></script>
+<script src="../solution-reveal.js"></script>
+</body>
+</html>

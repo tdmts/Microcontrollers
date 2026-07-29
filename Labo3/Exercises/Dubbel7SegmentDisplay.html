@@ -34,7 +34,7 @@
     <p>De Arduino hangt nog steeds aan dezelfde drie pinnen als in de vorige oefening: DS op pin 2, STCP op pin 3 en SHCP op pin 4. Enkel het tweede schuifregister komt erbij.</p>
 
     <h2 id="code">Code</h2>
-    <p>Als je de vorige oefening hebt gemaakt dan heb je nu 3 subroutines: <code>three()</code>, <code>two()</code> en <code>one()</code>. Breid uit zodanig dat je aftelt van 10 tot 0.</p>
+    <p>Als je de vorige oefening hebt gemaakt dan heb je nu 3 subroutines: <code>toonDrie()</code>, <code>toonTwee()</code> en <code>toonEen()</code>. Breid uit zodanig dat je aftelt van 10 tot 0.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Denk eerst na over de volgorde</div>
@@ -71,7 +71,7 @@
             </div>
 
             <p>In plaats van tien aparte procedures zet je de tien cijferpatronen in één array. <code>schuifCijfer()</code> schuift dan acht bits naar buiten zonder te latchen, en <code>toonGetal()</code> roept die twee keer na elkaar op en geeft pas op het einde één stijgende flank op STCP. Zo verschijnen beide cijfers op exact hetzelfde moment.</p>
-            <p>De drie procedures <code>three()</code>, <code>two()</code> en <code>one()</code> uit de vorige oefening zijn hier vervangen door die ene array, want tien procedures overtikken zou hetzelfde patroon tien keer herhalen.</p>
+            <p>De drie procedures <code>toonDrie()</code>, <code>toonTwee()</code> en <code>toonEen()</code> uit de vorige oefening zijn hier vervangen door die ene array, want tien procedures overtikken zou hetzelfde patroon tien keer herhalen.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang van het eerste schuifregister
 const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
@@ -98,7 +98,7 @@ void setup()
   pinMode(pinSHCP, OUTPUT);
 }
 
-void risingEdge(int pinNummer)
+void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -111,7 +111,7 @@ void schuifCijfer(int cijfer)
   for (int i = 7; i >= 0; i--)
   {
     digitalWrite(pinDS, cijferPatronen[cijfer][i] ? HIGH : LOW);
-    risingEdge(pinSHCP);
+    opgaandeFlank(pinSHCP);
   }
 }
 
@@ -124,7 +124,7 @@ void toonGetal(int getal)
   schuifCijfer(eenheden);
   schuifCijfer(tientallen);
 
-  risingEdge(pinSTCP); // pas nu springen beide displays tegelijk om
+  opgaandeFlank(pinSTCP); // pas nu springen beide displays tegelijk om
 }
 
 void loop()

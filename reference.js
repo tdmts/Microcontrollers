@@ -21,6 +21,7 @@ window.LAB_REFERENCE = {
             {
                 name: 'Programmeerconcepten',
                 topics: [
+                    { id: 'spelregels', name: 'De spelregels van C++', href: 'SpelregelsVanCpp.html', blurb: 'De vormregels waar de compiler op staat: de puntkomma, de accolades, hoofdletters die meetellen, en waar je code hoort te staan.' },
                     { id: 'constantenvariabelen', name: 'Constanten, variabelen en gegevenstypes', href: 'ConstantenVariabelenGegevenstypes.html', blurb: 'Het verschil tussen constanten en variabelen, en de courante gegevenstypes in Arduino.' },
                     { id: 'wiskundigeoperatoren', name: 'Wiskundige operatoren', href: 'WiskundigeOperatoren.html', blurb: 'Met wiskundige operatoren kan je berekeningen uitvoeren op variabelen en constanten.' },
                     { id: 'selecties', name: 'Selecties', href: 'Selecties.html', blurb: 'Een keuze maken in je programma op basis van een voorwaarde die herleidt tot true of false.' },
@@ -177,7 +178,7 @@ window.LAB_REFERENCE = {
                 topics: [
                     { id: 'tekensengetallen', name: 'Tekens en getallen', href: 'TekensEnGetallen.html', blurb: 'Waarom het getal 100 als drie tekens over de draad gaat, wat ASCII daarmee te maken heeft, en welke twee tekens println() er zelf achter zet.' },
                     { id: 'boodschappenlezen', name: 'Boodschappen lezen', href: 'BoodschappenLezen.html', blurb: 'De ontvangstbuffer, available() en read(), en hoe je met readStringUntil() een volledige boodschap tegelijk ophaalt.' },
-                    { id: 'strings', name: 'Werken met een String', href: 'Strings.html', blurb: 'Tekst in een variabele: trim, indexOf, substring, toInt en toFloat, en het volledige recept om een boodschap van de vorm SLEUTEL:WAARDE uit elkaar te halen.' }
+                    { id: 'strings', name: 'Werken met een String', href: 'Strings.html', blurb: 'Tekst in een variabele: trim, indexOf, substring, toInt en toFloat, en de volledige aanpak om een boodschap van de vorm SLEUTEL:WAARDE uit elkaar te halen.' }
                 ]
             },
             {

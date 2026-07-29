@@ -7,8 +7,16 @@ description: Bring one lab's existing prose in line with SCHRIJFSTIJL.md - strip
 
 [`SCHRIJFSTIJL.md`](../../../SCHRIJFSTIJL.md) in the repo root is the rule. **Read it
 in full before touching anything** - this skill is the procedure, that file is the
-content, and it is the single source of truth. Fifteen patterns: 1 to 11 about
-ornament, 12 and 13 about word choice, 14 and 15 added later (both ornament).
+content, and it is the single source of truth. Seventeen patterns: 1 to 11 about
+ornament, 12 and 13 about word choice, 14 and 15 added later (both ornament), and 16
+and 17 about the shape of a paragraph rather than a sentence.
+
+Patterns 16 and 17 are the ones a pass is most likely to miss, because they are
+invisible sentence by sentence: 16 is the paragraph that rates its own content
+("Dit is de gevaarlijkste van de drie", "Twee dingen zijn de moeite om apart te
+bekijken") and 17 is material an earlier lab already taught, explained at the same
+depth as the new material. Read a page once more for those two after you have done
+the other fifteen, and read whole paragraphs rather than lines.
 
 They apply everywhere a student reads, including headings, box titles, checklist
 lines, spoiler labels, `alt`, `figcaption` and the manifest `name`/`blurb`, and not to
@@ -81,7 +89,7 @@ skimmed, which is exactly the failure this skill exists to prevent.
 bash scripts/check-content.sh --audit
 ```
 
-Filter the output to the lab you are working on. Five of the fifteen patterns are
+Filter the output to the lab you are working on. Five of the seventeen patterns are
 greppable and will appear here: stock `lead` opener (9), decorative diminutive (11),
 Netherlandic word choice (12), filler adverb (13), and the `u`-vorm. Treat this as a
 floor, not a list: it is roughly a third of what a pass finds.
@@ -92,7 +100,7 @@ prefers the Belgian word to the Netherlandic one, and only spoken-register words
 
 ### 3. Read every page of the lab in full
 
-The other eight patterns need a reader. Read in the student's order, exercises by
+The other twelve patterns need a reader. Read in the student's order, exercises by
 their `order` in [`exercises.js`](../../../exercises.js) and then the reference topics
 from [`reference.js`](../../../reference.js), so that repetition across pages becomes
 visible. The stock `lead` opener and the closing punchline are only recognisable as

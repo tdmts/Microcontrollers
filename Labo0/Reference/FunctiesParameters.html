@@ -21,33 +21,33 @@
 
     <h2 id="eigen-functies-maken">Eigen functies maken</h2>
     <p>Je kan ook zelf functies maken. Bijvoorbeeld:</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinLed = 2;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 2;
 
 void setup()
 {
-  pinMode(pinLed, OUTPUT);
+  pinMode(ledPin, OUTPUT);
 }
 
 void loop()
 {
-  blinkLed(200);   // laat de LED 200 ms branden
-  blinkLed(1000);  // laat de LED 1000 ms branden
+  knipperLed(200);   // laat de LED 200 ms branden
+  knipperLed(1000);  // laat de LED 1000 ms branden
 }
 
 // functie met parameter
-void blinkLed(int tijd)
+void knipperLed(int tijd)
 {
-  digitalWrite(pinLed, HIGH);  // LED aan
+  digitalWrite(ledPin, HIGH);  // LED aan
   delay(tijd);                 // wacht de opgegeven tijd
-  digitalWrite(pinLed, LOW);   // LED uit
+  digitalWrite(ledPin, LOW);   // LED uit
   delay(tijd);                 // wacht de opgegeven tijd
 }</code></pre>
 
     <h2 id="uitleg">Uitleg</h2>
     <ul>
-        <li>De functie heet <code>blinkLed</code>.</li>
+        <li>De functie heet <code>knipperLed</code>.</li>
         <li>Tussen de haakjes staat <strong><code>int tijd</code></strong>, dat is de <strong>parameter</strong>.</li>
-        <li>Wanneer je de functie aanroept (<code>blinkLed(200)</code> of <code>blinkLed(1000)</code>), vul je die parameter in met een waarde.</li>
+        <li>Wanneer je de functie aanroept (<code>knipperLed(200)</code> of <code>knipperLed(1000)</code>), vul je die parameter in met een waarde.</li>
         <li>Binnen de functie wordt die waarde gebruikt door <code>delay(tijd)</code>.</li>
     </ul>
     <p>Zo kan je dezelfde functie gebruiken voor <strong>verschillende situaties</strong>, zonder dat je code moet kopiëren of herschrijven.</p>

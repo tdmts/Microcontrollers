@@ -29,7 +29,7 @@
     <h2 id="non-blocking-timer">Non-blocking timer</h2>
     <p>Met <code>millis()</code> vraag je op hoeveel milliseconden je Arduino al aan het werk is. Je kwam die aanpak al tegen bij <a href="../../Labo0/Reference/Debouncen.html">Debouncen</a> in labo 0 en bij het multiplexen in labo 1. Door de huidige tijd te vergelijken met een eerder bewaard tijdstip laat je tijd verstrijken zonder je programma stil te leggen:</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>unsigned long previousMillis;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>unsigned long vorigeMillis;
 const unsigned long interval = 10000; // 10 seconden
 
 void setup()
@@ -39,13 +39,13 @@ void setup()
 
 void loop()
 {
-  unsigned long currentMillis = millis(); // huidige tijd
+  unsigned long nu = millis(); // huidige tijd
 
-  if (currentMillis - previousMillis &gt;= interval)
+  if (nu - vorigeMillis &gt;= interval)
   {
     // voer acties uit die elk interval uitgevoerd moeten worden
 
-    previousMillis = currentMillis; // onthoud wanneer het interval verstreek
+    vorigeMillis = nu; // onthoud wanneer het interval verstreek
   }
   else
   {

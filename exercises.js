@@ -11,7 +11,7 @@ window.LAB_EXERCISES = {
         labTitle: 'Labo 0',
         exercises: [
             { id: 'blink', order: 1, name: 'Blink', href: 'https://tdmts.github.io/Microcontrollers/Labo0/Exercises/Blink.html', checklistDriven: true, difficulty: 1, time: '~10 min', blurb: 'Je allereerste sketch: laat een ingebouwde led periodiek knipperen.' },
-            { id: 'begeleideoefening', order: 2, name: 'Begeleide oefening', href: 'https://tdmts.github.io/Microcontrollers/Labo0/Exercises/BegeleideOefening.html', checklistDriven: true, difficulty: 2, time: '~45 min', blurb: 'Bouw stap voor stap een knop-en-led-schakeling en breid je programma uit met een parametriseerbare blink-functie.' }
+            { id: 'begeleideoefening', order: 2, name: 'Begeleide oefening', href: 'https://tdmts.github.io/Microcontrollers/Labo0/Exercises/BegeleideOefening.html', checklistDriven: true, difficulty: 2, time: '~45 min', blurb: 'Bouw stap voor stap een knop-en-led-schakeling en breid je programma uit met een parametriseerbare knipper-functie.' }
         ]
     },
     labo1: {

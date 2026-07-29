@@ -102,8 +102,8 @@ void toonKleur(bool rood, bool groen, bool blauw)
 
 double leesTemperatuur()
 {
-  int value = analogRead(sensorPin);        // 0..1023
-  double spanning = value * 5.0 / 1023.0;   // omrekenen naar volt
+  int waarde = analogRead(sensorPin);        // 0..1023
+  double spanning = waarde * 5.0 / 1023.0;   // omrekenen naar volt
 
   // 0,75 V komt overeen met 25 graden, en elke graad erbij is 0,01 V erbij
   return (spanning - 0.75) / 0.01 + 25.0;

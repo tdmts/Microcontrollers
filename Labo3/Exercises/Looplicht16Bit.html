@@ -62,7 +62,7 @@ void setup()
   pinMode(pinSHCP, OUTPUT);
 }
 
-void risingEdge(int pinNummer)
+void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -71,7 +71,7 @@ void risingEdge(int pinNummer)
 void schuifBit(bool waarde)
 {
   digitalWrite(pinDS, waarde ? HIGH : LOW);
-  risingEdge(pinSHCP);
+  opgaandeFlank(pinSHCP);
 }
 
 void loop()
@@ -93,7 +93,7 @@ void loop()
       schuifBit(false);
     }
 
-    risingEdge(pinSTCP); // alle 16 LEDs tegelijk bijwerken
+    opgaandeFlank(pinSTCP); // alle 16 LEDs tegelijk bijwerken
     delay(stapTijd);
   }
 }</code></pre>

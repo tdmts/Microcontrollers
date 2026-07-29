@@ -22,31 +22,31 @@
         <p>Dat is geen eigenschap van <code>digitalRead()</code> zelf, maar van hoe je de knop aansluit. Bij een <strong>pull-down</strong>weerstand, zoals in het voorbeeld hieronder, lees je in rust een <code>LOW</code> en bij het indrukken een <code>HIGH</code>. Bij een <strong>pull-up</strong>weerstand of bij <code>INPUT_PULLUP</code> is het net omgekeerd: in rust <code>HIGH</code>, ingedrukt <code>LOW</code>. Die tweede vorm kom je in dit vak het vaakst tegen. Zie <a href="PullUpPullDown.html">Pull up en pull down weerstanden</a>, en let er dus altijd op waarop je test.</p>
     </div>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinLed = 2;
-const int pinButton = 3;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 2;
+const int knopPin = 3;
 
 void setup()
 {
-  pinMode(pinLed, OUTPUT);     // LED als uitgang
-  pinMode(pinButton, INPUT);   // knop als ingang, met externe pull-downweerstand
+  pinMode(ledPin, OUTPUT);   // LED als uitgang
+  pinMode(knopPin, INPUT);   // knop als ingang, met externe pull-downweerstand
 }
 
 void loop()
 {
-  int knopStatus = digitalRead(pinButton); // lees de knop
+  int knopStatus = digitalRead(knopPin); // lees de knop
 
   if (knopStatus == HIGH)
   {
-    digitalWrite(pinLed, HIGH);  // LED aan als knop ingedrukt
+    digitalWrite(ledPin, HIGH);  // LED aan als knop ingedrukt
   }
   else
   {
-    digitalWrite(pinLed, LOW);   // LED uit als knop niet ingedrukt
+    digitalWrite(ledPin, LOW);   // LED uit als knop niet ingedrukt
   }
 }</code></pre>
 
     <ul>
-        <li><code>pinLed</code> en <code>pinButton</code> zijn <strong>globale constanten</strong>, zodat het pinnummer overal hetzelfde is.</li>
+        <li><code>ledPin</code> en <code>knopPin</code> zijn <strong>globale constanten</strong>, zodat het pinnummer overal hetzelfde is.</li>
         <li>In <code>setup()</code> worden de pinnen ingesteld.</li>
         <li>In <code>loop()</code> leest de Arduino continu de knop en schakelt de led aan of uit.</li>
     </ul>

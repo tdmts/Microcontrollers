@@ -105,7 +105,7 @@ const int aantalStappen = 4;
 
 // Elke rij is één stap. Per rij staat er voor elke motorpin een 1 of een 0.
 // Let op de volgorde: A, B, A terug, B terug.
-const int fullStep[aantalStappen][4] = {
+const int volleStap[aantalStappen][4] = {
   {1, 0, 0, 0}, // spoel A, ene richting
   {0, 0, 1, 0}, // spoel B, ene richting
   {0, 1, 0, 0}, // spoel A, andere richting
@@ -118,7 +118,7 @@ void zetStap(int stap)
 {
   for (int pin = 0; pin &lt; 4; pin++)
   {
-    digitalWrite(motorPinnen[pin], fullStep[stap][pin]);
+    digitalWrite(motorPinnen[pin], volleStap[stap][pin]);
   }
 }
 

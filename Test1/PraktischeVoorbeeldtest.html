@@ -81,61 +81,61 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
-            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
-const int pinLed1 = 3;
-const int pinLed2 = 5;
-const int pinPotentiometer = A0;
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin1 = 3;
+const int ledPin2 = 5;
+const int potPin = A0;
 
 bool situatie = false;
 
 void setup()
 {
-  pinMode(pinButton, INPUT);
-  pinMode(pinLed1, OUTPUT);
-  pinMode(pinLed2, OUTPUT);
-  pinMode(pinPotentiometer, INPUT);
+  pinMode(knopPin, INPUT);
+  pinMode(ledPin1, OUTPUT);
+  pinMode(ledPin2, OUTPUT);
+  pinMode(potPin, INPUT);
 }
 
 void loop()
 {
   // Knop uitlezen en situatie omwisselen
-  int status = digitalRead(pinButton);
+  int status = digitalRead(knopPin);
   if (status == HIGH)
   {
     situatie = !situatie; // ! = NOT = INVERTEREN
-    delay(100); // Even wachten om niet 2x een statusverandering te triggeren bij het te lang indrukken van de knop
+    delay(50); // debouncing: wacht tot het denderen voorbij is
   }
 
   if (situatie == false)
   {
-    digitalWrite(pinLed2, LOW);
+    digitalWrite(ledPin2, LOW);
 
-    int potValue = analogRead(pinPotentiometer);
-    if (potValue &lt; 102) // 10%
+    int potWaarde = analogRead(potPin);
+    if (potWaarde &lt; 102) // 10%
     {
-      digitalWrite(pinLed1, LOW);
+      digitalWrite(ledPin1, LOW);
     }
-    else if (potValue &gt; 922) // 90%
+    else if (potWaarde &gt; 922) // 90%
     {
-      digitalWrite(pinLed1, HIGH);
+      digitalWrite(ledPin1, HIGH);
     }
     else
     {
-      long ledValue = map(potValue, 102, 922, 0, 255);
-      analogWrite(pinLed1, ledValue);
+      long ledWaarde = map(potWaarde, 102, 922, 0, 255);
+      analogWrite(ledPin1, ledWaarde);
     }
   }
   else
   {
-    digitalWrite(pinLed1, LOW);
+    digitalWrite(ledPin1, LOW);
 
-    int potValue = analogRead(pinPotentiometer);
-    long delayValue = map(potValue, 0, 1023, 1000, 200);
+    int potWaarde = analogRead(potPin);
+    long wachttijd = map(potWaarde, 0, 1023, 1000, 200);
 
-    digitalWrite(pinLed2, HIGH);
-    delay(delayValue / 2);
-    digitalWrite(pinLed2, LOW);
-    delay(delayValue / 2);
+    digitalWrite(ledPin2, HIGH);
+    delay(wachttijd / 2);
+    digitalWrite(ledPin2, LOW);
+    delay(wachttijd / 2);
   }
 }</code></pre>
         </div>

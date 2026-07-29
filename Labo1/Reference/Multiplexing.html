@@ -44,16 +44,16 @@
 
     <p>Eén doorloop van de wissel ziet er zo uit. Welke stand van de selectiepin welk display activeert, hangt van je schema af, dus zet dat in een constante:</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDigitSelect = 10;
-const bool DIGIT_LINKS = HIGH; // pas aan volgens jouw schema
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int cijferKiesPin = 10;
+const bool CIJFER_LINKS = HIGH; // pas aan volgens jouw schema
 
 void multiplexStap(int linksCijfer, int rechtsCijfer)
 {
-  digitalWrite(pinDigitSelect, DIGIT_LINKS);
+  digitalWrite(cijferKiesPin, CIJFER_LINKS);
   toonCijfer(linksCijfer);
   delay(5);
 
-  digitalWrite(pinDigitSelect, !DIGIT_LINKS);
+  digitalWrite(cijferKiesPin, !CIJFER_LINKS);
   toonCijfer(rechtsCijfer);
   delay(5);
 }</code></pre>

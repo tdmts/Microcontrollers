@@ -16,8 +16,12 @@ afwijking staat. Geldige namen voor de stijlregels: `lead-opener`, `u-vorm`, `ve
 `noord-nederlands`, `vulwoord`.
 
 De kolom "greppable" is wat `bash scripts/check-content.sh --audit` nu nog meldt voor dat labo.
-Dat is ongeveer een derde van wat een doorloop vindt: de acht andere patronen hebben een lezer
+Dat is ongeveer een derde van wat een doorloop vindt: de twaalf andere patronen hebben een lezer
 nodig.
+
+**klaar betekent klaar onder de vijftien patronen van toen.** Patroon 16 en 17 kwamen er op 28 juli
+2026 bij, na de doorloop van labo 7, en die kijken naar de alinea in plaats van naar de zin. Elk labo
+hieronder heeft daarvoor nog een tweede, smalle doorloop nodig. Zie de sectie onderaan.
 
 | Labo | Pagina's | Greppable open | Status |
 |---|---|---|---|
@@ -29,7 +33,7 @@ nodig.
 | Labo 5 | 14 | 0 | **klaar** |
 | Labo 6 | 12 | 0 | **klaar** |
 | Labo 7 | 15 | 0 | **klaar** |
-| Test1 + Test2 | 6 | 1 | open |
+| Test1 + Test2 + Test3 | 9 | 1 | open |
 
 De openstaande meldingen zitten scheef verdeeld: labo 5 en labo 7 zijn samen twee derde,
 en dat zijn precies de labo's die het recentst geschreven zijn. Labo 1 tot 4 bestaan grotendeels
@@ -493,7 +497,7 @@ Volgens het bereik sinds 28 juli 2026 gaat een taalfout niet mee in de diff van 
 | Wat | Waar | Beslissing |
 |---|---|---|
 | Kadertitel "Twee details in het C#-programma die het waard zijn" | `ArduinoAansturenVanafPc.html` | **"Drie details in het C#-programma".** De staart was opsmuk, en het kader beschrijft er drie (`DtrEnable`, `NewLine`, `ReadTimeout`). Zelfde ingreep als "Twee grensgevallen" → "Drie grensgevallen" in labo 2. |
-| Kop "Het recept: SLEUTEL:WAARDE" | `Strings.html` | **Blijft.** Dezelfde afweging als "De oplossing: multiplexing" in labo 1: de dubbele punt noemt hier het onderwerp en kondigt geen pointe aan. |
+| Kop "Het recept: SLEUTEL:WAARDE" | `Strings.html` | **"SLEUTEL:WAARDE uit elkaar halen".** Eerst bleef die kop staan: de dubbele punt noemde hier het onderwerp en kondigde geen pointe aan, dezelfde afweging als "De oplossing: multiplexing" in labo 1. Op 28 juli 2026 alsnog herzien, niet om de dubbele punt maar om het woord: `recept` is beeldspraak (15) voor een stuk code, en het staat nergens anders in de cursus. Overal weg, ook in de blurb in `reference.js`, in `BoodschappenMetEenSleutel.html` ("de aanpak die je hier gaat toepassen") en in vraag 3 van `Test3/TheoretischeVoorbeeldtest.html`. Vergelijk "Het recept:" in `NoodstopOverDeSerieleLijn.html`, dat in labo 7 al sneuvelde. |
 | `pootjes` van de potentiometer | `PotentiometerwaardeDoorsturen.html` | **Blijft.** SCHRIJFSTIJL.md 11 beschermt dit als de vakterm voor de buitenste aansluitingen van een potentiometer, en dat is precies het gebruik hier. |
 
 Voorgelegd, en alle drie meteen beslist en uitgevoerd. De rode draad in de drie beslissingen: het
@@ -626,6 +630,33 @@ op **klaar**. Dezelfde afweging als bij `LED` naar `led`.
 eerder al `kunt` werd: het onderwerp staat niet altijd naast het werkwoord. "Wanneer je bijvoorbeeld
 een sensorwaarde wilt omzetten" in de `lead` van `map.html` zat er met vier woorden tussen, en de
 tweewoordsvorm ving die niet. `wilt u` blijft aan de u-vormregel, zodat niets dubbel gemeld wordt.
+
+## Patroon 16 en 17, toegevoegd op 28 juli 2026
+
+Tom las de net geschreven Test3-pagina's en zei dat de tekst "fake" klonk en opviel als door een AI
+geschreven, zonder er de vinger op te kunnen leggen. Terecht: elke zin afzonderlijk overleefde de
+vijftien patronen. Wat het deed, zat in de vorm van de alinea, en daar keek geen enkele regel naar.
+
+Vier tells zijn benoemd. Twee ervan zijn nu patroon 16 (*stel vast, beoordeel niet*) en 17 (*bekend
+materiaal krijgt minder plaats*), met de oplossingsuitleg van
+[Test3/PraktischeVoorbeeldtest.html](../Test3/PraktischeVoorbeeldtest.html) als proefstuk: die is
+onder één regel herschreven, voorgelegd, en goedgekeurd. Dat is meteen het ijkpunt voor deze twee,
+zoals `WatIsEenMicrocontroller.html` dat is voor de eerste dertien.
+
+De derde tell is **de te evenwichtige zin**: het symmetrische contrastpaar ("te veel basisstroom is
+zelden een probleem, te weinig wel"). Die staat er tientallen keren en klinkt samen geslepen, maar
+elk paar apart is gewoon goed Nederlands en het onderscheid met een nuttige tegenstelling is niet
+scherp te krijgen. Geen regel van gemaakt, met opzet. Komt hij terug, dan is dat het bewijs dat hij
+er een verdient.
+
+De vierde is **de afwezige auteur**: nergens een ik, een jaartal of een ervaring, alle stelligheid is
+algemene waarheid. Dat is geen stijlregel maar een gat dat alleen Tom kan vullen, want ik weet niet
+wat hij vorig jaar zag misgaan. **Openstaande vraag aan hem:** wil hij op de plaatsen waar het telt
+een eigen zin leveren, dan zetten we die erin.
+
+Labo 0 tot en met 7 staan hierboven op **klaar**, maar dat is klaar onder vijftien patronen. Ze
+hebben nog een tweede, veel smallere doorloop nodig die alleen naar 16 en 17 kijkt en alinea's leest
+in plaats van zinnen. Dat is een aparte ronde en geen heropening van de rest.
 
 ## Voor orion-review
 

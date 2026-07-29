@@ -14,27 +14,27 @@
     <h1>Constanten, variabelen en gegevenstypes</h1>
     <p class="lead">Een variabele is een plaats in het geheugen waar je een waarde bewaart. Met een gegevenstype spreek je af wat voor soort waarde erin past, en met <code>const</code> geef je aan dat de waarde nooit meer verandert.</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinLed = 2;
-bool isEnabled = false;
-double value = 10.5;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 2;
+bool isActief = false;
+double waarde = 10.5;
 
 void setup()
 {
-  isEnabled = true;
+  isActief = true;
 }
 
 void loop()
 {
-  String text = "abc";
+  String tekst = "abc";
   char c = 'a';
 
-  value = value + 0.5;
+  waarde = waarde + 0.5;
 }</code></pre>
 
     <p>In dit voorbeeld zie je hoe we in Arduino werken met <strong>constanten</strong> en <strong>variabelen</strong>.</p>
     <ul>
-        <li><strong>Constanten</strong> (zoals <code>const int pinLed = 2;</code>) krijgen één vaste waarde die tijdens het programma niet meer kan veranderen.</li>
-        <li><strong>Variabelen</strong> (zoals <code>bool isEnabled = false;</code> en <code>double value = 10.5;</code>) kunnen tijdens de uitvoering van het programma wél andere waarden krijgen. In <code>setup()</code> wordt <code>isEnabled</code> bijvoorbeeld aangepast naar <code>true</code>. In <code>loop()</code> wordt <code>value</code> telkens met <code>0.5</code> verhoogd.</li>
+        <li><strong>Constanten</strong> (zoals <code>const int ledPin = 2;</code>) krijgen één vaste waarde die tijdens het programma niet meer kan veranderen.</li>
+        <li><strong>Variabelen</strong> (zoals <code>bool isActief = false;</code> en <code>double waarde = 10.5;</code>) kunnen tijdens de uitvoering van het programma wél andere waarden krijgen. In <code>setup()</code> wordt <code>isActief</code> bijvoorbeeld aangepast naar <code>true</code>. In <code>loop()</code> wordt <code>waarde</code> telkens met <code>0.5</code> verhoogd.</li>
     </ul>
 
     <h2 id="gegevenstypes">Gegevenstypes</h2>
@@ -87,8 +87,8 @@ void loop()
     <h2 id="globaal-en-lokaal">Globaal en lokaal</h2>
     <p>Er is ook een verschil tussen <strong>globale</strong> en <strong>lokale</strong> variabelen:</p>
     <ul>
-        <li>De variabelen bovenaan (<code>pinLed</code>, <code>isEnabled</code>, <code>value</code>) zijn <strong>globaal</strong> en kunnen overal in het programma gebruikt worden.</li>
-        <li>De variabelen die je in <code>loop()</code> schrijft (<code>text</code>, <code>c</code>) zijn <strong>lokaal</strong>: ze bestaan enkel binnen die functie en verdwijnen zodra de functie klaar is.</li>
+        <li>De variabelen bovenaan (<code>ledPin</code>, <code>isActief</code>, <code>waarde</code>) zijn <strong>globaal</strong> en kunnen overal in het programma gebruikt worden.</li>
+        <li>De variabelen die je in <code>loop()</code> schrijft (<code>tekst</code>, <code>c</code>) zijn <strong>lokaal</strong>: ze bestaan enkel binnen die functie en verdwijnen zodra de functie klaar is.</li>
     </ul>
 </div>
 

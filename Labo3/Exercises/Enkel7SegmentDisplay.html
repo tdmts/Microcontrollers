@@ -80,9 +80,9 @@ void loop()
     <h3>Wat is een stijgende flank?</h3>
     <p>De ingangen SHCP en STCP reageren volgens de datasheet enkel op een stijgende flank. Dit kan je nalezen in de <a href="../../datasheets/74hc595.pdf" target="_blank" rel="noopener">functional description</a>.</p>
     <p>Tot nu toe hebben we enkel <code>digitalWrite(pinNummer, HIGH)</code> en <code>digitalWrite(pinNummer, LOW)</code> gebruikt. Dat zijn echter twee <strong>vaste toestanden</strong> en deze keer willen we een <strong>flank</strong>.</p>
-    <p>Om dat te simuleren bouwen we <strong>zelf een functie risingEdge</strong>. Bekijk de code eens en vraag uitleg in het labo als je dit niet meteen snapt.</p>
+    <p>Om dat te simuleren bouwen we <strong>zelf een functie opgaandeFlank</strong>. Bekijk de code eens en vraag uitleg in het labo als je dit niet meteen snapt.</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void risingEdge(int pinNummer)
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -154,7 +154,7 @@ void loop()
   a();
 }
 
-void risingEdge(int pinNummer)
+void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -163,34 +163,34 @@ void risingEdge(int pinNummer)
 void a()
 {
   digitalWrite(pinDS, LOW);
-  risingEdge(pinSHCP);
+  opgaandeFlank(pinSHCP);
 
   digitalWrite(pinDS, LOW);
-  risingEdge(pinSHCP);
+  opgaandeFlank(pinSHCP);
 
   digitalWrite(pinDS, LOW);
-  risingEdge(pinSHCP);
+  opgaandeFlank(pinSHCP);
 
   digitalWrite(pinDS, LOW);
-  risingEdge(pinSHCP);
+  opgaandeFlank(pinSHCP);
 
   digitalWrite(pinDS, LOW);
-  risingEdge(pinSHCP);
+  opgaandeFlank(pinSHCP);
 
   digitalWrite(pinDS, LOW);
-  risingEdge(pinSHCP);
+  opgaandeFlank(pinSHCP);
 
   digitalWrite(pinDS, LOW);
-  risingEdge(pinSHCP);
+  opgaandeFlank(pinSHCP);
 
   digitalWrite(pinDS, HIGH);
-  risingEdge(pinSHCP);
+  opgaandeFlank(pinSHCP);
 
-  risingEdge(pinSTCP);
+  opgaandeFlank(pinSTCP);
 }</code></pre>
 
     <h2 id="aftellen-van-3-naar-1">Aftellen van 3 naar 1</h2>
-    <p>Nu je één segment kan aansturen met <code>a()</code>, maak je er nog drie procedures bij: <code>three()</code>, <code>two()</code> en <code>one()</code>. Daarin doe je telkens de juiste segmenten oplichten, met een pauze van 1 seconde ertussen. De bedoeling is dat je aftelt van 3 naar 1.</p>
+    <p>Nu je één segment kan aansturen met <code>a()</code>, maak je er nog drie procedures bij: <code>toonDrie()</code>, <code>toonTwee()</code> en <code>toonEen()</code>. Daarin doe je telkens de juiste segmenten oplichten, met een pauze van 1 seconde ertussen. De bedoeling is dat je aftelt van 3 naar 1.</p>
 
     <p>Welke segmenten je per cijfer nodig hebt, lees je af uit dit overzicht:</p>
 
@@ -212,7 +212,7 @@ void a()
             <li><label><input type="checkbox" class="form-check-input me-2"> Je weet of jouw display common cathode of common anode is</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De voorschakelweerstand is berekend en in elke segmentlijn geplaatst</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Segment A licht op met de procedure a()</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De procedures three(), two() en one() tonen elk het juiste cijfer</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De procedures toonDrie(), toonTwee() en toonEen() tonen elk het juiste cijfer</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Het display telt af van 3 naar 1 met 1 seconde tussen elk cijfer</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De pinnummers staan bovenaan als constanten met commentaar erbij</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
@@ -229,7 +229,7 @@ void a()
                 <p>Deze oplossing gaat uit van een <strong>common cathode</strong> display, waarbij een 1 een segment doet oplichten. Heb jij een common anode display, dan draai je de waarden in de patronen om (of je keert <code>HIGH</code> en <code>LOW</code> om in <code>toonPatroon()</code>).</p>
             </div>
 
-            <p>De opdracht vraagt drie procedures <code>three()</code>, <code>two()</code> en <code>one()</code>, maar je wil niet drie keer acht regels <code>digitalWrite</code> overtikken. Daarom zet je het patroon van elk cijfer in een array en schrijf je één keer een functie <code>toonPatroon()</code> die zo'n array naar buiten schuift. De drie procedures blijven dan één regel lang.</p>
+            <p>De opdracht vraagt drie procedures <code>toonDrie()</code>, <code>toonTwee()</code> en <code>toonEen()</code>, maar je wil niet drie keer acht regels <code>digitalWrite</code> overtikken. Daarom zet je het patroon van elk cijfer in een array en schrijf je één keer een functie <code>toonPatroon()</code> die zo'n array naar buiten schuift. De drie procedures blijven dan één regel lang.</p>
             <p>Let op de volgorde in <code>toonPatroon()</code>. De laatst verschoven bit belandt op Q0, dus loop je de array van achter naar voor door. Pas helemaal op het einde geef je één stijgende flank op STCP, zodat het hele cijfer in één keer verschijnt.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinDS = 2;   // Data ingang
@@ -248,7 +248,7 @@ void setup()
   pinMode(pinSHCP, OUTPUT);
 }
 
-void risingEdge(int pinNummer)
+void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -261,36 +261,36 @@ void toonPatroon(const bool patroon[])
   for (int i = 7; i >= 0; i--)
   {
     digitalWrite(pinDS, patroon[i] ? HIGH : LOW);
-    risingEdge(pinSHCP);
+    opgaandeFlank(pinSHCP);
   }
 
-  risingEdge(pinSTCP); // pas nu wordt het cijfer zichtbaar
+  opgaandeFlank(pinSTCP); // pas nu wordt het cijfer zichtbaar
 }
 
-void three()
+void toonDrie()
 {
   toonPatroon(patroonDrie);
 }
 
-void two()
+void toonTwee()
 {
   toonPatroon(patroonTwee);
 }
 
-void one()
+void toonEen()
 {
   toonPatroon(patroonEen);
 }
 
 void loop()
 {
-  three();
+  toonDrie();
   delay(1000);
 
-  two();
+  toonTwee();
   delay(1000);
 
-  one();
+  toonEen();
   delay(1000);
 }</code></pre>
         </div>

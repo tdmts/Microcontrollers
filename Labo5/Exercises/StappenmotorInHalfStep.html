@@ -90,7 +90,7 @@ const int potPin = A0;
 const int aantalStappen = 8;
 
 // De half-steptabel. Stap 0, 2, 4 en 6 zijn samen de full-steptabel.
-const int halfStep[aantalStappen][4] = {
+const int halveStap[aantalStappen][4] = {
   {1, 0, 0, 0}, // alleen spoel A
   {1, 0, 1, 0}, // A en B samen
   {0, 0, 1, 0}, // alleen spoel B
@@ -107,7 +107,7 @@ void zetStap(int stap)
 {
   for (int pin = 0; pin &lt; 4; pin++)
   {
-    digitalWrite(motorPinnen[pin], halfStep[stap][pin]);
+    digitalWrite(motorPinnen[pin], halveStap[stap][pin]);
   }
 }
 

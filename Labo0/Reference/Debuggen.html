@@ -16,29 +16,29 @@
 
     <h2 id="debuggen-met-serial">Debuggen met Serial</h2>
     <p>In onderstaand programma tonen we de status van de knop met behulp van de seriële monitor.</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinButton = 2;
-const int pinLed = 3;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
+const int ledPin = 3;
 
 void setup()
 {
-  pinMode(pinButton, INPUT_PULLUP);  // Interne pull-up weerstand
-  pinMode(pinLed, OUTPUT);
+  pinMode(knopPin, INPUT_PULLUP);  // Interne pull-up weerstand
+  pinMode(ledPin, OUTPUT);
   Serial.begin(9600);  // Start seriële communicatie
   Serial.println("Programma gestart!");
 }
 
 void loop()
 {
-  int buttonState = digitalRead(pinButton);  // Lees de knop in
+  int knopStand = digitalRead(knopPin);  // Lees de knop in
 
-  if (buttonState == LOW) // Actief laag door pull-up weerstand
+  if (knopStand == LOW) // Actief laag door pull-up weerstand
   {
-    digitalWrite(pinLed, HIGH);
+    digitalWrite(ledPin, HIGH);
     Serial.println("Knop ingedrukt = LED AAN");
   }
   else
   {
-    digitalWrite(pinLed, LOW);
+    digitalWrite(ledPin, LOW);
     Serial.println("Knop losgelaten = LED UIT");
   }
 

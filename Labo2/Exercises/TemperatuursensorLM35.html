@@ -62,8 +62,8 @@ void setup()
 
 void loop()
 {
-  int value = analogRead(sensorPin);        // 0..1023
-  double spanning = value * 5.0 / 1023.0;   // omrekenen naar volt
+  int waarde = analogRead(sensorPin);        // 0..1023
+  double spanning = waarde * 5.0 / 1023.0;   // omrekenen naar volt
 
   // de LM35 geeft 10 mV per graad, en 0 V bij 0 graden
   double temperatuur = spanning / 0.01;

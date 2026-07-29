@@ -101,6 +101,8 @@
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 
+const unsigned long ontdenderTijd = 50;
+
 int vorigeStand = HIGH; // niet ingedrukt, door de pull-up
 
 void setup()
@@ -127,7 +129,7 @@ void loop()
 
     vorigeStand = stand;
 
-    delay(50); // laat de dendering uitsterven
+    delay(ontdenderTijd); // laat de dendering uitsterven
   }
 }</code></pre>
 

@@ -30,24 +30,24 @@
     </div>
 
     <h2 id="voorbeeld">Voorbeeld</h2>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinPotentiometer = A0;    // Potentiometer op analoge pin A0
-const int pinLed = 3;               // LED op PWM pin 3
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int potPin = A0;  // Potentiometer op analoge pin A0
+const int ledPin = 3;   // LED op PWM pin 3
 
 void setup()
 {
-  pinMode(pinLed, OUTPUT);
+  pinMode(ledPin, OUTPUT);
 }
 
 void loop()
 {
   // Lees de potentiometer uit (0-1023)
-  int valuePotentiometer = analogRead(pinPotentiometer);
+  int potWaarde = analogRead(potPin);
 
   // Herschaal naar PWM waarde (0-255)
-  int brightness = valuePotentiometer / 1023.0 * 255;
+  int helderheid = potWaarde / 1023.0 * 255;
 
   // Stuur PWM signaal naar LED
-  analogWrite(pinLed, brightness);
+  analogWrite(ledPin, helderheid);
 }</code></pre>
 
     <div class="info-box">

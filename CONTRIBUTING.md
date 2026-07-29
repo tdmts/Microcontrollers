@@ -81,8 +81,8 @@ Er zitten ook zes opmerkingen over de tekst zelf bij, de enige zes uit
 - **Vulwoorden** (`netjes`, `heel even`). "Vergeet je `volatile`, dan compileert alles netjes" zegt
   precies hetzelfde zonder dat laatste woord.
 - **`LED` in kapitalen.** In de lopende tekst schrijf je `led` en `leds`, met een hoofdletter alleen
-  waar een zin of een titel begint. In code verandert er niets: `pinLED` is een naam, en in labo 6
-  is `"LED"` de sleutel van het protocol tussen de pc en de Arduino. De controle kijkt daarom alleen
+  waar een zin of een titel begint. In code verandert er niets: in labo 6 is `"LED"` de sleutel van
+  het protocol tussen de pc en de Arduino. De controle kijkt daarom alleen
   naar regels met prozaopmaak en laat alles binnen een `<pre>` staan. Schrijft een pagina de
   afkorting ooit voluit ("LED staat voor Light Emitting Diode"), dan blijft de kapitaal staan en zet
   je er `<!-- audit-skip: led-spelling -->` bij.
@@ -172,6 +172,35 @@ Schrijf je het anders (`<code>` op een eigen regel, of helemaal geen `<code>`), 
 controle nog steeds: die herkent alle drie de vormen. Dat was ooit níet zo, en dat kostte ons 28
 blokken over 18 pagina's die nooit gecompileerd werden terwijl de controle groen bleef. Vergeet je
 `</pre>`, dan krijg je nu een foutmelding in plaats van stilte.
+
+### Hoe je een variabele noemt
+
+**Namen in de code zijn Nederlands**, en een samenstelling zet het hoofdwoord achteraan: `ledPin`,
+`knopPin`, `potPin`, `sensorPin`, `ontdenderTijd`, `netIngedrukt`. Dat is de gewone Nederlandse
+samenstelling ("de ledpin") in camelCase, en het is toevallig ook de Engelse woordvolgorde, waardoor
+die namen er in beide talen juist uitzien. `pinLed` en `pinButton` klopten in geen van beide en zijn
+in juli 2026 repo-breed hernoemd.
+
+De reden is didactisch. De Arduino-API is en blijft Engels (`digitalWrite`, `INPUT_PULLUP`,
+`attachInterrupt`), en dát is de vaktaal die studenten later nodig hebben. De namen die je zelf kiest
+zijn bijna allemaal woorden van de labotafel: knop, led, noodstop, ontdenderen, schuifregister. Staat
+in de sketch hetzelfde woord als in de opgave, dan hoeft de student niets te vertalen terwijl hij al
+met timing en interrupts worstelt.
+
+Drie uitzonderingen:
+
+- **Namen uit een datasheet blijven zoals ze daar staan**: `pinDS`, `pinSHCP`, `pinSTCP` van de
+  74HC595, `in1Pin`, `in2Pin` en `enablePin` van de L298N, `segA` tot `segG`. Bij een letterwoord
+  leest `pinDS` beter dan `dsPin`, en je wil de naam op het schema kunnen terugvinden.
+- **De Arduino-API citeer je letterlijk.** [Labo2/Reference/map.html](Labo2/Reference/map.html)
+  documenteert `map(value, fromLow, fromHigh, toLow, toHigh)` met de echte parameternamen en zet er
+  `<!-- audit-skip: identifier-taal -->` bij.
+- **Leenwoorden zijn gewoon Nederlands**: led, sensor, pin, byte, timer, interrupt, index, status.
+
+`--audit` meldt de oude namen als je er per ongeluk eentje terugschrijft. Die lijst bevat alleen
+samenstellingen, geen los `value` of `state`: dat zijn ook een HTML-attribuut (`value="0"`) en de
+JavaScript van het schuifregisterwidget, en een adviesregel die vals alarm slaat is erger dan een die
+af en toe iets mist.
 
 ## Een oefening toevoegen
 

@@ -14,6 +14,7 @@
     <p class="lead">Met <code>map()</code> kan je een waarde van het ene bereik omzetten naar een ander bereik. Dit is handig wanneer je bijvoorbeeld een sensorwaarde (0-1023) wil omzetten naar een PWM-waarde (0-255), of wanneer je een percentage wil berekenen.</p>
 
     <h2 id="hoe-werkt-het">Hoe werkt het?</h2>
+    <!-- audit-skip: identifier-taal --> <!-- de handtekening hieronder citeert de parameternamen van de Arduino-API zelf, die zijn Engels -->
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>long result = map(value, fromLow, fromHigh, toLow, toHigh);</code></pre>
     <ul>
         <li><strong>value</strong>: de waarde die je wil omzetten</li>
@@ -25,80 +26,80 @@
 
     <h2 id="voorbeeld-1">Voorbeeld 1</h2>
     <p>Lineaire analogRead naar analogWrite</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinPotentiometer = A0;
-const int pinLed = 3;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int potPin = A0;
+const int ledPin = 3;
 
 void setup()
 {
-  pinMode(pinLed, OUTPUT);
+  pinMode(ledPin, OUTPUT);
 }
 
 void loop()
 {
   // Lees de potentiometer uit (0-1023)
-  int valuePotentiometer = analogRead(pinPotentiometer);
+  int potWaarde = analogRead(potPin);
 
   // Map van 0-1023 naar 0-255
-  long brightness = map(valuePotentiometer, 0, 1023, 0, 255);
+  long helderheid = map(potWaarde, 0, 1023, 0, 255);
 
   // Stuur PWM signaal naar LED
-  analogWrite(pinLed, brightness);
+  analogWrite(ledPin, helderheid);
 }</code></pre>
 
     <h2 id="voorbeeld-2">Voorbeeld 2</h2>
     <p>Geïnverteerde lineaire analogRead naar analogWrite</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinPotentiometer = A0;
-const int pinLed = 3;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int potPin = A0;
+const int ledPin = 3;
 
 void setup()
 {
-  pinMode(pinLed, OUTPUT);
+  pinMode(ledPin, OUTPUT);
 }
 
 void loop()
 {
   // Lees de potentiometer uit (0-1023)
-  int valuePotentiometer = analogRead(pinPotentiometer);
+  int potWaarde = analogRead(potPin);
 
   // Map van 0-1023 naar 0-255
-  long brightness = map(valuePotentiometer, 0, 1023, 255, 0);
+  long helderheid = map(potWaarde, 0, 1023, 255, 0);
 
   // Stuur PWM signaal naar LED
-  analogWrite(pinLed, brightness);
+  analogWrite(ledPin, helderheid);
 }</code></pre>
 
     <h2 id="voorbeeld-3">Voorbeeld 3</h2>
     <p>Dead zone potentiometer waarbij we de eerste 10% de led volledig uitzetten en de laatste 10% de led volledig aanzetten.</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinPotentiometer = A0;
-const int pinLed = 3;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int potPin = A0;
+const int ledPin = 3;
 
 void setup()
 {
-  pinMode(pinLed, OUTPUT);
+  pinMode(ledPin, OUTPUT);
 }
 
 void loop()
 {
   // Lees de potentiometer uit (0-1023)
-  int valuePotentiometer = analogRead(pinPotentiometer);
-  long brightness = 0;
+  int potWaarde = analogRead(potPin);
+  long helderheid = 0;
 
-  if(valuePotentiometer &lt; 102)
+  if(potWaarde &lt; 102)
   {
-    brightness = 0;
+    helderheid = 0;
   }
-  else if(valuePotentiometer &gt; 922)
+  else if(potWaarde &gt; 922)
   {
-    brightness = 255;
+    helderheid = 255;
   }
   else
   {
     // Map van 10%-90% naar 0%-100%
-    brightness = map(valuePotentiometer, 102, 922, 0, 255);
+    helderheid = map(potWaarde, 102, 922, 0, 255);
   }
 
   // Stuur PWM signaal naar LED
-  analogWrite(pinLed, brightness);
+  analogWrite(ledPin, helderheid);
 }</code></pre>
 </div>
 

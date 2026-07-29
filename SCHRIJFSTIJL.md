@@ -61,11 +61,15 @@ schrijven.
 
 ## Wat eruit gaat
 
-Vijftien patronen, elk met een echt voorbeeld uit deze repo. Geen enkel patroon is op zich fout: het
+Zeventien patronen, elk met een echt voorbeeld uit deze repo. Geen enkel patroon is op zich fout: het
 probleem is dat ze allemaal samen, op elke pagina, van uitleg een voordracht maken. Patroon 1 tot 11
 gaan over opsmuk, 12 en 13 over woordkeuze, en 14 en 15 kwamen er later bij (allebei opsmuk). De
 nummers liggen vast, ook al loopt de indeling daardoor niet meer netjes door: het register in
 `review/` citeert ze.
+
+Patroon 16 en 17 zitten een niveau hoger dan de rest: ze gaan niet over een zin maar over de vorm van
+een alinea, en daarom overleeft elke zin afzonderlijk de andere vijftien. Ze staan hier omdat de
+tekst zonder hen nog altijd geschreven klinkt terwijl niemand kan aanwijzen waarom.
 
 ### 1. Geen slotzin die moet blijven hangen
 
@@ -330,6 +334,56 @@ Een stijlronde vervangt een beeld **alleen wanneer de letterlijke formulering al
 zoals `opoffert` naast `gebruikt`. Vraagt de vervanging een technisch feit dat er nog niet staat, dan
 is het geen stijlingreep meer en gaat de zin naar de vragenlijst van die doorloop. Zo blijft overeind
 dat een stijlronde nooit verzint wat een pagina beweert.
+
+### 16. Stel vast, beoordeel niet
+
+Een alinea zegt wat er gebeurt. Ze zegt er niet bij hoe erg, hoe belangrijk of hoe gemeen dat is.
+
+> **Voor:** De **noodstop** trekt diezelfde enable met een `digitalWrite()` laag, en dat is de reden
+> dat hij ook werkt terwijl het afremmen in een `delay()` zit.
+>
+> **Na:** De noodstop trekt diezelfde enable met een `digitalWrite()` laag. Daardoor werkt hij ook
+> midden in het afremmen, terwijl de `loop()` in een `delay()` staat.
+
+Het oordeel komt in drie vormen, en alle drie gaan ze weg. **De rangschikking:** "Dit is de
+gevaarlijkste van de drie", "Dit is de gemeenste van allemaal", "die test is geen luxe". **De
+aankondiging:** "Twee dingen zijn de moeite om apart te bekijken", die alleen zegt dat er iets komt
+en het meteen weegt; de alinea's die erop volgen staan er beter zonder. **De slotwaardering:** "Zo
+krijg je één melding per druk in plaats van een monitor die volloopt", die het feit uit de vorige
+zin nog eens beoordeelt in plaats van het te zeggen.
+
+De toets: schrap het waarderende zinsdeel. Staat het feit er dan nog, dan was het een oordeel.
+
+Dit is niet hetzelfde als patroon 1, al overlappen ze aan het eind van een alinea. Patroon 1 gaat over
+een zin die moet blijven hangen en die je schrapt. Hier gaat het over de gewoonte om de lezer te
+vertellen wat hij van een feit moet vinden, en de ingreep is meestal geen schrapping maar een
+verplaatsing: het gewicht gaat de mededeling in ("Daardoor werkt hij ook midden in het afremmen") in
+plaats van ernaast te staan.
+
+Een waarschuwing is geen oordeel. "De pin gaat stuk voor de motor draait" is een feit en blijft, ook
+in een `warning`-kader. "Dit is de gevaarlijkste fout van de drie" is een rangschikking en gaat weg.
+En één keer per pagina mag een echte klemtoon: het probleem is de herhaling, want een tekst die alles
+weegt, weegt niets meer.
+
+### 17. Bekend materiaal krijgt minder plaats
+
+Alles even diep uitleggen is zelf een vorm van opvoering. Wat een vorig labo al behandeld heeft, krijgt
+één regel en een terugkoppeling; het nieuwe krijgt de ruimte.
+
+> **Voor:** De **richting** ligt vast in 1A en 2A, die altijd tegengesteld staan. De **snelheid** is
+> een `analogWrite()` op de enable, en die pin moet daarom een PWM-pin zijn.
+>
+> **Na:** Richting en snelheid zijn die van labo 5: 1A en 2A staan altijd tegengesteld, en de
+> snelheid is een `analogWrite()` op de enable, die daarom op een PWM-pin moet.
+
+Dit is de tegenhanger van de terugkoppeling uit *Wat blijft*: die zegt dat je naar het vorige labo
+verwijst, deze zegt dat je er dan ook korter over doet. Twee alinea's van gelijke lengte over iets
+bekends en iets nieuws vertellen de student dat allebei even zwaar weegt, en dat klopt niet.
+
+Zelfde rem als bij patroon 15. Een stijlronde krimpt een uitleg **alleen wanneer een eerder labo de
+stof aantoonbaar behandelt**, en de verwijzing komt ervoor in de plaats. Kan je dat niet aanwijzen,
+dan is inkorten geen stijlingreep en gaat de alinea naar de vragenlijst van die doorloop. Nieuwe stof
+korter maken valt hier nooit onder.
 
 ### Spelling: `led`, niet `LED`
 

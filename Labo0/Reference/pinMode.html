@@ -30,13 +30,13 @@
 
     <h2 id="voorbeeld">Voorbeeld</h2>
     <p>In een programma ziet dat er dan bijvoorbeeld zo uit:</p>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int pinLed = 2;
-const int pinButton = 3;
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 2;
+const int knopPin = 3;
 
 void setup()
 {
-  pinMode(pinLed, OUTPUT);    // een led stuur je aan: uitgang
-  pinMode(pinButton, INPUT);  // een knop lees je uit: ingang
+  pinMode(ledPin, OUTPUT);  // een led stuur je aan: uitgang
+  pinMode(knopPin, INPUT);  // een knop lees je uit: ingang
 }
 
 void loop()

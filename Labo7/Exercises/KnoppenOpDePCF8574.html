@@ -145,6 +145,8 @@ const int adresExpander = 0x38; // controleer met de I2C scanner
 const int intPin = 2;
 const int ledPin = 4;
 
+const unsigned long ontdenderTijd = 50;
+
 volatile bool expanderVeranderd = false;
 
 byte vorigeKnoppen = 0xFF;
@@ -219,7 +221,7 @@ void loop()
     ledBrandt = !ledBrandt;
     digitalWrite(ledPin, ledBrandt);
 
-    delay(20); // even de dendering laten uitsterven
+    delay(ontdenderTijd); // even de dendering laten uitsterven
 
     // Dat gestuiter heeft ondertussen nieuwe meldingen opgeleverd. Opruimen,
     // anders schakelt de LED zo dadelijk nog een paar keer om.

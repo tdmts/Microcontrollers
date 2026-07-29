@@ -101,7 +101,7 @@ const int adresExpander = 0x38; // PCF8574AN met A0, A1 en A2 aan GND
 const int pinDS = 2;   // Data ingang
 const int pinSTCP = 3; // 0 naar 1 = schuifregister naar storage register
 const int pinSHCP = 4; // 0 naar 1 = seriële ingang naar schuifregister
-const int pinPot = A0; // Loper van de potentiometer
+const int potPin = A0; // Loper van de potentiometer
 
 const int aantalLeds = 8;
 
@@ -130,7 +130,7 @@ byte leesExpander()
   return 0xFF; // niets ontvangen: doe alsof de knop niet ingedrukt is
 }
 
-void risingEdge(int pinNummer)
+void opgaandeFlank(int pinNummer)
 {
   digitalWrite(pinNummer, LOW);
   digitalWrite(pinNummer, HIGH);
@@ -143,10 +143,10 @@ void toonBalk(int aantalAan)
   for (int led = aantalLeds; led &gt;= 1; led--)
   {
     digitalWrite(pinDS, led &lt;= aantalAan ? HIGH : LOW);
-    risingEdge(pinSHCP);
+    opgaandeFlank(pinSHCP);
   }
 
-  risingEdge(pinSTCP); // hele balk in één keer bijwerken
+  opgaandeFlank(pinSTCP); // hele balk in één keer bijwerken
 }
 
 // Enkel de led met dat nummer brandt.
@@ -155,10 +155,10 @@ void toonEnkeleLed(int nummer)
   for (int led = aantalLeds; led &gt;= 1; led--)
   {
     digitalWrite(pinDS, led == nummer ? HIGH : LOW);
-    risingEdge(pinSHCP);
+    opgaandeFlank(pinSHCP);
   }
 
-  risingEdge(pinSTCP);
+  opgaandeFlank(pinSTCP);
 }
 
 void setup()
@@ -187,7 +187,7 @@ void loop()
     vorigeStap = millis();
   }
 
-  int potWaarde = analogRead(pinPot);
+  int potWaarde = analogRead(potPin);
 
   if (looplicht == false)
   {

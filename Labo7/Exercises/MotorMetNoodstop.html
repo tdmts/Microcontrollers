@@ -146,6 +146,7 @@ const int startPin = 4;    // gepold: pin 2 en 3 zijn al bezet
 const int noodstopPin = 2; // de enige interruptpin die nog vrij is
 
 const unsigned long draaiTijd = 10000;
+const unsigned long ontdenderTijd = 50;
 
 volatile bool noodstop = false;
 
@@ -177,7 +178,7 @@ void loop()
 
   if (digitalRead(startPin) == LOW) // ingedrukt
   {
-    delay(50); // even de dendering laten uitsterven
+    delay(ontdenderTijd); // even de dendering laten uitsterven
 
     Serial.println("Motor start");
 

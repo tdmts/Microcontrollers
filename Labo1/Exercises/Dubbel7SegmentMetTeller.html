@@ -51,7 +51,7 @@
                     jouw specifieke sjabloon welke pinnen je precies gebruikt voor de
                     segmenten, of het display common anode of common cathode is
                     (<code>SEGMENT_AAN</code>), en welke stand van pin10 het eerste
-                    versus het tweede display activeert (<code>DIGIT_TIENTALLEN</code>).
+                    versus het tweede display activeert (<code>CIJFER_TIENTALLEN</code>).
                     Zoek dit op in jouw schema en pas de placeholders hieronder aan.
                 </p>
             </div>
@@ -72,12 +72,12 @@
             </p>
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>// Placeholder-pinnen: vervang door de pinnen uit jouw eigen schema
 const int segPins[] = {2, 3, 4, 5, 6, 7, 8}; // a,b,c,d,e,f,g
-const int pinDigitSelect = 10;
+const int cijferKiesPin = 10;
 
 // Pas aan op basis van je display: HIGH voor common cathode, LOW voor common anode
 const bool SEGMENT_AAN = HIGH;
 // Pas aan: welke stand van pin10 activeert het display met de tientallen?
-const bool DIGIT_TIENTALLEN = HIGH;
+const bool CIJFER_TIENTALLEN = HIGH;
 
 // Patronen per cijfer 0-9: volgorde a,b,c,d,e,f,g. 1 = segment aan.
 const bool cijferPatronen[10][7] = {
@@ -102,7 +102,7 @@ void setup()
   {
     pinMode(segPins[i], OUTPUT);
   }
-  pinMode(pinDigitSelect, OUTPUT);
+  pinMode(cijferKiesPin, OUTPUT);
 }
 
 void toonCijfer(int cijfer)
@@ -117,12 +117,12 @@ void toonCijfer(int cijfer)
 void multiplexStap(int tientallen, int eenheden)
 {
   // Even kort de tientallen tonen op display 1...
-  digitalWrite(pinDigitSelect, DIGIT_TIENTALLEN);
+  digitalWrite(cijferKiesPin, CIJFER_TIENTALLEN);
   toonCijfer(tientallen);
   delay(5);
 
   // ...en dan kort de eenheden op display 2. Snel afwisselen = geen flikkering zichtbaar.
-  digitalWrite(pinDigitSelect, !DIGIT_TIENTALLEN);
+  digitalWrite(cijferKiesPin, !CIJFER_TIENTALLEN);
   toonCijfer(eenheden);
   delay(5);
 }
