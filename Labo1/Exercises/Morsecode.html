@@ -89,6 +89,25 @@ void loop()
         </div>
     </div>
 
+    <h2 id="morse-met-een-buzzer">Extra: morse met een buzzer</h2>
+
+    <p>Je kan het SOS-signaal ook hoorbaar maken. In je Arduino-kit zitten daarvoor twee buzzers: een actieve en een passieve.</p>
+
+    <ul>
+        <li>Een <strong>actieve buzzer</strong> heeft een oscillator ingebouwd. Zet je er spanning op, dan geeft hij één vaste toon. Aansturen doe je met <code>digitalWrite()</code>, net zoals bij een led.</li>
+        <li>Een <strong>passieve buzzer</strong> heeft die oscillator niet en zet alleen om wat je erop zet. Je moet dus zelf een wisselend signaal genereren, met <code>tone(buzzerPin, 1000)</code> om een toon van 1000 Hz te starten en <code>noTone(buzzerPin)</code> om hem te stoppen. De frequentie die je meegeeft, bepaalt de toonhoogte.</li>
+    </ul>
+
+    <p>Voor deze oefening is de <strong>actieve</strong> buzzer dus direct bruikbaar. Een punt en een streep zijn ook hier een korte en een lange periode waarin de uitgang aanstaat, dus je vervangt de led door de buzzer en je code blijft dezelfde.</p>
+
+    <p>Welke van de twee je in handen hebt, weet je door de buzzer kort tussen 5V en GND te hangen: de actieve zoemt onmiddellijk, de passieve geeft één klik en daarna stilte. Aan de behuizing zie je het meestal ook, want bij de passieve buzzer is de onderkant een open printplaat en bij de actieve is die dichtgemaakt. De actieve buzzer is gepolariseerd, met de langere pin aan de plus.</p>
+
+    <div class="video-container">
+        <div class="ratio ratio-16x9">
+            <iframe src="https://www.youtube.com/embed/4U5eYG8NnL4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
     <hr>
 
     <h2 id="indienen">Indienen</h2>

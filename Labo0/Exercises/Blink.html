@@ -26,6 +26,10 @@
     </ol>
     <p>Loop je vast bij het selecteren van je bord of het uploaden? Bekijk dan de stappen met screenshots in <a href="../Reference/ProgrammaUploaden.html">Een programma uploaden</a>.</p>
 
+    <h2 id="de-knippertijden-aanpassen">De knippertijden aanpassen</h2>
+    <p>In het voorbeeld staat de led even lang aan als uit. Pas het programma aan zodat de led <strong>2 seconden brandt</strong> en daarna <strong>een halve seconde dooft</strong>. Upload je aangepaste versie en kijk of het knipperritme klopt.</p>
+    <p>Je hebt daarvoor alleen de twee wachttijden nodig. <code>delay()</code> rekent in milliseconden, dus 1 seconde is <code>delay(1000)</code>.</p>
+
     <h2 id="onderzoeksvragen">Onderzoeksvragen</h2>
     <p>Zoek daarnaast de antwoorden op de volgende vragen op. Achter elke vraag staat de referentiepagina waar je begint te zoeken.</p>
     <ul>
@@ -45,6 +49,7 @@
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> Het blink-voorbeeld draait: de ingebouwde led knippert</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je aangepaste versie laat de led 2 seconden branden en een halve seconde doven</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je weet via welke poort de Arduino met de laptop verbonden is</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je weet hoeveel stroom een pin kan leveren (sourcing) en verwerken (sinking)</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Je kan de verschillende pinModes en hun onderscheid uitleggen</label></li>
@@ -57,6 +62,20 @@
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
 
         <div class="spoiler-content solution-content">
+            <p><strong>De aangepaste knippertijden.</strong> Alleen de twee <code>delay()</code>-waarden veranderen: 2000 milliseconden na het aanzetten, 500 na het uitzetten.</p>
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
+{
+    pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop()
+{
+    digitalWrite(LED_BUILTIN, HIGH);   // led aan
+    delay(2000);                       // 2 seconden wachten
+    digitalWrite(LED_BUILTIN, LOW);    // led uit
+    delay(500);                        // een halve seconde wachten
+}</code></pre>
+
             <ul>
                 <li>
                     <strong>Via welke poort is de Arduino verbonden?</strong> In de Arduino IDE kies je het bord en de poort via de <strong>Select board</strong>-dropdown of via <strong>Tools &gt; Port</strong>. Op Windows is dat meestal een <code>COM</code>-poort (bv. <code>COM3</code>), op macOS/Linux een <code>/dev/tty...</code>-apparaat. Meer hierover in <a href="../Reference/ProgrammaUploaden.html">Een programma uploaden</a>.

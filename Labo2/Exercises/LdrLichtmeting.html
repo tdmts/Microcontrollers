@@ -68,7 +68,7 @@
 
     <div class="spoiler-container">
         <div class="basic">
-            Welke weerstandswaarde neem je best voor de vaste weerstand R2, zodat je het grootste bereik aan waarden krijgt over U2? Kies uit 1 Ohm, 2 kOhm of 10 kOhm.
+            Welke weerstandswaarde neem je best voor de vaste weerstand, zodat je het grootste bereik aan waarden krijgt over U2? Kies uit 1 Ohm, 2 kOhm of 10 kOhm.
         </div>
         <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
         <div class="hidden">
@@ -80,10 +80,65 @@
             <figure class="figure w-100 text-center figure-zoom">
                 <img src="../../img/spanningsdeler-formule.png" alt="Formule U2 is gelijk aan U maal R2 gedeeld door R1 plus R2" width="195" height="72">
             </figure>
-            <p>Vul je die formule in voor de drie mogelijkheden, met de LDR die tussen 400 Ohm en 9000 Ohm varieert, dan zie je dat 2 kOhm veruit het grootste verschil tussen de minimum- en maximumspanning oplevert:</p>
-            <figure class="figure w-100 text-center figure-zoom">
-                <img src="../../img/ldr-keuze-vaste-weerstand.png" alt="Tabel met voor R1 gelijk aan 1, 2000 en 10000 Ohm de berekende minimum- en maximumspanning over U2 en het verschil, met het grootste verschil van 3,26 V bij 2000 Ohm" width="507" height="95">
-            </figure>
+            <p>De vaste weerstand hoort in het midden van het bereik dat de LDR doorloopt, en dat midden is het meetkundig gemiddelde: de vierkantswortel uit het product van de laagste en de hoogste weerstand. De LDR zakt bij helder licht tot ongeveer 400 Ohm en klimt in het schemerdonker tot ongeveer 9000 Ohm:</p>
+
+            <div class="math-tex">
+                $$ R_{vast} = \sqrt{R_{min} \cdot R_{max}} = \sqrt{400 \cdot 9000} = \sqrt{3\,600\,000} \approx 1897\ \Omega $$
+            </div>
+
+            <p>1897 Ohm bestaat niet als weerstand, dus kom je uit bij 2 kOhm. Vul je de spanningsdelerformule in voor de drie mogelijkheden, met de LDR als R1 en de vaste weerstand als R2, dan zie je dat 2 kOhm veruit het grootste verschil tussen de minimum- en maximumspanning oplevert:</p>
+
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <caption>De spanning over de vaste weerstand R2, en wat <code>analogRead()</code> daarvan maakt</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">R2 (vast)</th>
+                            <th scope="col">U2 bij 400 Ohm (licht)</th>
+                            <th scope="col">U2 bij 9000 Ohm (donker)</th>
+                            <th scope="col">Verschil</th>
+                            <th scope="col"><code>analogRead()</code></th>
+                            <th scope="col">Stappen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1 Ohm</td>
+                            <td>0,01 V</td>
+                            <td>0,00 V</td>
+                            <td>0,01 V</td>
+                            <td>0 tot 3</td>
+                            <td>3</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2 kOhm</strong></td>
+                            <td>4,17 V</td>
+                            <td>0,91 V</td>
+                            <td><strong>3,26 V</strong></td>
+                            <td><strong>186 tot 853</strong></td>
+                            <td><strong>667</strong></td>
+                        </tr>
+                        <tr>
+                            <td>10 kOhm</td>
+                            <td>4,81 V</td>
+                            <td>2,63 V</td>
+                            <td>2,18 V</td>
+                            <td>538 tot 984</td>
+                            <td>446</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p>Zo reken je de middelste rij uit, met R2 = 2000 Ohm en de LDR op 400 Ohm:</p>
+
+            <div class="math-tex">
+                $$ U_2 = U \cdot \frac{R_2}{R_1 + R_2} = 5\,\text{V} \cdot \frac{2000}{400 + 2000} = 4{,}17\ \text{V} $$
+            </div>
+
+            <p>De kolom <code>analogRead()</code> volgt uit die spanning: 4,17 V van de 5 V, maal de 1023 stappen die de ingang teruggeeft, is 853. Onthou die twee grenzen van 186 en 853, want je hebt ze straks nodig in je <code>map()</code>.</p>
+
+            <p>Waarom je hier het meetkundig gemiddelde neemt en niet het gewone gemiddelde, en waarom je met 400 tot 9000 Ohm rekent in plaats van met de 100 Ohm tot 1 MOhm uit de datasheet, staat uitgewerkt op <a href="../Reference/Spanningsdeler.html#voorbeeld-ldr">De spanningsdeler</a>.</p>
         </div>
     </div>
 
@@ -116,19 +171,29 @@
 
         <div class="spoiler-content solution-content">
             <p>
-                De spanningsdeler levert een waarde tussen 0 en 1023. Je wil de led
-                feller laten branden naarmate het donkerder wordt, dus je moet de
-                meting <em>omkeren</em>. Dat doe je door bij <code>map()</code> het
-                uitvoerbereik om te draaien: 0 wordt 255 en 1023 wordt 0.
+                Je wil de led feller laten branden naarmate het donkerder wordt, dus je
+                moet de meting <em>omkeren</em>. Dat doe je door bij <code>map()</code>
+                het uitvoerbereik om te draaien: de laagste meting wordt 255 en de
+                hoogste wordt 0.
             </p>
             <p>
-                Welke kant je op moet keren hangt af van hoe je de LDR en de vaste
-                weerstand aansluit. Meet eerst wat je binnenkrijgt in het donker en in
-                het licht, en draai de <code>map()</code> om als het de verkeerde
-                richting uitgaat.
+                Het invoerbereik is daarbij <strong>niet</strong> 0 tot 1023. Uit de
+                berekening hierboven weet je dat deze schakeling tussen ongeveer 186 en
+                853 blijft. Vul je toch 0 en 1023 in, dan haalt je led nooit zijn
+                uitersten: in het schemerdonker blijft hij op 209 in plaats van 255, en
+                in het licht zakt hij maar tot 43 in plaats van 0. Een derde van je
+                helderheidsbereik gebruik je dan nooit.
+            </p>
+            <p>
+                <code>constrain()</code> knipt de meting af op die twee grenzen. Zonder
+                die regel geeft <code>map()</code> bij een meting onder 186 een getal
+                boven 255, en daar kan <code>analogWrite()</code> niet mee overweg.
             </p>
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ldrPin = A0; // midden van de spanningsdeler op A0
 const int ledPin = 3;  // led op een PWM-pin (~)
+
+const int ondergrens = 186; // meting in het schemerdonker, LDR op 9000 ohm
+const int bovengrens = 853; // meting bij helder licht, LDR op 400 ohm
 
 void setup()
 {
@@ -138,10 +203,13 @@ void setup()
 
 void loop()
 {
-  int licht = analogRead(ldrPin); // 0..1023, hoger = meer licht
+  int licht = analogRead(ldrPin); // hoger = meer licht
+
+  // hou de meting binnen het bereik dat de schakeling echt haalt
+  int begrensd = constrain(licht, ondergrens, bovengrens);
 
   // omgekeerd: veel licht geeft een lage helderheid, weinig licht een hoge
-  int helderheid = map(licht, 0, 1023, 255, 0);
+  int helderheid = map(begrensd, ondergrens, bovengrens, 255, 0);
   analogWrite(ledPin, helderheid);
 
   Serial.print("licht: ");
@@ -151,6 +219,12 @@ void loop()
 
   delay(100);
 }</code></pre>
+            <p>
+                De 186 en de 853 zijn berekende waarden. Je eigen LDR, je weerstand en
+                het licht in je lokaal wijken daarvan af, dus lees eerst een tijdje de
+                Serial Monitor mee: hou je hand boven de LDR voor de laagste waarde,
+                schijn met je gsm erop voor de hoogste, en pas ondergrens en bovengrens aan naargelang wat je echt ziet.
+            </p>
         </div>
     </div>
 </div>

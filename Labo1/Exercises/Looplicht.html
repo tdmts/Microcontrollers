@@ -13,20 +13,36 @@
     <h1>Looplicht</h1>
     <p class="lead">Verbind 4 leds met pinnen 3 tot en met 6 en programmeer een looplicht. Frequentie van het looplicht is 1Hz.</p>
 
-    <p>Kijk eens naar het schema in onderstaande video. Wordt hier gebruik gemaakt van <strong>sourcing</strong> of <strong>sinking</strong>? Welke invloed heeft dat op de <strong>schakeling</strong> en de <strong>code</strong>?</p>
-
-    <!-- TODO: teken het schema van deze sinking-schakeling (4 leds op pin 3 t.e.m. 6,
-         anode aan de +5V-rail, kathode via de weerstand naar de pin), zodat de
-         schakeling ook zonder de video te zien is -->
+    <h2 id="schema">Schema</h2>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-looplicht-sinking-schema.png" class="img-fluid" alt="TODO: schema van het looplicht met 4 leds volgens sinking aangesloten op de pinnen 3 tot en met 6">
+            <img src="../../img/looplicht-sinking-schema.png" class="img-fluid" alt="Schema van het looplicht: vier rode leds op een breadboard, elke led met de anode via een voorschakelweerstand naar de plusrail van 5V en met de kathode naar een van de pinnen 3 tot en met 6 van de Arduino Uno">
         </figure>
     </div>
+
+    <p>Kijk goed naar het schema en naar de schakeling in onderstaande video. Wordt hier gebruik gemaakt van <strong>sourcing</strong> of <strong>sinking</strong>? Welke invloed heeft dat op de <strong>schakeling</strong> en de <strong>code</strong>?</p>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">
             <iframe src="https://www.youtube.com/embed/jEOSIbBoFwM?wmode=opaque&amp;rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <p>Denk eerst zelf na en klap daarna open.</p>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Sourcing of sinking?</div>
+            <p>Volg de stroom op het schema. Elke led hangt met de anode via de weerstand aan de plusrail van 5V, en met de kathode aan een pin van de Arduino. De stroom komt dus niet uit de pin, hij loopt naar de pin toe. Dat is <strong><a href="../../Labo0/Reference/SourcenSinken.html#sinking">sinking</a></strong>.</p>
+            <p>Voor de schakeling betekent dat: de rails van het breadboard voeren 5V, en de pin is het uiteinde waar de stroom naartoe verdwijnt. In <a href="../../Labo0/Exercises/BegeleideOefening.html">de begeleide oefening van labo 0</a> hing de led er net omgekeerd in, met de anode aan de pin, en dat is <a href="../../Labo0/Reference/SourcenSinken.html#sourcing">sourcing</a>.</p>
+            <p>Voor de code betekent het dat je logica omkeert. Er staat enkel spanning over de led wanneer de pin <code>LOW</code> is, want dan is er een verschil tussen de 5V aan de ene kant en de 0V aan de andere kant. Bij <code>HIGH</code> staat er aan beide kanten 5V en blijft de led uit. Je zet een led dus aan met <code>digitalWrite(pin, LOW)</code> en uit met <code>digitalWrite(pin, HIGH)</code>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat betekent een frequentie van 1Hz?</div>
+            <p>Frequentie is het aantal volledige cycli per seconde, uitgedrukt in hertz (Hz). Een frequentie van 1Hz betekent dus &eacute;&eacute;n volledige cyclus per seconde. Bij dit looplicht is &eacute;&eacute;n cyclus: led 1, led 2, led 3, led 4 en dan weer led 1.</p>
+            <p>De tijd die &eacute;&eacute;n cyclus duurt, is de periode T. Frequentie en periode zijn elkaars omgekeerde: <code>T = 1 / f</code>. Voor 1Hz geeft dat <code>T = 1 / 1 = 1 s</code>, ofwel 1000 ms.</p>
+            <p>Die 1000 ms verdeel je over de stappen van de cyclus. Vier leds zijn vier stappen, dus <code>1000 / 4 = 250 ms</code> per led. Dat is de waarde die in je <code>delay()</code> komt.</p>
+            <p>Reken altijd in deze richting: eerst de periode uit de frequentie, dan de periode delen door het aantal stappen. Bij <a href="KnightRider.html">Knight Rider</a> blijft de frequentie 1Hz, maar verandert het aantal stappen, en dan verandert de delay mee.</p>
         </div>
     </div>
 
@@ -51,23 +67,65 @@
 
         <div class="spoiler-content solution-content">
             <p>
-                Dit is een <strong>sinking</strong>-schakeling: de leds hangen met de
-                anode aan een vaste +5V-rail en met de kathode (via de weerstand) aan
-                de Arduino-pin. Er vloeit dus enkel stroom wanneer de pin
-                <code>LOW</code> staat (de pin "zinkt" de stroom naar GND). Bij
-                <code>HIGH</code> staat er geen spanningsverschil over de led en blijft
-                hij uit. De code moet dus <code>LOW</code> gebruiken om een led aan te
-                zetten, en <code>HIGH</code> om hem uit te zetten.
+                Het is een <strong>sinking</strong>-schakeling, dus <code>LOW</code> zet
+                een led aan en <code>HIGH</code> zet hem uit. Uit de 1Hz volgt een
+                periode van 1000 ms, verdeeld over 4 stappen, dus 250 ms per led.
             </p>
             <p>
-                De frequentie van 1Hz slaat op de volledige cyclus van de 4 leds:
-                elke led blijft dus <code>1000 / 4 = 250ms</code> aan.
+                We bouwen de oplossing in drie stappen op: eerst uitgeschreven zonder lussen en functies, daarna met een eigen functie met parameter, en ten slotte korter met een functie en een <code>for</code>-lus. Uiteraard moet je die stappen niet altijd doorlopen, je kunt ook meteen de kortste versie maken. Maar voor beginners is het goed om eerst de logica te begrijpen en stap voor stap te vereenvoudigen. Wandelen voor je kan lopen (pun intended)!
             </p>
+
+            <h3>Stap 1: Volledig uitgeschreven (zonder functie)</h3>
             <p>
-                Het aan- en uitzetten van &eacute;&eacute;n led zit in
-                <code>laatBranden()</code>, een functie met een parameter zoals je die
-                in de begeleide oefening van labo 0 gemaakt hebt. Zo schrijf je die drie
-                regels &eacute;&eacute;n keer in plaats van vier keer.
+                Hier schrijven we elke stap van het looplicht rechtstreeks onder elkaar in de <code>loop()</code>.
+            </p>
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int led1 = 3;
+const int led2 = 4;
+const int led3 = 5;
+const int led4 = 6;
+
+const int stapDuur = 250; // 1000 ms gedeeld door 4 leds, dus 1Hz per cyclus
+
+void setup()
+{
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+
+  // sinking: HIGH = led uit, dus we beginnen met alles uit
+  digitalWrite(led1, HIGH);
+  digitalWrite(led2, HIGH);
+  digitalWrite(led3, HIGH);
+  digitalWrite(led4, HIGH);
+}
+
+void loop()
+{
+  // Led 1 aan en uit
+  digitalWrite(led1, LOW); // sinking: LOW = led aan
+  delay(stapDuur);
+  digitalWrite(led1, HIGH); // sinking: HIGH = led uit
+
+  // Led 2 aan en uit
+  digitalWrite(led2, LOW);
+  delay(stapDuur);
+  digitalWrite(led2, HIGH);
+
+  // Led 3 aan en uit
+  digitalWrite(led3, LOW);
+  delay(stapDuur);
+  digitalWrite(led3, HIGH);
+
+  // Led 4 aan en uit
+  digitalWrite(led4, LOW);
+  delay(stapDuur);
+  digitalWrite(led4, HIGH);
+}</code></pre>
+
+            <h3>Stap 2: Met een functie en parameter</h3>
+            <p>
+                Om te vermijden dat we dezelfde drie regels code vier keer kopi&euml;ren, stoppen we het aan- en uitzetten van &eacute;&eacute;n led in een eigen functie <code>laatBranden()</code> met de pin als parameter (zoals in de begeleide oefening van labo 0).
             </p>
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int led1 = 3;
 const int led2 = 4;
@@ -104,11 +162,42 @@ void loop()
   laatBranden(led3);
   laatBranden(led4);
 }</code></pre>
+
+            <h3>Stap 3: Met een <code>for</code>-lus</h3>
             <p>
-                Vier keer dezelfde regel in de <code>loop()</code> blijft wat omslachtig.
-                Vanaf <a href="RGBLed.html">RGB Led</a> leer je met
-                <a href="../Reference/Arrays.html">arrays</a> werken, en daarmee kort je
-                dit soort herhaling in tot een lus van twee regels.
+                Aangezien de vier leds aangesloten zijn op opeenvolgende pinnen (3 tot en met 6), kunnen we een <code>for</code>-lus gebruiken om rechtstreeks over de pinnummers te itereren. Dit maakt zowel de <code>setup()</code> als de <code>loop()</code> heel wat korter.
+            </p>
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int minPin = 3;
+const int maxPin = 6;
+
+const int stapDuur = 250; // 1000 ms gedeeld door 4 leds, dus 1Hz per cyclus
+
+void setup()
+{
+  for (int pin = minPin; pin <= maxPin; pin++)
+  {
+    pinMode(pin, OUTPUT);
+    digitalWrite(pin, HIGH); // sinking: HIGH = led uit
+  }
+}
+
+void laatBranden(int pin)
+{
+  digitalWrite(pin, LOW); // sinking: LOW = led aan
+  delay(stapDuur);
+  digitalWrite(pin, HIGH); // sinking: HIGH = led uit
+}
+
+void loop()
+{
+  for (int pin = minPin; pin <= maxPin; pin++)
+  {
+    laatBranden(pin);
+  }
+}</code></pre>
+            <p>
+                Later leer je ook met
+                <a href="../Reference/Arrays.html">arrays</a> werken. Daarmee kun je lussen gebruiken zelfs wanneer de pinnen niet opeenvolgend zijn aangesloten.
             </p>
         </div>
     </div>

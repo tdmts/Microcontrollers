@@ -11,11 +11,11 @@
 <body>
 <div class="container">
     <h1>De spanningsdeler</h1>
-    <p class="lead">Twee weerstanden in serie verdelen de spanning onder elkaar. Zo lees je zowat elke weerstandssensor uit: een LDR, een thermistor, een rekstrookje. Je Arduino kan namelijk geen weerstand meten, alleen spanning.</p>
+    <p class="lead">Twee weerstanden in serie verdelen de spanning onder elkaar. Zo lees je zowat elke weerstandssensor uit: een LDR, een thermistor, een fototransistor, ... Je Arduino kan namelijk geen weerstand meten, alleen spanning.</p>
 
-    <h2 id="het-probleem">Waarom je dit nodig hebt</h2>
+    <h2 id="het-probleem">Waarom je een spanningsdeler nodig hebt</h2>
 
-    <p>Een LDR is een weerstand die verandert met het licht: donker geeft veel weerstand, licht weinig. Maar <a href="analogRead.html"><code>analogRead()</code></a> meet geen ohm, het meet volt. Hang je de LDR rechtstreeks tussen 5 V en een analoge ingang, dan meet je altijd 5 V, hoe donker het ook is. Er loopt immers geen stroom, dus valt er ook geen spanning over de LDR.</p>
+    <p>Een LDR is een weerstand die verandert met het licht: donker geeft veel weerstand, licht weinig. Maar <a href="analogRead.html"><code>analogRead()</code></a> meet geen weerstand, het meet spanning. Hang je de LDR rechtstreeks tussen 5 V en een analoge ingang, dan meet je altijd 5 V, hoe donker het ook is. Er loopt immers geen stroom, dus valt er ook geen spanning over de LDR.</p>
 
     <p>Je hebt dus een tweede weerstand nodig, zodat er wel stroom kan lopen en de spanning zich over de twee kan verdelen. Die verdeling verschuift mee met je sensor, en dat is wat je meet.</p>
 
@@ -44,17 +44,87 @@
 
     <h2 id="de-vaste-weerstand-kiezen">De vaste weerstand kiezen</h2>
 
-    <p>Bij een sensor is één van de twee weerstanden de sensor zelf, en de andere kies je. Die keuze bepaalt hoe bruikbaar je meting wordt.</p>
+    <p>Bij een sensor is één van de twee weerstanden de sensor zelf, en de andere weerstand kies je. Die keuze bepaalt hoe bruikbaar je meting wordt.</p>
 
     <p>Neem je een vaste weerstand die veel te groot of veel te klein is tegenover je sensor, dan zit je meting altijd tegen 5 V of tegen 0 V geplakt en verandert er nauwelijks iets als de sensor beweegt. Je gooit dan het grootste deel van je 1024 meetstappen weg.</p>
 
-    <div class="info-box tip">
-        <div class="info-title tip">Kies rond het midden van je sensorbereik</div>
-        <p>Kies je vaste weerstand ergens in het <strong>midden van het bereik</strong> dat je sensor doorloopt, meetkundig gezien. Varieert je LDR tussen 400 &Omega; en 9000 &Omega;, dan zit je goed rond de 2 k&Omega;. Zo krijg je het grootste verschil tussen je laagste en je hoogste meting.</p>
-        <p>Twijfel je tussen een paar waarden die je in huis hebt, vul dan de formule in voor elk ervan en kijk welke het grootste verschil tussen minimum en maximum oplevert. Dat is wat je bij <a href="../Exercises/LdrLichtmeting.html">LDR: lichtmeting</a> doet.</p>
+    <p>De beste waarde ligt in het midden van het bereik dat je sensor doorloopt, maar dat is niet het gewone gemiddelde. Een sensorbereik loopt over factoren in plaats van over vaste stappen: een LDR gaat van honderden naar duizenden ohm. Het midden dat daarbij hoort is het <strong>meetkundig gemiddelde</strong>, de vierkantswortel uit het product van de laagste en de hoogste weerstand:</p>
+
+    <div class="math-tex">
+        $$ R_{vast} = \sqrt{R_{min} \cdot R_{max}} $$
     </div>
 
-    <h2 id="de-potentiometer">De potentiometer is er ook een</h2>
+    <p>Daarin zijn R<sub>min</sub> en R<sub>max</sub> de laagste en de hoogste weerstand die je sensor aanneemt. Die twee lees je af in de datasheet van je sensor.</p>
+
+    <h2 id="voorbeeld-ldr">Uitgewerkt: de vaste weerstand voor een LDR</h2>
+
+    <p>De LDR die je in labo 2 gebruikt zakt bij helder licht tot ongeveer 400 &Omega; en klimt in het schemerdonker tot ongeveer 9000 &Omega;. Vul die twee waarden in:</p>
+
+    <div class="math-tex">
+        $$ R_{vast} = \sqrt{400\ \Omega \cdot 9000\ \Omega} = \sqrt{3\,600\,000} \approx 1897\ \Omega $$
+    </div>
+
+    <p>Een weerstand van 1897 &Omega; bestaat niet, dus neem je de dichtstbijzijnde waarde die je wel hebt: <strong>2 k&Omega;</strong>. Naar boven afronden zoals bij een <a href="../../Labo0/Reference/WetVanOhm.html">voorschakelweerstand</a> is hier overbodig, want er is geen stroom die je moet begrenzen.</p>
+
+    <p>Dat 2 k&Omega; de beste keuze is, kan je narekenen. Hang de LDR als R1 tussen 5 V en het middenpunt, en je vaste weerstand als R2 tussen het middenpunt en GND. Vul dan de formule van hierboven in voor de twee uitersten van de LDR. Dit is wat drie mogelijke waarden opleveren:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De spanning over de vaste weerstand R2, bij een LDR van 400 &Omega; en van 9000 &Omega;</caption>
+            <thead>
+                <tr>
+                    <th scope="col">R2 (vast)</th>
+                    <th scope="col">U2 bij 400 &Omega; (licht)</th>
+                    <th scope="col">U2 bij 9000 &Omega; (donker)</th>
+                    <th scope="col">Verschil</th>
+                    <th scope="col">Stappen op <code>analogRead()</code></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1 &Omega;</td>
+                    <td>0,01 V</td>
+                    <td>0,00 V</td>
+                    <td>0,01 V</td>
+                    <td>3</td>
+                </tr>
+                <tr>
+                    <td><strong>2 k&Omega;</strong></td>
+                    <td>4,17 V</td>
+                    <td>0,91 V</td>
+                    <td><strong>3,26 V</strong></td>
+                    <td><strong>667</strong></td>
+                </tr>
+                <tr>
+                    <td>10 k&Omega;</td>
+                    <td>4,81 V</td>
+                    <td>2,63 V</td>
+                    <td>2,18 V</td>
+                    <td>446</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Zo reken je de middelste rij uit, met R2 = 2000 &Omega; en de LDR op 400 &Omega;:</p>
+
+    <div class="math-tex">
+        $$ U_2 = U \cdot \frac{R_2}{R_1 + R_2} = 5\,\text{V} \cdot \frac{2000}{400 + 2000} = 4{,}17\ \text{V} $$
+    </div>
+
+    <p>De laatste kolom zet dat verschil om naar meetstappen: 3,26 V van de 5 V, maal de 1023 stappen die <a href="analogRead.html"><code>analogRead()</code></a> teruggeeft. Met 1 &Omega; hou je er 3 over, dus verandert je meting van 3 in het licht naar 0 in het donker en weet je zo goed als niets. Met 10 k&Omega; hou je er 446 over, met 2 k&Omega; 667.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Reken met het bereik dat je echt gebruikt</div>
+        <p>De datasheet van de LDR geeft 1 M&Omega; bij volledige verduistering en 100 &Omega; bij vol daglicht. Vul je die in, dan kom je uit op &radic;(100 &middot; 1 000 000) = 10 k&Omega;. Die uitersten haal je op je werktafel zelden: volledige verduistering betekent geen enkel licht, vol daglicht is 10 000 lux. Neem daarom het bereik waarin je schakeling moet werken, hier 400 &Omega; tot 9000 &Omega;. Diezelfde afweging maak je bij <a href="../Exercises/LdrLichtmeting.html">LDR: lichtmeting</a>.</p>
+    </div>
+
+    <div class="info-box remark">
+        <div class="info-title remark">R1 en R2 omwisselen mag</div>
+        <p>In de tabel hierboven meet je over de vaste weerstand, dus geeft meer licht een <em>hogere</em> waarde. Zet je de LDR onderaan en je vaste weerstand aan 5 V, dan meet je over de LDR en keert de richting om: meer licht geeft dan een lagere waarde. Het verschil blijft in beide gevallen 3,26 V, dus je meetbereik is even groot. Welke kant het uitgaat, corrigeer je achteraf in software met <a href="map.html"><code>map()</code></a>.</p>
+    </div>
+
+    <h2 id="de-potentiometer">De potentiometer is ook een spanningsdeler</h2>
 
     <p>Een potentiometer met drie pootjes is een spanningsdeler waarvan je het middenpunt kan verschuiven. De twee buitenste pootjes hang je aan 5 V en aan GND, en het middelste pootje, de loper, is precies dat punt tussen R1 en R2. Draaien aan de knop verschuift de verhouding tussen de twee helften, en dus de spanning die je meet.</p>
 

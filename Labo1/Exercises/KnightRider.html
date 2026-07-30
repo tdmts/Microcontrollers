@@ -13,19 +13,35 @@
     <h1>Knight rider</h1>
     <p class="lead">Verbind 4 leds met pinnen 3 tot en met 6 en programmeer een looplicht maar dan met een knightrider effect. Frequentie is opnieuw 1Hz. Wat ga je moeten doen met de delay?</p>
 
-    <!-- TODO: teken het schema van deze sourcing-schakeling (4 leds op pin 3 t.e.m. 6,
-         kathode via de weerstand aan de GND-rail, anode aan de pin). Let op: dit is de
-         omgekeerde bedrading van de Looplicht-oefening, en dat verschil moet uit de
-         tekening blijken -->
+    <h2 id="schema">Schema</h2>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-knightrider-sourcing-schema.png" class="img-fluid" alt="TODO: schema van de knight rider met 4 leds volgens sourcing aangesloten op de pinnen 3 tot en met 6">
+            <img src="../../img/knightrider-sourcing-schema.png" class="img-fluid" alt="Schema van de knight rider: vier rode leds op een breadboard, elke led met de anode naar een van de pinnen 3 tot en met 6 van de Arduino Uno en met de kathode via een voorschakelweerstand naar de GND-rail">
         </figure>
     </div>
+
+    <p>Vergelijk dit schema met dat van het <a href="Looplicht.html">looplicht</a>. Wordt hier gebruik gemaakt van <strong>sourcing</strong> of <strong>sinking</strong>? Welke invloed heeft dat op de <strong>code</strong>?</p>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">
             <iframe src="https://www.youtube.com/embed/1F55clpCmmc?wmode=opaque&amp;rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <p>Denk eerst zelf na en klap daarna open.</p>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Sourcing of sinking?</div>
+            <p>Volg opnieuw de stroom op het schema. De anode van elke led hangt nu rechtstreeks aan een pin, en de kathode gaat via de weerstand naar de GND-rail. De stroom komt dus uit de pin en dat is <strong><a href="../../Labo0/Reference/SourcenSinken.html#sourcing">sourcing</a></strong>, de omgekeerde bedrading van het <a href="Looplicht.html">looplicht</a>.</p>
+            <p>De led brandt nu wanneer de pin <code>HIGH</code> is, want dan staat er 5V aan de anode en 0V aan de andere kant. Bij <code>LOW</code> staat er aan beide kanten 0V en blijft de led uit. Je zet een led dus aan met <code>digitalWrite(pin, HIGH)</code> en uit met <code>digitalWrite(pin, LOW)</code>, precies omgekeerd aan je code van het looplicht.</p>
+            <p>Aan welke van de twee je toe bent, lees je dus af van je schema en niet van je code.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Hoe reken je de delay uit bij 1Hz?</div>
+            <p>De rekenweg is dezelfde als bij het <a href="Looplicht.html">looplicht</a>: uit <code>T = 1 / f</code> volgt een periode van 1 s, ofwel 1000 ms voor &eacute;&eacute;n volledige cyclus. Die 1000 ms deel je door het aantal stappen in die cyclus.</p>
+            <p>Het aantal stappen is hier wel anders. Schrijf &eacute;&eacute;n cyclus uit tot je weer bij het begin bent: led 1, led 2, led 3, led 4, led 3, led 2 en dan opnieuw led 1. Dat zijn <strong>6</strong> stappen en geen 8, want led 1 en led 4 keren om en branden dus maar &eacute;&eacute;n keer per cyclus, terwijl led 2 en led 3 twee keer aan bod komen.</p>
+            <p>Per stap krijg je dan <code>1000 / 6 = 166,7 ms</code>. Zowel 166 als 167 ms is goed, dat verschil van 1 ms ziet niemand.</p>
         </div>
     </div>
 
@@ -61,35 +77,81 @@
 
         <div class="spoiler-content solution-content">
             <p>
-                Dit is een <strong>sourcing</strong>-schakeling: anders dan bij de
-                Looplicht-oefening hangen de leds hier met de kathode (via de
-                weerstand) aan een vaste GND-rail, en met de anode rechtstreeks aan de
-                Arduino-pin. Er vloeit dus enkel stroom wanneer de pin <code>HIGH</code>
-                staat (de pin "bront" de stroom naar de led). Bij <code>LOW</code>
-                staat er geen spanningsverschil over de led en blijft hij uit. De code
-                moet dus <code>HIGH</code> gebruiken om een led aan te zetten, en
-                <code>LOW</code> om hem uit te zetten.
+                Het is een <strong>sourcing</strong>-schakeling, dus <code>HIGH</code>
+                zet een led aan en <code>LOW</code> zet hem uit. Een volledige cyclus
+                1&rarr;2&rarr;3&rarr;4&rarr;3&rarr;2 bestaat uit 6 stappen, dus wordt de
+                delay <code>1000 / 6 &asymp; 166 ms</code> in plaats van
+                <code>1000 / 4</code>.
             </p>
             <p>
-                Bij een knightrider-effect loopt het licht heen en weer:
-                1&rarr;2&rarr;3&rarr;4&rarr;3&rarr;2&rarr;1&rarr;... Een volledige cyclus
-                bestaat dus niet uit 4, maar uit <strong>6</strong> stappen (de eerste en
-                laatste led worden maar 1x aangeraakt per cyclus, de 2 middelste leds
-                2x). Om de frequentie op 1Hz te houden moet de delay per stap dus
-                <code>1000 / 6 &asymp; 167ms</code> zijn in plaats van <code>1000 / 4</code>.
+                Net als bij het looplicht kunnen we de oplossing in drie stappen opbouwen:
             </p>
+
+            <h3>Stap 1: Volledig uitgeschreven (zonder functie)</h3>
             <p>
-                Net als bij het looplicht zit &eacute;&eacute;n stap in
-                <code>laatBranden()</code>. In de <code>loop()</code> zie je de zes
-                stappen dan onder elkaar staan, en meteen ook waarom het er zes zijn en
-                geen acht: led 1 en led 4 komen maar &eacute;&eacute;n keer voor.
+                Alle zes de stappen (vier heen, twee terug) schrijven we rechtstreeks in de <code>loop()</code>.
             </p>
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int led1 = 3;
 const int led2 = 4;
 const int led3 = 5;
 const int led4 = 6;
 
-// 6 stappen per volledige cyclus, dus 1000 / 6 = 166 ms per stap
+// 6 stappen per cyclus (1->2->3->4->3->2), dus 1000 / 6 = 166 ms per stap
+const int stapDuur = 166;
+
+void setup()
+{
+  pinMode(led1, OUTPUT);
+  pinMode(led2, OUTPUT);
+  pinMode(led3, OUTPUT);
+  pinMode(led4, OUTPUT);
+
+  // sourcing: LOW = led uit, dus we beginnen met alles uit
+  digitalWrite(led1, LOW);
+  digitalWrite(led2, LOW);
+  digitalWrite(led3, LOW);
+  digitalWrite(led4, LOW);
+}
+
+void loop()
+{
+  // Heen
+  digitalWrite(led1, HIGH); // sourcing: HIGH = led aan
+  delay(stapDuur);
+  digitalWrite(led1, LOW);  // sourcing: LOW = led uit
+
+  digitalWrite(led2, HIGH);
+  delay(stapDuur);
+  digitalWrite(led2, LOW);
+
+  digitalWrite(led3, HIGH);
+  delay(stapDuur);
+  digitalWrite(led3, LOW);
+
+  digitalWrite(led4, HIGH);
+  delay(stapDuur);
+  digitalWrite(led4, LOW);
+
+  // En terug, zonder de uiteinden te herhalen (led 3 en led 2)
+  digitalWrite(led3, HIGH);
+  delay(stapDuur);
+  digitalWrite(led3, LOW);
+
+  digitalWrite(led2, HIGH);
+  delay(stapDuur);
+  digitalWrite(led2, LOW);
+}</code></pre>
+
+            <h3>Stap 2: Met een functie en parameter</h3>
+            <p>
+                Het aan- en uitzetten van &eacute;&eacute;n led gieten we in een eigen functie <code>laatBranden()</code>. In de <code>loop()</code> zie je de zes stappen dan onder elkaar staan, en meteen ook waarom het er zes zijn en geen acht: led 1 en led 4 komen maar &eacute;&eacute;n keer voor.
+            </p>
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int led1 = 3;
+const int led2 = 4;
+const int led3 = 5;
+const int led4 = 6;
+
+// 6 stappen per cyclus (1->2->3->4->3->2), dus 1000 / 6 = 166 ms per stap
 const int stapDuur = 166;
 
 void setup()
@@ -124,6 +186,47 @@ void loop()
   // En terug, zonder de uiteinden nog eens: anders zou de cyclus 8 stappen duren
   laatBranden(led3);
   laatBranden(led2);
+}</code></pre>
+
+            <h3>Stap 3: Met <code>for</code>-lussen</h3>
+            <p>
+                Omdat de leds op opeenvolgende pinnen (3 t.e.m. 6) hangen, kun je twee <code>for</code>-lussen combineren: &eacute;&eacute;n die optelt van 3 naar 6 (heen), en &eacute;&eacute;n die aftelt van 5 naar 4 (terug).
+            </p>
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int minPin = 3;
+const int maxPin = 6;
+
+// 6 stappen per cyclus (3->4->5->6->5->4), dus 1000 / 6 = 166 ms per stap
+const int stapDuur = 166;
+
+void setup()
+{
+  for (int pin = minPin; pin <= maxPin; pin++)
+  {
+    pinMode(pin, OUTPUT);
+    digitalWrite(pin, LOW); // sourcing: LOW = led uit
+  }
+}
+
+void laatBranden(int pin)
+{
+  digitalWrite(pin, HIGH); // sourcing: HIGH = led aan
+  delay(stapDuur);
+  digitalWrite(pin, LOW);  // sourcing: LOW = led uit
+}
+
+void loop()
+{
+  // Heen (pin 3 t.e.m. 6)
+  for (int pin = minPin; pin <= maxPin; pin++)
+  {
+    laatBranden(pin);
+  }
+
+  // Terug (pin 5 en 4: we slaan de uiteinden 6 en 3 over)
+  for (int pin = maxPin - 1; pin > minPin; pin--)
+  {
+    laatBranden(pin);
+  }
 }</code></pre>
         </div>
     </div>

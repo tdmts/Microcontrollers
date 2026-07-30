@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>7 segment met teller</h1>
-    <p class="lead">Maak een teller op 1 display die doorlopend telt van 0 tot en met 9. Gebruik een array om de letterpatronen op te slaan. segA=pin3, segB=pin4,... Frequentie van de teller is 2Hz.</p>
+    <p class="lead">Maak een teller op 1 display die doorlopend telt van 0 tot en met 9. Gebruik een array om de letterpatronen op te slaan. Ieder cijfer staat 1 seconde aan.</p>
 
     <p>Je vertrekt van de schakeling uit <a href="AchtAnimatieOp7Segment.html">de 8-animatie</a>: hetzelfde display, dezelfde zeven segmentpinnen, en je weet intussen of het common anode of common cathode is. Wat er nieuw bijkomt, is dat een segment nu niet meer los oplicht, maar als deel van een cijfer.</p>
 
@@ -25,9 +25,15 @@
 
     <p>Kort samengevat: je maakt één rij per cijfer en één kolom per segment, en de rij die je uitleest bepaalt welk cijfer op het display verschijnt.</p>
 
-    <div class="video-container">
-        <div class="ratio ratio-16x9">
-            <iframe src="https://www.youtube.com/embed/zDzZnVyExlo?wmode=opaque&amp;rel=0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Wat is de periode?</div>
+            <p>De periode <strong>T</strong> is de duur van &eacute;&eacute;n volledige tellercyclus die steeds wordt herhaald. De teller bestaat uit 10 cijfers (0 tot en met 9) die elk 1 seconde op het scherm staan, dus de periode is <code>10 &times; 1 s = 10 s</code>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat is de frequentie?</div>
+            <p>De relatie tussen frequentie en periode is <code>f = 1 / T</code>.</p>
+            <p>De frequentie van de tellercyclus is hier dus <code>1 / 10 s = 0,1 Hz</code>.</p>
         </div>
     </div>
 
@@ -42,8 +48,8 @@
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> Display telt doorlopend van 0 tot en met 9</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Letterpatronen worden opgeslagen in een array</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Segmenten zijn correct verbonden (segA=pin3, segB=pin4, ...)</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Frequentie van de teller is 2Hz</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Segmenten zijn correct verbonden (segA=pin2, segB=pin3, ...)</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elk cijfer blijft 1 seconde aan (frequentie van de cyclus is 0,1Hz)</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>
@@ -54,40 +60,25 @@
 
         <div class="spoiler-content solution-content">
             <p>
-                Dit display is <strong>common anode</strong>: de gemeenschappelijke pin
-                hangt rechtstreeks (zonder weerstand) aan de vaste +5V-rail, en elk
-                segment gaat via zijn eigen weerstand naar een Arduino-pin. Dit is dus
-                <strong>actief laag</strong>: een segment gaat aan bij <code>LOW</code>
-                en uit bij <code>HIGH</code>.
+                Dit display is <strong>common cathode</strong>: de gemeenschappelijke pin
+                hangt aan GND, en elk segment gaat via zijn eigen weerstand naar een
+                Arduino-pin. Dit is dus <strong>actief hoog</strong>: een segment gaat
+                aan bij <code>HIGH</code> en uit bij <code>LOW</code>.
             </p>
             <p>
                 Elk cijfer wordt opgeslagen als een rij van 7 waarden (a t.e.m. g) in
-                een array; <code>1</code> betekent "segment aan" in de array, wat via
-                <code>SEGMENT_AAN</code> vertaald wordt naar het juiste
-                <code>HIGH</code>/<code>LOW</code>-niveau voor dit (actief lage)
-                display. Bij 2Hz wisselt het cijfer 2x per seconde, dus elk cijfer
-                blijft <code>500ms</code> staan.
+                een array; <code>1</code> betekent "segment aan" in de array, wat in
+                <code>toonCijfer()</code> rechtstreeks vertaald wordt naar <code>HIGH</code>.
+                Elk cijfer blijft <code>1000ms</code> (1 seconde) staan. Met 10 cijfers duurt &eacute;&eacute;n volledige cyclus <code>10 s</code> (periode T = 10 s, frequentie f = 0,1 Hz).
             </p>
-            <p>
-                In <code>toonCijfer()</code> staat een operator die je nog niet
-                eerder gezien hebt:
-                <code>segmentAan ? SEGMENT_AAN : !SEGMENT_AAN</code>. Dat
-                vraagteken is de korte schrijfwijze van een
-                <code>if</code>/<code>else</code> die tussen twee waarden kiest.
-                Hoe je hem leest, staat bij
-                <a href="../../Labo0/Reference/Selecties.html#tweevoudige-selectie-in-het-kort">Een
-                tweevoudige selectie in het kort</a>.
-            </p>
-            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segA = 3;
-const int segB = 4;
-const int segC = 5;
-const int segD = 6;
-const int segE = 7;
-const int segF = 8;
-const int segG = 9;
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segA = 2;
+const int segB = 3;
+const int segC = 4;
+const int segD = 5;
+const int segE = 6;
+const int segF = 7;
+const int segG = 8;
 const int segPins[] = {segA, segB, segC, segD, segE, segF, segG};
-
-const bool SEGMENT_AAN = LOW; // common anode: LOW = segment aan
 
 // Patronen per cijfer 0-9: volgorde a,b,c,d,e,f,g. 1 = segment aan.
 const bool cijferPatronen[10][7] = {
@@ -116,7 +107,8 @@ void toonCijfer(int cijfer)
   for (int i = 0; i < 7; i++)
   {
     bool segmentAan = cijferPatronen[cijfer][i];
-    digitalWrite(segPins[i], segmentAan ? SEGMENT_AAN : !SEGMENT_AAN);
+    // Actief Hoog (Common Cathode): 1 (true) -> HIGH, 0 (false) -> LOW
+    digitalWrite(segPins[i], segmentAan ? HIGH : LOW);
   }
 }
 
@@ -125,7 +117,7 @@ void loop()
   for (int cijfer = 0; cijfer <= 9; cijfer++)
   {
     toonCijfer(cijfer);
-    delay(500); // 2Hz => elk cijfer 500ms zichtbaar
+    delay(1000); // 1 seconde per cijfer (cyclus T = 10s, f = 0,1 Hz)
   }
 }</code></pre>
         </div>

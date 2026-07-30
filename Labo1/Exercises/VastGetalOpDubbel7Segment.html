@@ -11,36 +11,42 @@
 <body>
 <div class="container">
     <h1>Vast getal op een dubbel 7-segment display</h1>
-    <p class="lead">Zet het getal 42 op een dubbel 7-segment display, en houd het stabiel. Er telt hier nog niets. Het enige dat je erbij leert, is hoe je twee cijfers tegelijk zichtbaar krijgt met de pinnen van één display.</p>
+    <p class="lead">Zet het getal 88 op twee aparte 7-segment displays. Er zijn hier twee problemen: het ene is hoe je 14 leds aanstuurt met 12 pinnen (pin 2 t.e.m. 13) en het tweede probleem is hoe je die stroom gaat leveren want 14 * 20mA = 280mA (en dat is meer dan de 200 mA die de Arduino kan leveren).</p>
 
     <p>Je hebt alles al: de cijferpatronen komen uit <a href="7SegmentMetTeller.html">7 segment met teller</a>, en de segmenten leerde je kennen bij <a href="AchtAnimatieOp7Segment.html">de 8-animatie</a>.</p>
 
-    <h2 id="het-probleem">Twee cijfers, maar één stel pinnen</h2>
+    <h2 id="het-probleem">Twee cijfers, te weinig pinnen en teveel stroom</h2>
 
     <p>Het dubbel 7-segment vind je niet in de TinkerCAD-bibliotheek. Je kan onderstaand sjabloon gebruiken:</p>
 
     <p><a rel="noopener" target="_blank" href="https://www.tinkercad.com/things/8dX1IJytp4b-sjabloon-dubbel-7-segmentdisplay">sjabloon dubbel 7-segmentdisplay (tinkercad.com)</a> (klik op copy and tinker)</p>
 
-    <p>Kijk in dat sjabloon eens goed naar de bedrading. De zeven segmentaansluitingen van het linkse cijfer en die van het rechtse hangen aan <strong>dezelfde</strong> Arduino-pinnen. Alleen de gemeenschappelijke pin van elk cijfer is apart uitgebracht.</p>
+    <!-- todo figuur importeren: "C:\Users\tmet746\Downloads\3007\2026-07-30_10-12-54.png" -->
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: waarom kan je zo geen 42 tonen?</button>
-        <div class="spoiler-content solution-content">
-            <p>Omdat de segmentpinnen gedeeld zijn, krijgen beide cijfers altijd hetzelfde patroon. Zet je het patroon van een 4 op de pinnen, dan staat er 44. Zet je dat van een 2, dan staat er 22. Twee verschillende cijfers tegelijk is fysiek onmogelijk met deze bedrading.</p>
-            <p>Wat je wel apart kan aansturen, is welk van de twee cijfers op dat moment stroom krijgt.</p>
-        </div>
-    </div>
+    <p>Kijk in het schema eens goed naar de bedrading. De zeven segmentaansluitingen van het linkse cijfer en die van het rechtse hangen aan <strong>dezelfde</strong> Arduino-pinnen. Alleen de gemeenschappelijke pin van elk cijfer is apart uitgebracht en loopt naar een 74HC14.</p>
+
+    <!-- todo: vraag de student om op te zoeken wat een 74HC14 is -->
 
     <h2 id="multiplexing">De oplossing: multiplexing</h2>
 
-    <p>Je toont de twee cijfers om beurten, en je wisselt zo snel dat je oog het verschil niet meer ziet. Hoe dat werkt, hoe snel het moet en waarom het werkt, staat op <a href="../Reference/Multiplexing.html">Multiplexing</a>.</p>
+    <p>Je toont de twee cijfers niet tegelijk maar om de beurt, en je wisselt zo snel dat je oog het verschil niet meer ziet. Hoe dat werkt, hoe snel het moet en waarom het werkt, staat op <a href="../Reference/Multiplexing.html">Multiplexing</a>.</p>
 
-    <p>Zoek in je sjabloon op welke pin bepaalt welk cijfer actief is, en welke stand van die pin bij welk cijfer hoort. Zet dat in een constante, dan kan je het in één regel omdraaien als het omgekeerd blijkt te zijn.</p>
+    <!-- todo: vermelden waarom dat het probleem van de pinnen en stroom oplost. -->
+
+    <!--todo: vermelden waarom die 74HC14 nodig is: je kan geen 240mA afvoeren over een enkele pin -->
+
+    <p>Bekijk het schema en de code in de sketch en ga na welke pin bepaalt welk display actief is, en welke stand van die pin bij welk display hoort.</p>
+
+    <!--todo: dit is de voorbeeldcode -->
+
+    <!-- todo: pin 9 wisselt tussen de displays. Als pin 9 hoog is, is het linkse display niet actief en de inverter maakt het rechtse display actief. Als pin 9 laag is, is het rechtse display niet actief en de inverter maakt het linkse display actief. -->
 
     <div class="info-box tip">
         <div class="info-title tip">Begin traag, dan snel</div>
-        <p>Zet je wisseltijd eerst eens op <code>delay(500)</code>. Je ziet dan de twee cijfers om beurten knipperen, en dat is precies wat er gebeurt. Breng die tijd daarna stap voor stap omlaag tot je niets meer ziet flikkeren. Zo zie je waar de truc zit.</p>
+        <p>Als je de sketch uitvoert dan zie je dat alle segmenten om de beurt aangaan op beide displays. De delay is nu ingesteld op 10ms maar verander die eens naar bv. 500ms. Dan zie je (hopelijk) in wat het achterliggende principe is van multiplexing.</p>
     </div>
+
+    <!-- uitleggen dat in de voorbeeldcode de wisseltijd is ingesteld op 20ms en dit 100x per seconde. Dat wil dus zeggen dat elk display 20ms  -->
 
     <hr>
 

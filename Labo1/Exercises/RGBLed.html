@@ -11,9 +11,13 @@
 <body>
 <div class="container">
     <h1>RGB Led</h1>
-    <p class="lead">Plaats een RGB led op pinnen 3 (rood), 4 (groen) en 5 (blauw). Deze keer sturen we niet actief laag. Maak een programma dat door de 7 basismengkleuren heen loopt. Elke kleur moet 1 seconde zichtbaar zijn.</p>
+    <p class="lead">Plaats een RGB led op pinnen 3 (groen), 4 (blauw) en 5 (rood). Elke kleur moet 1 seconde zichtbaar zijn.</p>
 
     <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Stuur je de kleuren actief hoog of laag?</div>
+            <p>De RGB led is common cathode, dus de kleuren worden actief hoog aangestuurd.</p>
+        </div>
         <div class="accordion-item">
             <div class="title">Wat is de periode?</div>
             <p>Een periode van een signaal is één volledige cyclus die steeds wordt herhaald. De eenheid is seconden. In dit geval is de periode 7 seconden.</p>
@@ -24,8 +28,6 @@
             <p>De frequentie is hier dus 1/7s ofwel ongeveer 0.143Hz</p>
         </div>
     </div>
-
-    <p>Zeven kleuren zijn zeven combinaties van drie kanalen. Die zet je in een tabel waar je met een lus overheen loopt, in plaats van ze zeven keer uit te schrijven. Hoe zo'n tabel eruitziet en hoe je hem uitleest, staat op <a href="../Reference/Arrays.html">Arrays</a>. Lees dat eerst, het is de eerste keer dat je ze in dit vak nodig hebt.</p>
 
     <h2 id="schema">Schema</h2>
     <div class="my-4">
@@ -40,6 +42,72 @@
         </div>
     </div>
 
+    <p>Zeven kleuren zijn zeven combinaties van de drie kleurkanalen (rood, groen en blauw). Met 3 geneste <code>for</code>-lussen doorloop je automatisch de binaire waarheidstabel van alle mogelijke combinaties, waarbij je de toestand waarin alle leds uit staan (0, 0, 0) overslaat.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Waarheidstabel van de RGB-kleurcombinaties</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Rood (pin 5)</th>
+                    <th scope="col">Groen (pin 3)</th>
+                    <th scope="col">Blauw (pin 4)</th>
+                    <th scope="col">Resultaat / Kleur</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td><em>Uit (overslaan)</em></td>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>Blauw</td>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>Groen</td>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>Cyaan (Groen + Blauw)</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>Rood</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>1</td>
+                    <td>Magenta (Rood + Blauw)</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>0</td>
+                    <td>Geel (Rood + Groen)</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>Wit (Rood + Groen + Blauw)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <hr>
 
     <h2 id="indienen">Indienen</h2>
@@ -49,7 +117,7 @@
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> RGB led aangesloten op pinnen 3 (rood), 4 (groen) en 5 (blauw)</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> RGB led aangesloten op pinnen 3 (groen), 4 (blauw) en 5 (rood)</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Alle 7 basismengkleuren worden na elkaar getoond</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Elke kleur is 1 seconde zichtbaar</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
@@ -65,8 +133,7 @@
                 Volgens het schema is dit een <strong>common cathode</strong> RGB led:
                 de gemeenschappelijke pin gaat rechtstreeks (zonder weerstand) naar de
                 vaste GND-rail, en elk kleurkanaal gaat via zijn eigen weerstand naar
-                een Arduino-pin. Dit is dus <strong>actief hoog</strong> ("niet actief
-                laag", zoals de opgave aangeeft): <code>HIGH</code> zet een kleurkanaal
+                een Arduino-pin. Dit is dus <strong>actief hoog</strong>: <code>HIGH</code> zet een kleurkanaal
                 aan, <code>LOW</code> zet het uit.
             </p>
             <p>
@@ -75,36 +142,38 @@
                 R+G+B (wit). Elke combinatie blijft 1 seconde staan, dus de periode van
                 7 seconden klopt met de 7 kleuren uit de opgave hierboven.
             </p>
-            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int roodPin = 3;
-const int groenPin = 4;
-const int blauwPin = 5;
-
-// 7 basismengkleuren: alle combinaties van R/G/B behalve "alles uit"
-const bool kleuren[7][3] = {
-  {1, 0, 0}, // rood
-  {0, 1, 0}, // groen
-  {0, 0, 1}, // blauw
-  {1, 1, 0}, // geel
-  {0, 1, 1}, // cyaan
-  {1, 0, 1}, // magenta
-  {1, 1, 1}, // wit
-};
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int groenPin = 3;
+const int blauwPin = 4;
+const int roodPin = 5;
 
 void setup()
 {
-  pinMode(roodPin, OUTPUT);
   pinMode(groenPin, OUTPUT);
   pinMode(blauwPin, OUTPUT);
+  pinMode(roodPin, OUTPUT);
 }
 
 void loop()
 {
-  for (int i = 0; i < 7; i++)
+  // 3 geneste for-lussen doorlopen alle 8 combinaties van R/G/B (0 en 1)
+  for (int r = 0; r <= 1; r++)
   {
-    digitalWrite(roodPin, kleuren[i][0]);
-    digitalWrite(groenPin, kleuren[i][1]);
-    digitalWrite(blauwPin, kleuren[i][2]);
-    delay(1000); // elke kleur 1 seconde zichtbaar
+    for (int g = 0; g <= 1; g++)
+    {
+      for (int b = 0; b <= 1; b++)
+      {
+        // Toestand (0,0,0) is "alles uit", die slaan we over
+        if (r == 0 && g == 0 && b == 0)
+        {
+          continue;
+        }
+
+        digitalWrite(roodPin, r);
+        digitalWrite(groenPin, g);
+        digitalWrite(blauwPin, b);
+        delay(1000); // elke kleur 1 seconde zichtbaar
+      }
+    }
   }
 }</code></pre>
         </div>
