@@ -74,17 +74,17 @@ void loop()
   digitalWrite(segB, LOW);
   digitalWrite(rechterDisplayPin, LOW);
   digitalWrite(linkerDisplayPin, HIGH);
-  delay(5);
+  delay(10);
 
   // Alleen segment b aan, en alleen het rechtse display actief
   digitalWrite(segA, LOW);
   digitalWrite(segB, HIGH);
   digitalWrite(linkerDisplayPin, LOW);
   digitalWrite(rechterDisplayPin, HIGH);
-  delay(5);
+  delay(10);
 }</code></pre>
 
-    <p>Met twee keer 5 ms duurt één volledige wissel 10 ms, dus elk display komt honderd keer per seconde aan de beurt, ruim genoeg. Zet die twee <code>delay(5)</code> eens op 500, dan zie je de segmenten om de beurt aangaan.</p>
+    <p>Met twee keer 10 ms duurt één volledige wissel 20 ms, dus elk display komt vijftig keer per seconde aan de beurt. Dat is genoeg om de twee samen te zien. Zet die twee <code>delay(10)</code> eens op 500, dan zie je de segmenten om de beurt aangaan.</p>
 
     <p>Een heel cijfer werkt precies hetzelfde. In plaats van twee <code>digitalWrite</code>-regels zet je dan een hele rij uit de <a href="ZevenSegmentDisplay.html#van-cijfer-naar-patroon">cijferpatronen</a> op de zeven segmentpinnen, en pas daarna activeer je het display waar dat patroon bij hoort.</p>
 

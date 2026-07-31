@@ -22,36 +22,9 @@
     </div>
 
     <div class="info-box tip">
-        <div class="info-title tip">Gebruik geen delay()</div>
-        <p>Je zou je er makkelijk vanaf kunnen maken met <code>delay(10000)</code>, maar daarmee blokkeer je je hele programma. Tijdens die 10 seconden kan je niets meer inlezen. Vraag gerust uitleg tijdens het labo als dat nog niet duidelijk is.</p>
+        <div class="info-title tip">Laat je programma doorlopen</div>
+        <p>Je zou je er makkelijk vanaf kunnen maken met <code>delay(10000)</code>, maar daarmee blokkeer je je hele programma. Tijdens die 10 seconden kan je de LDR niet meer uitlezen, en dus ook niet merken dat het weer licht wordt. Je hebt een timer nodig die je programma laat doorlopen: hoe die werkt, staat op <a href="../Reference/NonBlockingTimer.html">Non-blocking timer</a>. Vraag gerust uitleg tijdens het labo als dat nog niet duidelijk is.</p>
     </div>
-
-    <h2 id="non-blocking-timer">Non-blocking timer</h2>
-    <p>Met <code>millis()</code> vraag je op hoeveel milliseconden je Arduino al aan het werk is. Je kwam die aanpak al tegen bij <a href="../../Labo0/Reference/Debouncen.html">Debouncen</a> in labo 0 en bij het multiplexen in labo 1. Door de huidige tijd te vergelijken met een eerder bewaard tijdstip laat je tijd verstrijken zonder je programma stil te leggen:</p>
-
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>unsigned long vorigeMillis;
-const unsigned long interval = 10000; // 10 seconden
-
-void setup()
-{
-  Serial.begin(9600);
-}
-
-void loop()
-{
-  unsigned long nu = millis(); // huidige tijd
-
-  if (nu - vorigeMillis &gt;= interval)
-  {
-    // voer acties uit die elk interval uitgevoerd moeten worden
-
-    vorigeMillis = nu; // onthoud wanneer het interval verstreek
-  }
-  else
-  {
-    // voer acties uit die sowieso uitgevoerd moeten worden
-  }
-}</code></pre>
 
     <hr>
 
@@ -86,9 +59,8 @@ void loop()
             </p>
             <p>
                 De variabele <code>lampAanSinds</code> is een <code>unsigned long</code>
-                omdat <code>millis()</code> dat ook is. Zet je die in een gewone
-                <code>int</code>, dan loopt hij na iets meer dan 32 seconden over en
-                klopt je timing niet meer.
+                omdat <code>millis()</code> dat ook is. Waarom een <code>int</code> hier
+                misloopt, staat op <a href="../Reference/NonBlockingTimer.html#waarom-unsigned-long">Non-blocking timer</a>.
             </p>
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ldrPin = A0; // midden van de spanningsdeler op A0
 const int ledPin = 3;  // led, zelfde pin als in de vorige oefening

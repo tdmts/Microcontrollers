@@ -46,8 +46,8 @@
             <p>
                 De valkuil hier is timing. Het display moet blijven multiplexen, dus je
                 mag niet met een <code>delay(500)</code> op je meting gaan wachten. Je
-                gebruikt dezelfde <code>millis()</code>-aanpak als bij
-                <a href="NachtlampMetTijd.html">Nachtlamp met tijd</a>. Het display
+                gebruikt dezelfde <a href="../Reference/NonBlockingTimer.html"><code>millis()</code>-aanpak</a>
+                als bij <a href="NachtlampMetTijd.html">Nachtlamp met tijd</a>. Het display
                 wordt continu ververst, en ongeveer twee keer per seconde meet je
                 tussendoor de temperatuur.
             </p>
@@ -127,17 +127,17 @@ void kiesDisplay(int display)
   }
 }
 
-void multiplexStap(int links, int rechts)
+void toonGetal(int links, int rechts)
 {
   // Even kort het linkse display tonen...
   toonPatroon(links);
   kiesDisplay(0);
-  delay(5);
+  delay(10);
 
   // ...en dan kort het rechtse. Snel afwisselen = geen flikkering zichtbaar.
   toonPatroon(rechts);
   kiesDisplay(1);
-  delay(5);
+  delay(10);
 }
 
 void loop()
@@ -156,7 +156,7 @@ void loop()
     rechts = temperatuur % 10;
   }
 
-  multiplexStap(links, rechts);
+  toonGetal(links, rechts);
 
   // Twee keer per seconde meten, zonder het multiplexen te blokkeren
   if (millis() - vorigeMeting &gt;= 500)

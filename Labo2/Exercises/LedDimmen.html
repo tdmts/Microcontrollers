@@ -11,17 +11,17 @@
 <body>
 <div class="container">
     <h1>Led dimmen</h1>
-    <p class="lead">Maak een programma waarbij een led langzaam van gedoofd naar volle sterkte gaat, en terug naar gedoofd.</p>
+    <p class="lead">Maak een programma waarbij een led van gedoofd naar volle sterkte gaat, en terug naar gedoofd. Het oplichten duurt ongeveer 2 seconden, het doven ongeveer 4 seconden.</p>
 
     <p>Gebruik de <code>analogWrite()</code> instructie om een analoge waarde op de pin te zetten. Wat er dan echt op die pin gebeurt, welke pinnen het kunnen en waarom de waarde deze keer tussen 0 en 255 ligt in plaats van 0 en 1023, staat op <a href="../Reference/analogWrite.html">analogWrite()</a>.</p>
 
-    <!-- TODO: teken het aansluitschema van de led op een PWM-pin (anode via 220 ohm naar
-         pin 3, kathode naar GND), met de ~ bij de pin duidelijk zichtbaar -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-led-op-pwm-pin-schema.png" class="img-fluid" alt="TODO: aansluitschema van een led met voorschakelweerstand op PWM-pin 3">
+            <img src="../../img/potentiometer-schema.png" class="img-fluid" alt="Schema op een breadboard: rechts een rode led waarvan de anode via een voorschakelweerstand naar digitale pin 3 van de Arduino Uno gaat en de kathode naar de massarail. Links staat de potentiometer van de vorige oefening nog, met de loper naar analoge ingang A0">
         </figure>
     </div>
+
+    <p>Pin 3 is een van de pinnen met een <code>~</code> ervoor, en dat is precies waarom die hier gebruikt wordt. De potentiometer links op het schema laat je gewoon staan: in deze oefening gebruik je ze niet, in de volgende weer wel.</p>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">
@@ -33,6 +33,22 @@
 
     <h2 id="vragen">Vragen</h2>
     <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Wat is de periode?</div>
+            <p>De periode <strong>T</strong> is de duur van één volledige cyclus die steeds wordt herhaald. Een cyclus bestaat hier uit het oplichten en het doven na elkaar, dus de periode is <code>2 s + 4 s = 6 s</code>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat is de frequentie?</div>
+            <p>De relatie tussen frequentie en periode is <code>f = 1 / T</code>.</p>
+            <p>De frequentie is hier dus <code>1 / 6 s ≈ 0,17 Hz</code>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Hoeveel tijd zit er tussen twee stappen?</div>
+            <p>Dat is dezelfde rekenweg als bij het <a href="../../Labo1/Exercises/Looplicht.html">looplicht</a> in labo 1: je deelt de tijd van een cyclus door het aantal stappen. Alleen zijn dat er hier geen 4 maar 256, want <code>analogWrite()</code> gaat van 0 tot en met 255.</p>
+            <p>Oplichten: <code>2000 ms / 256 ≈ 8 ms</code> per stap.</p>
+            <p>Doven: <code>4000 ms / 256 ≈ 16 ms</code> per stap.</p>
+            <p>Je komt daar niet exact op uit, want elke <code>analogWrite()</code> en elke lusdoorgang kost ook tijd. Vandaar dat er <em>ongeveer</em> 2 en 4 seconden gevraagd wordt.</p>
+        </div>
         <div class="accordion-item">
             <div class="title">Kan je naar elke pin van de Arduino een analoge spanning sturen?</div>
             <p>Het hangt er vanaf welke Arduino je gebruikt. Je kan dit enkel doen naar een PWM (Pulse Width Modulation) pin, maar niet bij iedere Arduino zijn die PWM-pinnen dezelfde.</p>
@@ -92,7 +108,8 @@
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> De led is aangesloten op een PWM-pin (aangeduid met ~)</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De helderheid wordt geregeld met <code>analogWrite()</code></label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> De led gaat langzaam van gedoofd naar volle sterkte en terug</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De led doet er ongeveer 2 seconden over om van gedoofd naar volle sterkte te gaan</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het doven duurt ongeveer 4 seconden</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De waarde in <code>analogWrite()</code> blijft tussen 0 en 255</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
@@ -108,7 +125,14 @@
                 bijvoorbeeld pin 3). Met een <code>for</code>-lus laat je de helderheid
                 stap voor stap oplopen van 0 naar 255 en daarna weer terug naar 0. Elke
                 stap zet je met <code>analogWrite()</code> op de pin, met telkens een
-                korte <code>delay()</code> zodat het dimmen zichtbaar traag verloopt.
+                korte <code>delay()</code> ertussen.
+            </p>
+            <p>
+                De duur van die <code>delay()</code> volgt uit de gevraagde tijden:
+                <code>2000 ms / 256 stappen ≈ 8 ms</code> voor het oplichten en
+                <code>4000 ms / 256 stappen ≈ 16 ms</code> voor het doven. Samen geeft
+                dat een periode van 6 seconden, ofwel een frequentie van ongeveer
+                0,17 Hz.
             </p>
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 3; // led op een PWM-pin (~)
 
@@ -119,17 +143,17 @@ void setup()
 
 void loop()
 {
-  // langzaam feller
+  // in ongeveer 2 seconden feller
   for (int helderheid = 0; helderheid <= 255; helderheid++)
   {
     analogWrite(ledPin, helderheid);
-    delay(10);
+    delay(8);
   }
-  // langzaam terug gedoofd
+  // in ongeveer 4 seconden terug gedoofd
   for (int helderheid = 255; helderheid >= 0; helderheid--)
   {
     analogWrite(ledPin, helderheid);
-    delay(10);
+    delay(16);
   }
 }</code></pre>
         </div>

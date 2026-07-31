@@ -106,6 +106,12 @@ window.LAB_REFERENCE = {
                 ]
             },
             {
+                name: 'Timing',
+                topics: [
+                    { id: 'nonblockingtimer', name: 'Non-blocking timer', href: 'NonBlockingTimer.html', blurb: 'Tijd laten verstrijken met millis() terwijl je programma blijft doorlopen: het patroon, waarom een unsigned long, en meerdere timers naast elkaar.' }
+                ]
+            },
+            {
                 name: 'Datasheets',
                 topics: [
                     { id: 'datasheettmp36', name: 'TMP35 / TMP36 / TMP37', href: '../../datasheets/tmp35-36-37.pdf', blurb: 'De datasheet van de temperatuursensor. Hierin vind je de schaalfactor van 10 mV per graad en de 750 mV bij 25 graden waarmee je de spanning omrekent.' },

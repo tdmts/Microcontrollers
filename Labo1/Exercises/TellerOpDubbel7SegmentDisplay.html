@@ -62,7 +62,7 @@
 
     <p>In het sjabloon staat daarom onder elk display een transistor: de <strong>2N2222</strong>, een NPN. De gemeenschappelijke pin van het display gaat naar de <strong>collector</strong>, de <strong>emitter</strong> gaat naar massa, en de <strong>basis</strong> hangt via een basisweerstand aan een Arduino-pin. Zet je die pin hoog, dan geleidt de transistor, wordt de gemeenschappelijke pin naar de massa getrokken en is dat display actief. De Arduino-pin levert dan alleen nog de kleine basisstroom. Merk op dat het niveau daarmee omkeert: de Arduino-pin stuurt nu de basis in plaats van de gemeenschappelijke pin, dus <strong>hoog</strong> zet het display aan.</p>
 
-    <p>Een relais zou hier ook kunnen, maar een transistor is goedkoper, schakelt in microseconden in plaats van in milliseconden, en heeft geen contacten die slijten. Bij multiplexing schakel je honderd keer per seconde, en dat houdt geen enkel relais vol. De volledige vergelijking staat op <a href="../Reference/VermogenSchakelen.html#een-relais-of-een-transistor">Vermogen schakelen</a>.</p>
+    <p>Een relais zou hier ook kunnen, maar een transistor is goedkoper, schakelt in microseconden in plaats van in milliseconden, en heeft geen contacten die slijten. Bij multiplexing schakel je vijftig keer per seconde, en dat houdt geen enkel relais vol. De volledige vergelijking staat op <a href="../Reference/VermogenSchakelen.html#een-relais-of-een-transistor">Vermogen schakelen</a>.</p>
 
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
@@ -156,16 +156,16 @@
 
     <div class="info-box tip">
         <div class="info-title tip">Begin traag, dan snel</div>
-        <p>Zet de wachttijd tussen de twee displays eerst op 500 ms. Dan zie je de twee cijfers om de beurt aangaan en zie je waar de truc zit. Breng ze daarna terug naar 5 ms en kijk wat er met het beeld gebeurt.</p>
+        <p>Zet de wachttijd tussen de twee displays eerst op 500 ms. Dan zie je de twee cijfers om de beurt aangaan en zie je waar de truc zit. Breng ze daarna terug naar 10 ms en kijk wat er met het beeld gebeurt.</p>
     </div>
 
     <div class="solution-container">
         <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing van het vaste getal</button>
 
         <div class="spoiler-content solution-content">
-            <p><code>kiesDisplay()</code> zet de basis van het gevraagde display hoog en die van het andere laag. <code>multiplexStap()</code> zet eerst het patroon op de gedeelde segmentpinnen en activeert daarna het display waar dat patroon bij hoort. Die functie wordt vanuit de <code>loop()</code> eindeloos herhaald, en dat herhalen is wat het beeld staande houdt. Stopt het, dan dooft het display.</p>
+            <p><code>kiesDisplay()</code> zet de basis van het gevraagde display hoog en die van het andere laag. <code>toonGetal()</code> zet eerst het patroon op de gedeelde segmentpinnen en activeert daarna het display waar dat patroon bij hoort. Die functie wordt vanuit de <code>loop()</code> eindeloos herhaald, en dat herhalen is wat het beeld staande houdt. Stopt het, dan dooft het display.</p>
 
-            <p>Met twee keer 5 ms duurt één volledige wissel 10 ms, dus elk display komt honderd keer per seconde aan de beurt.</p>
+            <p>Met twee keer 10 ms duurt één volledige wissel 20 ms, dus elk display komt vijftig keer per seconde aan de beurt.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segA = 2;
 const int segB = 3;
@@ -228,20 +228,20 @@ void kiesDisplay(int display)
   }
 }
 
-void multiplexStap(int tientallen, int eenheden)
+void toonGetal(int tientallen, int eenheden)
 {
   toonCijfer(tientallen);
   kiesDisplay(0);
-  delay(5);
+  delay(10);
 
   toonCijfer(eenheden);
   kiesDisplay(1);
-  delay(5);
+  delay(10);
 }
 
 void loop()
 {
-  multiplexStap(teTonenGetal / 10, teTonenGetal % 10);
+  toonGetal(teTonenGetal / 10, teTonenGetal % 10);
 }</code></pre>
         </div>
     </div>
@@ -252,8 +252,8 @@ void loop()
 
     <div class="info-box warning">
         <div class="info-title warning">Een <code>delay(1000)</code> dooft je display</div>
-        <p>Zolang je programma in een <code>delay()</code> zit, roept het geen <code>multiplexStap()</code> aan, en dus staat er geen enkel cijfer aan. Zet je een <code>delay(1000)</code> in je <code>loop()</code> om de teller op te hogen, dan is je display een volle seconde donker en zie je alleen een korte flits. Multiplexing werkt enkel zolang je blijft wisselen.</p>
-        <p>Je hebt dus een manier nodig om "is er al een seconde voorbij?" te vragen zonder te wachten. Dat is de <code>millis()</code>-aanpak die je in <a href="../../Labo0/Reference/Debouncen.html">Debouncen</a> gebruikte. Op <a href="../Reference/Multiplexing.html">Multiplexing</a> staat hoe die twee samengaan.</p>
+        <p>Zolang je programma in een <code>delay()</code> zit, roept het geen <code>toonGetal()</code> aan, en dus staat er geen enkel cijfer aan. Zet je een <code>delay(1000)</code> in je <code>loop()</code> om de teller op te hogen, dan is je display een volle seconde donker en zie je alleen een korte flits. Multiplexing werkt enkel zolang je blijft wisselen.</p>
+        <p>Je laat de seconde dus voorbijgaan terwijl je blijft wisselen, en dat kan je tellen. Eén doorloop van <code>toonGetal()</code> duurt twee keer 10 ms, dus vijftig doorlopen na elkaar vullen samen een seconde. Geef je in al die doorlopen hetzelfde getal mee, dan staat dat getal een seconde lang stabiel op het display.</p>
     </div>
 
     <hr>
@@ -310,7 +310,7 @@ void loop()
 
             <h3>De teller</h3>
 
-            <p>De schakeling en de eerste vier functies blijven wat ze bij het vaste getal waren. Wat erbij komt, is een <code>teller</code> die elke seconde ophoogt. De <code>loop()</code> blijft ondertussen <code>multiplexStap()</code> aanroepen, want die twee mogen elkaar niet ophouden.</p>
+            <p>De schakeling en de vier functies blijven wat ze bij het vaste getal waren. Alleen de <code>loop()</code> verandert, en daarin staan nu twee lussen in elkaar. De buitenste telt met <code>i</code> van 0 tot 99 en splitst dat getal in tientallen en eenheden. De binnenste toont datzelfde getal vijftig keer na elkaar, en die vijftig doorlopen van 20 ms vullen samen de seconde waarin het cijfer stilstaat.</p>
 
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segA = 2;
 const int segB = 3;
@@ -338,9 +338,6 @@ const bool cijferPatronen[10][7] = {
   {1, 1, 1, 1, 1, 1, 1}, // 8
   {1, 1, 1, 1, 0, 1, 1}  // 9
 };
-
-int teller = 0;
-unsigned long vorigeTelTick = 0;
 
 void setup()
 {
@@ -374,30 +371,34 @@ void kiesDisplay(int display)
   }
 }
 
-void multiplexStap(int tientallen, int eenheden)
+void toonGetal(int tientallen, int eenheden)
 {
   toonCijfer(tientallen);
   kiesDisplay(0);
-  delay(5);
+  delay(10);
 
   toonCijfer(eenheden);
   kiesDisplay(1);
-  delay(5);
+  delay(10);
 }
 
 void loop()
 {
-  multiplexStap(teller / 10, teller % 10);
-
-  // Om de seconde ophogen, zonder de multiplexing te blokkeren
-  if (millis() - vorigeTelTick &gt;= 1000)
+  // Van 00 tot 99, dus i = 0, 1, 2, ..., 99
+  for (int i = 0; i &lt; 100; i++)
   {
-    vorigeTelTick = millis();
-    teller = (teller + 1) % 100; // 00 t.e.m. 99, dan terug naar 00
+    int tientallen = i / 10; // Stel i = 42, dan tientallen = 4
+    int eenheden = i % 10;   // Stel i = 42, dan eenheden = 2
+
+    // Eén toonGetal() duurt 20 ms, dus 50 keer samen 1 seconde
+    for (int j = 0; j &lt; 50; j++)
+    {
+      toonGetal(tientallen, eenheden);
+    }
   }
 }</code></pre>
 
-            <p>Eén doorloop van <code>multiplexStap()</code> duurt 10 ms, dus de teller loopt tot 10 ms achter op de seconde. Op een display dat elke seconde verspringt, valt dat niet te zien.</p>
+            <p>De seconde komt hier uit opgetelde wachttijden in plaats van uit een klok. Het werk in <code>toonCijfer()</code> en <code>kiesDisplay()</code> komt er per doorloop nog bij, dus in werkelijkheid duurt een cijfer een fractie langer dan een seconde. Op een display dat elke seconde verspringt, valt dat niet te zien.</p>
         </div>
     </div>
 </div>

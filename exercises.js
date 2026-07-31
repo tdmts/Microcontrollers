@@ -36,7 +36,7 @@ window.LAB_EXERCISES = {
         labTitle: 'Labo 2',
         exercises: [
             { id: 'potentiometeruitlezen', order: 1, name: 'Potentiometer uitlezen', href: 'PotentiometerUitlezen.html', checklistDriven: true, difficulty: 1, time: '~15 min', blurb: 'Lees een potentiometer in met analogRead() en stuur de waarde via seriële communicatie naar de PC.' },
-            { id: 'leddimmen', order: 2, name: 'Led dimmen', href: 'LedDimmen.html', checklistDriven: true, difficulty: 1, time: '~15 min', blurb: 'Laat een led met analogWrite() langzaam van gedoofd naar volle sterkte gaan en terug.' },
+            { id: 'leddimmen', order: 2, name: 'Led dimmen', href: 'LedDimmen.html', checklistDriven: true, difficulty: 1, time: '~15 min', blurb: 'Laat een led met analogWrite() in 2 seconden oplichten en in 4 seconden weer doven.' },
             { id: 'leddimmenmetpotentiometer', order: 3, name: 'Led dimmen met potentiometer', href: 'LedDimmenMetPotentiometer.html', checklistDriven: true, difficulty: 2, time: '~20 min', blurb: 'Combineer analogRead() en analogWrite() tot een dimmer: de stand van de potentiometer bepaalt de helderheid van de led.' },
             { id: 'dimmermetschakelaar', order: 4, name: 'Dimmer met schakelaar', href: 'DimmerMetSchakelaar.html', checklistDriven: true, difficulty: 2, time: '~20 min', blurb: 'Voeg een schakelaar toe aan je dimmer, zodat je de gedimde led ook helemaal aan en uit kan zetten.' },
             { id: 'ldrlichtmeting', order: 5, name: 'LDR: lichtmeting', href: 'LdrLichtmeting.html', checklistDriven: true, difficulty: 2, time: '~25 min', blurb: 'Meet licht met een LDR in een spanningsdeler en laat de led feller branden naarmate het donkerder wordt.' },

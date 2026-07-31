@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Non-blocking timer</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Non-blocking timer</h1>
+    <p class="lead">Een <code>delay(1000)</code> legt je hele programma een seconde stil, dus een knopdruk in die seconde merk je nooit op. Met <code>millis()</code> vraag je op hoe lang je Arduino al aan staat. Met dat getal ga je zelf na of het interval voorbij is, en blijf je ondertussen je knop inlezen en je display verversen.</p>
+
+    <h2 id="waarom-delay-je-programma-stillegt">Waarom delay() je programma stillegt</h2>
+
+    <p>Eén led en één knop. De led knippert elke seconde, en zolang je de knop indrukt, moet ze blijven branden.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 3;
+const int knopPin = 2;
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  pinMode(knopPin, INPUT_PULLUP);
+}
+
+void loop()
+{
+  if (digitalRead(knopPin) == LOW)
+  {
+    digitalWrite(ledPin, HIGH);
+  }
+  else
+  {
+    digitalWrite(ledPin, HIGH);
+    delay(1000); // een seconde lang gebeurt er niets anders
+    digitalWrite(ledPin, LOW);
+    delay(1000); // en hier opnieuw
+  }
+}</code></pre>
+
+    <p>Een <code>delay(1000)</code> houdt je Arduino een volle seconde tegen. Hij voert in die tijd geen enkele regel code uit. De knop wordt hier dus maar één keer per twee seconden uitgelezen. Druk je kort, dan is je druk alweer voorbij tegen dat <code>digitalRead()</code> aan bod komt en gebeurt er niets. Hou je de knop vast, dan blijft de led nog tot twee seconden verder knipperen voor ze reageert.</p>
+
+    <p>Je hebt dus een manier nodig om te vragen "is er al een seconde voorbij?" zonder daarop te blijven staan wachten. Dat is wat een non-blocking timer doet: je kijkt op de klok, en als het nog geen tijd is, ga je gewoon verder met de rest van je <code>loop()</code>.</p>
+
+    <h2 id="wat-millis-teruggeeft">Wat millis() teruggeeft</h2>
+
+    <p><code>millis()</code> geeft het aantal milliseconden terug sinds je Arduino is opgestart. Die teller loopt op de achtergrond mee en begint bij nul zodra je het bord van spanning voorziet of op de resetknop drukt.</p>
+
+    <p>Je kan er geen tijdstip mee instellen en hem ook niet terugzetten. Wat je er wel mee kan, is twee metingen van elkaar aftrekken. Het verschil tussen de tijd van nu en een tijd die je eerder bewaarde, is het aantal milliseconden dat sindsdien voorbij is.</p>
+
+    <h2 id="het-patroon">Het patroon</h2>
+
+    <p>Elke non-blocking timer bestaat uit dezelfde drie stukken: een variabele waarin je het tijdstip van de vorige keer bewaart, een constante met het interval, en een <code>if</code> die de twee vergelijkt. Hieronder staat hetzelfde programma als hierboven, nu zonder <code>delay()</code>. De led wisselt nog altijd elke seconde van toestand, maar <code>loop()</code> blijft ondertussen duizenden keren per seconde doorlopen, en de knop wordt dus even vaak uitgelezen.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 3;
+const int knopPin = 2;
+const unsigned long interval = 1000; // 1 seconde
+
+unsigned long vorigeMillis = 0;
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  pinMode(knopPin, INPUT_PULLUP);
+}
+
+void loop()
+{
+  unsigned long nu = millis(); // hoe laat is het nu?
+
+  if (nu - vorigeMillis &gt;= interval) // in plaats van delay(1000)
+  {
+    vorigeMillis = nu; // onthoud wanneer het interval verstreek
+
+    // Voer uit omdat het interval verstreek: wissel de led
+    if (digitalRead(ledPin) == LOW)
+    {
+      digitalWrite(ledPin, HIGH);
+    }
+    else
+    {
+      digitalWrite(ledPin, LOW);
+    }
+  }
+
+  // Voer altijd uit: lees de knop in en zet de led aan zolang ze ingedrukt is
+  if (digitalRead(knopPin) == LOW)
+  {
+    digitalWrite(ledPin, HIGH);
+  }
+}</code></pre>
+
+    <p>De <code>loop()</code> bestaat nu uit twee losse <code>if</code>-blokken die niets van elkaar hoeven te weten. Het eerste is de timer: is er sinds de vorige omschakeling een seconde voorbij, dan zet je <code>vorigeMillis</code> op de huidige tijd en wissel je de led om. Om te weten of ze aan of uit staat, lees je de uitgangspin terug, want <code>digitalRead()</code> geeft je op een uitgang terug wat je er als laatste naartoe schreef.</p>
+
+    <p>Het tweede blok is de knop, en dat is dezelfde regel als in het programma met <code>delay()</code>. De vergelijking van de timer is bijna altijd onwaar, en dan valt de <code>loop()</code> meteen door naar die knop. Zo wordt <code>digitalRead(knopPin)</code> duizenden keren per seconde uitgevoerd in plaats van één keer per twee seconden, en reageert de knop onmiddellijk.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Bewaar de tijd in een variabele</div>
+        <p>In het voorbeeld hierboven wordt <code>millis()</code> één keer per doorloop opgevraagd en in <code>nu</code> gezet. Je kan de functie ook overal rechtstreeks aanroepen, maar dan kan de tijd tussen twee regels van dezelfde doorloop al verschoven zijn. Met één meting per doorloop werken al je timers met exact hetzelfde tijdstip.</p>
+    </div>
+
+    <h2 id="waarom-unsigned-long">Waarom unsigned long</h2>
+
+    <p><code>millis()</code> geeft een <code>unsigned long</code> terug, en je eigen tijdvariabelen moeten dat dus ook zijn. Een <code>unsigned long</code> is vier bytes groot en kan tellen tot 4 294 967 295.</p>
+
+    <p>Zet je een tijdstip in een gewone <code>int</code>, dan loopt die na 32 767 over. Dat is iets meer dan 32 seconden na het opstarten, en vanaf dan klopt je timing niet meer. De fout valt op korte termijn nauwelijks op, wat het lastig maakt om ze terug te vinden.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Na 49 dagen begint millis() opnieuw</div>
+        <p>Ook een <code>unsigned long</code> raakt ooit vol: na ongeveer 49 dagen springt <code>millis()</code> terug naar nul. Zolang je het verschil berekent zoals hierboven, <code>nu - vorigeMillis</code>, blijft je timer daar correct doorlopen. Schrijf je de vergelijking als <code>nu &gt;= vorigeMillis + interval</code>, dan gaat het op dat ene moment wel mis. Beide vormen lijken hetzelfde te doen, dus hou de eerste aan.</p>
+    </div>
+
+    <h2 id="een-keer-wachten-in-plaats-van-herhalen">Eén keer wachten in plaats van herhalen</h2>
+
+    <p>De timer hierboven herhaalt zich: hij zet <code>vorigeMillis</code> op de nieuwe tijd en begint meteen aan het volgende interval. Vaak wil je iets anders, namelijk één afgemeten duur die start op een moment dat jij bepaalt. </p>
+
+    <p>Zo'n eenmalige timer bouw je in <a href="../Exercises/NachtlampMetTijd.html">Nachtlamp met tijd</a>.</p>
+
+</div>
+
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+</body>
+</html>

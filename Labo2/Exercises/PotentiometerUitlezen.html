@@ -15,15 +15,17 @@
 
     <p>Gebruik de <code>analogRead()</code> instructie om een analoge waarde te lezen. Welke pinnen dat kunnen, waarom je een getal tussen 0 en 1023 terugkrijgt en hoe je dat omrekent naar een spanning, staat op <a href="../Reference/analogRead.html">analogRead()</a>.</p>
 
+    <p>Het versturen naar de pc doe je met <code>Serial.begin()</code> en <code>Serial.println()</code>, net zoals je in labo 0 al deed om je programma te <a href="../../Labo0/Reference/Debuggen.html">debuggen</a>. Op die pagina staat ook hoe je de seriële monitor opent en waarom de baudrate daar moet overeenkomen met die in je <code>Serial.begin()</code>.</p>
+
     <p>Een potentiometer met drie pootjes is trouwens een <a href="../Reference/Spanningsdeler.html">spanningsdeler</a> waarvan je het middenpunt kan verschuiven. De twee buitenste pootjes gaan naar +5 V en GND, en het middelste, de loper, naar je analoge ingang.</p>
 
-    <!-- TODO: teken het aansluitschema van de potentiometer (buitenste pootjes aan +5V en
-         GND, loper naar A0). Drie pootjes is niet te raden voor een beginner -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-potentiometer-aansluitschema.png" class="img-fluid" alt="TODO: aansluitschema van een potentiometer met de buitenste pootjes aan +5V en GND en de loper naar analoge ingang A0">
+            <img src="../../img/potentiometer-schema.png" class="img-fluid" alt="Schema van de potentiometer op een breadboard: de twee buitenste pootjes gaan naar de plusrail van 5 V en naar de massarail, de loper in het midden gaat via een groene draad naar analoge ingang A0 van de Arduino Uno. Rechts op het breadboard staat al een rode led met voorschakelweerstand naar digitale pin 3">
         </figure>
     </div>
+
+    <p>De led met voorschakelweerstand rechts op het schema heb je in deze oefening nog niet nodig. Je gebruikt ze vanaf de volgende oefening, dus je kan ze nu al plaatsen en laten staan.</p>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">
