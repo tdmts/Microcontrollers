@@ -174,6 +174,18 @@ Klaar. Acht oefeningen plus drie theoriepagina's; `dashboard.html` en `reference
 een boilerplate `lead` en zijn ongewijzigd gebleven. Twee pagina's bleven helemaal ongemoeid:
 `Morsecode.html` en `7SegmentMetTeller.html` stonden al goed.
 
+**Bijgewerkt 2026-07-31.** Labo 1 is herstructureerd (zie [labo1.md](labo1.md)): zes oefeningen
+plus vier theoriepagina's. `AchtAnimatieOp7Segment.html`, `7SegmentMetTeller.html`,
+`VastGetalOpDubbel7Segment.html` en `Dubbel7SegmentMetTeller.html` zijn opgegaan in
+`TellerOp7SegmentDisplay.html` en `TellerOpDubbel7SegmentDisplay.html`. De rijen hieronder blijven
+staan als verantwoording van wat er destijds veranderd is; de beslissingen zijn meegenomen naar de
+nieuwe pagina's, inclusief de twee twijfelgevallen over `VastGetalOpDubbel7Segment.html`. Nieuw
+sinds die ronde en meteen meegenomen: `VermogenSchakelen.html` (kop "Een relais of een transistor?"
+naar de stellende vorm (3), kadertitel "Waarom is de gemeten collectorstroom 40 mA en niet de
+berekende 43,5 mA?" naar een stelling zonder `niet` (3 en 6), en drie keer `we` naar de je-vorm),
+de `reference.html`-lead die nu zegt waarover het labo gaat, en drie greppable resten die de audit
+meldde: `kun je`/`kunt` in `Looplicht.html` en `KnightRider.html` (12).
+
 | Pagina | Wat er veranderde |
 |---|---|
 | [Looplicht.html](../Labo1/Exercises/Looplicht.html) | Alleen `led's` naar `leds` in de `lead`. De rest van de pagina stond goed. |

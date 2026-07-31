@@ -31,13 +31,25 @@
     <p>Je hebt daarvoor alleen de twee wachttijden nodig. <code>delay()</code> rekent in milliseconden, dus 1 seconde is <code>delay(1000)</code>.</p>
 
     <h2 id="onderzoeksvragen">Onderzoeksvragen</h2>
-    <p>Zoek daarnaast de antwoorden op de volgende vragen op. Achter elke vraag staat de referentiepagina waar je begint te zoeken.</p>
-    <ul>
-        <li>Zoek uit via welke poort de Arduino verbonden is met de laptop. (<a href="../Reference/ProgrammaUploaden.html#je-bord-en-poort-kiezen">Een programma uploaden</a>)</li>
-        <li>Zoek op hoeveel stroom elke pin kan leveren (sourcing) of verwerken (sinking). (<a href="../Reference/SourcenSinken.html">Sourcen en sinken</a>)</li>
-        <li>Wat zijn de verschillende pinModes, en wat is het onderscheid? (<a href="../Reference/pinMode.html#wat-is-het-verschil">pinMode()</a>)</li>
-        <li>Wat is de standaard pinMode na het opstarten? (<a href="../Reference/pinMode.html#wat-is-het-verschil">pinMode()</a>)</li>
-    </ul>
+    <p>Zoek daarnaast de antwoorden op de volgende vragen op. Je vindt ze op <a href="../Reference/ProgrammaUploaden.html#je-bord-en-poort-kiezen">Een programma uploaden</a>, <a href="../Reference/SourcenSinken.html">Sourcen en sinken</a> en <a href="../Reference/pinMode.html#wat-is-het-verschil">pinMode()</a>. Klap een vraag pas open als je zelf gezocht hebt.</p>
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Via welke poort is de Arduino verbonden met de laptop?</div>
+            <p>In de Arduino IDE kies je het bord en de poort via de <strong>Select board</strong>-dropdown of via <strong>Tools &gt; Port</strong>. Op Windows is dat meestal een <code>COM</code>-poort (bv. <code>COM3</code>), op macOS/Linux een <code>/dev/tty...</code>-apparaat. Meer hierover in <a href="../Reference/ProgrammaUploaden.html">Een programma uploaden</a>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Hoeveel stroom kan elke pin leveren (sourcing) of verwerken (sinking)?</div>
+            <p>Een pin kan <strong>absoluut maximaal 40 mA</strong> sourcen of sinken, maar in de praktijk hou je best <strong>~20 mA per pin</strong> aan als veilige waarde. De som van alle pinstromen samen mag bovendien niet boven <strong>200 mA</strong> komen. Zie <a href="../Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat zijn de verschillende pinModes, en wat is het onderscheid?</div>
+            <p>Er zijn drie modes: <code>INPUT</code> (hoogimpedant, om een signaal in te lezen), <code>OUTPUT</code> (laagimpedant, om iets aan te sturen en stroom te leveren) en <code>INPUT_PULLUP</code> (zoals INPUT, maar met de ingebouwde pullupweerstand ingeschakeld). Zie <a href="../Reference/pinMode.html#wat-is-het-verschil">pinMode() – Wat is het verschil?</a>, en <a href="../Reference/Impedantie.html">Weerstand en impedantie</a> als hoog- en laagimpedant je niets zeggen.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat is de standaard pinMode na het opstarten?</div>
+            <p>Elke pin staat na het opstarten standaard in <code>INPUT</code>-mode. Zie opnieuw <a href="../Reference/pinMode.html#wat-is-het-verschil">pinMode() – Wat is het verschil?</a>.</p>
+        </div>
+    </div>
 
     <hr>
 
@@ -76,20 +88,8 @@ void loop()
     delay(500);                        // een halve seconde wachten
 }</code></pre>
 
-            <ul>
-                <li>
-                    <strong>Via welke poort is de Arduino verbonden?</strong> In de Arduino IDE kies je het bord en de poort via de <strong>Select board</strong>-dropdown of via <strong>Tools &gt; Port</strong>. Op Windows is dat meestal een <code>COM</code>-poort (bv. <code>COM3</code>), op macOS/Linux een <code>/dev/tty...</code>-apparaat. Meer hierover in <a href="../Reference/ProgrammaUploaden.html">Een programma uploaden</a>.
-                </li>
-                <li>
-                    <strong>Hoeveel stroom kan een pin leveren of verwerken?</strong> Een pin kan <strong>absoluut maximaal 40 mA</strong> sourcen of sinken, maar in de praktijk hou je best <strong>~20 mA per pin</strong> aan als veilige waarde. De som van alle pinstromen samen mag bovendien niet boven <strong>200 mA</strong> komen. Zie <a href="../Reference/SourcenSinken.html">Sourcen en sinken</a>.
-                </li>
-                <li>
-                    <strong>Wat zijn de verschillende pinModes, en wat is het onderscheid?</strong> Er zijn drie modes: <code>INPUT</code> (hoogimpedant, om een signaal in te lezen), <code>OUTPUT</code> (laagimpedant, om iets aan te sturen en stroom te leveren) en <code>INPUT_PULLUP</code> (zoals INPUT, maar met de ingebouwde pullupweerstand ingeschakeld). Zie <a href="../Reference/pinMode.html#wat-is-het-verschil">pinMode() – Wat is het verschil?</a>, en <a href="../Reference/Impedantie.html">Weerstand en impedantie</a> als hoog- en laagimpedant je niets zeggen.
-                </li>
-                <li>
-                    <strong>Wat is de standaard pinMode na het opstarten?</strong> Elke pin staat na het opstarten standaard in <code>INPUT</code>-mode. Zie opnieuw <a href="../Reference/pinMode.html#wat-is-het-verschil">pinMode() – Wat is het verschil?</a>.
-                </li>
-            </ul>
+            <p><code>LED_BUILTIN</code></strong> is een ingebouwde constante, net zoals <code>HIGH</code> en <code>LOW</code>: je hoeft ze zelf niet te declareren, de Arduino-omgeving kent ze al. Op de Arduino Uno en de Leonardo staat <code>LED_BUILTIN</code> voor het getal 13, en dat is de pin waarop de ingebouwde led zit. <code>digitalWrite(LED_BUILTIN, HIGH)</code> doet dus hetzelfde als <code>digitalWrite(13, HIGH)</code>.</p>
+            <p><code>HIGH</code> en <code>LOW</code> duiden een spanningsniveau aan (5 V of 0 V).
         </div>
     </div>
 </div>

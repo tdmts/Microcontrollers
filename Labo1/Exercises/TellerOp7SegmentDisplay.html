@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teller op een 7-segment display</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Teller op een 7-segment display</h1>
+    <p class="lead">Je maakt een teller die doorlopend van 0 tot en met 9 telt op één 7-segment display. Dat doe je in drie stappen: eerst sluit je één segment aan en controleer je je bedrading, dan teken je er een acht mee, en daarna maak je er cijfers van.</p>
+
+    <p>Een <a href="../Reference/ZevenSegmentDisplay.html">7-segment display</a> is zeven leds in de vorm van een acht. Elk van die leds heet een <strong>segment</strong> en draagt een letter, a tot en met g. Welke segmenten branden, bepaalt welk <strong>cijfer</strong> je ziet.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/seven-segment-display.png" alt="Een 7-segment display met de zeven segmenten in de vorm van een acht, elk aangeduid met zijn letter a tot en met g" class="figure-img img-fluid">
+        </figure>
+    </div>
+
+    <h2 id="een-segment-tegelijk">Begin met één segment</h2>
+
+    <p>Deze oefening gaat uit van een <strong>common cathode</strong> display: de gemeenschappelijke pin van alle zeven segmenten hangt aan de GND, en een segment brandt wanneer de Arduino-pin <code>HIGH</code> is. Het verschil met een common anode display staat op <a href="../Reference/ZevenSegmentDisplay.html#common-anode-of-common-cathode">Het 7-segment display</a>.</p>
+
+    <p>Sluit eerst alleen <strong>segment a</strong> aan, met zijn eigen <a href="../../Labo0/Reference/WetVanOhm.html#voorschakelweerstand-berekenen">voorschakelweerstand</a>, en verbind de gemeenschappelijke pin van het display met de GND. Schrijf een korte sketch die die ene pin <code>HIGH</code> zet. Het segment hoort te branden. Zo weet je welke Arduino-pin effectief aan segment a hangt voor je er zes bijsteekt.</p>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Sourcing of sinking?</div>
+            <p>De gemeenschappelijke pin hangt aan GND, dus de Arduino-pin levert de stroom aan het segment (<code>HIGH</code>). Dat is <strong><a href="../../Labo0/Reference/SourcenSinken.html#sourcing">sourcing</a></strong>.</p>
+            <p>Bij een common anode display hangt de gemeenschappelijke pin aan 5V en trekt de Arduino-pin de stroom naar de massa (<code>LOW</code>): dat is <strong><a href="../../Labo0/Reference/SourcenSinken.html#sinking">sinking</a></strong>.</p>
+        </div>
+    </div>
+
+    <h3>De andere zes segmenten</h3>
+
+    <p>Sluit nu de overige zes segmenten aan, elk met zijn eigen weerstand. Noteer erbij welke Arduino-pin bij welk segment hoort, want dat heb je zo nodig.</p>
+
+    <p>Zeven keer <code>pinMode</code> uitschrijven mag, maar het kan korter. Zet de zeven pinnummers in een <a href="../Reference/Arrays.html">array</a> en loop er met een for-lus overheen. Je hebt die array straks toch nodig.</p>
+
+    <h2 id="de-8-animatie">De 8-animatie</h2>
+
+    <p>Een 8-animatie laat de segmenten na elkaar oplichten alsof je met een pen een acht tekent, zonder je hand op te heffen: <strong>a, b, g, e, d, c, g, f</strong> en dan weer van voor af aan. Er brandt telkens maar één segment tegelijk, en elk segment blijft 1 seconde aan.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Waarom staat g twee keer in de reeks?</div>
+        <p>De acht bestaat uit twee lussen, een bovenste en een onderste, die elkaar in het midden kruisen. Dat kruispunt is segment g, en daar kom je dus twee keer voorbij: één keer op weg naar beneden en één keer op weg naar boven.</p>
+    </div>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Wat is de periode?</div>
+            <p>De periode <strong>T</strong> is de duur van &eacute;&eacute;n volledige animatiecyclus die steeds wordt herhaald. De animatie bestaat uit 8 stappen van 1 seconde (a, b, g, e, d, c, g, f), dus de periode is <code>8 &times; 1 s = 8 s</code>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat is de frequentie?</div>
+            <p>De relatie tussen frequentie en periode is <code>f = 1 / T</code>.</p>
+            <p>De frequentie van de animatiecyclus is hier dus <code>1 / 8 s = 0,125 Hz</code>.</p>
+        </div>
+    </div>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing van de 8-animatie</button>
+
+        <div class="spoiler-content solution-content">
+            <div class="info-box warning">
+                <div class="info-title warning">Pas de pinnen aan op jouw schakeling</div>
+                <p>De pinnummers hieronder zijn die van het schema: de segmenten a tot en met g op de pinnen 2 tot en met 8. Zit jouw display anders aangesloten, pas dan de zeven constanten bovenaan aan.</p>
+            </div>
+
+            <p>Op het schema hieronder gaat de gemeenschappelijke pin van het display naar de GND-rail. Elk segment hangt via zijn eigen voorschakelweerstand aan een pin tussen 2 en 8.</p>
+
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../../img/achtanimatie-7segment-schema.png" class="img-fluid" alt="Schema van het 7-segment display op een breadboard: de gemeenschappelijke pin gaat naar de GND-rail, elk van de zeven segmenten gaat via een eigen voorschakelweerstand naar een van de pinnen 2 tot en met 8 van de Arduino Uno">
+                </figure>
+            </div>
+
+            <p>De constanten <code>segA</code> tot en met <code>segG</code> geven elke pin een naam, en <code>segmentPins</code> zet ze op een rij zodat je ze met een for-lus als uitgang kan instellen. De array <code>animatie</code> bevat de 8 stappen van de beweging, met <code>segG</code> twee keer.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segA = 2;
+const int segB = 3;
+const int segC = 4;
+const int segD = 5;
+const int segE = 6;
+const int segF = 7;
+const int segG = 8;
+
+const int segmentPins[7] = {segA, segB, segC, segD, segE, segF, segG};
+
+// De acht in één beweging: a, b, g, e, d, c, g, f
+const int animatie[8] = {segA, segB, segG, segE, segD, segC, segG, segF};
+
+void setup()
+{
+  for (int i = 0; i &lt; 7; i++)
+  {
+    pinMode(segmentPins[i], OUTPUT);
+    digitalWrite(segmentPins[i], LOW); // common cathode: LOW is uit
+  }
+}
+
+void loop()
+{
+  for (int i = 0; i &lt; 8; i++)
+  {
+    digitalWrite(animatie[i], HIGH);
+    delay(1000);
+    digitalWrite(animatie[i], LOW);
+  }
+}</code></pre>
+        </div>
+    </div>
+
+    <h2 id="van-segment-naar-cijfer">Van segmenten naar cijfers</h2>
+
+    <p>De schakeling blijft dezelfde: hetzelfde display, dezelfde zeven segmentpinnen. Wat er nu bijkomt, is dat een segment niet meer los oplicht, maar als deel van een cijfer.</p>
+
+    <p>Daarvoor heb je een tabel nodig: per cijfer welke van de zeven segmenten aan moeten. Je maakt één rij per cijfer en één kolom per segment, en de rij die je uitleest bepaalt welk cijfer op het display verschijnt. Hoe je zo'n tweedimensionale array opbouwt en uitleest, staat op <a href="../Reference/Arrays.html#tweedimensionale-arrays">Arrays</a>. Welke segmenten bij welk cijfer horen, staat op <a href="../Reference/ZevenSegmentDisplay.html#van-cijfer-naar-patroon">Het 7-segment display</a>.</p>
+
+    <p>Laat je display doorlopend tellen van 0 tot en met 9. Elk cijfer blijft 1 seconde staan.</p>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Wat is de periode?</div>
+            <p>De periode <strong>T</strong> is de duur van &eacute;&eacute;n volledige tellercyclus die steeds wordt herhaald. De teller bestaat uit 10 cijfers (0 tot en met 9) die elk 1 seconde op het scherm staan, dus de periode is <code>10 &times; 1 s = 10 s</code>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat is de frequentie?</div>
+            <p>De relatie tussen frequentie en periode is <code>f = 1 / T</code>.</p>
+            <p>De frequentie van de tellercyclus is hier dus <code>1 / 10 s = 0,1 Hz</code>.</p>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+
+        <p><strong>Eén segment</strong></p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De gemeenschappelijke pin van het display hangt aan de GND, en een segment brandt bij HIGH</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elk segment heeft zijn eigen voorschakelweerstand</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je hebt genoteerd welke Arduino-pin bij welk segment hoort</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De zeven pinnummers staan in een array en je stelt ze met een for-lus in als uitgang</label></li>
+        </ul>
+
+        <p><strong>De 8-animatie</strong></p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De segmenten lichten op in de volgorde a, b, g, e, d, c, g, f</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er brandt telkens precies één segment tegelijk</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elk segment blijft 1 seconde aan</label></li>
+        </ul>
+
+        <p><strong>De teller</strong></p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het display telt doorlopend van 0 tot en met 9</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De cijferpatronen staan in een tweedimensionale array, niet in losse digitalWrite-regels</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elk cijfer blijft 1 seconde staan, dus de cyclus duurt 10 seconden</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De constanten en de <code>setup()</code> blijven wat ze bij de 8-animatie waren. Er komt een tabel bij met één rij per cijfer en één kolom per segment, waarin een <code>1</code> betekent dat dat segment moet branden.</p>
+
+            <p><code>toonCijfer()</code> leest één rij uit die tabel en zet ze op de zeven pinnen. De <code>?:</code> is de korte schrijfwijze van een <code>if</code>/<code>else</code> die tussen twee waarden kiest, zie <a href="../../Labo0/Reference/Selecties.html#tweevoudige-selectie-in-het-kort">Een tweevoudige selectie in het kort</a>. Een <code>1</code> in de tabel wordt zo <code>HIGH</code>, en op een common cathode display brandt dat segment.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segA = 2;
+const int segB = 3;
+const int segC = 4;
+const int segD = 5;
+const int segE = 6;
+const int segF = 7;
+const int segG = 8;
+
+const int segmentPins[7] = {segA, segB, segC, segD, segE, segF, segG};
+
+// Eén rij per cijfer, één kolom per segment: a,b,c,d,e,f,g. 1 = segment aan.
+const bool cijferPatronen[10][7] = {
+  {1, 1, 1, 1, 1, 1, 0}, // 0
+  {0, 1, 1, 0, 0, 0, 0}, // 1
+  {1, 1, 0, 1, 1, 0, 1}, // 2
+  {1, 1, 1, 1, 0, 0, 1}, // 3
+  {0, 1, 1, 0, 0, 1, 1}, // 4
+  {1, 0, 1, 1, 0, 1, 1}, // 5
+  {1, 0, 1, 1, 1, 1, 1}, // 6
+  {1, 1, 1, 0, 0, 0, 0}, // 7
+  {1, 1, 1, 1, 1, 1, 1}, // 8
+  {1, 1, 1, 1, 0, 1, 1}  // 9
+};
+
+void setup()
+{
+  for (int i = 0; i &lt; 7; i++)
+  {
+    pinMode(segmentPins[i], OUTPUT);
+  }
+}
+
+void toonCijfer(int cijfer)
+{
+  for (int i = 0; i &lt; 7; i++)
+  {
+    bool segmentAan = cijferPatronen[cijfer][i];
+    digitalWrite(segmentPins[i], segmentAan ? HIGH : LOW);
+  }
+}
+
+void loop()
+{
+  for (int cijfer = 0; cijfer &lt;= 9; cijfer++)
+  {
+    toonCijfer(cijfer);
+    delay(1000); // 1 seconde per cijfer, dus T = 10 s en f = 0,1 Hz
+  }
+}</code></pre>
+
+            <p>Deze <code>toonCijfer()</code> gebruik je in de volgende oefening opnieuw, dan met twee displays naast elkaar.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo1);
+</script>
+</body>
+</html>

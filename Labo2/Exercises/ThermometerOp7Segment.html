@@ -13,11 +13,11 @@
     <h1>Thermometer op 7-segment display</h1>
     <p class="lead">Zoals de vorige oefening, maar deze keer maak je de temperatuur zichtbaar op het dubbele 7-segment display.</p>
 
-    <p>We gaan ervan uit dat je altijd temperaturen meet tussen -9 °C en 99 °C. Je hebt dus twee posities nodig: bij een negatieve temperatuur toont de linkse een minteken en de rechtse het cijfer.</p>
+    <p>We gaan ervan uit dat je altijd temperaturen meet tussen -9 °C en 99 °C. Je hebt dus allebei je displays nodig: bij een negatieve temperatuur toont het linkse een minteken en het rechtse het cijfer.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Bouw verder op wat je al hebt</div>
-        <p>Het multiplexen van het dubbele display heb je al gedaan in <a href="../../Labo1/Exercises/Dubbel7SegmentMetTeller.html">Dubbel 7-segment met teller</a> uit labo 1, en de werking staat uitgelegd op <a href="../../Labo1/Reference/Multiplexing.html">Multiplexing</a>. Neem die aanpak over en vervang de teller door je temperatuurmeting.</p>
+        <p>Het multiplexen van de twee displays heb je al gedaan in <a href="../../Labo1/Exercises/TellerOpDubbel7SegmentDisplay.html">Teller op een dubbel 7-segment display</a> uit labo 1, en de werking staat uitgelegd op <a href="../../Labo1/Reference/Multiplexing.html">Multiplexing</a>. Neem die aanpak over en vervang de teller door je temperatuurmeting.</p>
     </div>
 
     <hr>
@@ -30,9 +30,9 @@
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
             <li><label><input type="checkbox" class="form-check-input me-2"> De temperatuur wordt uitgelezen met de TMP36 en omgerekend naar °C</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Beide cijfers van het display worden gemultiplext, zonder zichtbaar flikkeren</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Beide displays worden gemultiplext, zonder zichtbaar flikkeren</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Een temperatuur van 0 tot 99 °C wordt correct getoond</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Een negatieve temperatuur toont een minteken op de linkse positie</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Een negatieve temperatuur toont een minteken op het linkse display</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De meting blokkeert het multiplexen niet, er wordt geen lange <code>delay()</code> gebruikt</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
@@ -59,13 +59,8 @@
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int sensorPin = A0;
 
 // Placeholder-pinnen: vervang door de pinnen uit jouw eigen schema
-const int segPins[] = {2, 3, 4, 5, 6, 7, 8}; // a,b,c,d,e,f,g
-const int cijferKiesPin = 10;
-
-// Pas aan op basis van je display: HIGH voor common cathode, LOW voor common anode
-const bool SEGMENT_AAN = HIGH;
-// Pas aan: welke stand van pin10 activeert het linkse display?
-const bool CIJFER_LINKS = HIGH;
+const int segmentPins[7] = {2, 3, 4, 5, 6, 7, 8}; // a,b,c,d,e,f,g
+const int displayPins[2] = {9, 10};               // naar de basis van elke transistor
 
 const int MINTEKEN = 10; // index van het extra patroon hieronder
 
@@ -91,9 +86,15 @@ void setup()
 {
   for (int i = 0; i &lt; 7; i++)
   {
-    pinMode(segPins[i], OUTPUT);
+    pinMode(segmentPins[i], OUTPUT);
   }
-  pinMode(cijferKiesPin, OUTPUT);
+
+  for (int i = 0; i &lt; 2; i++)
+  {
+    pinMode(displayPins[i], OUTPUT);
+    digitalWrite(displayPins[i], LOW);
+  }
+
   Serial.begin(9600);
 }
 
@@ -113,20 +114,29 @@ void toonPatroon(int index)
   for (int i = 0; i &lt; 7; i++)
   {
     bool segmentAan = patronen[index][i];
-    digitalWrite(segPins[i], segmentAan ? SEGMENT_AAN : !SEGMENT_AAN);
+    digitalWrite(segmentPins[i], segmentAan ? HIGH : LOW);
+  }
+}
+
+void kiesDisplay(int display)
+{
+  for (int i = 0; i &lt; 2; i++)
+  {
+    // Basis hoog: de transistor geleidt en dat display is actief
+    digitalWrite(displayPins[i], i == display ? HIGH : LOW);
   }
 }
 
 void multiplexStap(int links, int rechts)
 {
-  // Even kort het linkse cijfer tonen...
-  digitalWrite(cijferKiesPin, CIJFER_LINKS);
+  // Even kort het linkse display tonen...
   toonPatroon(links);
+  kiesDisplay(0);
   delay(5);
 
   // ...en dan kort het rechtse. Snel afwisselen = geen flikkering zichtbaar.
-  digitalWrite(cijferKiesPin, !CIJFER_LINKS);
   toonPatroon(rechts);
+  kiesDisplay(1);
   delay(5);
 }
 

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Teller op een dubbel 7-segment display</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Teller op een dubbel 7-segment display</h1>
+    <p class="lead">Je maakt een teller van 00 tot 99 op twee 7-segment displays. Onderweg los je twee problemen op: je hebt te weinig pinnen voor veertien segmenten, en de gemeenschappelijke pin van een display moet meer stroom afvoeren dan een uitgangspin aankan. Voor dat tweede probleem reken je zelf een basisweerstand uit.</p>
+
+    <p>Je hebt alles al in huis: de cijferpatronen en <code>toonCijfer()</code> komen uit <a href="TellerOp7SegmentDisplay.html">de teller op één display</a>, en waarom een uitgangspin een grote stroom niet aankan staat op <a href="../Reference/VermogenSchakelen.html">Vermogen schakelen</a>.</p>
+
+    <p>Je werkt deze oefening uit in TinkerCAD. Een dubbel display vind je niet in de bibliotheek, dus vertrek van dit sjabloon:</p>
+
+    <p><a rel="noopener" target="_blank" href="https://www.tinkercad.com/things/9eticGwmBvg-labo1-dubbel7segment-met-npn?sharecode=H4K5RPV-gtRtQJ4BTwF0oZMv14gnGMVexZRpXSP84_A">sjabloon dubbel 7-segmentdisplay met NPN (tinkercad.com)</a> (klik op copy and tinker)</p>
+
+    <h2 id="het-probleem">Te weinig pinnen en te veel stroom</h2>
+
+    <p>Een dubbel display is één onderdeel met twee 7-segment displays erin, het linkse en het rechtse. Kijk in het schema goed naar de bedrading: de zeven segmentaansluitingen van het linkse display en die van het rechtse hangen aan <strong>dezelfde</strong> Arduino-pinnen. Alleen de gemeenschappelijke pin van elk display is apart uitgebracht.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-dubbel7segment-pinout.png" class="img-fluid" alt="De pinout van het dubbel 7-segment display in het TinkerCAD-sjabloon: de zeven segmentaansluitingen van beide displays zijn per segment aan elkaar doorverbonden, en elk display heeft zijn eigen gemeenschappelijke aansluiting">
+        </figure>
+    </div>
+
+    <p>Sluit je beide displays zomaar aan en zet je er een patroon op, dan gaat er meteen drie keer iets mis. Reken het na voor het cijfer 8, waarbij alle zeven segmenten branden en er dus 14,5 mA per segment loopt.</p>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Wat loopt er door één segmentpin?</div>
+            <p>Elke segmentpin voedt twee segmenten tegelijk, één in elk display: 2 × 14,5 mA = <strong>29 mA</strong>. Dat is meer dan de 20 mA waarvoor een uitgangspin bedoeld is.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat levert de Arduino in totaal?</div>
+            <p>Veertien segmenten samen vragen 14 × 14,5 mA = <strong>203 mA</strong>. De chip mag er in totaal 200 leveren, dus ook die grens haal je.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Wat loopt er door de gemeenschappelijke pin?</div>
+            <p>Alle stroom van één display komt in zijn gemeenschappelijke pin samen: 7 × 14,5 mA = <strong>101,5 mA</strong>. Een uitgangspin mag er absoluut maximaal 40 afvoeren, dus dit is de zwaarste overschrijding van de drie.</p>
+        </div>
+    </div>
+
+    <p>De cijfers uit die berekeningen komen uit <a href="../../Labo0/Reference/WetVanOhm.html#voorschakelweerstand-berekenen">de wet van Ohm</a> en uit <a href="../Reference/VermogenSchakelen.html#hoeveel-stroom-een-pin-levert">Vermogen schakelen</a>.</p>
+
+    <h2 id="multiplexing">Twee cijfers met de pinnen van één display</h2>
+
+    <p>Je toont de twee cijfers niet tegelijk maar om de beurt, en je wisselt zo snel dat je oog het verschil niet meer ziet. Hoe dat werkt en hoe snel het moet, staat op <a href="../Reference/Multiplexing.html">Multiplexing</a>.</p>
+
+    <p>Daarmee zijn de eerste twee problemen weg. Er brandt nog maar één display tegelijk, dus een segmentpin voedt één segment van 14,5 mA en de Arduino levert samen 101,5 mA in plaats van 203.</p>
+
+    <p>Het derde probleem blijft staan. Het display dat aan de beurt is, stuurt nog altijd 101,5 mA door zijn gemeenschappelijke pin, en dat is tweeënhalf keer het absolute maximum van een uitgangspin. Die pin gaat de stroom dus niet zelf afvoeren.</p>
+
+    <h2 id="een-transistor-per-display">Een transistor per display</h2>
+
+    <p>In het sjabloon staat daarom onder elk display een transistor: de <strong>2N2222</strong>, een NPN. De gemeenschappelijke pin van het display gaat naar de <strong>collector</strong>, de <strong>emitter</strong> gaat naar massa, en de <strong>basis</strong> hangt via een basisweerstand aan een Arduino-pin. Zet je die pin hoog, dan geleidt de transistor en is dat display actief. De Arduino-pin levert dan alleen nog de kleine basisstroom.</p>
+
+    <p>Een relais zou hier ook kunnen, maar een transistor is goedkoper, schakelt in microseconden in plaats van in milliseconden, en heeft geen contacten die slijten. Bij multiplexing schakel je honderd keer per seconde, en dat houdt geen enkel relais vol. De volledige vergelijking staat op <a href="../Reference/VermogenSchakelen.html#een-relais-of-een-transistor">Vermogen schakelen</a>.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/dubbel7segment-transistor-schema.png" class="img-fluid" alt="Breadboardschema met twee 7-segment displays naast elkaar. De zeven segmentaansluitingen van beide displays zijn per segment met gele draden doorverbonden en lopen via zeven voorschakelweerstanden en groene draden naar de pinnen 2 tot en met 8 van de Arduino Uno. De gemeenschappelijke pin van elk display gaat naar de collector van een eigen NPN-transistor, met de emitter aan de massarail en de basis via een basisweerstand en een magenta draad naar pin 9 respectievelijk pin 10">
+        </figure>
+    </div>
+
+    <p>Bij de twee basisweerstanden staat geen waarde, want die reken je zelf uit.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">De massa's moeten aan elkaar</div>
+        <p>De emitters van de twee transistoren gaan naar de <strong>GND van de Arduino</strong>. Werk je met een aparte voeding voor het display, dan verbind je de min van die voeding met diezelfde GND. Zonder gemeenschappelijke massa heeft de spanning op de basis geen referentie en schakelt er niets.</p>
+    </div>
+
+    <ol>
+        <li>
+            <p><strong>Reken uit hoeveel stroom één display trekt.</strong> Bereken met de <a href="../../Labo0/Reference/WetVanOhm.html#voorschakelweerstand-berekenen">wet van Ohm</a> de stroom door één segment, en kijk hoeveel segmenten er in het slechtste geval samen branden. Dat is je <strong>Ic</strong>, de collectorstroom die de transistor moet doorlaten.</p>
+        </li>
+        <li>
+            <p><strong>Zoek Vbe en hFE op in de datasheet.</strong> Beide staan in de <a href="../../datasheets/p2n2222a.pdf">datasheet van de transistor</a>. Vbe is de spanning over de basis-emitterjunctie, hFE de stroomversterkingsfactor.</p>
+        </li>
+        <li>
+            <p><strong>Neem marge op de hFE.</strong> Reken niet met de waarde uit de datasheet zelf. Deel ze ruim door, zodat de transistor zeker voluit schakelt. Op <a href="../Reference/VermogenSchakelen.html#de-basisweerstand-berekenen">Vermogen schakelen</a> staat waarom, en met welke factor.</p>
+        </li>
+        <li>
+            <p><strong>Bereken Rb.</strong> Eerst <code>Ib = Ic / hFE</code>, dan <code>Rb = (Vcc - Vbe) / Ib</code>. Rond af naar een weerstand die echt bestaat, en noteer je berekening. Beide displays krijgen dezelfde waarde, want ze trekken evenveel.</p>
+        </li>
+        <li>
+            <p><strong>Vul de basisweerstanden in.</strong> Zet je berekende waarde in beide basissen van het sjabloon, en controleer of je met een hoge pin het bijhorende display aan krijgt.</p>
+        </li>
+        <li>
+            <p><strong>Meet na.</strong> Zet een ampèremeter in de gemeenschappelijke tak van één display, laat er een 8 op staan, en vergelijk de meting met je berekening.</p>
+        </li>
+    </ol>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-dubbel7segment-stroommeting.png" class="img-fluid" alt="Hetzelfde schema met een ampèremeter tussen de gemeenschappelijke pin van het linkse display en de collector van zijn transistor, die de stroom van de zeven brandende segmenten aanwijst">
+        </figure>
+    </div>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Je meet net iets minder dan je berekende</div>
+        <p>Over de transistor blijft er in geleiding een kleine spanning staan, de Vce(sat), en die gaat af van wat er over de led en zijn weerstand overblijft. Je meet daardoor iets minder stroom dan je berekend hebt. Voor het dimensioneren maakt dat niets uit, want het valt binnen de marge die je op de hFE genomen hebt. De uitwerking staat op <a href="../Reference/VermogenSchakelen.html#de-schakeling-doormeten">Vermogen schakelen</a>.</p>
+    </div>
+
+    <h2 id="een-vast-getal">Zet er eerst 42 op</h2>
+
+    <p>Schrijf nu een sketch die <strong>42</strong> op het display zet: een 4 links en een 2 rechts. Je hebt daarvoor de cijferpatronen en <code>toonCijfer()</code> uit de vorige oefening, plus een functie die de twee displays om de beurt activeert.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">Begin traag, dan snel</div>
+        <p>Zet de wachttijd tussen de twee displays eerst op 500 ms. Dan zie je de twee cijfers om de beurt aangaan en zie je waar de truc zit. Breng ze daarna terug naar 5 ms en kijk wat er met het beeld gebeurt.</p>
+    </div>
+
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing van het vaste getal</button>
+
+        <div class="spoiler-content solution-content">
+            <p><code>kiesDisplay()</code> zet de basis van het gevraagde display hoog en die van het andere laag. <code>multiplexStap()</code> zet eerst het patroon op de gedeelde segmentpinnen en activeert daarna het display waar dat patroon bij hoort. Die functie wordt vanuit de <code>loop()</code> eindeloos herhaald, en dat herhalen is wat het beeld staande houdt. Stopt het, dan dooft het display.</p>
+
+            <p>Met twee keer 5 ms duurt één volledige wissel 10 ms, dus elk display komt honderd keer per seconde aan de beurt.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segA = 2;
+const int segB = 3;
+const int segC = 4;
+const int segD = 5;
+const int segE = 6;
+const int segF = 7;
+const int segG = 8;
+
+const int segmentPins[7] = {segA, segB, segC, segD, segE, segF, segG};
+
+// Naar de basis van de transistor van het linkse en het rechtse display
+const int displayPins[2] = {9, 10};
+
+const int teTonenGetal = 42;
+
+// Eén rij per cijfer, één kolom per segment: a,b,c,d,e,f,g. 1 = segment aan.
+const bool cijferPatronen[10][7] = {
+  {1, 1, 1, 1, 1, 1, 0}, // 0
+  {0, 1, 1, 0, 0, 0, 0}, // 1
+  {1, 1, 0, 1, 1, 0, 1}, // 2
+  {1, 1, 1, 1, 0, 0, 1}, // 3
+  {0, 1, 1, 0, 0, 1, 1}, // 4
+  {1, 0, 1, 1, 0, 1, 1}, // 5
+  {1, 0, 1, 1, 1, 1, 1}, // 6
+  {1, 1, 1, 0, 0, 0, 0}, // 7
+  {1, 1, 1, 1, 1, 1, 1}, // 8
+  {1, 1, 1, 1, 0, 1, 1}  // 9
+};
+
+void setup()
+{
+  for (int i = 0; i &lt; 7; i++)
+  {
+    pinMode(segmentPins[i], OUTPUT);
+  }
+
+  for (int i = 0; i &lt; 2; i++)
+  {
+    pinMode(displayPins[i], OUTPUT);
+    digitalWrite(displayPins[i], LOW);
+  }
+}
+
+void toonCijfer(int cijfer)
+{
+  for (int i = 0; i &lt; 7; i++)
+  {
+    bool segmentAan = cijferPatronen[cijfer][i];
+    digitalWrite(segmentPins[i], segmentAan ? HIGH : LOW);
+  }
+}
+
+void kiesDisplay(int display)
+{
+  for (int i = 0; i &lt; 2; i++)
+  {
+    // Basis hoog: de transistor geleidt en dat display is actief
+    digitalWrite(displayPins[i], i == display ? HIGH : LOW);
+  }
+}
+
+void multiplexStap(int tientallen, int eenheden)
+{
+  toonCijfer(tientallen);
+  kiesDisplay(0);
+  delay(5);
+
+  toonCijfer(eenheden);
+  kiesDisplay(1);
+  delay(5);
+}
+
+void loop()
+{
+  multiplexStap(teTonenGetal / 10, teTonenGetal % 10);
+}</code></pre>
+        </div>
+    </div>
+
+    <h2 id="tellen-van-00-tot-99">Tellen van 00 tot 99</h2>
+
+    <p>Laat het getal nu elke seconde met één toenemen, van 00 tot 99 en dan opnieuw. De schakeling blijft ongewijzigd.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Een <code>delay(1000)</code> dooft je display</div>
+        <p>Zolang je programma in een <code>delay()</code> zit, roept het geen <code>multiplexStap()</code> aan, en dus staat er geen enkel cijfer aan. Zet je een <code>delay(1000)</code> in je <code>loop()</code> om de teller op te hogen, dan is je display een volle seconde donker en zie je alleen een korte flits. Multiplexing werkt enkel zolang je blijft wisselen.</p>
+        <p>Je hebt dus een manier nodig om "is er al een seconde voorbij?" te vragen zonder te wachten. Dat is de <code>millis()</code>-aanpak die je in <a href="../../Labo0/Reference/Debouncen.html">Debouncen</a> gebruikte. Op <a href="../Reference/Multiplexing.html">Multiplexing</a> staat hoe die twee samengaan.</p>
+    </div>
+
+    <hr>
+
+    <h2 id="indienen">Indienen</h2>
+    <p>Sla je oefening op.</p>
+
+    <div class="info-box evaluation">
+        <div class="info-title evaluation">Checklist</div>
+        <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
+
+        <p><strong>De schakeling</strong></p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je hebt uitgerekend hoeveel stroom de gemeenschappelijke pin van één display moet afvoeren</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je basisweerstand is berekend, met marge op de hFE, en afgerond naar een bestaande waarde</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je berekening staat genoteerd, zodat je ze kan tonen</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Elk display heeft zijn eigen transistor, met de emitter aan de GND van de Arduino</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De gemeten stroom in de gemeenschappelijke tak komt overeen met wat je berekende</label></li>
+        </ul>
+
+        <p><strong>Het vaste getal</strong></p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er staat 42 op het display: een 4 links en een 2 rechts</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Beide cijfers zijn tegelijk leesbaar, zonder zichtbaar geflikker</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Je hebt uitgeprobeerd wat er bij een trage wisseltijd gebeurt, en je kan uitleggen wat je dan ziet</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De pinnen die de displays activeren, staan in een constante</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> De cijferpatronen staan in een array, niet in losse digitalWrite-regels</label></li>
+        </ul>
+
+        <p><strong>De teller</strong></p>
+        <ul class="checklist">
+            <li><label><input type="checkbox" class="form-check-input me-2"> De teller telt doorlopend van 00 tot 99</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Het getal verandert elke seconde en ondertussen blijft het display leesbaar</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Er staat nergens een <code>delay()</code> van een seconde in je <code>loop()</code></label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
+        </ul>
+    </div>
+
+    <h2 id="oplossing">Oplossing</h2>
+    <div class="solution-container">
+        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
+
+        <div class="spoiler-content solution-content">
+            <p>De berekening, stap voor stap:</p>
+            <ul>
+                <li><code>Isegment</code> = (5 V - 1,8 V) / 220 &Omega; = 14,5 mA, de stroom door één segment. Dit rekende je in labo 0 al uit.</li>
+                <li><code>Ic</code> = 7 &times; 14,5 mA = <strong>101,5 mA</strong>, de stroom van een cijfer waarbij alle zeven segmenten branden.</li>
+                <li><code>hFE</code> = 200 volgens de datasheet, maar we rekenen met 40 om ruim in saturatie te zitten.</li>
+                <li><code>Ib</code> = 0,1015 A / 40 = 0,00254 A, dus 2,54 mA.</li>
+                <li><code>Rb</code> = (5 V - 0,7 V) / 0,00254 A = 1693 &Omega;, naar beneden afgerond dus <strong>1,5 k&Omega;</strong>.</li>
+            </ul>
+
+            <p>Zonder transistor moest de gemeenschappelijke pin 101,5 mA afvoeren. Nu levert de pin 2,54 mA aan de basis, veertig keer minder en ruim onder zijn grens van 20 mA. De stroom van de segmenten loopt via de collector en de emitter naar de massa.</p>
+
+            <p>In labo 5 doe je dezelfde berekening nog eens, voor een motor van 80 mA, en dan kom je op 2,2 k&Omega; uit.</p>
+
+            <h3>De teller</h3>
+
+            <p>De schakeling en de eerste vier functies blijven wat ze bij het vaste getal waren. Wat erbij komt, is een <code>teller</code> die elke seconde ophoogt. De <code>loop()</code> blijft ondertussen <code>multiplexStap()</code> aanroepen, want die twee mogen elkaar niet ophouden.</p>
+
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segA = 2;
+const int segB = 3;
+const int segC = 4;
+const int segD = 5;
+const int segE = 6;
+const int segF = 7;
+const int segG = 8;
+
+const int segmentPins[7] = {segA, segB, segC, segD, segE, segF, segG};
+
+// Naar de basis van de transistor van het linkse en het rechtse display
+const int displayPins[2] = {9, 10};
+
+// Eén rij per cijfer, één kolom per segment: a,b,c,d,e,f,g. 1 = segment aan.
+const bool cijferPatronen[10][7] = {
+  {1, 1, 1, 1, 1, 1, 0}, // 0
+  {0, 1, 1, 0, 0, 0, 0}, // 1
+  {1, 1, 0, 1, 1, 0, 1}, // 2
+  {1, 1, 1, 1, 0, 0, 1}, // 3
+  {0, 1, 1, 0, 0, 1, 1}, // 4
+  {1, 0, 1, 1, 0, 1, 1}, // 5
+  {1, 0, 1, 1, 1, 1, 1}, // 6
+  {1, 1, 1, 0, 0, 0, 0}, // 7
+  {1, 1, 1, 1, 1, 1, 1}, // 8
+  {1, 1, 1, 1, 0, 1, 1}  // 9
+};
+
+int teller = 0;
+unsigned long vorigeTelTick = 0;
+
+void setup()
+{
+  for (int i = 0; i &lt; 7; i++)
+  {
+    pinMode(segmentPins[i], OUTPUT);
+  }
+
+  for (int i = 0; i &lt; 2; i++)
+  {
+    pinMode(displayPins[i], OUTPUT);
+    digitalWrite(displayPins[i], LOW);
+  }
+}
+
+void toonCijfer(int cijfer)
+{
+  for (int i = 0; i &lt; 7; i++)
+  {
+    bool segmentAan = cijferPatronen[cijfer][i];
+    digitalWrite(segmentPins[i], segmentAan ? HIGH : LOW);
+  }
+}
+
+void kiesDisplay(int display)
+{
+  for (int i = 0; i &lt; 2; i++)
+  {
+    // Basis hoog: de transistor geleidt en dat display is actief
+    digitalWrite(displayPins[i], i == display ? HIGH : LOW);
+  }
+}
+
+void multiplexStap(int tientallen, int eenheden)
+{
+  toonCijfer(tientallen);
+  kiesDisplay(0);
+  delay(5);
+
+  toonCijfer(eenheden);
+  kiesDisplay(1);
+  delay(5);
+}
+
+void loop()
+{
+  multiplexStap(teller / 10, teller % 10);
+
+  // Om de seconde ophogen, zonder de multiplexing te blokkeren
+  if (millis() - vorigeTelTick &gt;= 1000)
+  {
+    vorigeTelTick = millis();
+    teller = (teller + 1) % 100; // 00 t.e.m. 99, dan terug naar 00
+  }
+}</code></pre>
+
+            <p>Eén doorloop van <code>multiplexStap()</code> duurt 10 ms, dus de teller loopt tot 10 ms achter op de seconde. Op een display dat elke seconde verspringt, valt dat niet te zien.</p>
+        </div>
+    </div>
+</div>
+
+<script src="../../back-link.js"></script>
+<script src="../../exercises.js"></script>
+<script src="../../checklist-sync.js"></script>
+<script src="../../solution-reveal.js"></script>
+<script>
+    initChecklistSync(LAB_EXERCISES.labo1);
+</script>
+</body>
+</html>

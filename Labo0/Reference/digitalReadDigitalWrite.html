@@ -51,6 +51,12 @@ void loop()
         <li>In <code>loop()</code> leest de Arduino continu de knop en schakelt de led aan of uit.</li>
     </ul>
 
+    <div class="info-box">
+        <div class="info-title tip">HIGH is 1 en LOW is 0</div>
+        <p>Die twee namen staan in de Arduino-omgeving gewoon voor een getal: <code>HIGH</code> is 1 en <code>LOW</code> is 0. Daardoor doen <code>digitalWrite(ledPin, 1)</code> en <code>digitalWrite(ledPin, true)</code> hetzelfde als <code>digitalWrite(ledPin, HIGH)</code>, en test <code>digitalRead(knopPin) == 1</code> hetzelfde als <code>digitalRead(knopPin) == HIGH</code>. <code>digitalWrite()</code> kijkt zelfs alleen of de waarde 0 is: elk ander getal zet de pin hoog, zonder foutmelding.</p>
+        <p>Schrijf toch <code>HIGH</code> en <code>LOW</code>. Die namen maken duidelijk dat het om een spanningsniveau gaat.</p>
+    </div>
+
     <h2 id="schema-met-pull-downweerstand">Schema met pull-downweerstand</h2>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">

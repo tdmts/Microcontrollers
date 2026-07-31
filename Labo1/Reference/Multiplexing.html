@@ -11,15 +11,15 @@
 <body>
 <div class="container">
     <h1>Multiplexing</h1>
-    <p class="lead">Twee cijfers tonen met de pinnen van één display. Je stuurt ze om beurten aan, en je wisselt zo snel dat je oog het verschil niet ziet.</p>
+    <p class="lead">Twee cijfers tonen terwijl je maar zeven pinnen op je Arduino gebruikt? Hoe doe je dat? Simpel: je stuurt de twee displays om beurten aan, en je wisselt zo snel dat je oog het verschil niet ziet.</p>
 
     <h2 id="het-probleem">Het probleem</h2>
 
-    <p>Een <a href="ZevenSegmentDisplay.html">7-segment display</a> kost je zeven pinnen. Twee displays zouden er dus veertien kosten, en zoveel vrije pinnen heeft een Arduino UNO niet als er ook nog knoppen en leds aan moeten.</p>
+    <p>Een <a href="ZevenSegmentDisplay.html">7-segment display</a> kost je zeven pinnen. Twee displays zouden er dus veertien kosten, en zoveel vrije pinnen heeft een Arduino UNO of Leonardo niet als er ook nog knoppen en leds aan moeten.</p>
 
-    <p>Een dubbel display lost dat hardwarematig half op: de zeven segmentaansluitingen van beide cijfers zitten aan elkaar geknoopt. Segment a van het linkse cijfer en segment a van het rechtse hangen aan dezelfde pin. Alleen de <strong>gemeenschappelijke</strong> pin van elk cijfer is apart uitgebracht.</p>
+    <p>Een dubbel display lost dat hardwarematig half op: de zeven segmentaansluitingen van beide displays zitten aan elkaar geknoopt. Segment a van het linkse display en segment a van het rechtse hangen aan dezelfde pin. Alleen de <strong>gemeenschappelijke</strong> pin van elk display is apart uitgebracht.</p>
 
-    <p>Dat scheelt pinnen, maar het levert meteen een nieuw probleem op: zet je een patroon op de segmentpinnen, dan krijgen <em>beide</em> cijfers datzelfde patroon. Je kan dus onmogelijk tegelijk een 4 links en een 7 rechts tonen. Wat je wel kan, is kiezen welk cijfer op dat moment stroom krijgt.</p>
+    <p>Dat scheelt pinnen, maar het levert meteen een nieuw probleem op: zet je een patroon op de segmentpinnen, dan krijgen <em>beide</em> displays datzelfde patroon. Je kan dus onmogelijk tegelijk een 4 links en een 7 rechts tonen. Wat je wel kan, is kiezen welk display op dat moment stroom krijgt.</p>
 
     <h2 id="de-truc">Te snel om te zien</h2>
 
@@ -33,51 +33,64 @@
         <li>Opnieuw vanaf stap 1.</li>
     </ol>
 
-    <p>Doe je dat traag, dan zie je de twee cijfers om beurten flikkeren. Doe je het snel genoeg, dan kan je oog de twee niet meer uit elkaar houden en zie je twee cijfers naast elkaar staan. Dat heet <strong>persistentie van het netvlies</strong>: je oog blijft een lichtpunt nog een fractie van een seconde zien nadat het al gedoofd is. Vanaf ongeveer 50 wisselingen per seconde per cijfer valt er niets meer te merken.</p>
+    <p>Doe je dat traag, dan zie je de twee cijfers om beurten flikkeren. Doe je het snel genoeg, dan kan je oog de twee niet meer uit elkaar houden en zie je twee cijfers naast elkaar staan. Dat heet <strong>persistentie van het netvlies</strong>: je oog blijft een lichtpunt nog een fractie van een seconde zien nadat het al gedoofd is. Vanaf ongeveer 50 wisselingen per seconde per display valt er niets meer te merken.</p>
 
     <div class="info-box remark">
         <div class="info-title remark">Dit is dezelfde truc als bij film</div>
-        <p>Een film is een reeks stilstaande beelden die snel genoeg na elkaar komen om als beweging over te komen. Bij multiplexing gebeurt hetzelfde, alleen wissel je tussen twee cijfers in plaats van tussen beelden.</p>
+        <p>Een film is een reeks stilstaande beelden die snel genoeg na elkaar komen om als beweging over te komen. Bij multiplexing gebeurt hetzelfde, alleen wissel je tussen twee displays in plaats van tussen beelden.</p>
     </div>
 
     <h2 id="in-code">In code</h2>
 
-    <p>Eén doorloop van de wissel ziet er zo uit. Welke stand van de selectiepin welk display activeert, hangt van je schema af, dus zet dat in een constante:</p>
+    <p>Elk display heeft zijn eigen pin die bepaalt of het aan de beurt is. In dit geval pin 9 en pin 10. Als we die pin laag zouden zetten dan kan er stroom vloeien van de 7 segmenten naar die ene pin. Dus in het slechtste geval wordt dat 7 x 14.5 mA = 101.5 mA. Dat is meer dan een pin kan sinken. Daarom wordt er een transistor gebruikt. De pin stuurt de basis van een transistor zodat deze werkt als een schakelaar. Zet je de pin op hoog dan kan er stroom vloeien van de segmenten naar de massa. Hoe je die transistor dimensioneert, staat ook uitgelegd op de pagina <a href="VermogenSchakelen.html">Vermogen schakelen</a>.</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int cijferKiesPin = 10;
-const bool CIJFER_LINKS = HIGH; // pas aan volgens jouw schema
-
-void multiplexStap(int linksCijfer, int rechtsCijfer)
-{
-  digitalWrite(cijferKiesPin, CIJFER_LINKS);
-  toonCijfer(linksCijfer);
-  delay(5);
-
-  digitalWrite(cijferKiesPin, !CIJFER_LINKS);
-  toonCijfer(rechtsCijfer);
-  delay(5);
-}</code></pre>
-
-    <p>Met twee keer 5 ms duurt één volledige wissel 10 ms, dus elk cijfer komt honderd keer per seconde aan de beurt, ruim genoeg.</p>
-
-    <div class="info-box warning">
-        <div class="info-title warning">Er mag niets anders lang duren</div>
-        <p>Zolang je programma iets anders doet, staat er geen enkel cijfer aan. Zet je ergens een <code>delay(1000)</code> om je teller elke seconde op te hogen, dan staat je display die hele seconde donker. Gebruik daarvoor <a href="../../Labo0/Reference/Debouncen.html">de <code>millis()</code>-aanpak</a>: je kijkt telkens of er al genoeg tijd voorbij is, en ondertussen blijft de multiplexing doorlopen.</p>
-        <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
-{
-  multiplexStap(teller / 10, teller % 10);
-
-  if (millis() - vorigeTick &gt;= 1000)
-  {
-    vorigeTick = millis();
-    teller = (teller + 1) % 100;
-  }
-}</code></pre>
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/dubbel7segment-transistor-schema.png" class="img-fluid" alt="Breadboardschema met twee 7-segment displays naast elkaar. De zeven segmentaansluitingen van beide displays zijn per segment met gele draden doorverbonden en lopen via zeven voorschakelweerstanden en groene draden naar de pinnen 2 tot en met 8 van de Arduino Uno. De gemeenschappelijke pin van elk display gaat naar de collector van een eigen NPN-transistor, met de emitter aan de massarail en de basis via een basisweerstand en een magenta draad naar pin 9 respectievelijk pin 10">
+            <figcaption>De zeven segmentpinnen zijn gedeeld, de twee gemeenschappelijke aansluitingen niet. Pin 9 en pin 10 sturen elk de basis van een transistor, en bepalen zo welk display op dat moment stroom krijgt.</figcaption>
+        </figure>
     </div>
+
+    <p>Het programma hieronder toont het principe met twee segmenten in plaats van met twee cijfers: <strong>segment a</strong> op het linkse display en <strong>segment b</strong> op het rechtse. Twee segmenten die nooit tegelijk aan staan, en die je toch allebei ziet branden.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segA = 2; // segment a van allebei de displays
+const int segB = 3; // segment b van allebei de displays
+
+const int linkerDisplayPin = 9;  // naar de basis van de linkse transistor
+const int rechterDisplayPin = 10;
+
+void setup()
+{
+  pinMode(segA, OUTPUT);
+  pinMode(segB, OUTPUT);
+  pinMode(linkerDisplayPin, OUTPUT);
+  pinMode(rechterDisplayPin, OUTPUT);
+}
+
+void loop()
+{
+  // Alleen segment a aan, en alleen het linkse display actief
+  digitalWrite(segA, HIGH);
+  digitalWrite(segB, LOW);
+  digitalWrite(rechterDisplayPin, LOW);
+  digitalWrite(linkerDisplayPin, HIGH);
+  delay(5);
+
+  // Alleen segment b aan, en alleen het rechtse display actief
+  digitalWrite(segA, LOW);
+  digitalWrite(segB, HIGH);
+  digitalWrite(linkerDisplayPin, LOW);
+  digitalWrite(rechterDisplayPin, HIGH);
+  delay(5);
+}</code></pre>
+
+    <p>Met twee keer 5 ms duurt één volledige wissel 10 ms, dus elk display komt honderd keer per seconde aan de beurt, ruim genoeg. Zet die twee <code>delay(5)</code> eens op 500, dan zie je de segmenten om de beurt aangaan.</p>
+
+    <p>Een heel cijfer werkt precies hetzelfde. In plaats van twee <code>digitalWrite</code>-regels zet je dan een hele rij uit de <a href="ZevenSegmentDisplay.html#van-cijfer-naar-patroon">cijferpatronen</a> op de zeven segmentpinnen, en pas daarna activeer je het display waar dat patroon bij hoort.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Het lijkt donkerder, en dat klopt</div>
-        <p>Elk cijfer staat maar de helft van de tijd aan, dus het display brandt minder fel dan wanneer je één cijfer rechtstreeks zou aansturen. Bij twee cijfers valt dat nauwelijks op. Ga je later multiplexen over vier of acht cijfers, dan wordt het wel merkbaar.</p>
+        <p>Elk display staat maar de helft van de tijd aan, dus het brandt minder fel dan wanneer je het rechtstreeks zou aansturen. Bij twee displays valt dat nauwelijks op. Ga je later multiplexen over vier of acht displays, dan wordt het wel merkbaar.</p>
     </div>
 </div>
 

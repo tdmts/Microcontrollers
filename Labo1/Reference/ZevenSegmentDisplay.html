@@ -23,7 +23,14 @@
         </figure>
     </div>
 
-    <p>Elk segment heeft zijn eigen aansluiting, en daarnaast is er één <strong>gemeenschappelijke</strong> pin waar alle zeven leds met hun andere kant op uitkomen. Een display sturen kost je dus zeven Arduino-pinnen, en daarom kom je in labo 3 het schuifregister tegen: dat brengt dat aantal terug.</p>
+    <p>Elk segment heeft zijn eigen aansluiting, en daarnaast is er één <strong>gemeenschappelijke</strong> pin waar alle zeven leds met hun andere kant op uitkomen. Een display sturen kost je dus zeven Arduino-pinnen, acht als je ook dp nodig hebt.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/7segment-tar5503-pinout.png" class="img-fluid" alt="Links een foto van een 7-segment display met tien pootjes in twee rijen, rechts de pinout: bovenaan pin 10 is g, 9 is f, 8 is com, 7 is a en 6 is b, onderaan pin 1 is e, 2 is d, 3 is com, 4 is c en 5 is de decimale punt">
+            <figcaption>Het onderdeel en zijn pinout. De tien pootjes liggen in twee rijen van vijf, en de gemeenschappelijke aansluiting komt twee keer naar buiten, op pin 3 en pin 8. Welke pin welk segment is, staat nooit op het onderdeel zelf, dus die haal je uit de datasheet of je zoekt hem uit met één segment tegelijk.</figcaption>
+        </figure>
+    </div>
 
     <h2 id="common-anode-of-common-cathode">Common anode of common cathode</h2>
 
@@ -59,28 +66,20 @@
         </table>
     </div>
 
-    <p>Het is hetzelfde onderscheid als in <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>, zeven keer naast elkaar.</p>
-
-    <div class="info-box tip">
-        <div class="info-title tip">Schrijf het niveau nooit rechtstreeks in je code</div>
-        <p>Zet het in een constante bovenaan, dan pas je bij een ander display één regel aan in plaats van je hele programma:</p>
-        <pre class="code-wrapper language-cpp linenumbers show-language"><code>const bool SEGMENT_AAN = LOW;  // common anode; HIGH bij common cathode
-const bool SEGMENT_UIT = !SEGMENT_AAN;</code></pre>
-        <p>Weet je niet welk type je hebt, sluit dan één segment aan met zijn weerstand en probeer beide niveaus uit. Wat het segment doet oplichten, is jouw <code>SEGMENT_AAN</code>.</p>
-    </div>
+    <p>Het is hetzelfde onderscheid als in <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Elk segment heeft zijn eigen weerstand nodig</div>
-        <p>Zeven leds delen hun gemeenschappelijke pin, maar niet hun stroom. Zet je één weerstand in die gemeenschappelijke tak, dan verdeelt de stroom zich over de segmenten die toevallig aan staan en verandert de helderheid met elk cijfer: een 1 (twee segmenten) brandt dan feller dan een 8 (zeven segmenten). Geef daarom elk segment zijn eigen serieweerstand. Hoe je die berekent, staat op <a href="../../Labo0/Reference/WetVanOhm.html">De wet van Ohm</a>.</p>
+        <p>De zeven segmenten delen hun gemeenschappelijke pin, maar niet hun stroom. Zet je één weerstand in die gemeenschappelijke tak, dan verdeelt de stroom zich over de segmenten die toevallig aan staan en verandert de helderheid met elk cijfer: een 1 (twee segmenten) brandt dan feller dan een 8 (zeven segmenten). Geef daarom elk segment zijn eigen serieweerstand. Een segment is een gewone led dus de berekening van de voorschakelweerstand is gelijkaardig aan die van een gewone led. Hoe je die precies berekent, staat op <a href="../../Labo0/Reference/WetVanOhm.html">De wet van Ohm</a>.</p>
     </div>
 
     <h2 id="van-cijfer-naar-patroon">Van cijfer naar patroon</h2>
 
-    <p>Om een cijfer te tonen moet je weten welke segmenten erbij horen. Voor een 7 zijn dat a, b en c; voor een 0 alles behalve g. Die kennis leg je vast in een <a href="Arrays.html">tweedimensionale array</a>: één rij per cijfer, één kolom per segment.</p>
+    <p>Om een cijfer te tonen moet je weten welke segmenten erbij horen. Voor een 7 zijn dat a, b en c; voor een 0 alles behalve g.</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
-            <caption>De eerste vier cijfers, met 1 voor "segment aan"</caption>
+            <caption>De tien cijfers, met 1 voor "segment aan"</caption>
             <thead>
                 <tr>
                     <th scope="col">Cijfer</th>
@@ -110,15 +109,78 @@ const bool SEGMENT_UIT = !SEGMENT_AAN;</code></pre>
                     <th scope="row">3</th>
                     <td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td>
                 </tr>
+                <tr>
+                    <th scope="row">4</th>
+                    <td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td>
+                </tr>
+                <tr>
+                    <th scope="row">5</th>
+                    <td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td>
+                </tr>
+                <tr>
+                    <th scope="row">6</th>
+                    <td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td>
+                </tr>
+                <tr>
+                    <th scope="row">7</th>
+                    <td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                </tr>
+                <tr>
+                    <th scope="row">8</th>
+                    <td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td>
+                </tr>
+                <tr>
+                    <th scope="row">9</th>
+                    <td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td>
+                </tr>
             </tbody>
         </table>
     </div>
 
-    <p>Merk op dat er in die tabel nergens <code>HIGH</code> of <code>LOW</code> staat. Een 1 betekent "dit segment moet branden", en pas op het moment dat je schrijft, vertaal je dat via <code>SEGMENT_AAN</code> naar het niveau dat jouw display nodig heeft. Zo blijft dezelfde tabel bruikbaar voor allebei de soorten.</p>
+    <p>Diezelfde tabel in code is een <a href="Arrays.html">tweedimensionale array</a> van tien rijen van zeven waarden. De rij die je uitleest is het cijfer dat je wil tonen, de kolom is het segment. Het programma hieronder zet daarmee een <strong>4</strong> op het display. Deze waarden zijn die van een <strong>common cathode</strong> display, waar een <code>1</code> het niveau <code>HIGH</code> wordt en het segment dus doet branden:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int segmentPins[7] = {2, 3, 4, 5, 6, 7, 8}; // a tot en met g
+
+// Eén rij per cijfer, één kolom per segment: a,b,c,d,e,f,g.
+// Common cathode: 1 = HIGH = segment aan.
+const bool cijferPatronen[10][7] = {
+  {1, 1, 1, 1, 1, 1, 0}, // 0
+  {0, 1, 1, 0, 0, 0, 0}, // 1
+  {1, 1, 0, 1, 1, 0, 1}, // 2
+  {1, 1, 1, 1, 0, 0, 1}, // 3
+  {0, 1, 1, 0, 0, 1, 1}, // 4
+  {1, 0, 1, 1, 0, 1, 1}, // 5
+  {1, 0, 1, 1, 1, 1, 1}, // 6
+  {1, 1, 1, 0, 0, 0, 0}, // 7
+  {1, 1, 1, 1, 1, 1, 1}, // 8
+  {1, 1, 1, 1, 0, 1, 1}  // 9
+};
+
+void setup()
+{
+  for (int i = 0; i &lt; 7; i++)
+  {
+    pinMode(segmentPins[i], OUTPUT);
+  }
+}
+
+void toonCijfer(int cijfer)
+{
+  // Rij 'cijfer' uit de tabel op de zeven segmentpinnen zetten
+  for (int i = 0; i &lt; 7; i++)
+  {
+    digitalWrite(segmentPins[i], cijferPatronen[cijfer][i] ? HIGH : LOW);
+  }
+}
+
+void loop()
+{
+  toonCijfer(4);
+}</code></pre>
 
     <h2 id="meerdere-displays">Meerdere displays</h2>
 
-    <p>Wil je twee cijfers tonen, dan heb je in principe veertien pinnen nodig. Dat hoeft niet, want je kan de segmentpinnen delen tussen beide displays en razendsnel wisselen welk display je aanstuurt. Hoe dat werkt, staat op <a href="Multiplexing.html">Multiplexing</a>.</p>
+    <p>Wil je twee cijfers tonen, dan heb je twee displays en minstens veertien pinnen nodig. Dat begint al lastig te worden voor een Arduino Uno of Leonardo want er zijn niet genoeg pinnen beschikbaar. Er zijn drie oplossingen: de eerste is <a href="Multiplexing.html">Multiplexing</a> en de andere (schuifregister en I2C I/O expander) bespreken we in labo 3 en 4.</p>
 </div>
 
 <script src="../../reference.js"></script>

@@ -76,7 +76,8 @@
         </div>
         <div class="accordion-item">
             <div class="title">Wat als de analoge pin meer dan 40 mA moet leveren aan de aan te sturen schakeling?</div>
-            <p>Dan kan je de analoge pin gebruiken om een <strong>transistor / FET / relais</strong> te schakelen in combinatie met een <strong>externe voeding</strong>.</p>
+            <p>Dan zet je er een <strong>transistor</strong> tussen, net zoals bij <a href="../../Labo1/Exercises/TellerOpDubbel7SegmentDisplay.html">de teller op een dubbel 7-segment display</a> in labo 1. De pin stuurt dan alleen nog de basis, en de stroom zelf komt uit de 5V-pin of uit een externe voeding. Zie <a href="../../Labo1/Reference/VermogenSchakelen.html">Vermogen schakelen</a>.</p>
+            <p><code>analogWrite()</code> werkt daar gewoon op: het PWM-signaal op de basis schakelt de transistor honderden keren per seconde aan en uit, en zo dim je een last die veel meer stroom trekt dan een pin aankan.</p>
         </div>
     </div>
 

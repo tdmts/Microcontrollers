@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vermogen schakelen</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Vermogen schakelen</h1>
+    <p class="lead">Een uitgangspin van je Arduino levert ongeveer 20 mA, en dat is minder dan je vaak nodig hebt. Met een transistor laat je een kleine stroom uit die pin een veel grotere stroom schakelen, en die grote stroom komt dan ergens anders vandaan: een externe voeding of de 5V-pin.</p>
+
+    <h2 id="hoeveel-stroom-een-pin-levert">Hoeveel stroom een pin levert</h2>
+
+    <p>Een digitale uitgangspin van een Arduino is geen voeding. Hij is bedoeld om een signaal te geven, en de stroom die hij daarbij kan leveren is beperkt:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Grens</th>
+                    <th>Waarde</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Aangeraden per pin</td>
+                    <td>20 mA</td>
+                </tr>
+                <tr>
+                    <td>Absoluut maximum per pin</td>
+                    <td>40 mA</td>
+                </tr>
+                <tr>
+                    <td>Alle pinnen samen</td>
+                    <td>200 mA</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Hoeveel stroom je nodig hebt, weet je al. Bij <a href="../../Labo0/Reference/WetVanOhm.html#voorschakelweerstand-berekenen">de wet van Ohm</a> rekende je de voorschakelweerstand van een led uit: 160 Ω in theorie, afgerond naar de 220 Ω die je echt hebt, en daardoor loopt er <strong>14,5 mA</strong> door één led in plaats van de nominale 20 mA.</p>
+
+    <p>Zet er drie naast elkaar op dezelfde pin, dan tel je die stromen op:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Aantal leds</th>
+                    <th>Stroom door de pin</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>14,5 mA</td>
+                    <td>Onder de aangeraden 20 mA</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>29 mA</td>
+                    <td>Boven de aangeraden 20 mA</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>43,5 mA</td>
+                    <td>Boven het absolute maximum van 40 mA</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Bij drie leds vraag je dus meer dan de pin ooit mag leveren. Kijk wat TinkerCAD daarvan maakt:</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/drie-leds-op-een-pin-schema.png" class="img-fluid" alt="Breadboardschema met drie rode leds die samen aan pin 2 van een Arduino UNO hangen, met een ampèremeter die 24,6 mA aanwijst en een waarschuwing van TinkerCAD dat de stroom door pin D2 het aanbevolen maximum van 20 mA overschrijdt">
+        </figure>
+    </div>
+
+    <p>De meter wijst geen 43,5 mA aan maar <strong>24,6 mA</strong>. Die 24,6 mA is niet wat je schakeling vraagt, het is wat de pin er nog van kan maken. Onder een belasting die hij niet aankan zakt zijn uitgangsspanning weg, en met minder spanning over dezelfde weerstanden loopt er minder stroom. Je leds branden dus zwakker dan waarvoor je ze berekend hebt.</p>
+
+    <p>Kapot gaat je pin er niet meteen van, maar de uitgangstrap van de microcontroller wordt warm, en hoe verder je boven de grens zit hoe korter je bord meegaat. Onthou vooral het getal dat je zelf berekende: je hebt <strong>43,5 mA</strong> nodig, en dat is wat je schakeling straks moet kunnen leveren.</p>
+
+    <div class="info-box tip">
+        <div class="info-title tip">De 5V-pin is iets anders dan een uitgangspin</div>
+        <p>De <strong>5V</strong>-pin op het bord komt rechtstreeks van de spanningsregelaar of van je USB-kabel, en niet uit de microcontroller. Die pin levert honderden milliampère. De oplossing bestaat er dus in de stroom voor je leds daar te halen, en de uitgangspin alleen nog te laten bepalen <em>of</em> die stroom loopt.</p>
+    </div>
+
+    <h2 id="een-relais-of-een-transistor">Een relais of een transistor</h2>
+
+    <p>Er zijn twee componenten die een grote stroom kunnen schakelen met een klein signaal. Een <strong>relais</strong> is een schakelaar die je met een elektromagneet bedient: er zit een spoel in die een contact fysiek naar zich toe trekt. Een <strong>transistor</strong> doet hetzelfde zonder bewegende delen.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Relais</th>
+                    <th>Transistor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Prijs</td>
+                    <td>Ongeveer een euro</td>
+                    <td>Enkele centen</td>
+                </tr>
+                <tr>
+                    <td>Schakeltijd</td>
+                    <td>5 tot 10 ms</td>
+                    <td>Microseconden</td>
+                </tr>
+                <tr>
+                    <td>Slijtage</td>
+                    <td>Bewegende contacten, dus een eindig aantal schakelingen</td>
+                    <td>Geen bewegende delen</td>
+                </tr>
+                <tr>
+                    <td>Geluid</td>
+                    <td>Hoorbare klik bij elke schakeling</td>
+                    <td>Stil</td>
+                </tr>
+                <tr>
+                    <td>Wat de spoel of de basis zelf trekt</td>
+                    <td>De spoel van een 5V-relais trekt zo'n 70 mA</td>
+                    <td>Een fractie van de stroom die je schakelt</td>
+                </tr>
+                <tr>
+                    <td>Dimmen met PWM</td>
+                    <td>Onmogelijk, het contact staat open of dicht</td>
+                    <td>Mogelijk, zie <a href="../../Labo2/Reference/analogWrite.html">analogWrite()</a> uit labo 2</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Kijk vooral naar de voorlaatste rij. Een relaisspoel trekt zelf 70 mA, en dat is opnieuw meer dan de 20 mA van je pin. Om een relais te schakelen heb je dus sowieso een transistor nodig, en dan kan je die transistor net zo goed rechtstreeks op je leds zetten.</p>
+
+    <p>Waar een relais wel op zijn plaats is: bij netspanning, want het contact is elektrisch volledig gescheiden van je Arduino, en bij schakelingen waar de stroom beide kanten op moet kunnen. Voor de gelijkstroom van dit labo neem je een transistor.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Er bestaat nog een derde component</div>
+        <p>De <strong>MOSFET</strong>, een veldeffecttransistor of kortweg FET, doet hetzelfde werk. Het verschil zit in hoe je hem stuurt: een gewone transistor stuur je met een <em>stroom</em> in zijn basis, een MOSFET met een <em>spanning</em> op zijn gate. Er loopt daar vrijwel geen stroom, dus bij een MOSFET valt er ook geen stuurweerstand te berekenen.</p>
+        <p>Daar staat één ding tegenover. Een gewone MOSFET gaat pas voluit open bij ongeveer 10 V op zijn gate, en jouw pin geeft er 5. Je hebt dus een type nodig dat als <strong>logic level</strong> verkocht wordt. Neem je een gewone, dan staat hij half open en wordt hij warm, terwijl je schakeling ondertussen lijkt te werken.</p>
+    </div>
+
+    <h2 id="de-drie-aansluitingen">De drie aansluitingen</h2>
+
+    <p>Een NPN-transistor heeft drie aansluitingen. Stuur je een kleine stroom in de <strong>basis</strong>, dan laat hij een veel grotere stroom door tussen <strong>collector</strong> en <strong>emitter</strong>.</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Aansluiting</th>
+                    <th>Waar ze naartoe gaat</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>B</strong> (basis)</td>
+                    <td>Via een weerstand naar de uitgangspin van de Arduino</td>
+                </tr>
+                <tr>
+                    <td><strong>C</strong> (collector)</td>
+                    <td>Naar wat je wil schakelen, hier de leds</td>
+                </tr>
+                <tr>
+                    <td><strong>E</strong> (emitter)</td>
+                    <td>Naar GND</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Welk pootje welke aansluiting is, staat op de eerste pagina van de <a href="../../datasheets/p2n2222a.pdf">datasheet</a>. Rechtsboven vind je het schemasymbool met de drie namen erbij, en daaronder de TO-92 behuizing met de pootjes genummerd 1, 2 en 3 in dezelfde volgorde.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/p2n2222a-datasheet-aansluitingen.png" class="img-fluid" alt="De eerste pagina van de datasheet van de P2N2222A, met links de tabel van de maximum ratings en rechts het schemasymbool waarin collector pin 1 is, basis pin 2 en emitter pin 3, plus de TO-92 behuizing met dezelfde nummering">
+        </figure>
+    </div>
+
+    <p>Diezelfde pagina geeft je meteen de grenzen van het onderdeel. De collectorstroom mag oplopen tot <strong>600 mA</strong> en tussen collector en emitter mag 40 V staan. Een 2N2222 kan dus veel meer schakelen dan wat je er in dit labo mee doet.</p>
+
+    <p>Zo ziet de schakeling van de drie leds er dan uit:</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/drie-leds-met-transistor-schakeling.png" class="img-fluid" alt="Breadboardschema met drie rode leds die met hun voorschakelweerstanden aan de plusrail hangen, hun gemeenschappelijke kant naar de collector van een NPN-transistor, de basis via een weerstand naar pin 2 van de Arduino UNO en de emitter naar de massarail">
+        </figure>
+    </div>
+
+    <p>De leds hangen <strong>boven</strong> de transistor: van de plus van de voeding, door de leds en hun voorschakelweerstanden, naar de collector. De transistor zit tussen de leds en de massa en laat de stroom er al dan niet door. Naar de Arduino lopen er drie draden: de 5V en de massa voor de voeding van de leds, en pin 2 naar de basisweerstand. In TinkerCAD is de <strong>2N2222</strong> gemodelleerd, en die gebruik je hier.</p>
+
+    <p>Je gebruikt de transistor op deze manier niet om een signaal te versterken, maar als een <strong>schakelaar die je met software bedient</strong>. Hij staat ofwel helemaal open, ofwel helemaal dicht, en niets ertussen. Die volledig open toestand heet <strong>saturatie</strong>. Ze is wat je wil, want dan staat er nauwelijks spanning over de transistor en maakt hij dus nauwelijks warmte.</p>
+
+    <h2 id="de-basisweerstand-berekenen">De basisweerstand berekenen</h2>
+
+    <p>Tussen je Arduino-pin en de basis hoort een weerstand. Zonder die weerstand loopt er een ongelimiteerde stroom je basis in en gaat je pin, je transistor of allebei eraan.</p>
+
+    <p>De formule voor die weerstand is de <a href="../../Labo0/Reference/WetVanOhm.html">wet van Ohm</a> toegepast op de basiskring:</p>
+
+    <div class="math-tex">
+        $$ R_b = \frac{V_{cc} - V_{be}}{I_b} $$
+    </div>
+
+    <p>Je hebt dus drie dingen nodig. Hieronder staat het voorbeeld van de drie leds helemaal uitgewerkt. In de oefening van dit labo doe je dezelfde berekening voor een 7-segment display, met een andere stroom en dus een andere weerstand.</p>
+
+    <h3>1. Vcc, de spanning op je pin</h3>
+
+    <p>Een uitgangspin van de UNO die hoog staat geeft 5 V. Dus <strong>Vcc = 5 V</strong>.</p>
+
+    <h3>2. Vbe, de spanning over de basis-emitterjunctie</h3>
+
+    <p>Ook die staat als grafiek in de <a href="../../datasheets/p2n2222a.pdf">datasheet</a>. Zoek weer je collectorstroom van 43,5 mA op, ga omhoog tot de curve van V<sub>BE(sat)</sub> en lees links af: ongeveer <strong>0,7 V</strong>. Bij zowat elke siliciumtransistor kom je op die waarde uit.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/p2n2222a-datasheet-vbe.png" class="img-fluid" alt="Grafiek uit de datasheet van de P2N2222A met de aan-spanningen tegenover de collectorstroom, met een pijl die bij 43,5 mA omhoog gaat tot de curve van de basis-emitterspanning en vandaar naar links wijst, waar je ongeveer 0,7 V afleest">
+        </figure>
+    </div>
+
+    <p>Onderaan diezelfde grafiek loopt nog een curve, V<sub>CE(sat)</sub>. Dat is de spanning die de transistor zelf overhoudt wanneer hij volledig openstaat. Bij 43,5 mA is dat maar een paar honderdsten van een volt, en dat is precies de bedoeling: wat de transistor niet zelf opneemt, komt bij je leds terecht.</p>
+
+    <h3>3. Ib, de stroom die je in de basis moet sturen</h3>
+
+    <p>Die volgt uit de stroom die je wil schakelen, gedeeld door de stroomversterkingsfactor <strong>hFE</strong> van de transistor:</p>
+
+    <div class="math-tex">
+        $$ I_b = \frac{I_c}{h_{FE}} $$
+    </div>
+
+    <p><code>Ic</code> is de collectorstroom, en die heb je hierboven al uitgerekend: drie leds van 14,5 mA, dus <strong>43,5 mA</strong>. Merk op dat je hier vertrekt van wat je schakeling <em>nodig heeft</em>, en niet van de 24,6 mA die de overbelaste pin nog kon leveren. De hFE zoek je weer op in de datasheet.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/p2n2222a-datasheet-hfe.png" class="img-fluid" alt="Grafiek uit de datasheet van de P2N2222A met de DC-stroomversterking hFE tegenover de collectorstroom, met een pijl die bij 43,5 mA omhoog gaat tot de curve van 25 graden en vandaar naar links wijst, waar je een hFE van ongeveer 200 afleest">
+        </figure>
+    </div>
+
+    <p>Het is een grafiek en geen enkel getal, dus je moet ze aflezen bij jouw collectorstroom. Zoek 43,5 mA op de horizontale as, ga omhoog tot de curve van 25 °C, en lees links af: een hFE van ongeveer <strong>200</strong>.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Neem ruim marge op de hFE</div>
+        <p>Reken je met die 200, dan stuur je precies genoeg basisstroom om je 43,5 mA te halen <em>als alles meezit</em>, en dat is te krap. Kijk nog eens naar de grafiek: bij dezelfde 43,5 mA leest de curve van -55 °C ongeveer 100 af en die van 125 °C ruim 300. Alleen de temperatuur laat je hFE dus al een factor drie schommelen, en daar komt de spreiding van exemplaar tot exemplaar nog bovenop. Rechts op de grafiek zie je bovendien dat de hFE vanaf een paar honderd milliampère instort.</p>
+        <p>Bovendien wil je dat de transistor in saturatie gaat en dus helemaal openstaat. Een transistor die maar half openstaat verstookt het verschil in warmte.</p>
+        <p>Deel de hFE daarom ruim door. Hier deel je 200 door 5 en reken je verder met <strong>hFE = 40</strong>. Dat ligt onder de honderd van de koudste curve, dus je zit goed over het hele temperatuurbereik. Je stuurt dan vijf keer meer basisstroom dan strikt nodig, en dat is de bedoeling.</p>
+    </div>
+
+    <h3>De berekening</h3>
+
+    <p>Met hFE = 40 wordt de basisstroom:</p>
+
+    <div class="math-tex">
+        $$ I_b = \frac{0{,}0435\ A}{40} = 0{,}00109\ A = 1{,}09\ mA $$
+    </div>
+
+    <p>En daarmee de basisweerstand:</p>
+
+    <div class="math-tex">
+        $$ R_b = \frac{5\ V - 0{,}7\ V}{0{,}00109\ A} = 3954\ \Omega $$
+    </div>
+
+    <p>Die waarde bestaat niet als standaardweerstand. Je kiest de dichtstbijzijnde die je hebt liggen, en dat is <strong>3,9 kΩ</strong>.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Deze keer rond je naar beneden af</div>
+        <p>Bij de voorschakelweerstand van je led rondde je 160 Ω naar boven af, naar 220 Ω. Hier rond je 3954 Ω naar beneden af, naar 3900 Ω. Dat lijkt tegenstrijdig, maar het is twee keer dezelfde vraag: <strong>welke kant is veilig voor dit onderdeel?</strong></p>
+        <p>Een grotere weerstand geeft minder stroom. Voor een led is dat de veilige kant, want te veel stroom maakt hem stuk. Voor een transistorbasis is het net de verkeerde, want te weinig basisstroom laat de transistor half openstaan en dan wordt hij warm. Te veel basisstroom is zelden een probleem, te weinig wel.</p>
+    </div>
+
+    <p>Kijk nog eens naar wat je pin nu doet. In plaats van 43,5 mA te moeten leveren, stuurt hij nog 1,09 mA de basis in. Dat is veertig keer minder, en ruim onder de 20 mA die hij aankan. De stroom voor de leds komt uit de 5V-pin en loopt via de collector en de emitter naar de massa. De pin bepaalt alleen nog of dat gebeurt.</p>
+
+    <h2 id="de-schakeling-doormeten">De schakeling doormeten</h2>
+
+    <p>Bouw je deze schakeling in TinkerCAD met 220 Ω per led en de berekende 3,9 kΩ in de basis, en hang je er op de vier interessante plaatsen een ampèremeter in, dan zie je dit:</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/drie-leds-met-transistor-gemeten.png" class="img-fluid" alt="Het breadboardschema met vier ampèremeters: Iled door één led wijst 13,3 mA aan, Ic in de collector 40,0 mA, Ib in de basis 1,08 mA en Ie in de emitter 41,1 mA">
+        </figure>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Meting</th>
+                    <th>Waar de stroom doorheen loopt</th>
+                    <th>Gemeten</th>
+                    <th>Berekend</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>Iled</code></td>
+                    <td>Door één led</td>
+                    <td>13,3 mA</td>
+                    <td>14,5 mA</td>
+                </tr>
+                <tr>
+                    <td><code>Ic</code></td>
+                    <td>In de collector, dus de drie leds samen</td>
+                    <td>40,0 mA</td>
+                    <td>43,5 mA</td>
+                </tr>
+                <tr>
+                    <td><code>Ib</code></td>
+                    <td>In de basis, dus wat je pin levert</td>
+                    <td>1,08 mA</td>
+                    <td>1,09 mA</td>
+                </tr>
+                <tr>
+                    <td><code>Ie</code></td>
+                    <td>In de emitter</td>
+                    <td>41,1 mA</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>De basisstroom komt op een honderdste milliampère uit waar je berekening hem voorspelde. De emitter heeft geen eigen berekening nodig, want zijn waarde volgt uit de twee andere:</p>
+
+    <div class="math-tex">
+        $$ I_e = I_b + I_c = 1{,}08 + 40{,}0 = 41{,}1\ mA $$
+    </div>
+
+    <p>Alles wat er langs de basis en langs de collector binnenkomt, verlaat de transistor langs de emitter. Dat is meteen een goede controle op je schakeling: klopt die optelling niet, dan meet je ergens verkeerd of loopt er stroom waar je ze niet verwacht.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">De gemeten collectorstroom ligt onder de berekende</div>
+        <p>Dat verschil kan je narekenen. Over de weerstand staat 0,0133 × 220 = 2,93 V, dus de led en de transistor samen nemen 5 - 2,93 = <strong>2,07 V</strong> voor hun rekening. In je berekening ging je uit van 1,8 V voor de led en niets voor de transistor.</p>
+        <p>Waar zit die 0,27 V dan? Aan de transistor ligt het nauwelijks: de V<sub>CE(sat)</sub>-curve hierboven geeft bij deze stroom maar een paar honderdsten van een volt. Het is dus vooral de led. Op <a href="../../Labo0/Reference/WetVanOhm.html#voorschakelweerstand-berekenen">de wet van Ohm</a> staat dat de V<sub>forward</sub> van een led meestal tussen 1,8 V en 2 V ligt, en jij nam de onderkant van dat bereik. Deze led zit aan de bovenkant.</p>
+        <p>Voor het dimensioneren maakt dat niets uit, want het valt volledig binnen de marge van factor 5 op de hFE. Reken gerust verder met 1,8 V.</p>
+    </div>
+
+</div>
+
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+</body>
+</html>

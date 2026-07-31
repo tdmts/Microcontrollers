@@ -11,13 +11,11 @@
 <body>
 <div class="container">
     <h1>De transistor als schakelaar</h1>
-    <p class="lead">Een <a href="DCMotor.html">DC motor</a> trekt meer stroom dan een pin van je Arduino mag leveren. Met een transistor los je dat op. Een kleine stroom uit je pin schakelt dan een veel grotere stroom uit een aparte voeding.</p>
-
-    <p>Je gebruikt de transistor hier dus niet om een signaal te versterken, maar als een <strong>schakelaar die je met software bedient</strong>. Hij staat ofwel helemaal open, ofwel helemaal dicht, en niets ertussen.</p>
+    <p class="lead">Een <a href="DCMotor.html">DC motor</a> trekt meer stroom dan een pin van je Arduino mag leveren. Dat probleem en zijn oplossing ken je al uit <a href="../../Labo1/Reference/VermogenSchakelen.html">Vermogen schakelen</a> in labo 1, waar je met een transistor een groep leds schakelde. Hier is de stroom een stuk groter, en komt er één component bij.</p>
 
     <h2 id="de-drie-aansluitingen">De drie aansluitingen</h2>
 
-    <p>Een NPN-transistor heeft drie aansluitingen. Stuur je een kleine stroom in de <strong>basis</strong>, dan laat hij een veel grotere stroom door tussen <strong>collector</strong> en <strong>emitter</strong>.</p>
+    <p>Een NPN-transistor heeft drie aansluitingen. Stuur je een kleine stroom in de <strong>basis</strong>, dan laat hij een veel grotere stroom door tussen <strong>collector</strong> en <strong>emitter</strong>. Bij een motor gaan ze hierheen:</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
@@ -68,74 +66,23 @@
 
     <h2 id="de-basisweerstand-berekenen">De basisweerstand berekenen</h2>
 
-    <p>Tussen je Arduino-pin en de basis hoort een weerstand. Zonder die weerstand loopt er een ongelimiteerde stroom je basis in en gaat je pin, je transistor of allebei eraan.</p>
-
-    <p>De formule voor die weerstand is de <a href="../../Labo0/Reference/WetVanOhm.html">wet van Ohm</a> toegepast op de basiskring:</p>
+    <p>De weerstand tussen je pin en de basis reken je uit zoals in labo 1, met dezelfde twee formules en dezelfde marge op de hFE. Waar die formules vandaan komen en waarom je door 5 deelt, staat op <a href="../../Labo1/Reference/VermogenSchakelen.html#de-basisweerstand-berekenen">Vermogen schakelen</a>.</p>
 
     <div class="math-tex">
-        $$ R_b = \frac{V_{cc} - V_{be}}{I_b} $$
+        $$ I_b = \frac{I_c}{h_{FE}} \qquad R_b = \frac{V_{cc} - V_{be}}{I_b} $$
     </div>
 
-    <p>Je hebt dus drie dingen nodig. We werken het voorbeeld helemaal uit voor de motor van 80 mA uit <a href="DCMotor.html">De DC motor</a>.</p>
-
-    <h3>1. Vcc, de spanning op je pin</h3>
-
-    <p>Een uitgangspin van de UNO die hoog staat geeft 5 V. Dus <strong>Vcc = 5 V</strong>.</p>
-
-    <h3>2. Vbe, de spanning over de basis-emitterjunctie</h3>
-
-    <p>Die zoek je op in de <a href="../../datasheets/p2n2222a.pdf">datasheet</a>. Voor deze transistor is dat ongeveer <strong>0,7 V</strong>. Bij zowat elke siliciumtransistor kom je op die waarde uit.</p>
-
-    <div class="my-4">
-        <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/p2n2222a-datasheet-vbe.png" alt="Fragment uit de datasheet van de P2N2222A met de basis-emitter verzadigingsspanning">
-        </figure>
-    </div>
-
-    <h3>3. Ib, de stroom die je in de basis moet sturen</h3>
-
-    <p>Die volgt uit de stroom die de motor trekt, gedeeld door de stroomversterkingsfactor <strong>hFE</strong> van de transistor:</p>
-
-    <div class="math-tex">
-        $$ I_b = \frac{I_c}{h_{FE}} $$
-    </div>
-
-    <p><code>Ic</code> is de collectorstroom, en dat is de stroom door je motor, dus <strong>80 mA</strong>. De hFE zoek je weer op in de datasheet.</p>
-
-    <div class="my-4">
-        <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/p2n2222a-datasheet-hfe.png" alt="Fragment uit de datasheet van de P2N2222A met de tabel van de DC-stroomversterking hFE">
-        </figure>
-    </div>
-
-    <p>Daar lees je een hFE van ongeveer <strong>200</strong> af.</p>
-
-    <div class="info-box warning">
-        <div class="info-title warning">Neem ruim marge op de hFE</div>
-        <p>Reken je met de hFE uit de datasheet, dan stuur je precies genoeg basisstroom om die 80 mA te halen <em>als alles meezit</em>, en dat is te krap. De hFE verschilt sterk van exemplaar tot exemplaar, zakt bij hogere stroom en verandert met de temperatuur. Bovendien wil je dat de transistor in <strong>saturatie</strong> gaat en dus helemaal openstaat, zodat er zo weinig mogelijk spanning over hem staat en hij dus zo weinig mogelijk warmte maakt. Een transistor die maar half openstaat verstookt het verschil.</p>
-        <p>Deel de hFE daarom ruim door. Hier delen we 200 door 5 en rekenen we verder met <strong>hFE = 40</strong>. Je stuurt dan vijf keer meer basisstroom dan strikt nodig, en dat is de bedoeling.</p>
-    </div>
-
-    <h3>De berekening</h3>
-
-    <p>Met hFE = 40 wordt de basisstroom:</p>
+    <p>Alleen de collectorstroom is anders. Voor de motor van 80 mA uit <a href="DCMotor.html">De DC motor</a>, met Vcc = 5 V, Vbe = 0,7 V en een hFE van 200 die we tot 40 herleiden:</p>
 
     <div class="math-tex">
         $$ I_b = \frac{0{,}08\ A}{40} = 0{,}002\ A = 2\ mA $$
     </div>
 
-    <p>En daarmee de basisweerstand:</p>
-
     <div class="math-tex">
         $$ R_b = \frac{5\ V - 0{,}7\ V}{0{,}002\ A} = 2150\ \Omega $$
     </div>
 
-    <p>Die waarde bestaat niet als standaardweerstand. Je kiest de dichtstbijzijnde die je hebt liggen, en dat is <strong>2,2 kΩ</strong>.</p>
-
-    <div class="info-box remark">
-        <div class="info-title remark">Naar boven of naar beneden afronden?</div>
-        <p>Je rondt hier naar boven af, van 2150 naar 2200 Ω, en dus stuur je iets minder basisstroom dan berekend. Dat mag, want in die 2 mA zat al een marge van factor 5. Zit je twijfelachtig dicht bij de grens, kies dan de kleinere weerstand, want te veel basisstroom is zelden een probleem en te weinig wel.</p>
-    </div>
+    <p>Die waarde bestaat niet als standaardweerstand, dus je neemt de dichtstbijzijnde die je hebt liggen: <strong>2,2 kΩ</strong>. Vbe en hFE zoek je op in de <a href="../../datasheets/p2n2222a.pdf">datasheet van de transistor</a>.</p>
 
     <h2 id="wat-de-transistor-niet-kan">Wat de transistor niet kan</h2>
 

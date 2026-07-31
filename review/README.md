@@ -18,7 +18,7 @@ bewijs dat er echt iets zit, geen ruis.
 | Ledger | Gelezen | Bevindingen | Nog open |
 |---|---|---|---|
 | [labo0.md](labo0.md) | 2 oefeningen, 14 referentiepagina's | 8 | 1 |
-| [labo1.md](labo1.md) | 7 oefeningen (nu 8) | 8 | 2 |
+| [labo1.md](labo1.md) | 7 oefeningen (na de herstructurering van 2026-07-31: 6) | 8 | 1 |
 | [labo2.md](labo2.md) | 10 oefeningen, 3 referentiepagina's | 7 | 1 |
 | [labo3.md](labo3.md) | 6 oefeningen, 1 referentiepagina | 4 | 1 |
 | [labo4.md](labo4.md) | 5 oefeningen, 3 referentiepagina's | 7 | 0 |

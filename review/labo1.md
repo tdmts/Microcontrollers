@@ -6,6 +6,41 @@ moment geen enkele referentiepagina, zie L1-04.
 Na deze ronde telt labo 1 acht oefeningen in plaats van zeven, en heeft het een eigen
 `Reference/`-map met drie pagina's. De 7-segmentreeks is opnieuw opgebouwd, zie L1-06.
 
+## Herstructurering 2026-07-31 (geen reviewronde)
+
+Dit is geen studentbril-ronde maar een structurele ingreep op vraag van de gebruiker: labo 1
+telde negen oefeningen en vier daarvan overlapten elkaar. Labo 1 telt er nu **zes**, en de
+`Reference/`-map vier pagina's. Wat er veranderde:
+
+- De vier 7-segmentoefeningen zijn er twee geworden:
+  `TellerOp7SegmentDisplay.html` (8-animatie + teller op &eacute;&eacute;n display) en
+  `TellerOpDubbel7SegmentDisplay.html` (transistor + multiplexing + teller op twee displays).
+  De opbouw van L1-06 blijft, maar per deel binnen een pagina in plaats van per kaart, elk
+  met een eigen tussenoplossing en een eigen blok in de checklist. Zie de aanvulling bij L1-06.
+- De losse oefening `DrieLedsMetTransistor.html` is geschrapt. Het uitgewerkte voorbeeld van
+  de drie leds blijft staan op [Vermogen schakelen](../Labo1/Reference/VermogenSchakelen.html);
+  de student past de berekening nu zelf toe op het dubbele display, waar het stroomprobleem
+  echt bestaat. Daarmee vervangt een transistor per display de 74HC14 uit het oude
+  TinkerCAD-sjabloon, die nergens uitgelegd werd en zelf maar ~25 mA mag voeren.
+- Woordafspraak, voortaan repo-breed: een **display** is &eacute;&eacute;n 7-segment display,
+  een **segment** is &eacute;&eacute;n led daarin, een **cijfer** is de waarde 0 tot en met 9.
+  De oude code gebruikte `cijfer` voor allebei (`cijferKiesPin` naast `toonCijfer(links)`).
+  `displayPins` en `kiesDisplay()` vervangen `cijferKiesPin` en `CIJFER_LINKS`.
+- De 7-segmentoefeningen gaan voortaan uit van een **common cathode** display: de
+  gemeenschappelijke pin aan de GND, een segment brandt bij `HIGH`. De constante
+  `SEGMENT_AAN` is daarmee verdwenen uit de vier sketches die haar gebruikten (de twee
+  oplossingen van `TellerOp7SegmentDisplay.html`, de twee van
+  `TellerOpDubbel7SegmentDisplay.html` en die van
+  `Labo2/Exercises/ThermometerOp7Segment.html`), die schrijven nu rechtstreeks `HIGH`/`LOW`.
+  Zie de aanvulling bij L1-07.
+- De vijf oude ids zijn vervallen en vervangen door `teller7segment` en
+  `tellerdubbel7segment`. Zelfde afweging als in L1-06: de checklists zijn inhoudelijk
+  veranderd en de opgeslagen vinkjes hangen aan hun index.
+
+De historische bevindingen hieronder verwijzen naar pagina's die intussen verdwenen zijn.
+Die links blijven staan zoals ze waren: ze beschrijven de toestand op het moment van de
+bevinding.
+
 Voorkennis waarvan deze ronde vertrekt: labo 0 in zijn gecorrigeerde vorm. De student kent
 setup/loop, uploaden, constanten en variabelen met hun types, rekenkundige operatoren, de
 wet van Ohm, selecties, iteraties (for, while, do-while), eigen functies met parameters,
@@ -147,7 +182,11 @@ wat er getekend moet worden, inclusief de waarschuwing dat het verschil tussen d
 en de sourcingbedrading uit de tekening moet blijken. `check-content.sh` meldt ze bij elke
 run als niet-blokkerende waarschuwing.
 
-**Status:** open, wacht op de tekeningen
+**Aanvulling (2026-07-31):** de tekeningen bestaan intussen.
+`img/looplicht-sinking-schema.png` en `img/knightrider-sourcing-schema.png` staan in beide
+pagina's en tonen het verschil tussen de sinking- en de sourcingbedrading.
+
+**Status:** opgelost, 2026-07-31
 
 ---
 
@@ -185,7 +224,26 @@ pagina. Voortgang die studenten daarop hadden staan, vervalt dus, en dat is hier
 keuze: de checklist van die oefening is inhoudelijk veranderd, en de opgeslagen
 vinkjestoestand hangt aan de index binnen die checklist.
 
-**Status:** opgelost, 2026-07-26
+**Aanvulling (2026-07-31):** de reeks is teruggebracht van vier oefeningen naar twee, omdat
+oefening 5 en 6 exact dezelfde schakeling gebruikten en 7 en 8 ~80% van hun oplossingscode
+deelden. Het uitgangspunt van deze bevinding blijft overeind: elk nieuw ding komt nog altijd
+apart binnen, maar als genummerd deel van een pagina.
+
+| Pagina | Deel | Wat er nieuw is |
+|---|---|---|
+| Teller op een 7-segment display | 1 | pinout uitzoeken, common anode of cathode vaststellen, een rij pinnen doorlopen |
+| | 2 | de 8-animatie |
+| | 3 | de cijferpatronentabel, dus de tweedimensionale array |
+| Teller op een dubbel 7-segment display | 1 | het stroomprobleem van veertien segmenten |
+| | 2 | multiplexing |
+| | 3 | een transistor per display, met de basisweerstand zelf berekend |
+| | 4 | een vast getal stabiel houden |
+| | 5 | niet-blokkerende timing met `millis()` |
+
+Elk deel heeft een eigen tussenoplossing en een eigen blok in de checklist, dus de student
+kan nog altijd per stap afvinken. Wat verdween, zijn de dashboardkaarten, niet de opbouw.
+
+**Status:** opgelost, aangevuld 2026-07-31
 
 ---
 
@@ -208,7 +266,27 @@ oplossingen van de twee dubbel-displayoefeningen bestaan nog altijd deels uit pl
 omdat het pinout van het TinkerCAD-sjabloon nergens getoond wordt. Komt terug in een
 volgende ronde.
 
-**Status:** open, besluit uitgesteld
+**Besluit (2026-07-31):** aanvaard, optie 'TODO-figuur inplannen', dezelfde aanpak als bij
+L1-05. De twee pagina's zijn er &eacute;&eacute;n geworden, en die heeft een `figure` met
+`img/TODO-dubbel7segment-pinout.png` waar het pinout van het sjabloon hoort, plus twee
+andere TODO-figuren voor het schema met de transistoren en voor de stroommeting. De
+gebruiker maakt een nieuw TinkerCAD-sjabloon met een transistor per display en levert de
+screenshots. De placeholders in de oplossing zijn intussen wel weg: `CIJFER_LINKS` bestaat
+niet meer, want met een NPN onder elk display activeert een hoog niveau altijd dat display.
+Wat er overblijft is `SEGMENT_AAN`, en dat is een echte eigenschap van jouw display in
+plaats van een gat in de opgave.
+
+**Aanvulling (2026-07-31):** die laatste zin geldt niet meer. Op vraag van de gebruiker
+ligt het displaytype nu vast: beide teller-oefeningen gaan uit van een common cathode
+display, met de gemeenschappelijke pin aan de GND en een segment dat brandt bij `HIGH`.
+`SEGMENT_AAN` is daarmee uit alle sketches verdwenen. De student stelt het type niet meer
+zelf vast; de eerste stap van `TellerOp7SegmentDisplay.html` dient nog om te controleren
+welke Arduino-pin aan welk segment hangt. Het verschil tussen common anode en common
+cathode blijft staan op
+[ZevenSegmentDisplay.html](../Labo1/Reference/ZevenSegmentDisplay.html), waar de theorie
+hoort. De oplossingen bevatten hiermee geen enkele placeholder meer.
+
+**Status:** open, wacht op de tekeningen
 
 ---
 

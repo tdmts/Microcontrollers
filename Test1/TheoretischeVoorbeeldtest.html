@@ -110,13 +110,13 @@ void loop()
         <div class="spoiler-content solution-content">
             <p><strong>Deel 1</strong></p>
 
-            <p>Op een dubbel display zijn de zeven segmentaansluitingen van beide cijfers intern aan elkaar geknoopt: segment a van links en segment a van rechts hangen aan dezelfde pin. Dat spaart pinnen uit, maar het betekent ook dat een patroon dat je op de segmentpinnen zet, meteen naar <em>allebei</em> de cijfers gaat. Een 4 links en een 7 rechts tegelijk kan dus niet. Alleen de gemeenschappelijke pin van elk cijfer is apart uitgebracht, en daarmee kies je welk cijfer op dat moment stroom krijgt.</p>
+            <p>Een dubbel display bevat twee 7-segment displays, en hun zeven segmentaansluitingen zijn intern aan elkaar geknoopt: segment a van het linkse en segment a van het rechtse hangen aan dezelfde pin. Dat spaart pinnen uit, maar het betekent ook dat een patroon dat je op de segmentpinnen zet, meteen naar <em>allebei</em> de displays gaat. Een 4 links en een 7 rechts tegelijk kan dus niet. Alleen de gemeenschappelijke pin van elk display is apart uitgebracht, en daarmee kies je welk display op dat moment stroom krijgt.</p>
 
-            <p>Multiplexing gebruikt dat: je zet het patroon van het linkse cijfer klaar, activeert alleen links, wacht heel even, zet dan het patroon van het rechtse cijfer klaar, activeert alleen rechts, wacht weer even, en begint opnieuw. Doe je dat traag, dan zie je de cijfers om beurten flikkeren. Doe je het snel genoeg, ongeveer vanaf 50 keer per seconde per cijfer, dan kan je oog de twee niet meer scheiden en zie je gewoon twee cijfers naast elkaar. Dat komt door de <strong>persistentie van het netvlies</strong>: je oog blijft een lichtpunt nog een fractie van een seconde zien nadat het al gedoofd is. Precies dezelfde truc als bij film.</p>
+            <p>Multiplexing gebruikt dat: je zet het patroon van het linkse cijfer klaar, activeert alleen het linkse display, wacht even, zet dan het patroon van het rechtse cijfer klaar, activeert alleen het rechtse, wacht weer even, en begint opnieuw. Doe je dat traag, dan zie je de cijfers om beurten flikkeren. Doe je het snel genoeg, ongeveer vanaf 50 keer per seconde per display, dan kan je oog de twee niet meer scheiden en zie je gewoon twee cijfers naast elkaar. Dat komt door de <strong>persistentie van het netvlies</strong>: je oog blijft een lichtpunt nog een fractie van een seconde zien nadat het al gedoofd is. Precies dezelfde truc als bij film.</p>
 
             <p><strong>Deel 2</strong></p>
 
-            <p>Zolang je programma iets anders doet, staat er geen enkel cijfer aan. Met een <code>delay(1000)</code> in je loop blijft je display dus een volle seconde donker, en dan ziet de student een display dat kort oplicht en daarna uitgaat, niet een teller.</p>
+            <p>Zolang je programma iets anders doet, staat er geen enkel display aan. Met een <code>delay(1000)</code> in je loop blijft je display dus een volle seconde donker, en dan ziet de student een display dat kort oplicht en daarna uitgaat, niet een teller.</p>
 
             <p>De oplossing is de tijd bijhouden in plaats van erop te wachten, met <code>millis()</code>. Je loop blijft dan gewoon doorlopen en multiplexen, en telkens je erlangs komt kijk je of er al genoeg tijd voorbij is:</p>
 

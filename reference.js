@@ -66,10 +66,22 @@ window.LAB_REFERENCE = {
                 ]
             },
             {
+                name: 'Vermogen schakelen',
+                topics: [
+                    { id: 'vermogenschakelen', name: 'Vermogen schakelen', href: 'VermogenSchakelen.html', blurb: 'Hoeveel stroom een uitgangspin levert, waarom een relais hier een transistor nodig heeft en dus niets oplost, en hoe je met een berekende basisweerstand wel een grote stroom schakelt.' }
+                ]
+            },
+            {
                 name: 'Displays',
                 topics: [
                     { id: 'zevensegment', name: 'Het 7-segment display', href: 'ZevenSegmentDisplay.html', blurb: 'De segmenten a tot g, het verschil tussen common anode en common cathode, en hoe een cijfer een patroon wordt.' },
-                    { id: 'multiplexing', name: 'Multiplexing', href: 'Multiplexing.html', blurb: 'Twee cijfers tonen met de pinnen van één display door er zo snel tussen te wisselen dat je oog het verschil niet ziet.' }
+                    { id: 'multiplexing', name: 'Multiplexing', href: 'Multiplexing.html', blurb: 'Twee cijfers tonen met zeven segmentpinnen door de twee displays zo snel om de beurt te activeren dat je oog het verschil niet ziet.' }
+                ]
+            },
+            {
+                name: 'Datasheets',
+                topics: [
+                    { id: 'datasheetp2n2222a', name: 'P2N2222A (2N2222)', href: '../../datasheets/p2n2222a.pdf', blurb: 'De datasheet van de NPN-transistor. Hierin vind je de Vbe en de hFE die je nodig hebt om je basisweerstand te berekenen.' }
                 ]
             },
             {
