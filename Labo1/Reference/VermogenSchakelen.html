@@ -85,6 +85,8 @@
 
     <p>De meter wijst geen 43,5 mA aan maar <strong>24,6 mA</strong>. Die 24,6 mA is niet wat je schakeling vraagt, het is wat de pin er nog van kan maken. Onder een belasting die hij niet aankan zakt zijn uitgangsspanning weg, en met minder spanning over dezelfde weerstanden loopt er minder stroom. Je leds branden dus zwakker dan waarvoor je ze berekend hebt.</p>
 
+    <p>Hoever de spanning wegzakt, kan je narekenen. Een uitgangspin gedraagt zich als een bron van 5 V met ongeveer 50 Ω in serie, dus hoe meer stroom je vraagt, hoe minder spanning er overblijft. Bij 1 mA meet je nog 4,95 V, bij 12 mA nog 4,4 V, en bij de 24,6 mA hierboven nog ongeveer 3,8 V. Reken je met die 3,8 V in plaats van met 5 V over dezelfde drie weerstanden, dan kom je precies op de gemeten 24,6 mA uit.</p>
+
     <p>Kapot gaat je pin er niet meteen van, maar de uitgangstrap van de microcontroller wordt warm, en hoe verder je boven de grens zit hoe korter je bord meegaat. Onthou vooral het getal dat je zelf berekende: je hebt <strong>43,5 mA</strong> nodig, en dat is wat je schakeling straks moet kunnen leveren.</p>
 
     <div class="info-box tip">
@@ -337,8 +339,47 @@
 
     <div class="info-box remark">
         <div class="info-title remark">De gemeten collectorstroom ligt onder de berekende</div>
-        <p>Dat verschil kan je narekenen. Over de weerstand staat 0,0133 × 220 = 2,93 V, dus de led en de transistor samen nemen 5 - 2,93 = <strong>2,07 V</strong> voor hun rekening. In je berekening ging je uit van 1,8 V voor de led en niets voor de transistor.</p>
-        <p>Waar zit die 0,27 V dan? Aan de transistor ligt het nauwelijks: de V<sub>CE(sat)</sub>-curve hierboven geeft bij deze stroom maar een paar honderdsten van een volt. Het is dus vooral de led. Op <a href="../../Labo0/Reference/WetVanOhm.html#voorschakelweerstand-berekenen">de wet van Ohm</a> staat dat de V<sub>forward</sub> van een led meestal tussen 1,8 V en 2 V ligt, en jij nam de onderkant van dat bereik. Deze led zit aan de bovenkant.</p>
+        <p>Dat verschil kan je tot op de honderdste narekenen. Meet de voedingsspanning en elke spanningsval in de ledkring apart, en vergelijk met wat je berekening aannam:</p>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>Spanning</th>
+                        <th>Gemeten</th>
+                        <th>Aangenomen</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>op de 5V-rail die de leds voedt</td>
+                        <td>5,00 V<br>voltmeter tussen de plusrail en GND. Deze bron zakt niet in onder belasting, want hij komt van de spanningsregelaar en niet uit een uitgangspin</td>
+                        <td>5 V<br>de berekening gaat uit van de volle voedingsspanning</td>
+                    </tr>
+                    <tr>
+                        <td>over de led</td>
+                        <td>2,02 V<br>voltmeter tussen de plusrail en de kathode van de led</td>
+                        <td>1,8 V<br>de V<sub>forward</sub> van een rode led, zoals je ze bij de wet van Ohm invulde</td>
+                    </tr>
+                    <tr>
+                        <td>over de transistor, V<sub>CE(sat)</sub></td>
+                        <td>0,05 V<br>voltmeter tussen de collector en GND</td>
+                        <td>0 V<br>de transistor kwam in de berekening niet voor</td>
+                    </tr>
+                    <tr>
+                        <td>over de voorschakelweerstand</td>
+                        <td>2,93 V<br>voltmeter over de weerstand, en 5,00 − 2,02 − 0,05 geeft hetzelfde</td>
+                        <td>3,2 V<br>wat er na de led en de transistor van de 5 V overblijft</td>
+                    </tr>
+                    <tr>
+                        <td><strong>de onderste drie samen</strong></td>
+                        <td><strong>5,00 V</strong><br>2,02 + 0,05 + 2,93, dus de spanning op de rail</td>
+                        <td><strong>5 V</strong><br>1,8 + 0 + 3,2, dus de volle voedingsspanning</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>In beide kolommen tellen de drie spanningsvallen op tot wat de bron levert. Anders dan bij een uitgangspin geeft de 5V-rail hier ook echt 5,00 V, dus het verschil zit volledig in de verdeling eronder: de weerstand houdt 2,93 V over in plaats van 3,2 V, en daarmee loopt er 2,93 / 220 = <strong>13,3 mA</strong>, precies wat de ampèremeter aanwijst. Van de 0,27 V die je mist, zit 0,22 V in de led en 0,05 V in de transistor.</p>
+        <p>Het is dus vooral de led. Op <a href="../../Labo0/Reference/WetVanOhm.html#voorschakelweerstand-berekenen">de wet van Ohm</a> staat dat de V<sub>forward</sub> van een led meestal tussen 1,8 V en 2 V ligt, en jij nam de onderkant van dat bereik. Deze led zit aan de bovenkant. Aan de uitgangspin ligt het niet: de stroom voor de leds komt van de 5V-rail en niet uit pin 2, en die rail staat wel degelijk op 5 V.</p>
         <p>Voor het dimensioneren maakt dat niets uit, want het valt volledig binnen de marge van factor 5 op de hFE. Reken gerust verder met 1,8 V.</p>
     </div>
 
