@@ -55,7 +55,8 @@
 #
 # What --fix repairs: em-dashes, K&R braces that end a line, a missing
 # referrerpolicy, an init call naming the wrong lab, a manifest href with the
-# wrong casing, and assets that exist but were never staged. What it leaves
+# wrong casing or written as a full Pages URL, and assets that exist but were
+# never staged. What it leaves
 # alone: anything needing words (a missing blurb) or a decision (which lab an
 # orphan page belongs to, what to call a downloaded image).
 set -uo pipefail
@@ -105,7 +106,10 @@ fi
 #   pasteInOrion.html - the Orion iframe wrapper. Not an Orion-styled page.
 EXEMPT_PAGES=" template.html pasteInOrion.html "
 
-# The GitHub Pages base URL that exercises.js hrefs point at.
+# The GitHub Pages base URL. A manifest href may never start with it: the
+# dashboard renders the href verbatim, so an absolute card link throws a local
+# preview onto the live site on the first click. exercises.js used to be written
+# this way, hence the repair in --fix.
 PAGES_BASE="https://tdmts.github.io/Microcontrollers/"
 
 # Manifest values are single-quoted today, but accept either quote style so a
@@ -225,7 +229,7 @@ rewrite() {
 }
 
 do_fix() {
-  local f hit call want have mf href target new_href key
+  local f hit call want have mf sub href target new_href key
 
   # Em-dash to comma. The check bans them outright, and a comma is the
   # substitution that always reads correctly in Dutch; a colon or "en"/"maar"
@@ -282,35 +286,42 @@ do_fix() {
       perl -0777 -pi -e 's{([ \t]*)(<script src="([^"]*)back-link\.js"></script>)(\r?\n)}{$1<script src="$3reference.js"></script>$4$1$2$4}'
   done
 
+  # An exercises.js href written as a full Pages URL. The dashboard prints the
+  # href straight into the card, so every click in a local preview leaves for
+  # the live site. The bare filename works in both places; run before the
+  # casing repair below, which expects that form.
+  if [ -f exercises.js ] && grep -q "href: '$PAGES_BASE" exercises.js; then
+    rewrite exercises.js "Pages URLs -> bare filenames" \
+      sed -i -E "s@href: '${PAGES_BASE}Labo[0-9]+/Exercises/@href: '@g"
+  fi
+
   # A manifest href whose casing does not match the file on disk.
   for mf in exercises.js reference.js; do
     [ -f "$mf" ] || continue
+    case "$mf" in exercises.js) sub="exercises" ;; *) sub="reference" ;; esac
     while IFS= read -r href; do
       [ -z "$href" ] && continue
       href="${href#*\'}"; href="${href%\'}"
       case "$href" in
-        "$PAGES_BASE"*) target="${href#"$PAGES_BASE"}" ;;
-        http*) continue ;;
-        *) [ "$mf" = "reference.js" ] || continue
-           # A reference href is a bare filename, so find which lab owns it.
-           # Matched through the tracked-path map rather than with -e, which
-           # would be case-blind on Windows and case-strict on the CI runner.
-           target=""
-           for key in "${!TRACKED_LC[@]}"; do
-             case "$key" in
-               labo*/reference/"${href,,}") target="${TRACKED_LC[$key]}"; break ;;
-             esac
-           done
-           [ -n "$target" ] || continue ;;
+        http*|/*) continue ;;
       esac
+      # A manifest href is a bare filename, so find which lab owns it. Matched
+      # through the tracked-path map rather than with -e, which would be
+      # case-blind on Windows and case-strict on the CI runner. Only the folder
+      # comes from that lookup: the filename keeps the manifest's own spelling,
+      # or classify_target below would be handed the tracked path it is meant
+      # to compare against and report every href as correct.
+      target=""
+      for key in "${!TRACKED_LC[@]}"; do
+        case "$key" in
+          labo*/"$sub"/"${href,,}") target="${TRACKED_LC[$key]%/*}/$href"; break ;;
+        esac
+      done
+      [ -n "$target" ] || continue
       classify_target "$target"
       case "$CT" in
         case:*)
-          if [ "$mf" = "exercises.js" ]; then
-            new_href="$PAGES_BASE${CT#case:}"
-          else
-            new_href="${CT##*/}"
-          fi
+          new_href="${CT##*/}"
           rewrite "$mf" "href case -> ${CT#case:}" sed -i "s|$href|$new_href|g"
           ;;
       esac
@@ -411,7 +422,9 @@ require_fields() {
   done
 }
 
-# exercises.js: one entry per line, hrefs are absolute Pages URLs.
+# exercises.js: one entry per line, hrefs are bare filenames inside
+# LaboN/Exercises/ (same rule as reference.js, and the same reason: the
+# dashboard card and the checklist page both sit in that folder).
 if [ -f exercises.js ]; then
   lab=""
   declare -A seen_id=() seen_order=()
@@ -449,18 +462,19 @@ if [ -f exercises.js ]; then
       seen_order["$lab/$order"]="$id"
     fi
 
+    labdir="Labo${lab#labo}"
     case "$href" in
-      "$PAGES_BASE"*) target="${href#"$PAGES_BASE"}" ;;
-      http*) err "exercises.js: $lab/$id href points outside the site ($href)"; continue ;;
-      *) norm_path "$href"; target="$NP" ;;
+      "$PAGES_BASE"*) err "exercises.js: $lab/$id href is a full Pages URL ($href); the dashboard renders it verbatim, so a local preview jumps to the live site. Use the bare filename."; continue ;;
+      http*|/*) err "exercises.js: $lab/$id href points outside the site ($href)"; continue ;;
     esac
+    norm_path "$labdir/Exercises/$href"
+    target="$NP"
     MANIFEST_PAGES["$target"]=1
     [[ "$line" == *"checklistDriven: true"* ]] && DRIVEN["$target"]=1
 
-    labdir="Labo${lab#labo}"
     case "$target" in
-      "$labdir"/*) ;;
-      *) err "exercises.js: $lab/$id href lives under ${target%%/*}/ instead of $labdir/" ;;
+      "$labdir"/Exercises/*) ;;
+      *) err "exercises.js: $lab/$id href reaches out to $target instead of staying in $labdir/Exercises/" ;;
     esac
 
     classify_target "$target"

@@ -39,7 +39,8 @@ bash scripts/check-content.sh --fix
 
 Dit herstelt zelf wat maar één juist antwoord heeft: em-dashes, accolades die op de verkeerde regel
 staan, een ontbrekende `referrerpolicy`, een `initChecklistSync` die naar het verkeerde labo wijst,
-een `href` met verkeerde hoofdletters, een referentiepagina die `reference.js` niet inlaadt, en
+een `href` met verkeerde hoofdletters of met een volledige `tdmts.github.io`-URL ervoor, een
+referentiepagina die `reference.js` niet inlaadt, en
 afbeeldingen die je vergat toe te voegen aan git. Wat het niet kan verzinnen (een ontbrekende
 `blurb` bijvoorbeeld) blijft gewoon in de lijst staan.
 
@@ -214,7 +215,7 @@ af en toe iets mist.
    | `id` | unieke sleutel binnen het labo, kleine letters. Wordt gebruikt in `localStorage`, dus achteraf wijzigen wist de voortgang van studenten. |
    | `order` | volgorde op het dashboard. Uniek binnen het labo. De volgorde in de array doet er niet toe. |
    | `name` | titel op de dashboardkaart |
-   | `href` | volledige `https://tdmts.github.io/Microcontrollers/...` URL. De bestandsnaam moet exact overeenkomen met je HTML-bestand, ook qua hoofdletters. |
+   | `href` | enkel de bestandsnaam, bijvoorbeeld `'Looplicht.html'`. De pagina staat naast `dashboard.html`, dus meer is niet nodig. Ze moet exact overeenkomen met je HTML-bestand, ook qua hoofdletters. Gebruik nooit een volledige `https://tdmts.github.io/...` URL: het dashboard zet de `href` letterlijk in de kaart, en dan springt elke klik in je lokale kopie naar de online site. Het script keurt dat af. |
    | `difficulty` | 1, 2 of 3. Enkel die drie: bij een andere waarde verdwijnen de pepertjes volledig van de kaart, zonder foutmelding. Het script controleert dit. |
    | `time` | ruwe schatting, bijvoorbeeld `'~20 min'` |
    | `blurb` | een zin die op de kaart komt |

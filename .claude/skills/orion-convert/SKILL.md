@@ -280,7 +280,7 @@ itself. So treat the checklist and the QR widget as two separate things:
     | `id` | lowercase, no spaces, unique within the lab |
     | `order` | next unused number, scoped to that lab |
     | `name` | matches the `<h1>`, and says what the student builds (see below) |
-    | `href` | `https://tdmts.github.io/Microcontrollers/LaboN/Exercises/{file}` |
+    | `href` | the bare filename, `{file}.html`, next to that lab's `dashboard.html` |
     | `difficulty` | 1, 2 or 3 |
     | `time` | rough estimate, e.g. `'~20 min'` |
     | `blurb` | one sentence for the dashboard card |

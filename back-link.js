@@ -165,9 +165,8 @@
         /* -------------------------------------------------- forward link */
 
         // Same "which manifest entry is this page?" rule as checklist-sync.js:
-        // compare basenames, lowercased. That is what lets exercises.js keep its
-        // absolute https://tdmts.github.io/... hrefs and still match a page
-        // served from localhost or opened from disk.
+        // compare basenames, lowercased. Both manifests hold bare filenames, so
+        // this is only tolerant of a stray path in front of one.
         function baseName(href) {
             return String(href).split(/[?#]/)[0].split('/').pop().toLowerCase();
         }
@@ -188,11 +187,12 @@
                 var orderB = typeof b.order === 'number' ? b.order : Number.MAX_SAFE_INTEGER;
                 return orderA - orderB;
             }).map(function (e) {
-                // Keep only the part after LaboN/ and rehang it on this page's
-                // own walk back up. Following the absolute Pages URL would throw
-                // a student out of a local preview halfway through a lab.
-                var rel = /\/labo\d+\/(.+)$/i.exec(String(e.href));
-                return { name: e.name, href: rel ? prefix + rel[1] : baseName(e.href) };
+                // A manifest href is a bare filename next to this page, exactly
+                // as in reference.js below, so it is resolved against the
+                // current page and works in a local preview as well as on
+                // Pages. (Matching is on baseName(), which lowercases; the href
+                // itself may not be, since Pages is case-sensitive.)
+                return { name: e.name, href: e.href };
             });
         }
 

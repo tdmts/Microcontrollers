@@ -31,7 +31,8 @@ in order:
    tracked by git with the exact same casing (GitHub Pages is case-sensitive and serves only tracked
    files, so a case typo or an uncommitted image works locally and 404s in production). Assets named
    `TODO-*` are reported as non-blocking warnings, for artwork that is planned but not drawn yet.
-2. **Manifests match the filesystem** — every `exercises.js` / `reference.js` `href` resolves, sits
+2. **Manifests match the filesystem** — every `exercises.js` / `reference.js` `href` is relative
+   (an absolute Pages URL is rejected, see the manifest section below), resolves, sits
    under its own lab folder, and has a unique `id` and `order`; every entry carries every field the
    engines read (`name`, `difficulty`, `time`, `blurb` for exercises, `name` + `blurb` for reference
    topics, all non-empty, since a missing field renders a blank card rather than an error);
@@ -164,7 +165,7 @@ Reach for this only when the page type genuinely differs, not to quiet a page yo
 
 `bash scripts/check-content.sh --fix` repairs the mechanical violations first and then reports the
 rest: em-dashes, K&R braces that end a line, a missing `referrerpolicy`, an init call naming the
-wrong lab, a manifest `href` with the wrong casing, a reference topic that never loads
+wrong lab, a manifest `href` with the wrong casing or written as a full Pages URL, a reference topic that never loads
 `reference.js` (the tag has exactly one place to go, right above `back-link.js`, with the same
 relative prefix), and assets that exist but were never staged.
 It deliberately does *not* touch anything needing words (a missing `blurb`) or a decision (which lab
@@ -238,8 +239,12 @@ there, not in the per-page HTML:
 
 - [exercises.js](exercises.js) → `window.LAB_EXERCISES.laboN` — every lab's exercise list. Read by
   both the lab dashboard and each exercise page's checklist sync. Ordering is driven by each entry's
-  `order` number (not array position). `href` basename **must** match the page's filename
-  (case-insensitive) or checklist sync silently no-ops.
+  `order` number (not array position). A `href` is a **bare filename** next to that lab's
+  `dashboard.html`, and must match the page's filename (case-insensitive) or checklist sync silently
+  no-ops. Never a full `https://tdmts.github.io/...` URL: `dashboard.js` prints the `href` straight
+  into the card, so an absolute one sends every click in a local preview to the live site. The whole
+  manifest was written that way until July 2026; rule 2 of the content check now rejects it and
+  `--fix` strips the prefix.
 - [reference.js](reference.js) → `window.LAB_REFERENCE.laboN` — every lab's reference topics, grouped
   into categories (shown in full, ordered by array position). A topic `href` is normally a bare
   filename next to `reference.html`, but it may also reach out of the lab folder to a document, as
