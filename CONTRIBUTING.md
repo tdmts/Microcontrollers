@@ -257,9 +257,13 @@ zelf bij.
 
 ## Terug- en volgende-links
 
-`back-link.js` zet zelf een navigatierij boven en onder elke pagina: links "Terug naar ...", rechts
+`back-link.js` zet zelf een navigatierij boven elke pagina: links "Terug naar ...", rechts
 "Volgende: ...". Je hoeft er niets voor op te roepen, het script leest alles uit het pad en uit het
 manifest van dat labo.
+
+Die rij blijft bovenaan staan terwijl je scrolt, en daarom staat ze er maar één keer. Vroeger stond
+dezelfde rij ook onderaan de pagina, zodat een lange pagina niet zonder uitweg eindigde. Een balk die
+nooit uit beeld verdwijnt lost dat op zonder zichzelf te herhalen.
 
 De volgorde komt uit de manifests, niet uit de pagina:
 
@@ -275,6 +279,29 @@ valt de "Volgende" gewoon weg: twee keer dezelfde link naast elkaar leest als ee
 
 Geen "Volgende"-link krijgen: `dashboard.html`, `reference.html` (dat zijn de overzichten zelf) en
 alles onder `TestN/` (daar bepaalt `overview.html` de volgorde met gewone links).
+
+## Het labomenu
+
+Midden tussen die twee links staat op elke oefening- en theoriepagina een knop met de positie van de
+pagina ("Oefening 3 / 10"). Die klapt het menu van het hele labo open: een tab **Theorie** met alle
+theoriepagina's, en een tab **Oefeningen** met een vinkje bij alles wat al afgewerkt is. Onderaan
+staat een link naar het dashboard of naar het theorie-overzicht.
+
+De theorie staat vooraan omdat dat de volgorde van het vak is. Welke tab *openklapt* is iets anders:
+dat is altijd de soort van de pagina waar je op staat, want op een oefeningpagina in de theorielijst
+belanden verbergt net de lijst waarvoor het menu bestaat.
+
+Dat menu bestaat omdat de pagina's in een iframe op Orion staan. Klikt een student daar een oefening
+aan op het dashboard, dan vervangt die oefening de enige lijst die hij had. De bovenste navigatierij
+plakt daarom aan de bovenkant van het Orion-venster en blijft staan tijdens het scrollen.
+
+Je hoeft er niets voor te doen. Alles komt uit `exercises.js` en `reference.js` en uit dezelfde
+`localStorage`-sleutels die het dashboard schrijft, dus een oefening die je aan het manifest toevoegt
+staat vanzelf in het menu van elke pagina van dat labo. Een pagina laadt maar één manifest, dus het
+andere haalt `back-link.js` zelf op uit de hoofdmap.
+
+Geen menu krijgen: `dashboard.html` en `reference.html` (die tonen de lijst al) en alles onder
+`TestN/` (geen manifest). Datasheets staan er niet in, net zoals ze niet in de "Volgende"-rij staan.
 
 ## Een volledig nieuw labo toevoegen
 

@@ -17,7 +17,10 @@ using [pasteInOrion.html](pasteInOrion.html) (edit only the iframe `src` per top
 There is **no build system, package manager, linter, or test suite**. You edit HTML/CSS/JS directly.
 To preview, open a page in a browser or push to GitHub Pages. Note: some behavior only works over
 `http(s)://`, not a `file://`-opened page — e.g. YouTube embeds need `referrerpolicy` (error 153
-otherwise) and the cross-tab dashboard sync relies on same-origin `localStorage`.
+otherwise), the cross-tab dashboard sync relies on same-origin `localStorage`, and the lab menu's
+*Theorie* tab reads "Niet beschikbaar" on an exercise page opened from disk, because Chrome refuses
+to fetch the second manifest across two `file://` documents (`--allow-file-access-from-files` lifts
+that if you want to check it locally).
 
 ## Content check (the one automated guardrail)
 
@@ -267,8 +270,11 @@ Engines (all IIFEs exposing one `window.*` init function):
   topic pointing at a page does not. The hub is iframed into Orion, so a PDF in the same tab would
   render inside that narrow frame. The card itself looks identical either way, and the decision is
   made from the `href`, so a new datasheet needs nothing beyond its `reference.js` entry.
-- [back-link.js](back-link.js) — self-running, no init. Injects the nav row above the `<h1>` and at
-  the bottom: "← Terug naar ..." on the left, "Volgende: ..." on the right. **Back** targets the
+- [back-link.js](back-link.js) — self-running, no init. Injects one nav row above the `<h1>`:
+  "← Terug naar ..." on the left, the lab menu in the middle, "Volgende: ..." on the right. The row
+  is sticky on every page that gets one, which is why there is no second copy at the end of the
+  page: the bottom row existed so a long page would not end without an exit, and a bar that never
+  scrolls away answers that without duplicating itself. **Back** targets the
   previous page (trusted same-origin `.html` referrer) when known, else the lab dashboard, else the
   reference hub for pages under `Reference/`. No-ops on `dashboard.html`. A page under `TestN/` is
   the exception: it always targets that folder's `overview.html` and ignores the referrer, so the
@@ -286,6 +292,26 @@ Engines (all IIFEs exposing one `window.*` init function):
   of this one. **This is why an exercise page must load `exercises.js` and a reference topic must
   load `reference.js`** — without it the page renders perfectly and only the forward link vanishes,
   so rule 3 of the content check asserts the include.
+  **The row carries the lab menu** between the two links: a button naming this
+  page's position ("Oefening 3 / 10") that opens a panel with a *Theorie* tab (every reference
+  topic) and an *Oefeningen* tab (every exercise, ticked off from the same `msDashboard:` keys the
+  dashboard writes), plus a link to the hub. Theory is the first tab because that is the order of
+  the course, but the tab that opens is the page's own kind, since landing on the theory list from
+  an exercise page would hide exactly the list the menu exists to keep within reach. It exists because the pages are read inside an iframe on
+  Orion, where opening an exercise from the dashboard replaces the only list the student had;
+  `orion-embed.css` gives that iframe a fixed height, so the page scrolls inside it and a sticky bar
+  pins to the top of the Orion content pane. Same skip list as the forward link, for the same
+  reasons, and datasheets stay out of both. Two things it has to do that the forward link does not:
+  it resolves each manifest `href` against **its own** folder (a reference href is a bare filename
+  next to `reference.html`, so resolving it against the linking page would break every theory link
+  on an exercise page), and it fetches the manifest the page does *not* load, from the folder
+  `document.currentScript.src` came out of, re-rendering when it lands. `localStorage` reads are
+  wrapped in a `try`, since a browser that blocks storage for an embedded frame throws on the first
+  read, which would otherwise take the whole nav row down with it. The sticky row is a three-column
+  grid rather than the flex row the bottom nav uses, so the button stays dead centre even on the
+  last exercise of a lab, where there is no "Volgende" link to fill the third column; the panel is
+  centred under it and nudged back inside the text column by measurement rather than by a guess,
+  since it is wider than the button that anchors it.
 - [solution-reveal.js](solution-reveal.js) — one-way "Toon oplossing" reveal for `.solution-container`.
 
 ## localStorage progress model (no backend)
