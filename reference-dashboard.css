@@ -2,8 +2,9 @@
    Shared styling for the per-lab reference hubs.
    Included by LaboN/Reference/index.html via a relative link.
    Scoped under .ms-ref-hub -- deliberately lighter-weight than
-   dashboard.css (no XP/badge/confetti treatment; this is a plain
-   topic index, not something you "complete").
+   dashboard.css (no XP/badge/confetti treatment; a theory page is not
+   something you "complete"). The one piece of state it does show is a
+   check on a topic that has been read, plus the link that clears them.
    ============================================================ */
 
 .ms-ref-hub {
@@ -56,13 +57,48 @@
 }
 
 .ms-ref-card-title {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
     font-weight: 600;
     color: #1f2937;
     margin-bottom: 0.3rem;
 }
 
+/* Pushed to the end of the title row, so a long title wraps against it
+   instead of shifting it out of the card. Same green as the tick in the
+   lab menu (.ms-lab-mark--done in back-link.js). */
+.ms-ref-card-check {
+    margin-left: auto;
+    flex: 0 0 auto;
+    color: #16a34a;
+    font-size: 0.9rem;
+}
+
 .ms-ref-card-blurb {
     font-size: 0.85rem;
     line-height: 1.4;
+    color: #6b7280;
+}
+
+/* --- Reset button --- */
+
+/* Deliberately identical to .ms-reset-btn in dashboard.css: the two hubs
+   sit one click apart, so their reset links have to look the same. Copied
+   rather than shared, because the two stylesheets are never loaded
+   together and a third file for ten lines costs more than it saves. */
+.ms-ref-reset-btn {
+    display: block;
+    margin: 2rem auto 0;
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 0.8rem;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0.5rem;
+}
+
+.ms-ref-reset-btn:hover {
     color: #6b7280;
 }

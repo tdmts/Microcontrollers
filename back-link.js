@@ -70,17 +70,27 @@
    ------------
    The top row is sticky and carries the lab's whole menu in the middle:
    a button ("Oefening 3 / 10") opening a panel with two tabs, every
-   exercise of this lab with a tick for the ones already finished, and
-   every theory topic. It exists because these pages are read inside an
-   iframe on Orion, where clicking an exercise on the dashboard replaces
-   the only list the student had. orion-embed.css gives that iframe a
-   fixed height, so the page scrolls inside it and a sticky bar stays put
-   at the top of the Orion content pane.
+   exercise of this lab and every theory topic, each with a tick for the
+   ones already behind the student. It exists because these pages are read
+   inside an iframe on Orion, where clicking an exercise on the dashboard
+   replaces the only list the student had. orion-embed.css gives that
+   iframe a fixed height, so the page scrolls inside it and a sticky bar
+   stays put at the top of the Orion content pane.
 
    Everything it shows comes out of the two manifests and out of the same
    localStorage keys dashboard.js writes, so an exercise added to
    exercises.js turns up in the menu of every page of that lab without
    touching a single page.
+
+   GELEZEN
+   -------
+   The two ticks do not mean the same thing, and cannot. An exercise is
+   finished when the student says so (a toggle, or a fully ticked
+   checklist); a theory page has nothing to finish, so the only honest
+   thing to record is that it was opened. This file writes that flag --
+   msDashboard:{labId}:theory:{topicId} -- as soon as it recognises the
+   page in reference.js, and reads it back for the Theorie tab. It is the
+   one write this script does; everything else here only reads.
 
    A page loads only its own manifest (an exercise page has exercises.js,
    a reference topic has reference.js), so the other one is fetched here,
@@ -322,13 +332,7 @@
                 ' loaded (with a ' + labId + ' block in it) to show a forward link.');
         }
 
-        /* -------------------------------------------------- lab menu */
-
-        // The hubs are left out: dashboard.html and reference.html already show
-        // every card, so a menu repeating them is noise. A TestN page has no
-        // manifest by design, and a page outside a LaboN/ folder has no lab.
-        var showMenu = !!labId && testIndex === -1 &&
-            currentFile !== 'reference.html' && currentFile !== 'dashboard.html';
+        /* ------------------------------------------ voortgang (storage) */
 
         // The same key dashboard.js and checklist-sync.js read and write, so a
         // ticked-off checklist shows up here as a tick without any extra state.
@@ -345,6 +349,49 @@
                 return false;
             }
         }
+
+        // A theory page is "gelezen" once it has been opened -- see GELEZEN in
+        // the header. The extra "theory:" segment keeps this clear of the
+        // exercise key above, so a topic and an exercise sharing an id (nothing
+        // forbids it across the two manifests) cannot overwrite each other.
+        function theoryKey(topicId) {
+            return STORAGE_PREFIX + labId + ':theory:' + topicId;
+        }
+
+        function isVisited(topicId) {
+            try {
+                return window.localStorage.getItem(theoryKey(topicId)) === '1';
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function markVisited(topicId) {
+            try {
+                window.localStorage.setItem(theoryKey(topicId), '1');
+            } catch (e) {
+                // Blocked storage, or a full quota. Same reasoning as isDone:
+                // the nav row matters more than the tick, and this runs before
+                // the row is built.
+            }
+        }
+
+        // Record this visit. "chain" and "index" were resolved above for the
+        // forward link, and manifestName is reference.js on exactly the pages
+        // that qualify: a theory topic listed in its own lab's manifest.
+        // reference.html is excluded from the chain, so the hub never marks
+        // itself, and a datasheet is not in there either.
+        if (manifestName === 'reference.js' && chain && index !== -1) {
+            markVisited(chain[index].id);
+        }
+
+        /* -------------------------------------------------- lab menu */
+
+        // The hubs are left out: dashboard.html and reference.html already show
+        // every card, so a menu repeating them is noise. A TestN page has no
+        // manifest by design, and a page outside a LaboN/ folder has no lab.
+        var showMenu = !!labId && testIndex === -1 &&
+            currentFile !== 'reference.html' && currentFile !== 'dashboard.html';
 
         function labTitle() {
             var data = (window.LAB_EXERCISES && window.LAB_EXERCISES[labId]) ||
@@ -372,10 +419,13 @@
                 {
                     key: 'reference',
                     tab: 'Theorie',
-                    // A reference topic has no "done" state: the hub is pure
-                    // navigation and awards no XP, so no ticks on this tab.
                     items: referenceChain(),
-                    ticks: false,
+                    // Each tab brings its own lookup rather than a shared "does
+                    // this tab have ticks" flag: the mark looks the same on both,
+                    // but a theory page is ticked for having been read and an
+                    // exercise for having been finished.
+                    isMarked: isVisited,
+                    markTitle: 'Gelezen',
                     hubHref: referenceBase ? new URL('reference.html', referenceBase).href : null,
                     hubLabel: 'Naar het theorie-overzicht →'
                 },
@@ -383,7 +433,8 @@
                     key: 'exercises',
                     tab: 'Oefeningen',
                     items: exerciseChain(),
-                    ticks: true,
+                    isMarked: isDone,
+                    markTitle: 'Afgewerkt',
                     hubHref: exercisesBase ? new URL('dashboard.html', exercisesBase).href : null,
                     hubLabel: 'Naar het dashboard →'
                 }
@@ -474,19 +525,18 @@
                     link.href = item.href;
                     if (isCurrent) link.setAttribute('aria-current', 'page');
 
-                    var done = active.ticks && isDone(item.id);
+                    var marked = active.isMarked(item.id);
                     var mark = document.createElement('span');
-                    mark.className = 'ms-lab-mark' + (active.ticks
-                        ? (done ? ' ms-lab-mark--done' : ' ms-lab-mark--todo')
-                        : ' ms-lab-mark--plain');
-                    mark.textContent = active.ticks ? (done ? '✓' : '○') : '·';
+                    mark.className = 'ms-lab-mark ' +
+                        (marked ? 'ms-lab-mark--done' : 'ms-lab-mark--todo');
+                    mark.textContent = marked ? '✓' : '○';
                     // The tick is decoration next to a label that already reads
                     // as a link; the state itself is announced on the text.
                     mark.setAttribute('aria-hidden', 'true');
 
                     var text = document.createElement('span');
                     text.textContent = (position + 1) + '. ' + item.name;
-                    if (active.ticks && done) text.title = 'Afgewerkt';
+                    if (marked) text.title = active.markTitle;
 
                     link.appendChild(mark);
                     link.appendChild(text);
@@ -646,7 +696,7 @@
             '.ms-lab-current a{background:rgba(79,70,229,.14);color:#4f46e5;font-weight:600;}' +
             '.ms-lab-mark{flex:0 0 1rem;text-align:center;font-size:0.8rem;}' +
             '.ms-lab-mark--done{color:#16a34a;}' +
-            '.ms-lab-mark--todo,.ms-lab-mark--plain{color:rgba(0,0,0,.3);}' +
+            '.ms-lab-mark--todo{color:rgba(0,0,0,.3);}' +
             '.ms-lab-note{margin:0.5rem;font-size:0.85rem;opacity:0.7;}' +
             '.ms-lab-hub{display:block;margin-top:0.35rem;padding:0.45rem 0.5rem;' +
             'border-top:1px solid rgba(0,0,0,.08);font-size:0.82rem;font-weight:600;' +

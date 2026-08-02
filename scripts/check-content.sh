@@ -504,6 +504,9 @@ if [ -f reference.js ]; then
     [[ "$line" =~ (^|[^b])id:[[:space:]]*$Q($NOTQ+)$Q ]] && id="${BASH_REMATCH[2]}" || continue
     [[ "$line" =~ href:[[:space:]]*$Q($NOTQ+)$Q ]] && href="${BASH_REMATCH[1]}" || continue
 
+    # A topic id is a localStorage key as well as a manifest key: back-link.js
+    # writes msDashboard:$lab:theory:$id when the page is opened. Two topics
+    # sharing an id would share one "gelezen" tick, silently.
     [ -n "${seen_ref[$lab/$id]:-}" ] && err "reference.js: $lab has duplicate id '$id'"
     seen_ref["$lab/$id"]=1
     require_fields "$line" "$REF_FIELDS" "reference.js: $lab/$id"

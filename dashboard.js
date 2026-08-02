@@ -184,8 +184,10 @@
             }
         }
 
+        // Names the exercises explicitly: the theory hub has a reset link of
+        // its own now, so "je voortgang" alone no longer says which one this is.
         function onReset() {
-            if (!window.confirm('Weet je zeker dat je jouw voortgang voor dit labo wil resetten?')) return;
+            if (!window.confirm('Weet je zeker dat je jouw voortgang bij de oefeningen van dit labo wil resetten?')) return;
             exercises.forEach(function (e) { setDone(config.labId, e.id, false); });
             render();
         }

@@ -241,7 +241,13 @@ af en toe iets mist.
 
 Zet het bestand in `LaboN/Reference/` en voeg een entry toe in [reference.js](reference.js), in de
 juiste categorie. `href` is hier gewoon de bestandsnaam. `name` en `blurb` zijn verplicht.
-Referentiepagina's houden geen voortgang bij, ze zijn puur navigatie.
+
+Een theoriepagina levert geen XP op en heeft geen checklist: er valt niets af te werken. Het enige
+dat bijgehouden wordt, is of de student de pagina al geopend heeft. Dat vinkje verschijnt op de kaart
+in het overzicht en in het labomenu, en `back-link.js` schrijft het vanzelf. De `id` uit het manifest
+is daarvoor de sleutel (`msDashboard:laboN:theory:{id}`), dus achteraf een `id` hernoemen wist het
+gelezen-vinkje van je studenten, net zoals bij een oefening. Het script bewaakt dat elke `id` binnen
+een labo uniek is.
 
 Net voor `</body>` horen deze twee scripts:
 
@@ -284,8 +290,12 @@ alles onder `TestN/` (daar bepaalt `overview.html` de volgorde met gewone links)
 
 Midden tussen die twee links staat op elke oefening- en theoriepagina een knop met de positie van de
 pagina ("Oefening 3 / 10"). Die klapt het menu van het hele labo open: een tab **Theorie** met alle
-theoriepagina's, en een tab **Oefeningen** met een vinkje bij alles wat al afgewerkt is. Onderaan
-staat een link naar het dashboard of naar het theorie-overzicht.
+theoriepagina's en een tab **Oefeningen** met alle oefeningen. Onderaan staat een link naar het
+dashboard of naar het theorie-overzicht.
+
+In beide tabs staat een groen vinkje voor wat de student achter de rug heeft, maar het betekent niet
+hetzelfde: een oefening is afgewerkt wanneer de student dat zelf aangeeft, een theoriepagina is
+gelezen zodra ze geopend is. Meer valt er aan een theoriepagina niet af te meten.
 
 De theorie staat vooraan omdat dat de volgorde van het vak is. Welke tab *openklapt* is iets anders:
 dat is altijd de soort van de pagina waar je op staat, want op een oefeningpagina in de theorielijst

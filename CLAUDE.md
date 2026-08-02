@@ -265,11 +265,16 @@ Engines (all IIFEs exposing one `window.*` init function):
   page, auto-detects the current exercise by filename, persists each checkbox, and marks the exercise
   "done" only when **all** boxes are checked. Fires a one-time celebration on the completing tick.
 - [reference-dashboard.js](reference-dashboard.js) `initReferenceHub('laboN')` — renders the
-  reference hub from `LAB_REFERENCE`. Pure navigation, no progress. A topic whose `href` is a
+  reference hub from `LAB_REFERENCE`. Navigation plus one bit of state: a topic already opened
+  carries a green check (`.ms-ref-card-check`, read from the `theory:` keys below), and a reset link
+  at the bottom clears this lab's checks and nothing else. No XP, no badges, no levels — the hub
+  stays deliberately lighter than `dashboard.js`. A topic whose `href` is a
   document (`.pdf`, `.zip`, `.docx`, `.pptx`, `.xlsx`) gets `target="_blank" rel="noopener"`; a
   topic pointing at a page does not. The hub is iframed into Orion, so a PDF in the same tab would
   render inside that narrow frame. The card itself looks identical either way, and the decision is
-  made from the `href`, so a new datasheet needs nothing beyond its `reference.js` entry.
+  made from the `href`, so a new datasheet needs nothing beyond its `reference.js` entry. A document
+  never gets a check: a PDF cannot carry `back-link.js`, so it could not be marked read, and a slot
+  that is always empty reads as a fault.
 - [back-link.js](back-link.js) — self-running, no init. Injects one nav row above the `<h1>`:
   "← Terug naar ..." on the left, the lab menu in the middle, "Volgende: ..." on the right. The row
   is sticky on every page that gets one, which is why there is no second copy at the end of the
@@ -294,8 +299,11 @@ Engines (all IIFEs exposing one `window.*` init function):
   so rule 3 of the content check asserts the include.
   **The row carries the lab menu** between the two links: a button naming this
   page's position ("Oefening 3 / 10") that opens a panel with a *Theorie* tab (every reference
-  topic) and an *Oefeningen* tab (every exercise, ticked off from the same `msDashboard:` keys the
-  dashboard writes), plus a link to the hub. Theory is the first tab because that is the order of
+  topic) and an *Oefeningen* tab (every exercise), plus a link to the hub. Both tabs are ticked off
+  from the `msDashboard:` keys below: exercises from the flag the dashboard writes, theory from the
+  `theory:` flag **this file itself writes** on arrival. Each tab carries its own lookup rather than
+  a shared "does this tab have ticks" flag, because the mark is the same green ✓ while the two
+  states are not the same claim. Theory is the first tab because that is the order of
   the course, but the tab that opens is the page's own kind, since landing on the theory list from
   an exercise page would hide exactly the list the menu exists to keep within reach. It exists because the pages are read inside an iframe on
   Orion, where opening an exercise from the dashboard replaces the only list the student had;
@@ -320,10 +328,27 @@ Self-reported, browser-local only. Key scheme (must match across engines):
 
 - `msDashboard:{labId}:{exerciseId}` — the exercise "done" flag (`'1'`).
 - `msDashboard:{labId}:{exerciseId}:item:{index}` — per-checkbox state for checklist-driven pages.
+- `msDashboard:{labId}:theory:{topicId}` — the "gelezen" flag for a reference topic (`'1'`), keyed on
+  its `reference.js` `id`. Written by `back-link.js` the moment it recognises the page in that
+  manifest, which is the only write that file does; read by the lab menu's *Theorie* tab and by the
+  reference hub. The `theory:` segment is what keeps a topic id from colliding with an exercise id,
+  since nothing coordinates ids across the two manifests. **A topic id is therefore student state**,
+  so renaming one wipes that flag — rule 2 asserts uniqueness within a lab for exactly this reason.
 
-The dashboard listens for cross-tab `storage` events, so ticking a checklist in one tab updates an
-open dashboard in another. Because both read/write the same keys, checklist pages need no changes to
-dashboard read logic.
+The two ticks look identical and mean different things on purpose: an exercise is done when the
+student says so, a theory page is read when it has been opened, because a theory page has nothing to
+complete. Visiting awards no XP and unlocks no badge.
+
+**Two independent resets, one per hub.** `dashboard.html` clears the exercise flags of its lab,
+`reference.html` clears that lab's `theory:` flags, and neither touches the other. Both are the same
+discreet grey underlined link at the bottom of the page (`.ms-reset-btn` /`.ms-ref-reset-btn`), and
+each `confirm()` names what it clears, since "je voortgang" no longer identifies one of them. Like
+`dashboard.js`, the hub clears only the ids listed in its own lab's manifest rather than sweeping the
+prefix, so a stale key from a renamed topic is never another lab's problem.
+
+Both hubs listen for cross-tab `storage` events, so ticking a checklist or opening a theory page in
+one tab updates an open dashboard or hub in another. Because every engine reads/writes the same keys,
+a page needs no changes to either hub's read logic.
 
 ## The checklist-driven page pattern
 
