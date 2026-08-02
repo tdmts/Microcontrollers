@@ -11,10 +11,11 @@
 <body>
 <div class="container">
     <!-- audit-skip: oplossing -->
-    <!-- Begeleide walkthrough: de oplossingen staan per stap in een eigen
-         solution-container ("Toon antwoord"), precies waar de student erover
-         nadenkt. Een aparte Oplossing-sectie op het einde zou die antwoorden
-         dupliceren en de stap-voor-stap opbouw doorbreken. -->
+    <!-- Begeleide walkthrough: de antwoorden op de denkstappen staan per stap in
+         een eigen accordion-item, precies waar de student erover nadenkt, en de
+         code van elke stap staat gewoon open. Een aparte Oplossing-sectie op het
+         einde zou die antwoorden dupliceren en de stap-voor-stap opbouw
+         doorbreken. -->
     <h1>Begeleide oefening</h1>
     <p class="lead">In deze oefening bouw je stap voor stap een schakeling met een drukknop en een led. We beginnen heel klein en breiden je programma telkens een beetje uit, tot je op het einde een led laat knipperen met een functie die je zelf hebt geschreven. Neem rustig de tijd en lees bij elke stap ook even het waarom.</p>
 
@@ -56,9 +57,9 @@ void loop()
 
     <h3>Stap 3: Denk eens na over de niveaus bij een pull-up</h3>
     <p>Voor je iets uittest: probeer eerst zelf te redeneren. Als je een pull-up-weerstand gebruikt, welk niveau (hoog of laag) verwacht je op de pin wanneer je de knop <em>niet</em> indrukt? En welk niveau wanneer je de knop <em>wel</em> indrukt?</p>
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Welk niveau lees je met en zonder de knop ingedrukt?</div>
             <p>Bij een pull-up trekt de weerstand de pin standaard naar 5&nbsp;V, dus je leest <strong>HIGH (1)</strong> zolang je de knop <strong>niet</strong> indrukt. Druk je de knop in, dan verbind je de pin met de massa (GND) en lees je <strong>LOW (0)</strong>. De logica is dus omgekeerd aan wat je intu&iuml;tief zou verwachten: ingedrukt = 0.</p>
         </div>
     </div>
@@ -134,9 +135,9 @@ void loop()
 
     <h3>Stap 6: Denk eens na over de niveaus voor sourcing</h3>
     <p>Opnieuw eerst zelf redeneren. Als je de led aanstuurt volgens sourcing, welk niveau moet er dan op de anode staan en welk op de kathode om de led te doen oplichten?</p>
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Welk niveau moet er op de anode en op de kathode staan?</div>
             <p>Bij sourcing komt de anode (de pluskant) aan de pin. Zet je de pin <strong>HIGH</strong>, dan staat de anode op ongeveer 5&nbsp;V en de kathode via de weerstand op 0&nbsp;V (GND). Er loopt dan stroom van de anode naar de kathode en de led brandt. Zet je de pin <strong>LOW</strong>, dan is er geen spanningsverschil en blijft de led uit.</p>
         </div>
     </div>
@@ -150,18 +151,18 @@ void loop()
 
     <h3>Stap 8: Denk eens na over de beschikbare weerstandswaarden</h3>
     <p>Je berekende 160&nbsp;&Omega;, maar dat is een theoretische waarde. Zit die 160&nbsp;&Omega; ook echt in je Arduino-starterkit? En welke weerstand neem je dan best?</p>
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Welke weerstand neem je dan uit je kit?</div>
             <p>160&nbsp;&Omega; is een standaardwaarde uit de E24-reeks (de reeks van de gangbare 5%-weerstanden), maar in een basis-starterkit zit die waarde meestal niet. Je neemt dan de dichtstbijzijnde <strong>hogere</strong> waarde die je w&eacute;l hebt: <strong>220&nbsp;&Omega;</strong>. Rond bij twijfel altijd naar boven af: een iets grotere weerstand betekent iets minder stroom en dus een iets minder felle, maar veiligere led.</p>
         </div>
     </div>
 
     <h3>Stap 9: Denk eens na over de stroom die een pin levert</h3>
     <p>Nog een denkoefening. Hoeveel stroom kan een pin van de Arduino eigenlijk leveren? En hebben we die voorschakelweerstand dan wel echt nodig?</p>
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Hoeveel stroom levert een pin, en heb je die weerstand echt nodig?</div>
             <p>Een pin van de Arduino Uno levert veilig ongeveer <strong>20&nbsp;mA</strong>. Het <strong>absolute maximum</strong> is 40&nbsp;mA (de schadegrens), en alle pinnen samen mogen niet boven ongeveer 200&nbsp;mA komen. Een led brandt mooi rond die 20&nbsp;mA, dus qua led zit je goed.</p>
             <p>Sluit je de led echter <strong>zonder</strong> weerstand aan, dan legt niets de stroom vast behalve de led zelf en de kleine inwendige weerstand van de pin (grofweg 25&nbsp;&Omega;). De stroom is dan geen nette 40&nbsp;mA, maar loopt ongecontroleerd op tot ruim boven de aanbevolen 20&nbsp;mA en voorbij het absolute maximum van 40&nbsp;mA. Dat overbelast de pin en kan zowel de pin als de led beschadigen. Net daarom heb je de weerstand nodig: die legt de stroom vast op een gekende, veilige waarde. Meer hierover lees je bij <a href="../Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
             <p>Ben je nieuwsgierig? Bouw dit gerust zelf na in TinkerCAD en meet de stroom met een multimeter die je op <strong>Stroomsterkte</strong> zet. Je ziet dan een stroom van ongeveer <strong>53&nbsp;mA</strong> verschijnen, ruim boven de veilige grens.</p>
@@ -427,7 +428,6 @@ void knipper(int aantal, int duurtijd)
 <script src="../../back-link.js"></script>
 <script src="../../exercises.js"></script>
 <script src="../../checklist-sync.js"></script>
-<script src="../../solution-reveal.js"></script>
 <script>
     initChecklistSync(LAB_EXERCISES.labo0);
 </script>

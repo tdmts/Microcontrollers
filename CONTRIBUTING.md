@@ -40,7 +40,8 @@ bash scripts/check-content.sh --fix
 Dit herstelt zelf wat maar één juist antwoord heeft: em-dashes, accolades die op de verkeerde regel
 staan, ontbrekende spaties rond operatoren, een ontbrekende `referrerpolicy`, een `initChecklistSync` die naar het verkeerde labo wijst,
 een `href` met verkeerde hoofdletters of met een volledige `tdmts.github.io`-URL ervoor, een
-referentiepagina die `reference.js` niet inlaadt, en
+referentiepagina die `reference.js` niet inlaadt, een `solution-reveal.js`-regel die niets meer
+aanstuurt, en
 afbeeldingen die je vergat toe te voegen aan git. Wat het niet kan verzinnen (een ontbrekende
 `blurb` bijvoorbeeld) blijft gewoon in de lijst staan.
 
@@ -460,6 +461,32 @@ Deze worden automatisch afgedwongen:
   Een naam zonder nummer mag wel, die beschrijft de vorm en niet een plaats in een rij: "Begeleide
   oefening" in labo 0 blijft dus staan. Is een oefening moeilijker dan de rest? Dat druk je uit met
   `difficulty: 3`, niet met het woord "gevorderde" in de titel.
+- **De uitklapknop van de oplossing gebruik je enkel voor de oplossing.** Een
+  `.solution-container` klapt maar één keer open: de knop verdwijnt en je krijgt hem niet meer
+  dicht. Dat past bij de oplossing, want wie daar kijkt is met de oefening klaar. Bij een denkvraag
+  past het net niet, want daar wil een student nadenken, controleren en verder lezen, en een vraag
+  die niet meer dicht kan is op na de eerste blik. Concreet: een `.solution-container` staat
+  **onder een `<h2>` waarvan de id met `oplossing` begint** (`id="oplossing"` op een oefening,
+  `id="oplossing-schema"` en `id="oplossing-code"` op een voorbeeldtest), en nergens anders. Alles
+  daarboven, dus een denkvraag met een verborgen antwoord, een hint of een tussenberekening, zet je
+  in een accordion:
+
+  ```html
+  <div class="accordion-container">
+      <div class="accordion-item">
+          <div class="title">Waarom is een pull-upweerstand nodig?</div>
+          <p>...</p>
+      </div>
+  </div>
+  ```
+
+  De titel zegt wat er achter de klik zit, nooit "Toon antwoord": de accordion nodigt zelf al uit om
+  te klikken. Bij een hint begin je met `Hint:`, zodat een student ziet dat er geen volledig antwoord
+  onder zit. Vragen over hetzelfde onderwerp mogen samen in één `accordion-container`, maar hou er
+  rekening mee dat er dan maar één item tegelijk open kan staan; hoort een blok naast iets anders
+  gelezen te worden, geef het dan een eigen container. **`.spoiler-container` gebruik je niet meer.**
+  Deze regel blokkeert, en er is geen `audit-skip` voor: een hint achter een eenrichtingsknop ziet er
+  in een browser volstrekt normaal uit, en dat is precies waarom het script erop let.
 
 Deze niet, maar hou ze toch aan:
 
@@ -480,6 +507,8 @@ Deze niet, maar hou ze toch aan:
   Bouwen opeenvolgende oefeningen op dezelfde schakeling verder, hou een component dan op dezelfde
   pin: een student mag geen draad moeten verleggen die de opgave niet vraagt.
 - Hints in een uitklapbaar blok, zodat wie het zelf wil proberen niet meteen het antwoord ziet.
+  Dát je een hint wegstopt is een gewoonte; welk blok je daarvoor neemt, staat hierboven bij de
+  regels die het script wél controleert.
 - Enkel echt kritische waarschuwingen als waarschuwing markeren, anders vervlakt het effect.
 
 ## Niet doen

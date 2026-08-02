@@ -49,10 +49,9 @@ void zetStap(int stap)
         <li>Alle vier de leds branden flauw, want de rijen volgen elkaar te snel op.</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 1</div>
             <p><strong>Antwoord: b) De rotor trilt heen en weer.</strong></p>
 
             <p>De volgorde van de rijen klopt niet. Deze tabel doet eerst spoel A in beide richtingen en daarna spoel B in beide richtingen, terwijl je bij full step telkens <strong>van spoel moet wisselen</strong>: A, B, A, B.</p>
@@ -86,10 +85,9 @@ void zetStap(int stap)
         <li>Een <code>Wire.requestFrom()</code> in een ISR geeft je een foutmelding of een timeout, zodat je het probleem meteen ziet.</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 2</div>
             <p><strong>Antwoord: a, b en d zijn juist. c en e zijn fout.</strong></p>
 
             <ul>
@@ -116,10 +114,9 @@ void zetStap(int stap)
         <li>Waarom hoort daar een <code>trim()</code> in, en waarom een test op het resultaat van <code>indexOf()</code>?</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 3</div>
             <p><strong>1. Negen bytes</strong></p>
 
             <p>De tekst zelf is zeven tekens lang, en <code>println()</code> plakt er nog <code>'\r'</code> (13) en <code>'\n'</code> (10) achter.</p>
@@ -199,10 +196,9 @@ void zetStap(int stap)
         <li>Leg uit waarom deze motor sowieso niet rechtstreeks aan een uitgangspin mag.</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 4</div>
             <p><strong>1. hFE = 40</strong></p>
 
             <p>Je deelt de hFE uit de datasheet ruim door, hier door 5. Reken je met 200, dan stuur je precies genoeg basisstroom om die 120 mA te halen als alles meezit, en dat is te krap: de hFE verschilt sterk van exemplaar tot exemplaar, zakt bij hogere stroom en verandert met de temperatuur. Bovendien wil je dat de transistor in <strong>saturatie</strong> gaat en dus volledig openstaat, want een transistor die maar half openstaat verstookt het verschil als warmte.</p>
@@ -275,10 +271,9 @@ void loop()
 
     <p>Er zitten drie fouten in. Welke, en hoe los je ze op?</p>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 5</div>
             <p><strong>Fout 1: de knop hangt op pin 7</strong></p>
 
             <p>Op een UNO kunnen alleen pin 2 en pin 3 een interrupt opwekken. Voor pin 7 geeft <code>digitalPinToInterrupt()</code> de waarde <code>NOT_AN_INTERRUPT</code> terug, en <code>attachInterrupt()</code> negeert die zonder iets te zeggen. Dat verklaart precies wat de student ziet: alles compileert en uploadt, en er gebeurt nooit iets.</p>
@@ -319,6 +314,5 @@ void loop()
 </div>
 
 <script src="../back-link.js"></script>
-<script src="../solution-reveal.js"></script>
 </body>
 </html>

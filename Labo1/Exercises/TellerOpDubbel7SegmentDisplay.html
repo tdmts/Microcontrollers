@@ -159,10 +159,9 @@
         <p>Zet de wachttijd tussen de twee displays eerst op 500 ms. Dan zie je de twee cijfers om de beurt aangaan en zie je waar de truc zit. Breng ze daarna terug naar 10 ms en kijk wat er met het beeld gebeurt.</p>
     </div>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing van het vaste getal</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Oplossing van het vaste getal</div>
             <p><code>kiesDisplay()</code> zet de basis van het gevraagde display hoog en die van het andere laag. <code>toonGetal()</code> zet eerst het patroon op de gedeelde segmentpinnen en activeert daarna het display waar dat patroon bij hoort. Die functie wordt vanuit de <code>loop()</code> eindeloos herhaald, en dat herhalen is wat het beeld staande houdt. Stopt het, dan dooft het display.</p>
 
             <p>Met twee keer 10 ms duurt één volledige wissel 20 ms, dus elk display komt vijftig keer per seconde aan de beurt.</p>

@@ -70,10 +70,9 @@ void loop()
         <li>Geen enkele, want STCP staat buiten de lus</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 1</div>
             <p><strong>Antwoord: b) Q6 en Q7</strong></p>
 
             <p>De bit die je er als <strong>laatste</strong> inschuift, komt op Q0 terecht. De eerste bit die je inschuift, is dus ook diegene die het verst doorschuift, helemaal tot Q7. Deze lus begint bij <code>patroon[0]</code>, en die belandt daarom op Q7. <code>patroon[1]</code> komt op Q6, en de zes nullen die daarna volgen vullen Q5 tot Q0 op.</p>
@@ -98,10 +97,9 @@ void loop()
         <li>De /INT-pin meldt dat er iets veranderd is op de I/O-lijnen, zodat je daar niet constant naar hoeft te vragen.</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 2</div>
             <p><strong>Antwoord: a, b en e zijn juist. c en d zijn fout.</strong></p>
 
             <ul>
@@ -125,10 +123,9 @@ void loop()
         <li>Je schuift eerst de acht bits voor het ene register in en dan die voor het andere. Waarom geef je pas op het einde één flank op STCP, en niet na elke acht bits?</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 3</div>
             <p><strong>Deel 1</strong></p>
 
             <p>SHCP en STCP van beide chips hang je gewoon parallel: ze krijgen allebei dezelfde klok en dezelfde latchflank, dus ze werken volledig in de pas. Enkel de dataweg is een ketting. DS van het eerste register komt van je Arduino, en <strong>Q7S</strong> van het eerste register gaat naar <strong>DS</strong> van het tweede. Q7S is de seriële uitgang: daar verlaat een bit het register wanneer hij er aan de andere kant uitgeduwd wordt.</p>
@@ -159,10 +156,9 @@ void loop()
         <li>Daarna moet de led op P5 er nog bij aan. Geef opnieuw de expressie en de nieuwe waarde, en leg uit waarom je dat niet doet met <code>poort = B00100000;</code>.</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 4</div>
             <p><strong>1. 0xD6 en 214</strong></p>
 
             <p>Voor hexadecimaal splits je de byte in twee groepjes van vier bits: <code>1101</code> is D en <code>0110</code> is 6, samen <strong>0xD6</strong>. Decimaal tel je de plaatswaarden van de enen op: 128 + 64 + 16 + 4 + 2 = <strong>214</strong>.</p>
@@ -292,10 +288,9 @@ void loop()
 
     <p>Er zitten twee fouten in. Welke, en hoe los je ze op?</p>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 5</div>
             <p><strong>Fout 1: de setup schrijft een 0 naar de knoppin</strong></p>
 
             <p>In de <code>setup()</code> gaat er <code>B00000000</code> naar de expander, en dus ook een 0 naar P0. De pinnen van de PCF8574 zijn quasi-bidirectioneel: een pin die je wil lezen moet een 1 in zijn uitgangslatch hebben. Met een 0 erin lees je die 0 gewoon terug, wat je programma leest als een permanent ingedrukte knop.</p>
@@ -334,6 +329,5 @@ opgaandeFlank(pinSTCP);</code></pre>
 </div>
 
 <script src="../back-link.js"></script>
-<script src="../solution-reveal.js"></script>
 </body>
 </html>

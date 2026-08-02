@@ -42,9 +42,9 @@
 
     <p>Je leest de drie knoppen in één keer in, als één byte. Elke knop is één bit van die byte, en door de pull-upweerstand is een ingedrukte knop een <strong>0</strong>. Op <a href="../Reference/Bits.html">Werken met bits</a> vind je terug hoe je met een masker één bit uit die byte haalt, en hoe je in één bewerking alle knoppen met hun vorige toestand vergelijkt.</p>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: hoe merk je één druk op?</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Hint: hoe merk je één druk op?</div>
             <p>Als je gewoon kijkt of een bit 0 is, dan blijft die voorwaarde waar zolang je de knop ingedrukt houdt. Voor de pauzeknop is dat een probleem: die zou dan tientallen keren per seconde blijven omschakelen tussen pauze en niet-pauze.</p>
             <p>Wat je wil weten is niet 'staat de knop ingedrukt', maar 'is de knop <em>net</em> ingedrukt'. Bewaar daarvoor de vorige byte in een variabele en vergelijk. Een bit dat vorige keer 1 was en nu 0 is, hoort bij een knop die net ingedrukt werd.</p>
         </div>

@@ -80,9 +80,9 @@ void loop()
 
     <p>In de begeleide oefening van labo 0 liet <code>digitalWrite(pin, HIGH)</code> je led branden. Hier doet <code>knipper()</code> net het omgekeerde: de led gaat aan bij <code>LOW</code> en uit bij <code>HIGH</code>. Hoe kan dat, en wat zegt dat over de manier waarop de led in deze schakeling aangesloten is?</p>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Waarom brandt de led hier bij LOW?</div>
             <p>Deze schakeling is <strong>sinking</strong>. De led hangt met de anode aan de +5V-rail en met de kathode (via de weerstand) aan pin 12. Er staat dus pas spanning over de led wanneer de pin <code>LOW</code> is: de pin "zinkt" de stroom naar de massa. Bij <code>HIGH</code> staan beide kanten op 5 V, is er geen spanningsverschil, en blijft de led gedoofd.</p>
             <p>In labo 0 hing de led er net andersom in, met de anode aan de pin: dat is <strong>sourcing</strong>, waarbij <code>HIGH</code> hem doet branden. Welke van de twee je hebt, lees je dus af van je schema en niet van je code. Zie <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
             <p>Zo'n actief lage schakeling kom je in dit vak nog vaak tegen, onder meer bij het 7-segment display met common anode en bij de I/O-expander in labo 4.</p>

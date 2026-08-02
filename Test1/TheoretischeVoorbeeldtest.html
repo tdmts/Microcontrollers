@@ -47,10 +47,9 @@ void loop()
         <li>2.50</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 1</div>
             <p><strong>Antwoord: b) 0.00</strong></p>
 
             <p>Zowel <code>waarde</code> als <code>1023</code> is een <code>int</code>, dus de Arduino maakt hier een <strong>gehele deling</strong>. 614 gedeeld door 1023 is 0 met rest, en die rest wordt weggegooid. Daarna wordt 0 nog eens maal 5 gedaan, wat 0 blijft. Dat het resultaat in een <code>double</code> terechtkomt, verandert daar niets aan: de deling is al gebeurd voor de toekenning.</p>
@@ -77,10 +76,9 @@ void loop()
         <li>Een pull-upweerstand is typisch 220 &Omega;.</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 2</div>
             <p><strong>Antwoord: a, b en d zijn juist. c en e zijn fout.</strong></p>
 
             <ul>
@@ -104,10 +102,9 @@ void loop()
         <li>Je wil je teller elke seconde ophogen en schrijft daarvoor <code>delay(1000)</code> in je <code>loop()</code>. Wat gaat er mis, en hoe los je het op?</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 3</div>
             <p><strong>Deel 1</strong></p>
 
             <p>Een dubbel display bevat twee 7-segment displays, en hun zeven segmentaansluitingen zijn intern aan elkaar geknoopt: segment a van het linkse en segment a van het rechtse hangen aan dezelfde pin. Dat spaart pinnen uit, maar het betekent ook dat een patroon dat je op de segmentpinnen zet, meteen naar <em>allebei</em> de displays gaat. Een 4 links en een 7 rechts tegelijk kan dus niet. Alleen de gemeenschappelijke pin van elk display is apart uitgebracht, en daarmee kies je welk display op dat moment stroom krijgt.</p>
@@ -152,10 +149,9 @@ void loop()
         <li>De stroom die er dan echt loopt, in milliampère.</li>
     </ol>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 4</div>
             <p><strong>1. Ongeveer 193 &Omega;</strong></p>
 
             <p>De led neemt 2,1 V van de 5 V voor zijn rekening. Wat overblijft, staat over de weerstand. Reken met ampère, niet met milliampère: 15 mA is 0,015 A.</p>
@@ -200,10 +196,9 @@ void loop()
 
     <p>Er zitten twee fouten in. Welke, en hoe los je ze op?</p>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon oplossing</button>
-
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Antwoord op vraag 5</div>
             <p><strong>Fout 1: pin 7 kan geen PWM</strong></p>
 
             <p>Alleen de pinnen met een <strong>~</strong> ernaast kunnen PWM: op de Uno en de Leonardo zijn dat pin 3, 5, 6, 9, 10 en 11. Pin 7 zit daar niet bij. Roep je <code>analogWrite()</code> aan op een gewone digitale pin, dan gedraagt die zich als <code>digitalWrite()</code>: alleen volledig aan of volledig uit. Precies wat de student ziet.</p>
@@ -237,6 +232,5 @@ void loop()
 </div>
 
 <script src="../back-link.js"></script>
-<script src="../solution-reveal.js"></script>
 </body>
 </html>

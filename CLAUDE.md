@@ -49,7 +49,11 @@ in order:
    because `back-link.js` builds its "volgende"-link out of that manifest and without it the page
    renders perfectly with the link silently absent; a page with a `.checklist` additionally carries
    `checklist-sync.js` and calls `initChecklistSync` for *its own* lab; a `.solution-container`
-   carries `solution-reveal.js`; `dashboard.html` and `reference.html` call `initDashboard` /
+   carries `solution-reveal.js` **and the reverse**, so the include cannot outlive the last reveal it
+   served (a page whose reveals moved into accordions still fetches a script that then binds nothing,
+   which is exactly the leftover that tells the next author this page still has a solution to reveal;
+   `--fix` drops the line, and both directions are matched on the class attribute rather than the bare
+   word, because two pages name the component in prose); `dashboard.html` and `reference.html` call `initDashboard` /
    `initReferenceHub` for their own lab (and the hub links `reference.js`, or it renders empty); and
    any page in a `LaboN/` folder whose `laboN` block does not exist yet in the manifest is flagged
    (adding a lab folder before its manifest block renders an empty dashboard, silently). Init calls
@@ -72,11 +76,29 @@ in order:
    anything as soon as the `order` changes. Name it after the thing it makes ("Ledbar met
    potentiometer"). A label *without* a number is fine, since it describes the format rather than a
    slot: `Begeleide oefening` in labo 0 passes deliberately.
+7. **A reveal component means one thing** — `.solution-container` is the one-way reveal driven by
+   `solution-reveal.js`: one button, and once it is gone there is no way back. That is right for *the
+   solution*, where a student who decides to look has ended the exercise anyway, and wrong above it,
+   where the point of a hidden answer is to think, check and read on. So the one-way reveal may only
+   appear under an `<h2>` whose id starts with `oplossing` (`oplossing` on a lab exercise,
+   `oplossing-schema` / `oplossing-code` on the practice tests), and a reasoning question with a
+   hidden answer, a hint or a worked calculation is an `.accordion-item` with a `<div class="title">`,
+   which closes again. `.spoiler-container` is retired from `Labo*/` and `Test*/` altogether: three
+   components for two jobs is how a page ends up choosing by accident. Blocking, and with no
+   `audit-skip` escape hatch, because the failure is silent — nothing about a hint inside a one-way
+   reveal looks wrong in a browser. It is the only rule besides the spacing one that needs to know
+   *where in the file* it is looking, so it is one `awk` rather than a `grep`, and both halves are
+   anchored on the class **attribute**: `template.html` documents both components in prose and
+   `BegeleideOefening.html` names one in a header comment, so an unanchored match would report the
+   very sentences that explain the rule.
 
-`template.html` and `pasteInOrion.html` are exempt from 1, 3 and 4 by design (the styleguide links a
-local `orion.css` and uses placehold.co demo images; the Orion wrapper is not an Orion-styled page).
-Section 5 still applies to them, because their code samples set the house style for everything
-copied out of them.
+`template.html` and `pasteInOrion.html` are exempt from every rule except 5 by design (the styleguide
+links a local `orion.css` and uses placehold.co demo images; the Orion wrapper is not an Orion-styled
+page; and the styleguide has to keep a working demo of every component it documents, the retired
+spoiler included). Section 5 is the one rule that runs over every file, because their code samples set
+the house style for everything copied out of them. They stay out of the rest through the file list
+rather than through an exemption of their own, those two being the only `.html` files outside a lab
+folder.
 
 The spacing rule is the one rule in section 5 that cannot be a single `grep`, and the reason is worth
 keeping. The code sits HTML-escaped inside `<pre>`, so four things on a page look exactly like a
@@ -158,7 +180,7 @@ the remaining patterns (a punchline, a rhetorical tricolon) are not something a 
 style pass that half-blocks would be worse than one that never does. **It never affects the exit
 code** and never runs in CI or the hook, so a stylistic deviation cannot block anyone.
 
-`bash scripts/check-content.sh --compile` adds rule 7, the one rule that does not read the HTML: it
+`bash scripts/check-content.sh --compile` adds rule 8, the one rule that does not read the HTML: it
 extracts every code block that is a whole program (has both `setup()` and `loop()`), undoes the HTML
 escaping, and hands each one to the real Arduino compiler with `--warnings all`. It **does** affect
 the exit code, because code that does not build is breakage rather than style. Warnings coming from
@@ -365,6 +387,8 @@ Engines (all IIFEs exposing one `window.*` init function):
   centred under it and nudged back inside the text column by measurement rather than by a guess,
   since it is wider than the button that anchors it.
 - [solution-reveal.js](solution-reveal.js) — one-way "Toon oplossing" reveal for `.solution-container`.
+  One-way on purpose, which is why rule 7 lets it appear only under an `<h2 id="oplossing...">`.
+  Anything the reader may want to close again is an accordion.
 
 ## localStorage progress model (no backend)
 
@@ -401,6 +425,9 @@ An exercise page whose lab has a `laboN` key in `exercises.js` gets a **live** c
 `back-link.js`, `exercises.js`, `checklist-sync.js`, `solution-reveal.js`, then
 `initChecklistSync(LAB_EXERCISES.laboN)`. See [Labo1/Exercises/Looplicht.html](Labo1/Exercises/Looplicht.html)
 for the canonical example. Every new exercise must also get a matching entry in `exercises.js`.
+`solution-reveal.js` is in that list because the page ends on an Oplossing reveal, and it goes when
+the last `.solution-container` does: [Labo0/Exercises/BegeleideOefening.html](Labo0/Exercises/BegeleideOefening.html)
+carries no include at all, since its per-step answers are accordions (rule 7).
 
 A reference topic is the shorter version of the same idea: `reference.js` then `back-link.js` before
 `</body>`, no init call, no checklist. See [Labo1/Reference/Arrays.html](Labo1/Reference/Arrays.html).
@@ -560,7 +587,10 @@ drops each `.solution-container`, and `--reference-only` leaves the exercises ou
 a theory bundle to hand out or to read on paper. Each writes to its own filename, `-student` and
 `-theorie`, so neither can overwrite the full PDF of that lab: the theory bundle is the published
 one, and a full export landing on top of it would put every solution in `downloads/`. Anything
-beyond a selection belongs in the page rather than in the exporter.
+beyond a selection belongs in the page rather than in the exporter. Rule 7 is what makes
+`--no-solutions` mean what its name says: now that the one-way reveal holds only the solution, a
+student handout keeps its hints and reasoning questions (they are accordions, which print open) and
+loses only the answer. Before, it cut those out too and left their question paragraph behind.
 
 Any export also drops the one manifest entry that points at the file being written, because
 the hub lists that PDF as a download and a bundle that appears in its own table of contents reads as

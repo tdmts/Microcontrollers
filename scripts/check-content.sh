@@ -15,6 +15,8 @@
 #      documents, YouTube embeds carry referrerpolicy).
 #   5. Code style (Allman braces, no em-dashes, spaces around operators).
 #   6. Exercise names say what the student builds, not "Gevorderde oefening 2".
+#   7. Reveal components mean one thing (the one-way solution-container only
+#      under an <h2 id="oplossing...">, spoiler-container retired).
 #
 # Placeholder assets named "TODO-*" are reported as warnings, never errors,
 # so planned-but-missing artwork does not block a commit.
@@ -410,6 +412,25 @@ do_fix() {
     done < <(grep -oE "href: '[^']+'" "$mf" 2>/dev/null)
   done
 
+  # A solution-reveal.js include with no .solution-container left to bind. Rule
+  # 7 sends the reasoning questions and hints on a page to accordions, and the
+  # page that loses its last one keeps fetching a script that then does nothing:
+  # harmless in the browser, and exactly the leftover that tells the next author
+  # this page still has a solution to reveal. One self-contained <script> line,
+  # so this repair has exactly one right answer. Two greps over the whole list
+  # rather than one per file, since do_fix runs long before section 3 builds its
+  # HAS_* arrays.
+  local -A F_REVEAL=() F_SOLUTION=()
+  while IFS= read -r f; do [ -n "$f" ] && F_REVEAL["$f"]=1; done \
+    < <(grep -lE 'solution-reveal\.js' "${checked[@]}" 2>/dev/null)
+  while IFS= read -r f; do [ -n "$f" ] && F_SOLUTION["$f"]=1; done \
+    < <(grep -lE 'class="[^"]*solution-container' "${checked[@]}" 2>/dev/null)
+  for f in "${!F_REVEAL[@]}"; do
+    [ -n "${F_SOLUTION[$f]:-}" ] && continue
+    rewrite "$f" "dropped the unused solution-reveal.js include" \
+      perl -ni -e 'print unless m{^\s*<script src="[^"]*solution-reveal\.js"></script>\s*\r?$}'
+  done
+
   # Assets a page references that exist on disk but were never staged.
   local -a to_stage=()
   while IFS= read -r hit; do
@@ -634,7 +655,12 @@ mark HAS_CHECKLIST 'class="checklist"'
 mark HAS_BACKLINK  'back-link\.js'
 mark HAS_EXERCISES 'exercises\.js'
 mark HAS_SYNC      'checklist-sync\.js'
-mark HAS_SOLUTION  'solution-container'
+# Anchored on the class attribute rather than the bare word, because the word
+# also appears in prose that DOCUMENTS the component: template.html explains the
+# difference with .spoiler-container, and BegeleideOefening.html says in a
+# header comment where its answers live. Unanchored, a page that no longer has a
+# single container would still be asked for the script that drives them.
+mark HAS_SOLUTION  'class="[^"]*solution-container'
 mark HAS_REVEAL    'solution-reveal\.js'
 mark HAS_DASHJS    'src="[^"]*dashboard\.js"'
 mark HAS_HUBJS     'reference-dashboard\.js'
@@ -710,6 +736,16 @@ for f in "${checked[@]}"; do
 
   if [ -n "${HAS_SOLUTION[$f]:-}" ] && [ -z "${HAS_REVEAL[$f]:-}" ]; then
     err "$f has a solution-container but is missing solution-reveal.js"
+  fi
+
+  # And the mirror image, so the include cannot outlive the last container it
+  # served. A page whose reveals moved into accordions still fetches
+  # solution-reveal.js, which then binds nothing: harmless in the browser, and
+  # exactly the leftover that tells the next author this page still has a
+  # solution to reveal. --fix drops the line, since a self-contained <script>
+  # tag has one right answer.
+  if [ -n "${HAS_REVEAL[$f]:-}" ] && [ -z "${HAS_SOLUTION[$f]:-}" ]; then
+    err "$f loads solution-reveal.js but has no solution-container left (drop the include)"
   fi
 
   if [ "$base" = "dashboard.html" ] && [ -n "$lab" ]; then
@@ -1155,7 +1191,76 @@ done < <(grep -niE "<(h1|title)>[^<]*$NAME_RE" "${checked[@]}" 2>/dev/null)
 take; v="$TAKEN"
 [ -n "$v" ] && naming_errs+="Generic page title - the <h1> and <title> should say what the exercise builds:"$'\n'"$v"
 
-# ------------------------------------------- 7. sketches compile (--compile)
+# ------------------------------- 7. a reveal component means one thing
+#
+# Two components on these pages hide something behind a click, and for a long
+# time nothing said which one to reach for. They are not interchangeable, and
+# the difference is didactic rather than visual.
+#
+# .solution-container is the one-way reveal driven by solution-reveal.js: one
+# button, and once it is gone there is no way back. That is right for THE
+# solution, where a student who decides to look has ended the exercise anyway,
+# and wrong above it, where the whole point of a hidden answer is to think,
+# check, and read on. A reasoning question that cannot be closed again is spent
+# the first time someone peeks. So the one-way reveal is reserved for the
+# solution, and everything above it - a reasoning question with a hidden answer,
+# a hint, a worked calculation - is an .accordion-item with a
+# <div class="title">, which opens and closes as often as the reader wants.
+#
+# "The solution" is not a judgement call: it is the section under an <h2> whose
+# id starts with "oplossing". That covers id="oplossing" on a lab exercise and
+# the pair id="oplossing-schema" / id="oplossing-code" on the practice tests,
+# and it is the same anchor the --audit oplossing rule and export-pdf.py's
+# --no-solutions already key on. Every <h2> in the repo carries an id, so the
+# state machine below is exact rather than a guess.
+#
+# .spoiler-container, orion.js's own two-way spoiler, is retired from these
+# pages. It was a third way to hide a paragraph, it looks like neither of the
+# other two, and what sat in it is exactly what an accordion item holds. Three
+# components for two jobs is how a page ends up choosing by accident.
+#
+# Blocking rather than advisory, and with no audit-skip escape hatch, for the
+# same reason as the rest of this file: the failure is silent. Nothing about a
+# hint inside a one-way reveal looks wrong in a browser.
+#
+# The placement half cannot be a grep, because it has to know where in the file
+# it is. So it is one awk over the whole list, like section 5, with FNR==1
+# resetting the per-file state and FILENAME:FNR doing the reporting. Both halves
+# are anchored on the class ATTRIBUTE, never on the bare word: template.html
+# documents both components in prose and BegeleideOefening.html names one in a
+# header comment, so an unanchored match would report the very sentences that
+# explain the rule.
+#
+# template.html and pasteInOrion.html stay out through "checked" rather than
+# through an exemption of their own: the styleguide has to keep a working demo
+# of every component it documents, the retired spoiler included, and its own
+# .solution-container demo already sits under an <h2 id="oplossing">.
+reveal_errs=""
+
+while IFS= read -r hit; do
+  [ -n "$hit" ] && err "$hit"
+done < <(awk '
+  FNR == 1 { sec = "" }
+  /<h2/ {
+    sec = $0
+    if (sec ~ /<h2[^>]*id="/) { sub(/.*<h2[^>]*id="/, "", sec); sub(/".*/, "", sec) }
+    else { sec = "(no id)" }
+  }
+  /<div[^>]*class="[^"]*solution-container/ && sec !~ /^oplossing/ {
+    printf "%s:%d  <- sits under %s\n", FILENAME, FNR,
+           (sec == "" ? "no <h2> at all" : "<h2 id=\"" sec "\">")
+  }
+' "${checked[@]}" 2>/dev/null)
+take; v="$TAKEN"
+[ -n "$v" ] && reveal_errs+="solution-container outside an Oplossing section - the one-way \"Toon oplossing\" reveal is reserved for THE solution, under an <h2 id=\"oplossing...\">. A reasoning question, a hint or a worked calculation goes in an accordion-container / accordion-item with a <div class=\"title\">, which closes again:"$'\n'"$v"
+
+while IFS= read -r hit; do
+  [ -n "$hit" ] && err "$hit"
+done < <(grep -nE '<div[^>]*class="[^"]*spoiler-container' "${checked[@]}" 2>/dev/null)
+take; v="$TAKEN"
+[ -n "$v" ] && reveal_errs+="spoiler-container is retired - move the content into an accordion-item with a <div class=\"title\">, or into a solution-container under an <h2 id=\"oplossing\"> when it really is the solution:"$'\n'"$v"
+
+# ------------------------------------------- 8. sketches compile (--compile)
 #
 # Every rule above reads the HTML. None of them can tell you whether the code
 # on the page actually builds. This one hands each complete sketch to the real
@@ -1330,6 +1435,7 @@ report=""
 [ -n "$asset_errs" ]    && report+="Asset hygiene:"$'\n'"$asset_errs"
 [ -n "$style_errs" ]    && report+="$style_errs"
 [ -n "$naming_errs" ]   && report+="$naming_errs"
+[ -n "$reveal_errs" ]   && report+="$reveal_errs"
 [ -n "$compile_errs" ]  && report+="$compile_errs"
 
 if [ -n "$FIXED" ]; then
@@ -1360,7 +1466,7 @@ fi
 
 if [ "$HOOK_MODE" -eq 0 ]; then
   [ -n "$warnings" ] && printf 'Pending placeholders (not blocking):\n%s' "$warnings"
-  echo "check-content: OK (${#files[@]} .html files: links, manifests, wiring, assets, style)"
+  echo "check-content: OK (${#files[@]} .html files: links, manifests, wiring, assets, style, reveals)"
   [ "$AUDIT" -eq 0 ] && echo "                 (--audit also reports house-style drift, --fix repairs the mechanical ones)"
   [ "$COMPILE" -eq 0 ] && echo "                 (--compile builds every sketch on the pages with the real Arduino compiler)"
 fi

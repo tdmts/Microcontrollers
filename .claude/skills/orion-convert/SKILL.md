@@ -174,8 +174,7 @@ source explicitly references an `.stl` file.
 | Command-line transcript (lines with a shell prompt like `$` or `user@host:~$`) | `.terminal-window` with `.term-line`/`.term-prompt`/`.term-cmd`/`.term-out` | Only when source is clearly a terminal session, not just any code |
 | Config file listing explicitly marked with changed/new lines | `.config-window` with `.conf-line.mod`/`.conf-line.new` | Only when the distinction between changed/new is explicit in source |
 | Numbered steps explicitly labeled "Stap 1/Stap 2/..." or "Step 1/Step 2/..." | `.steps-container` with `.step-item[data-title]` | Not just any ordered list — must be explicit multi-step walkthrough |
-| Explicit FAQ / Q&A pairs | `.accordion-container` with `.accordion-item` | |
-| Source explicitly indicates optional/expandable extra info ("meer weten?", "spoiler", "optioneel") | `.spoiler-container` | |
+| Explicit FAQ / Q&A pairs, a reasoning question whose answer should stay hidden, a hint, a worked calculation, or optional/expandable extra info ("meer weten?", "spoiler", "optioneel") | `.accordion-container` with `.accordion-item` | The `<div class="title">` says what is behind the click, never "Toon antwoord"; a hint opens with `Hint:`. **`.spoiler-container` is retired** — never emit one. Only *the* solution gets a `.solution-container`, see below |
 | LaTeX-style math (`$...$` or `$$...$$`) | `.math-tex` | Inline for `$...$` paragraphs, block `<div class="math-tex">` for `$$...$$` |
 | Image | `<figure class="figure w-100 text-center figure-zoom"><img ...></figure>` inside `<div class="my-4">` | Default for all images — this is standard structure, keep original `src` as-is |
 | YouTube URL or `<iframe>` embed | `.video-container` wrapping `.ratio.ratio-16x9` iframe | Convert bare iframes (like the old Looplicht.html) into this wrapper. Match YouTube's current official embed attributes on the iframe: `frameborder="0"`, `allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"`, and `referrerpolicy="strict-origin-when-cross-origin"` (required — without it YouTube throws error 153, "Fout bij configuratie van videospeler"; note this only takes effect over `http(s)://`, not a `file://`-opened page, so it won't visibly fix things when testing by double-clicking the file). Keep the video's own `src` exactly as given — don't invent a `?si=...` tracking param. Per current convention (see Looplicht.html/KnightRider.html), when the video is the exercise's main explainer it sits directly under the `lead` paragraph with **no own `<h2>`**, followed by `<hr>` before the next section — don't force a "Video" heading unless there's enough surrounding explanatory content to justify a section of its own |
@@ -355,7 +354,17 @@ it's part of the standard page structure, not gated on whether the source
 provides a solution. **Reference (theory) pages never get one** (they aren't a
 task to solve). Place it as the **last section inside `.container`, directly
 after the checklist `.info-box.evaluation`**, and add the
-`solution-reveal.js` include to the script list before `</body>`. See
+`solution-reveal.js` include to the script list before `</body>`.
+
+**This is the only place a `.solution-container` may appear**, and rule 7 of
+`check-content.sh` blocks on it: the reveal is one-way (the button is gone for
+good once clicked), which suits a solution and ruins a reasoning question. So a
+`.solution-container` has to sit under an `<h2>` whose id starts with
+`oplossing`, and everything a student may want to close again — a hint, a
+question with a hidden answer, a worked calculation, even a full sketch for a
+sub-assignment halfway down the page — is an `.accordion-item`. A page that ends
+up with no `.solution-container` at all also drops the `solution-reveal.js`
+include, or the same rule flags the leftover. See
 [`Labo1/Exercises/Looplicht.html`](../../../Labo1/Exercises/Looplicht.html) for the
 canonical example.
 

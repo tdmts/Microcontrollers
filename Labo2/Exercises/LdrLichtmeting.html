@@ -30,32 +30,17 @@
     <h2 id="vragen">Vragen</h2>
     <p>Bekijk eerst de <a href="../../datasheets/ldr-3190.pdf" target="_blank" rel="noopener">datasheet van de LDR</a> en beantwoord onderstaande vragen.</p>
 
-    <div class="spoiler-container">
-        <div class="basic">
-            Welke weerstandswaarde heeft de LDR bij volledige verduistering?
-        </div>
-        <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
-        <div class="hidden">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Welke weerstandswaarde heeft de LDR bij volledige verduistering?</div>
             <p>1 MOhm.</p>
         </div>
-    </div>
-
-    <div class="spoiler-container">
-        <div class="basic">
-            Welke weerstandswaarde heeft de LDR bij schemerdonker?
-        </div>
-        <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
-        <div class="hidden">
+        <div class="accordion-item">
+            <div class="title">Welke weerstandswaarde heeft de LDR bij schemerdonker?</div>
             <p>9 kOhm.</p>
         </div>
-    </div>
-
-    <div class="spoiler-container">
-        <div class="basic">
-            Welke weerstandswaarde heeft de LDR bij 10000 lux, dus bij daglicht?
-        </div>
-        <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
-        <div class="hidden">
+        <div class="accordion-item">
+            <div class="title">Welke weerstandswaarde heeft de LDR bij 10000 lux, dus bij daglicht?</div>
             <p>100 Ohm. Je leest dat af op de grafiek uit de datasheet:</p>
             <figure class="figure w-100 text-center figure-zoom">
                 <img src="../../img/ldr-weerstand-vs-lux.png" alt="Grafiek uit de datasheet: weerstand van de LDR in kOhm tegenover de lichtsterkte in lux, dalend van 1000 kOhm bij 0,1 lux tot ongeveer 0,1 kOhm bij 10000 lux" width="385" height="257">
@@ -63,12 +48,9 @@
         </div>
     </div>
 
-    <div class="spoiler-container">
-        <div class="basic">
-            Welke weerstandswaarde neem je best voor de vaste weerstand, zodat je het grootste bereik aan waarden krijgt over U2? Kies uit 1 Ohm, 2 kOhm of 10 kOhm.
-        </div>
-        <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
-        <div class="hidden">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Welke vaste weerstand geeft je het grootste bereik over U2? Kies uit 1 Ohm, 2 kOhm of 10 kOhm.</div>
             <p>2 kOhm. Je vertrekt van het schema van de spanningsdeler:</p>
             <figure class="figure w-100 text-center figure-zoom">
                 <img src="../../img/spanningsdeler-schema.png" alt="Schema van een spanningsdeler met R1 en R2 in serie over de spanning U, met de deelspanningen U1 over R1 en U2 over R2" width="186" height="246">

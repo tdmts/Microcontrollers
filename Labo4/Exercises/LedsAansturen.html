@@ -63,9 +63,9 @@
 
     <p>Je stuurt telkens één byte naar de chip, en die byte bevat de toestand van alle acht de pinnen tegelijk. Je kan dus niet één led apart aansturen, want je schrijft altijd het hele patroon. Hoe je zo'n patroon opbouwt en leest, staat op <a href="../Reference/Bits.html">Werken met bits</a>.</p>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: hoe ziet dat patroon eruit?</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Hint: hoe ziet dat patroon eruit?</div>
             <p>Het meest rechtse bit van je byte is P0, het meest linkse is P7. Wil je enkel de led op P0 laten branden, dan moet enkel dat bit 0 zijn en de rest 1. Dat is dus <code>B11111110</code>.</p>
             <p>Voor de led op P1 schuift die nul één plaats op: <code>B11111101</code>.</p>
         </div>

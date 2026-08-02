@@ -23,9 +23,9 @@
 
     <p>Het programma van <a href="DraairichtingMetL293.html">Draairichting omkeren met de L293D</a> doet exact wat er gevraagd werd. Toch zou je het zo nooit op een echte machine zetten.</p>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: waarom is die code slecht? Stel je een motor voor die aan 10000 toeren draait...</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Waarom is die code slecht? Stel je een motor voor die aan 10000 toeren draait</div>
             <p>Die motor draait aan 10000 toeren naar links. Je schuift de potentiometer één stap voorbij 512, en van de ene lus op de andere keert de stroom volledig om. De motor moet dus in één klap van 10000 toeren links naar 10000 toeren rechts.</p>
             <p>Mechanisch is dat een schok waar een tandwielkast of een koppeling niet tegen kan. Elektrisch is het nog erger. Een motor die nog draait terwijl je de spanning omkeert werkt even als een generator die tegenwerkt, en de stroompiek die daardoor loopt is een veelvoud van de normale bedrijfsstroom. Die piek gaat door je H-brug.</p>
             <p>Wat je wil, is dat de motor <strong>afremt naar nul</strong> voor hij de andere kant op vertrekt. Dat krijg je als je met dezelfde knop ook de snelheid regelt.</p>
@@ -72,9 +72,9 @@
         <p>Hier zie je waarom de vorige oefening je de enable meteen op <strong>pin 3</strong> liet zetten. Op de UNO werkt <code>analogWrite()</code> alleen op pin 3, 5, 6, 9, 10 en 11. Zet je hem op een pin zonder <code>~</code>, dan compileert alles en gedraagt je motor zich alsof je <code>digitalWrite()</code> gebruikt. Elke waarde vanaf 128 is dan voluit, alles eronder is stil. Dat is een fout die je aan je code niet ziet.</p>
     </div>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon hint: hoe reken je die afstand tot het midden uit?</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Hint: hoe reken je die afstand tot het midden uit?</div>
             <p>Je hebt twee bereiken die allebei op 0 tot 255 moeten uitkomen: 511 terug naar 0 voor de ene kant, en 512 door naar 1023 voor de andere. Met twee keer een <a href="../../Labo2/Reference/map.html">map()</a>, elk in zijn eigen tak van de <code>if</code>, ben je er.</p>
             <p>Let op de richting van je eerste map: bij een potwaarde van 0 wil je 255 als snelheid, en bij 511 wil je 0. Dat mag, want <code>map()</code> aanvaardt een omgekeerd bereik.</p>
         </div>

@@ -27,9 +27,9 @@
         </figure>
     </div>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: waarom is een pull-upweerstand nodig?</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Waarom is een pull-upweerstand nodig?</div>
             <p>Als je er geen gebruikt, dan kan de ingang 'floating' zijn en wisselen tussen 0 en 1. Met een pull-up (of pull-down) weerstand zet je de toestand vast. In dit geval is de toestand in rust 1, en trekt een ingedrukte knop de pin naar 0.</p>
         </div>
     </div>
@@ -79,9 +79,9 @@ void loop()
   }
 }</code></pre>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: wat doet <code>bool knop1 = waarde &amp; B00000001;</code>?</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Wat doet <code>bool knop1 = waarde &amp; B00000001;</code>?</div>
             <p>Het is een AND-bewerking op 2 getallen.</p>
             <p>Stel dat <code>waarde</code> gelijk is aan 01010101, dan is het resultaat van de AND-bewerking 00000001, ofwel 1, ofwel true.</p>
             <p>We zijn van de byte <code>waarde</code> enkel geïnteresseerd in de status van de laatste bit. Dezelfde redenering volgen we voor <code>knop2</code>, waarbij we enkel geïnteresseerd zijn in de voorlaatste bit.</p>

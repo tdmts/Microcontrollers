@@ -17,32 +17,17 @@
 
     <h2 id="vragen">Vragen</h2>
 
-    <div class="spoiler-container">
-        <div class="basic">
-            Wat is de minimum- en maximumtemperatuur die de sensor kan meten?
-        </div>
-        <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
-        <div class="hidden">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Wat is de minimum- en maximumtemperatuur die de sensor kan meten?</div>
             <p>Van -40 °C tot +125 °C.</p>
         </div>
-    </div>
-
-    <div class="spoiler-container">
-        <div class="basic">
-            Welke spanning meet je op de uitgangspin bij 25 °C?
-        </div>
-        <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
-        <div class="hidden">
+        <div class="accordion-item">
+            <div class="title">Welke spanning meet je op de uitgangspin bij 25 °C?</div>
             <p>750 mV, of 0,75 V.</p>
         </div>
-    </div>
-
-    <div class="spoiler-container">
-        <div class="basic">
-            Met hoeveel volt neemt de spanning op de uitgangspin toe als de temperatuur 1 graad stijgt?
-        </div>
-        <div class="button" data-shown="Verberg antwoord">Toon antwoord</div>
-        <div class="hidden">
+        <div class="accordion-item">
+            <div class="title">Met hoeveel volt neemt de spanning op de uitgangspin toe als de temperatuur 1 graad stijgt?</div>
             <p>10 mV, of 0,01 V.</p>
         </div>
     </div>
@@ -74,9 +59,9 @@
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>double temperatuur = (spanning - 0.75) / 0.01 + 25.0;</code></pre>
 
-    <div class="solution-container">
-        <button type="button" class="btn-spoiler solution-reveal-btn">Toon antwoord: welke van de twee neem je hier best?</button>
-        <div class="spoiler-content solution-content">
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Welke van de twee neem je hier best?</div>
             <p><strong>Manier 2.</strong> Ze is korter, ze rekent met <code>double</code> en heeft dus geen last van afkapping, en je leest de twee getallen uit de datasheet er rechtstreeks in terug. Bij manier 1 voer je factoren in die je daarna weer wegdeelt, en daar sluipen makkelijk fouten in.</p>
             <p><code>map()</code> blijft wel bruikbaar. Bij de dimmer was het de juiste keuze, want daar ging het om twee bereiken van gehele getallen (0-1023 naar 0-255) en was er niets om af te kappen. De vuistregel is dus <code>map()</code> voor gehele bereiken, en een eigen formule zodra er kommagetallen in het spel zijn.</p>
         </div>
