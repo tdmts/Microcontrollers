@@ -59,8 +59,13 @@ in order:
    `.xlsx` — self-host in `datasheets/`, since a vendor PDF URL dies mid-semester exactly like a
    hotlinked image), and every YouTube embed carries `referrerpolicy` (error 153 without it).
 5. **Code style** — **K&R braces** in Arduino/C++ code (the house style is Allman: opening `{` on
-   its own line; data initializers `= { ... }` are exempt) and **em-dashes** (`&mdash;` or `—`)
-   anywhere in prose.
+   its own line; data initializers `= { ... }` are exempt), **em-dashes** (`&mdash;` or `—`)
+   anywhere in prose, and **operators without surrounding spaces**: the house form is
+   `int macht = 1;` and `for (byte i = 0; i < 10; i++)`, never `int macht=1;` or
+   `for(byte i=0;i&lt;10;i++)`. No compiler cares (whitespace dies in the lexer), but a first-year
+   reading a wall of characters spends on the syntax exactly the effort the lesson wanted. Covered:
+   `=`, the comparisons (`== != < > <= >=`), `&&`/`||`, a `;` inside a `for` header, a `,` in an
+   argument list, and the space after `if`/`for`/`while`/`switch`.
 6. **Exercise names say what the student builds** — an `exercises.js` `name`, or a page `<h1>`/
    `<title>`, may not be a generic slot label like "Gevorderde oefening 2", "Basis oefening 3" or
    "Oefening 1". Those tell a student nothing about the task, read as a placeholder, and stop meaning
@@ -72,6 +77,32 @@ in order:
 local `orion.css` and uses placehold.co demo images; the Orion wrapper is not an Orion-styled page).
 Section 5 still applies to them, because their code samples set the house style for everything
 copied out of them.
+
+The spacing rule is the one rule in section 5 that cannot be a single `grep`, and the reason is worth
+keeping. The code sits HTML-escaped inside `<pre>`, so four things on a page look exactly like a
+violation: an attribute (`width=device-width`), a YouTube URL (`?wmode=opaque`), an inline
+`<code>i=9</code>` in prose, and above all the **Dutch decimal comma** (`0,17 Hz`, `0,75 V`). A naive
+grep reported 151 hits, nearly all of them false. So it is one `awk` over the whole file list, still
+a single fork, with two filters that between them measured **zero** false positives across the repo:
+a line carrying a raw `<[a-zA-Z/!]` is prose and drops out (code escapes its `<` as `&lt;`, and the
+opening `<pre class="code-wrapper ..."><code>` is stripped off first, because the first line of a
+block is glued to it), and what remains must **end** on `;{}(),` once a trailing `//` comment is
+gone. That second filter is what kills the decimal comma: prose ends on a period or a word, code ends
+on a semicolon or a bracket. It is the same tag-filtering as the `identifier-taal` and `led-spelling`
+rules in `--audit`, and the same inversion: there the line must carry a prose tag, here it must not.
+
+`*`, `/`, `%`, `+`, `-`, `&`, `|`, `<<`, `>>` and `->` are deliberately **out** of the rule. `char* p`,
+`-1`, `i++`, `&buffer` and `1 << 3` are all legitimately tight, and on a blocking rule a false
+positive is worse than a missed one. The repo had exactly one violation of that kind
+(`macht=macht*2;`), fixed by hand; `CONTRIBUTING.md` states the expectation in prose instead.
+`#include <Wire.h>` is exempt for the same reason: all 25 of them are correct as written.
+
+[`.clang-format`](.clang-format) carries the same two rules (`BreakBeforeBraces: Allman`,
+`SpaceBeforeParens: ControlStatements`) for anyone editing a sketch in the Arduino IDE, where Ctrl+T
+is bound to clang-format. It exists because the IDE's stock style attaches the brace K&R-style and
+would fight the house rule on every reformat. It is **not** a second enforcement layer and never runs
+in CI: clang-format cannot reach code that sits HTML-escaped inside a `<pre>`, which is why the rule
+lives in the script at all.
 
 `bash scripts/check-content.sh --audit` adds an advisory pass over the house conventions the check
 proper stays out of: every code block must be `code-wrapper language-cpp linenumbers show-language`
@@ -167,10 +198,23 @@ walkthrough whose solutions sit inline per step, so a closing Oplossing section 
 Reach for this only when the page type genuinely differs, not to quiet a page you haven't fixed yet.
 
 `bash scripts/check-content.sh --fix` repairs the mechanical violations first and then reports the
-rest: em-dashes, K&R braces that end a line, a missing `referrerpolicy`, an init call naming the
+rest: em-dashes, K&R braces that end a line, operator spacing, a missing `referrerpolicy`, an init call naming the
 wrong lab, a manifest `href` with the wrong casing or written as a full Pages URL, a reference topic that never loads
 `reference.js` (the tag has exactly one place to go, right above `back-link.js`, with the same
 relative prefix), and assets that exist but were never staged.
+
+The spacing repair is the one that runs as a single `perl` over the entire file list rather than
+through the per-file `rewrite` helper: the pre-filter that would select candidates is nearly every
+page, and a fork per page is the 48s path this script exists to avoid, so `perl` names the files it
+touched on stderr instead. It holds two things out of the substitution because both hold prose:
+string literals and the trailing `//` comment. The comment matters more than it looks, since the
+segment table in [`Labo2/Exercises/ThermometerOp7Segment.html`](Labo2/Exercises/ThermometerOp7Segment.html)
+is annotated `// a,b,c,d,e,f,g` and spacing that out would be wrong. And it **never introduces an
+entity into a line that had none**: an earlier version decoded, substituted and re-encoded
+unconditionally, which escaped a raw `<` that had been there all along, and inside an inline
+`<script>` that is not a tidy-up but a syntax error. [`Labo3/Reference/Schuifregister.html`](Labo3/Reference/Schuifregister.html)
+is the page that caught it, with `for (var i = 0; i < 8; i++)` in the widget driving its animation.
+
 It deliberately does *not* touch anything needing words (a missing `blurb`) or a decision (which lab
 an orphan page belongs to, what to name a downloaded image). It wants a clean tree so `git diff`
 shows exactly what it changed (`--force` overrides), and it refuses to combine with `--hook`, since

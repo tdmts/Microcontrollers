@@ -49,20 +49,20 @@ void setup()
 
 void knipper(bool duur)
 {
-  digitalWrite(ledPin,LOW);
+  digitalWrite(ledPin, LOW);
   delay(100);
-  if(duur)
+  if (duur)
   {
     delay(200); //Extra delay
   }
-  digitalWrite(ledPin,HIGH);
+  digitalWrite(ledPin, HIGH);
   delay(100);
 }
 
 void loop()
 {
   //De letter S = 3x kort
-  for(int i = 0; i < 3; i++)
+  for (int i = 0; i < 3; i++)
   {
     knipper(KORT);
   }
@@ -140,21 +140,21 @@ void loop()
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
 {
   //De letter S = 3x kort
-  for(int i = 0; i < 3; i++)
+  for (int i = 0; i < 3; i++)
   {
     knipper(KORT);
   }
   delay(300); //Pauze tussen twee letters.
 
   //Nu nog de O
-  for(int i = 0; i < 3; i++)
+  for (int i = 0; i < 3; i++)
   {
     knipper(LANG);
   }
   delay(300); //Pauze tussen twee letters.
 
   //Nu nog de S
-  for(int i = 0; i < 3; i++)
+  for (int i = 0; i < 3; i++)
   {
     knipper(KORT);
   }

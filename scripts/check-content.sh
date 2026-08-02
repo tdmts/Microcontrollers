@@ -13,7 +13,7 @@
 #   3. Page wiring (Orion CDN, nav/checklist/solution/dashboard/hub script sets).
 #   4. Asset hygiene (no Brightspace hotlinks, no remote images, no remote
 #      documents, YouTube embeds carry referrerpolicy).
-#   5. Code style (Allman braces, no em-dashes).
+#   5. Code style (Allman braces, no em-dashes, spaces around operators).
 #   6. Exercise names say what the student builds, not "Gevorderde oefening 2".
 #
 # Placeholder assets named "TODO-*" are reported as warnings, never errors,
@@ -53,10 +53,10 @@
 #                                          # add --force to override. Cannot
 #                                          # be combined with --hook.
 #
-# What --fix repairs: em-dashes, K&R braces that end a line, a missing
-# referrerpolicy, an init call naming the wrong lab, a manifest href with the
-# wrong casing or written as a full Pages URL, and assets that exist but were
-# never staged. What it leaves
+# What --fix repairs: em-dashes, K&R braces that end a line, operator spacing,
+# a missing referrerpolicy, an init call naming the wrong lab, a manifest href
+# with the wrong casing or written as a full Pages URL, and assets that exist
+# but were never staged. What it leaves
 # alone: anything needing words (a missing blurb) or a decision (which lab an
 # orphan page belongs to, what to call a downloaded image).
 set -uo pipefail
@@ -252,6 +252,88 @@ do_fix() {
     [ -n "$f" ] && rewrite "$f" "Allman braces" \
       perl -pi -e 's/^([ \t]*)(\S.*?)[ \t]*\{[ \t]*(\r?)$/$1$2$3\n$1\{$3/ if /(\)|\belse\b|\bdo\b)[ \t]*\{[ \t]*\r?$/'
   done < <(grep -lE '\) ?\{|\belse ?\{|\bdo ?\{' "${checked[@]}" 2>/dev/null)
+
+  # Operator spacing (section 5). One perl over the entire file list rather than
+  # the rewrite() helper above: the pre-filter that would select candidates is
+  # nearly every page, and a fork per page is the 48s path this script exists to
+  # avoid. So perl names the files it actually changed on stderr instead.
+  #
+  # Because perl -i rewrites every file it opens, this touches the mtime of all
+  # of them even when the content is identical. Left that way on purpose: git
+  # sees nothing, there is no build or watcher here to confuse, and the obvious
+  # fix (a grep pre-filter) would put the qualifying logic in a second place
+  # where it can drift out of step with the perl and the awk in section 5.
+  #
+  # It repeats the two filters of the check, then works on a decoded copy: the
+  # entities are turned back into "<", ">" and "&", the operators that are never
+  # spaced (-> << >>) and the two-character ones (== != <= >= && ||) are parked
+  # under sentinel bytes so the plain "=" rule cannot split them, and everything
+  # is re-encoded afterwards with "&" first, so a "<" that just became "&lt;"
+  # does not get its ampersand escaped twice.
+  #
+  # Two things are held out of the substitution entirely, because both hold
+  # prose: string literals (parked under \x01, restored after the re-encoding,
+  # so a "<" inside one stays exactly as it was written) and the trailing //
+  # comment. That comment matters more than it looks: the segment table in
+  # ThermometerOp7Segment.html is annotated "// a,b,c,d,e,f,g", and spacing that
+  # out would be wrong.
+  #
+  # Compound assignments (+= -= *= /= %= &= |= ^=) are parked and restored
+  # untouched. They fall outside the documented rule for the same reason the
+  # arithmetic operators do, and the repo contains none.
+  while IFS= read -r f; do
+    [ -n "$f" ] && fixed "$f: operator spacing"
+  done < <(perl -pi -e '
+    BEGIN { $cur = ""; $hit = 0 }
+    if ($ARGV ne $cur) { print STDERR "$cur\n" if $hit; $cur = $ARGV; $hit = 0 }
+    my $orig = $_;
+    my $eol    = s/(\r?\n)\z//                                    ? $1 : "";
+    my $prefix = s/^(\s*<pre class="code-wrapper[^>]*>(?:<code>)?)// ? $1 : "";
+    # Filter 1: a raw HTML tag means prose. Filter 2: the code must end on a
+    # code character once the comment is off, which is what keeps the Dutch
+    # decimal comma ("0,17 Hz") out of this.
+    if (!m{<[a-zA-Z/!]} && !/^\s*#\s*include/) {
+      my ($code, $comment) = /^(.*?)(\s*\/\/.*)$/s ? ($1, $2) : ($_, "");
+      my $probe = $code; $probe =~ s/\s+$//;
+      if ($probe =~ /[;{}(),]$/) {
+        my @S;
+        $code =~ s/("(?:[^"\x5c]|\x5c.)*")/push @S, $1; "\x01" . $#S . "\x01"/ge;
+        # Only ever put back an entity the line already had. Without these
+        # flags the re-encoding below escapes a raw "<" that was there all
+        # along, and inside an inline <script> that is not a tidy-up but a
+        # syntax error: Schuifregister.html carries "for (var i = 0; i < 8;
+        # i++)" in the widget that drives its animation.
+        my $had_lt = $code =~ /&lt;/; my $had_gt = $code =~ /&gt;/;
+        my $had_amp = $code =~ /&amp;/;
+        $code =~ s/&lt;/</g; $code =~ s/&gt;/>/g; $code =~ s/&amp;/\&/g;
+        $code =~ s/->/\x02/g; $code =~ s/<</\x03/g; $code =~ s/>>/\x04/g;
+        $code =~ s/([+\-*\/%&|^])=/$1\x12/g;
+        $code =~ s/==/\x05/g;  $code =~ s/!=/\x06/g;
+        $code =~ s/<=/\x0e/g;  $code =~ s/>=/\x0f/g;
+        $code =~ s/&&/\x10/g;  $code =~ s/\|\|/\x11/g;
+        $code =~ s/([A-Za-z0-9_)\]\x01])=/$1 =/g;
+        $code =~ s/=([A-Za-z0-9_(\x01!~+-])/= $1/g;
+        $code =~ s/([A-Za-z0-9_)\]\x01])([<>\x05\x06\x0e\x0f\x10\x11])/$1 $2/g;
+        $code =~ s/([<>\x05\x06\x0e\x0f\x10\x11])([A-Za-z0-9_(\x01!~-])/$1 $2/g;
+        $code =~ s/;([A-Za-z0-9_(\x01])/; $1/g;
+        $code =~ s/,([A-Za-z0-9_({\x01!~-])/, $1/g;
+        $code =~ s/\b(if|for|while|switch)\(/$1 (/g;
+        $code =~ s/\x12/=/g;
+        $code =~ s/\x11/||/g;  $code =~ s/\x10/&&/g;
+        $code =~ s/\x0f/>=/g;  $code =~ s/\x0e/<=/g;
+        $code =~ s/\x06/!=/g;  $code =~ s/\x05/==/g;
+        $code =~ s/\x04/>>/g;  $code =~ s/\x03/<</g;  $code =~ s/\x02/->/g;
+        $code =~ s/&/&amp;/g if $had_amp;
+        $code =~ s/</&lt;/g   if $had_lt;
+        $code =~ s/>/&gt;/g   if $had_gt;
+        $code =~ s/\x01(\d+)\x01/$S[$1]/g;
+        $_ = $code . $comment;
+      }
+    }
+    $_ = $prefix . $_ . $eol;
+    $hit = 1 if $_ ne $orig;
+    END { print STDERR "$cur\n" if $hit }
+  ' "${files[@]}" 2>&1 >/dev/null)
 
   # referrerpolicy on YouTube embeds that lack it.
   while IFS= read -r f; do
@@ -983,6 +1065,74 @@ while IFS= read -r hit; do
 done < <(grep -nE '&mdash;|—' "${files[@]}" 2>/dev/null)
 take; v="$TAKEN"
 [ -n "$v" ] && style_errs+="Em-dash(es) - replace with a comma, colon, period, or 'en'/'maar':"$'\n'"$v"
+
+# Spaces around operators. "int macht=1;" and "for(byte i=0;i<10;i++)" compile
+# to the same bytes as the spaced form - no compiler cares - but for a first-year
+# reading a wall of characters, working out where one token ends and the next
+# begins is exactly the effort that should be going into the lesson instead.
+#
+# This is the one rule in this section that cannot be a single grep, because the
+# code sits HTML-escaped inside <pre> and four things on a page look exactly like
+# a violation: an attribute (width=device-width), a YouTube URL (?wmode=opaque),
+# inline <code>i=9</code> in prose, and above all the DUTCH DECIMAL COMMA
+# ("0,17 Hz", "0,75 V"). A naive grep reported 151 hits, nearly all of them
+# false. So one awk over the whole file list - still a single fork, like mark()
+# and the --compile extractor - with two filters that between them measured zero
+# false positives across the repo:
+#
+#   1. No raw HTML tag on the line. Code inside a <pre> escapes its "<" as
+#      "&lt;", so a raw "<[a-zA-Z/!]" means prose. The opening
+#      <pre class="code-wrapper ..."><code> is stripped off first, because the
+#      first line of a block is glued to it (Iteraties.html:34). Same tag
+#      filtering as the identifier-taal and led-spelling rules in --audit, and
+#      the same inversion: there the line must carry a tag, here it must not.
+#   2. The line must END on ";{}()," once a trailing // comment is gone. This is
+#      what kills the decimal comma: prose ends on a period or a word, code ends
+#      on a semicolon or a bracket.
+#
+# Deliberately NOT checked: * / % + - & | << >> ->. "char* p", "-1", "i++",
+# "&buffer" and "1 << 3" are all legitimately tight, and on a BLOCKING rule a
+# false positive is worse than a missed one. The repo has exactly one violation
+# of that kind ("macht=macht*2;"), fixed by hand; CONTRIBUTING.md states the
+# expectation in prose. #include <Wire.h> is exempt for the same reason: all 25
+# of them are correct as written.
+while IFS= read -r hit; do
+  [ -n "$hit" ] && err "$hit"
+done < <(awk '
+  {
+    L = $0
+    sub(/^[[:space:]]*<pre class="code-wrapper[^>]*>(<code>)?/, "", L)
+    if (L ~ /<[a-zA-Z\/!]/) next
+    if (L ~ /^[[:space:]]*#[[:space:]]*include/) next
+
+    c = L
+    # Undo the escaping first, or the ";" of "&lt;" reads as a statement
+    # separator and every comparison reports twice.
+    gsub(/&lt;/, "<", c); gsub(/&gt;/, ">", c)
+    gsub(/&quot;/, "\"", c); gsub(/&#39;/, "\047", c); gsub(/&amp;/, "\\&", c)
+    # Blank string and char literals: a comma or an "=" inside one is data.
+    # Done before the comment strip, so "http://" in a string keeps its line.
+    gsub(/"[^"]*"/, "\"\"", c)
+    gsub(/\047[^\047]*\047/, "\047\047", c)
+    sub(/[[:space:]]*\/\/.*$/, "", c)
+    sub(/[[:space:]]+$/, "", c)
+    if (c !~ /[;{}(),]$/) next
+    # Multi-character operators that are never spaced, out of the way before
+    # the comparison tests: "a->b" would otherwise report as a tight ">".
+    gsub(/->|<<|>>/, "@@", c)
+
+    bad = ""
+    if (c ~ /[A-Za-z0-9_)\]]=[^=]/ || c ~ /(^|[^=!<>+*\/%&|^-])=[A-Za-z0-9_("\047(-]/) bad = bad " ="
+    if (c ~ /[A-Za-z0-9_)\]](==|!=|<=|>=|<|>)/ || c ~ /(==|!=|<=|>=|<|>)[A-Za-z0-9_(]/) bad = bad " comparison"
+    if (c ~ /[A-Za-z0-9_)\]](&&|\|\|)/ || c ~ /(&&|\|\|)[A-Za-z0-9_(!]/) bad = bad " &&/||"
+    if (c ~ /;[A-Za-z0-9_]/) bad = bad " ;"
+    if (c ~ /,[A-Za-z0-9_("\047{-]/) bad = bad " ,"
+    if (c ~ /(^|[^A-Za-z0-9_.])(if|for|while|switch)\(/) bad = bad " keyword("
+
+    if (bad != "") printf "%s:%d:%s  <- no space after:%s\n", FILENAME, FNR, $0, bad
+  }' "${files[@]}" 2>/dev/null)
+take; v="$TAKEN"
+[ -n "$v" ] && style_errs+="Operator(s) without surrounding spaces - write 'int macht = 1;' and 'for (byte i = 0; i < 10; i++)':"$'\n'"$v"
 
 # --------------------------------------------------------- 6. exercise names
 

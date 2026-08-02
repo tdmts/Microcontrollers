@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="container">
-    <!-- compile-skip: twee voorbeelden tonen met opzet een fout (while(voorwaarde=true) en een byte die nooit 260 haalt), dus de compilerwaarschuwing is hier de les -->
+    <!-- compile-skip: twee voorbeelden tonen met opzet een fout (while (voorwaarde = true) en een byte die nooit 260 haalt), dus de compilerwaarschuwing is hier de les -->
     <h1>Iteraties</h1>
     <p class="lead">Naast de sequentie en de selectie is de iteratie één van de drie basisstructuren waarmee een programma wordt opgebouwd. Itereren betekent letterlijk herhalen. Het is dus een structuur om een stuk code een aantal keer te herhalen. Dit kan een oneindige herhaling zijn zoals de <code>loop()</code>-functie, maar kan ook een conditionele herhaling zijn zoals een for-lus of een while-constructie.</p>
 
@@ -18,7 +18,7 @@
     <p>Bij de for-instructie gaat het om een lus waarvan we op voorhand weten hoeveel keer hij moet doorlopen worden. Dit aantal keer kan ook een variabele waarde zijn, maar het gaat erom dat het zeker is dat na x aantal keer de lus te hebben doorlopen het programma verder gezet wordt.</p>
 
     <h3>Syntax</h3>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>for(initialisatie; voorwaarde; aanpassing)
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>for (initialisatie; voorwaarde; aanpassing)
 {
     // instructies
 }</code></pre>
@@ -31,15 +31,15 @@
     </ul>
 
     <h3>Voorbeeld</h3>
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>for(int i=0;i&lt;10;i++)
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>for (int i = 0; i &lt; 10; i++)
 {
     Serial.println(i);
 }</code></pre>
-    <p>In bovenstaand voorbeeld wordt een variabele <code>i</code> van het type integer op 0 geïnitialiseerd. Daarna wordt de voorwaarde een eerste maal geëvalueerd, waarbij het resultaat <code>true</code> is, want <code>0&lt;10</code> resulteert in <code>true</code>. De luscode wordt een eerste keer doorlopen en via het serieel kanaal zien we 0 op de terminal verschijnen.</p>
+    <p>In bovenstaand voorbeeld wordt een variabele <code>i</code> van het type integer op 0 geïnitialiseerd. Daarna wordt de voorwaarde een eerste maal geëvalueerd, waarbij het resultaat <code>true</code> is, want <code>0 &lt; 10</code> resulteert in <code>true</code>. De luscode wordt een eerste keer doorlopen en via het serieel kanaal zien we 0 op de terminal verschijnen.</p>
     <p>Na het uitvoeren van de luscode wordt de aanpassing uitgevoerd, en krijgt <code>i</code> de nieuwe waarde 1 door de verhoging ten gevolge van <code>i++</code>.</p>
-    <p>De voorwaarde wordt opnieuw geëvalueerd, waardoor er opnieuw een <code>true</code> als resultaat gevonden wordt: <code>1&lt;10</code> is immers waar. De luscode wordt dus een tweede maal doorlopen en op de terminal verschijnt een 1.</p>
+    <p>De voorwaarde wordt opnieuw geëvalueerd, waardoor er opnieuw een <code>true</code> als resultaat gevonden wordt: <code>1 &lt; 10</code> is immers waar. De luscode wordt dus een tweede maal doorlopen en op de terminal verschijnt een 1.</p>
     <p>Opnieuw wordt <code>i</code> met één verhoogd, waardoor <code>i</code> gelijk wordt aan twee. We kunnen deze redenering voortzetten en zullen zien dat op de terminal achtereenvolgens nog de 2, 3, 4, 5, 6, 7, 8 en 9 verschijnen.</p>
-    <p>Bij <code>i=9</code> zal de aanpassing ervoor zorgen dat <code>i</code> nu de waarde 10 krijgt. De voorwaarde <code>10&lt;10</code> geeft nu als resultaat <code>false</code>, waardoor de lus niet meer uitgevoerd wordt en het programma verder gaat met de eerste instructie na de lus.</p>
+    <p>Bij <code>i = 9</code> zal de aanpassing ervoor zorgen dat <code>i</code> nu de waarde 10 krijgt. De voorwaarde <code>10 &lt; 10</code> geeft nu als resultaat <code>false</code>, waardoor de lus niet meer uitgevoerd wordt en het programma verder gaat met de eerste instructie na de lus.</p>
 
     <div class="info-box">
         <div class="info-title warning">Een byte loopt maar tot 255</div>
@@ -50,7 +50,7 @@
 }
 void loop()
 {
-  for(byte i=250;i&lt;260;i++)
+  for (byte i = 250; i &lt; 260; i++)
   {
     Serial.println(i);
   }
@@ -67,11 +67,11 @@ void loop()
 
 void loop()
 {
-  int macht=1;
-  for(byte i=0;i&lt;10;i++)
+  int macht = 1;
+  for (byte i = 0; i &lt; 10; i++)
   {
     Serial.println(macht);
-    macht=macht*2;
+    macht = macht * 2;
   }
 }</code></pre>
 
@@ -83,9 +83,9 @@ void loop()
 
 void loop()
 {
-  for(byte i=0;i&lt;10;i++)
+  for (byte i = 0; i &lt; 10; i++)
   {
-    Serial.println(pow(2,i));
+    Serial.println(pow(2, i));
   }
 }</code></pre>
 
@@ -97,7 +97,7 @@ void loop()
 
 void loop()
 {
-  for(int i=1;i&lt;513;i=i*2)
+  for (int i = 1; i &lt; 513; i = i * 2)
   {
     Serial.println(i);
   }
@@ -118,11 +118,11 @@ void loop()
     <h3>Voorbeeld</h3>
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>void setup()
 {
-    pinMode(3,INPUT_PULLUP);
+    pinMode(3, INPUT_PULLUP);
 }
 void loop()
 {
-    while(digitalRead(3))
+    while (digitalRead(3))
     {
     }
 }</code></pre>
@@ -140,7 +140,7 @@ void loop()
 void loop()
 {
   bool voorwaarde = false;
-  while(voorwaarde=true)
+  while (voorwaarde = true)
   {
     Serial.print("surprise");
   }
@@ -153,7 +153,7 @@ void loop()
         <div class="info-title remark">Een programma permanent stoppen</div>
         <p>Het kan soms de bedoeling zijn om het programma permanent te stoppen. Dat lijkt onmogelijk, aangezien het programma binnen de <code>loop()</code>-functie draait die oneindig herhaalt.</p>
         <p>Je kan met de while-instructie echter zorgen voor een oneindige lus waardoor de uitvoering van het programma gestopt lijkt voor de buitenwereld. Gebruik daarvoor de constructie:</p>
-        <pre class="code-wrapper language-cpp linenumbers show-language"><code>while(true)
+        <pre class="code-wrapper language-cpp linenumbers show-language"><code>while (true)
 {
 }</code></pre>
     </div>

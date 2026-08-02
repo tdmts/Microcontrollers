@@ -186,7 +186,7 @@ void loop()
   Serial.print("Status: ");
   Serial.println(toestand);
 
-  if(toestand == LOW)
+  if (toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
@@ -221,7 +221,7 @@ void loop()
   Serial.print("Status: ");
   Serial.println(toestand);
 
-  if(toestand == LOW)
+  if (toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
@@ -251,7 +251,7 @@ void loop()
   Serial.print("Status: ");
   Serial.println(toestand);
 
-  if(toestand == LOW)
+  if (toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     knipper(); // verwijs naar de functie knipper
@@ -299,7 +299,7 @@ void loop()
   Serial.print("Status: ");
   Serial.println(toestand);
 
-  if(toestand == LOW)
+  if (toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     knipper(); // verwijs naar de functie knipper
@@ -313,7 +313,7 @@ void loop()
 
 void knipper()
 {
-  for(int i = 1; i &lt;= 3; i++)
+  for (int i = 1; i &lt;= 3; i++)
   {
     digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
     delay(50);
@@ -340,7 +340,7 @@ void loop()
   Serial.print("Status: ");
   Serial.println(toestand);
 
-  if(toestand == LOW)
+  if (toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     knipper(4); // verwijs naar de functie knipper
@@ -354,7 +354,7 @@ void loop()
 
 void knipper(int aantal)
 {
-  for(int i = 1; i &lt;= aantal; i++)
+  for (int i = 1; i &lt;= aantal; i++)
   {
     digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
     delay(50);
@@ -381,7 +381,7 @@ void loop()
   Serial.print("Status: ");
   Serial.println(toestand);
 
-  if(toestand == LOW)
+  if (toestand == LOW)
   {
     // pull up -&gt; LOW = er werd op de knop gedrukt
     knipper(4, 100); // verwijs naar de functie knipper
@@ -395,7 +395,7 @@ void loop()
 
 void knipper(int aantal, int duurtijd)
 {
-  for(int i = 1; i &lt;= aantal; i++)
+  for (int i = 1; i &lt;= aantal; i++)
   {
     digitalWrite(ledPin, HIGH); // Sourcing -&gt; HIGH = de LED brandt
     delay(duurtijd);

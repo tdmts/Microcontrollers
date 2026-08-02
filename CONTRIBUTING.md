@@ -38,7 +38,7 @@ bash scripts/check-content.sh --fix
 ```
 
 Dit herstelt zelf wat maar één juist antwoord heeft: em-dashes, accolades die op de verkeerde regel
-staan, een ontbrekende `referrerpolicy`, een `initChecklistSync` die naar het verkeerde labo wijst,
+staan, ontbrekende spaties rond operatoren, een ontbrekende `referrerpolicy`, een `initChecklistSync` die naar het verkeerde labo wijst,
 een `href` met verkeerde hoofdletters of met een volledige `tdmts.github.io`-URL ervoor, een
 referentiepagina die `reference.js` niet inlaadt, en
 afbeeldingen die je vergat toe te voegen aan git. Wat het niet kan verzinnen (een ontbrekende
@@ -415,6 +415,30 @@ Deze worden automatisch afgedwongen:
 
 - **Allman-accolades** in Arduino/C++-code: de openende `{` staat op zijn eigen regel.
   Data-initialisatie (`= { ... }`) mag wel op één regel.
+- **Spaties rond operatoren** in Arduino/C++-code. Dus:
+
+  ```cpp
+  int macht = 1;
+  for (byte i = 0; i < 10; i++)
+  digitalWrite(ledPin, LOW);
+  ```
+
+  en niet `int macht=1;`, `for(byte i=0;i<10;i++)` of `digitalWrite(ledPin,LOW);`. De compiler
+  maakt het niets uit, want spaties verdwijnen sowieso bij het compileren. Maar een eerstejaars die
+  naar een muur tekens kijkt, is bezig met uitpluizen waar het ene woord stopt en het volgende
+  begint, en dat is net de aandacht die naar de leerstof had moeten gaan. De regel dekt `=`, de
+  vergelijkingen (`== != < > <= >=`), `&&` en `||`, de puntkomma's in een `for`-hoofding, de komma
+  tussen argumenten, en de spatie na `if`, `for`, `while` en `switch`.
+
+  `*`, `/`, `%`, `+`, `-`, `&`, `|`, `<<`, `>>` en `->` zitten er bewust **niet** in: `char* p`,
+  `-1`, `i++` en `1 << 3` zijn allemaal terecht zonder spaties, en een blokkerende controle die
+  vals alarm slaat is erger dan geen controle. Schrijf ze wel met spaties (`macht = macht * 2;`),
+  maar niets houdt je tegen. `#include <Wire.h>` blijft zoals het is.
+
+  Dit is precies wat `--fix` voor je oplost, dus je hoeft er bij het typen niet op te letten.
+  Werk je een sketch uit in de Arduino IDE, dan doet **Ctrl+T** ("Auto Format") hetzelfde, op
+  voorwaarde dat je [`.clang-format`](.clang-format) uit deze repo naast je sketch zet. Zonder dat
+  bestand gebruikt de IDE haar eigen stijl en trekt ze je accolades naar de verkeerde regel.
 - **Geen em-dashes** in tekst. Gebruik een komma, dubbele punt, punt, of "en"/"maar".
 - **Afbeeldingen zelf hosten** in de gedeelde map `img/`, met een beschrijvende bestandsnaam.
   Nooit rechtstreeks linken naar een externe site of naar Brightspace-content

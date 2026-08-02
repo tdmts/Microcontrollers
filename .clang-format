@@ -1,0 +1,43 @@
+# Huisstijl voor de Arduino-code in deze repo, in het formaat dat de Arduino IDE
+# zelf gebruikt (Ctrl+T, "Auto Format"). Kopieer een sketch uit een pagina naar
+# de IDE en Ctrl+T laat hem staan zoals hij hier hoort te staan.
+#
+# Zonder dit bestand gebruikt de IDE haar eigen stijl, en die zet de accolade
+# achter de regel (K&R). Dat is precies het tegendeel van de Allman-huisregel,
+# dus dan vecht Ctrl+T met check-content.sh in plaats van te helpen.
+#
+# Dit draait NOOIT in CI en is geen vervanging voor scripts/check-content.sh:
+# de code op de pagina's staat HTML-escaped in een <pre>, en daar kan
+# clang-format niet bij. Het script blijft de controle die telt.
+#
+# De IDE zoekt dit bestand naast de sketch. Werk je in ~/Arduino/Blink/, kopieer
+# het dan mee, of zet het als globale configuratie in ~/.arduinoIDE/clang-format.
+---
+Language: Cpp
+BasedOnStyle: LLVM
+
+# De twee huisregels die check-content.sh afdwingt.
+BreakBeforeBraces: Allman
+SpaceBeforeParens: ControlStatements   # "for (" en "if (", niet "for("
+
+# Spaties rond operatoren: dit is de standaard, expliciet gemaakt omdat het de
+# hele reden is dat dit bestand bestaat.
+SpaceBeforeAssignmentOperators: true
+SpaceAfterCStyleCast: true
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpaceAfterTemplateKeyword: false
+
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+ColumnLimit: 0            # geen automatische regelafbreking: de pagina's tonen
+                          # de code in een smalle kolom, en clang-format zou
+                          # regels afbreken op plaatsen die de uitleg breken.
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: None
+AllowShortBlocksOnASingleLine: false
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 1
+SortIncludes: false       # de volgorde van #include is soms didactisch gekozen
