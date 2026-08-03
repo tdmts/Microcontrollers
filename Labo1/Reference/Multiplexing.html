@@ -19,6 +19,13 @@
 
     <p>Een dubbel display lost dat hardwarematig half op: de zeven segmentaansluitingen van beide displays zitten aan elkaar geknoopt. Segment a van het linkse display en segment a van het rechtse hangen aan dezelfde pin. Alleen de <strong>gemeenschappelijke</strong> pin van elk display is apart uitgebracht.</p>
 
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/dubbel7segment-gedeelde-segmenten-schema.png" class="img-fluid" alt="Breadboardschema met een dubbel 7-segment display waarop allebei de displays een 8 tonen. De zeven segmentaansluitingen van het linkse en het rechtse display zijn per segment met gele draden doorverbonden en lopen via zeven voorschakelweerstanden en groene draden naar de Arduino. De twee gemeenschappelijke pinnen gaan apart, met een magenta draad, naar pin 9 en pin 10. Op de Arduino staat een waarschuwingsteken">
+            <figcaption>De zeven segmentpinnen zijn doorverbonden, dus staat op allebei de displays hetzelfde patroon: twee keer een 8. Alleen de twee gemeenschappelijke pinnen gaan apart naar pin 9 en pin 10. Het waarschuwingsteken hoort bij de stroom die door die twee pinnen moet; verderop op deze pagina staat waarom daar een transistor bij komt.</figcaption>
+        </figure>
+    </div>
+
     <p>Dat scheelt pinnen, maar het levert meteen een nieuw probleem op: zet je een patroon op de segmentpinnen, dan krijgen <em>beide</em> displays datzelfde patroon. Je kan dus onmogelijk tegelijk een 4 links en een 7 rechts tonen. Wat je wel kan, is kiezen welk display op dat moment stroom krijgt.</p>
 
     <h2 id="de-truc">Te snel om te zien</h2>
