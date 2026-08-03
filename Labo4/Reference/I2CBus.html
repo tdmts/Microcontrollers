@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>De I²C bus</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>De I²C bus</h1>
+    <p class="lead">I²C staat voor <strong>Inter-Integrated Circuit</strong>: een seriële bus die Philips begin jaren tachtig ontwierp om meerdere chips binnen één toestel met elkaar te laten communiceren. Alles gebeurt over twee lijnen, een datalijn (SDA) en een kloklijn (SCL), en daar hangen alle chips samen aan. Elke chip op de bus heeft een adres, en met dat adres spreekt de master er telkens één aan. In dit labo hangt de <a href="PCF8574.html">PCF8574</a> aan die bus.</p>
+
+    <h2 id="twee-lijnen">SDA en SCL</h2>
+
+    <p>De datalijn heet <strong>SDA</strong> (Serial Data), de kloklijn <strong>SCL</strong> (Serial Clock). Daarnaast heeft elke chip voeding nodig, dus in de praktijk trek je vier draden: SDA, SCL, <strong>Vcc</strong> en <strong>GND</strong>.</p>
+
+    <p>Het woord bus slaat op de manier van aansluiten. Elke chip verbindt zijn SDA-pin met dezelfde SDA-lijn en zijn SCL-pin met dezelfde SCL-lijn, dus er loopt geen aparte draad per chip. Een tweede chip komt ernaast te hangen, en aan de kant van de Arduino verandert de bedrading niet.</p>
+
+    <!-- TODO: tekening van de bus. Een Arduino links, twee chips ernaast, met twee doorlopende
+         lijnen SDA en SCL waar alle drie op aftakken, en Vcc en GND als de twee andere lijnen -->
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/TODO-i2c-bus-twee-chips.png" class="img-fluid" alt="TODO: schema van een I2C bus met een Arduino en twee chips die alle drie op dezelfde SDA- en SCL-lijn aftakken">
+            <figcaption class="figure-caption">Twee chips die op dezelfde SDA- en SCL-lijn aftakken.</figcaption>
+        </figure>
+    </div>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Waar zitten SDA en SCL op je bord?</div>
+        <p>Op een UNO R3 en op een Leonardo staan er twee pinnen met het opschrift <strong>SDA</strong> en <strong>SCL</strong> naast de AREF-pin. De schema's in deze cursus gebruiken die twee, want ze liggen op beide borden op dezelfde plaats. Op een UNO zijn dat dezelfde lijnen als A4 (SDA) en A5 (SCL), op een Leonardo dezelfde als pin 2 (SDA) en pin 3 (SCL). Welke pinnen het zijn ligt vast in de hardware van de chip, dus je kiest ze niet zelf.</p>
+        <p>Dezelfde lijn betekent ook dezelfde pin. Zodra je I²C gebruikt, zijn A4 en A5 op een UNO bezet en houd je nog vier analoge ingangen over, A0 tot en met A3. Op een Leonardo geldt hetzelfde voor de digitale pinnen 2 en 3. Heb je in dezelfde schakeling nog een potentiometer of een drukknop nodig, hou daar dan rekening mee bij het kiezen van je pinnen.</p>
+    </div>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Je hangt drie chips op de bus. Hoeveel pinnen van je Arduino gebruik je dan?</div>
+            <p>Twee, want elke chip takt af op dezelfde SDA- en SCL-lijn. Een vierde en een vijfde chip veranderen daar niets aan.</p>
+        </div>
+    </div>
+
+    <h2 id="serieel-en-synchroon">Serieel en synchroon</h2>
+
+    <p>De bus is <strong>serieel</strong>: de acht bits van een byte gaan één na één over dezelfde datalijn, in plaats van elk over een eigen draad. Dat is waarom je met twee draden toekomt waar acht parallelle lijnen acht pinnen zouden kosten.</p>
+
+    <p>De bus is daarnaast <strong>synchroon</strong>: de klok loopt mee over SCL. Bij elke puls op de kloklijn staat er één bit op de datalijn.</p>
+
+    <h2 id="master-en-slaves">De master en de slaves</h2>
+
+    <p>Op een I²C bus bepaalt één toestel wanneer er iets over de lijn gaat. Dat is de <strong>master</strong>, en bij ons is dat de Arduino. De andere chips zijn <strong>slaves</strong>: ze antwoorden wanneer de master hen aanspreekt en beginnen zelf geen communicatie. De master zet ook de klok op SCL, en bepaalt zo het tempo waarop de bits over de lijn gaan. De standaard laat meerdere masters op één bus toe, maar in dit labo is er altijd één.</p>
+
+    <p>De data gaat wel in twee richtingen over diezelfde SDA-lijn. De master kan <strong>schrijven</strong> naar een slave, bijvoorbeeld om de uitgangen van een chip een waarde te geven, en <strong>lezen</strong> van een slave, bijvoorbeeld om de ingangen te controleren. Welke van de twee het wordt, zegt de master meteen bij het adres: naast de adresbits stuurt hij één bit mee dat lezen of schrijven betekent. Daarom vermeldt een datasheet soms twee adressen voor dezelfde chip, één om te schrijven en één om te lezen.</p>
+
+    <h2 id="het-adres">Elk toestel heeft een adres</h2>
+
+    <p>Alle chips hangen aan dezelfde twee draden en krijgen dus alles binnen wat de master verstuurt. Om er toch één aan te spreken begint de master elke boodschap met het <strong>adres</strong> van de chip die hij nodig heeft. Enkel de chip met dat adres antwoordt, de andere laten de boodschap voorbijgaan.</p>
+
+    <p>Zo'n adres is <strong>7 bits</strong> lang, goed voor 128 combinaties. Zestien daarvan zijn door de standaard gereserveerd, dus er blijven er 112 over voor echte chips. Het adres zit ingebouwd in de chip en wordt door de fabrikant vastgelegd, zodat een temperatuursensor en een geheugenchip elkaar op één bus niet in de weg zitten. Bij sommige chips kan je een paar bits van dat adres zelf kiezen door adrespinnen aan Vcc of aan GND te leggen.</p>
+
+    <div class="info-box warning">
+        <div class="info-title warning">Twee keer hetzelfde adres op één bus</div>
+        <p>Hangen er twee chips met hetzelfde adres aan dezelfde bus, dan reageren ze allebei op dezelfde boodschap en antwoorden ze door elkaar. De master kan ze niet uit elkaar houden en wat je uitleest klopt niet meer. Zet je twee dezelfde chips op de bus, geef ze dan elk een ander adres.</p>
+    </div>
+
+    <p>Ben je niet zeker welk adres je chip heeft, dan laat je de <a href="I2CAdres.html">I2C scanner</a> de hele bus aflopen. Die spreekt alle adressen na elkaar aan en toont welke er antwoorden.</p>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Je sluit twee expanders aan en de scanner vindt maar één adres. Wat zoek je eerst na?</div>
+            <p>De adrespinnen. Staan ze bij beide chips op dezelfde manier aangesloten, dan hebben ze hetzelfde adres en zie je er maar één. Vind je helemaal niets terug, dan zit het meestal in de bedrading: SDA en SCL verwisseld, of een chip zonder voeding of massa.</p>
+        </div>
+    </div>
+
+    <h2 id="in-code">I²C in je programma</h2>
+
+    <p>Het aansturen van I²C hardware moet je gelukkig niet allemaal zelf programmeren. Dat doet de <strong>Wire-bibliotheek</strong>, die bij de Arduino IDE zit. Drie regels volstaan om een byte naar een chip te sturen:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.beginTransmission(adres); // spreek de chip met dit adres aan
+Wire.write(waarde);            // zet een databyte klaar
+Wire.endTransmission();        // verstuur alles, de bus is weer vrij</code></pre>
+
+    <p>Hoe je een bibliotheek toevoegt staat bij <a href="Bibliotheken.html">bibliotheken gebruiken</a>, en de volledige uitleg over schrijven naar en lezen van een chip staat bij <a href="PCF8574.html#aan-de-slag">werken met de PCF8574</a>.</p>
+</div>
+
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+</body>
+</html>

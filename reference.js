@@ -156,17 +156,18 @@ window.LAB_REFERENCE = {
         labTitle: 'Labo 4',
         categories: [
             {
-                name: 'Bits en bytes',
-                topics: [
-                    { id: 'bits', name: 'Werken met bits', href: 'Bits.html', blurb: 'De acht bits van een byte, binaire notatie, en de operatoren &, |, ~ en << waarmee je één bit uitleest of aanpast. Met oefenvragen per onderdeel.' }
-                ]
-            },
-            {
                 name: 'I²C en de PCF8574',
                 topics: [
+                    { id: 'i2cbus', name: 'De I²C bus', href: 'I2CBus.html', blurb: 'De seriële bus achter de expander: SDA en SCL, de klok die de bits in de pas houdt, waar de twee pinnen op je bord zitten, en hoe elke chip met zijn eigen adres van 7 bits wordt aangesproken.' },
                     { id: 'bibliotheken', name: 'Bibliotheken gebruiken', href: 'Bibliotheken.html', blurb: 'Hoe je een bibliotheek toevoegt aan je sketch en hoe je terugvindt welke functies ze aanbiedt, met Wire als voorbeeld.' },
                     { id: 'pcf8574', name: 'Werken met de PCF8574', href: 'PCF8574.html', blurb: 'De aansluitingen van de I/O-expander, hoe A0, A1 en A2 het adres bepalen, en hoe je met Wire naar de chip schrijft en ervan leest.' },
                     { id: 'i2cadres', name: 'Het I²C adres vinden', href: 'I2CAdres.html', blurb: 'De I2C scanner loopt alle adressen af en toont welke chips er op de bus hangen. Handig als je niet zeker bent van je bedrading.' }
+                ]
+            },
+            {
+                name: 'Bits en bytes',
+                topics: [
+                    { id: 'bits', name: 'Werken met bits', href: 'Bits.html', blurb: 'De acht bits van een byte, binaire notatie, en de operatoren &, |, ~ en << waarmee je één bit uitleest of aanpast. Met oefenvragen per onderdeel.' }
                 ]
             },
             {

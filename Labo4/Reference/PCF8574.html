@@ -15,14 +15,9 @@
 
     <h2 id="de-i2c-bus">De I²C bus</h2>
 
-    <p>De <strong>I²C bus</strong> bestaat uit twee lijnen: <strong>SDA (Serial Data)</strong> en <strong>SCL (Serial Clock)</strong>. Meestal worden ook <strong>Vcc</strong> en <strong>GND</strong> meegenomen, waardoor je in de praktijk een <strong>4-lijns bus</strong> krijgt.</p>
+    <p>De PCF8574 hangt aan de <a href="I2CBus.html">I²C bus</a>, de twee lijnen SDA en SCL waarover je Arduino met andere chips praat, samen met Vcc en GND. Waar die pinnen op je bord zitten en hoe een chip er een adres op krijgt, lees je daar.</p>
 
-    <div class="info-box remark">
-        <div class="info-title remark">Waar zitten SDA en SCL op de UNO?</div>
-        <p>Op de Arduino UNO liggen SDA en SCL vast: <strong>SDA is A4</strong> en <strong>SCL is A5</strong>. Op een UNO R3 zijn diezelfde twee lijnen ook nog eens apart uitgebracht naast de AREF-pin, dus je mag ze daar even goed aansluiten. Je kiest die pinnen niet zelf, want de I²C-hardware in de chip hangt eraan vast. Op een Leonardo, die je in sommige schema's hier ziet staan, zijn het pinnen 2 en 3.</p>
-    </div>
-
-    <p>Op deze bus kan je de PCF8574 aansluiten. <strong>Per PCF8574 krijg je 8 extra I/O-lijnen</strong>, en er kunnen tot 8 exemplaren van deze chip op dezelfde bus geplaatst worden. Met 2 pinnen van de Arduino beschik je dus over maximaal 64 extra in- en uitgangen.</p>
+    <p>Op die bus kan je de PCF8574 aansluiten. <strong>Per PCF8574 krijg je 8 extra I/O-lijnen</strong>, en er kunnen tot 8 exemplaren van deze chip op dezelfde bus geplaatst worden. Met 2 pinnen van de Arduino beschik je dus over maximaal 64 extra in- en uitgangen.</p>
 
     <h2 id="aansluitingen">Aansluitingen</h2>
 
@@ -99,7 +94,7 @@
 
     <div class="info-box remark">
         <div class="info-title remark">Waarom staat er een Leonardo op het schema?</div>
-        <p>Dit schema komt uit het cursusmateriaal en is met een Leonardo getekend. Voor de PCF8574 maakt dat niets uit: het zijn dezelfde vier draden. Werk je met een UNO, sluit SDA dan aan op A4 en SCL op A5.</p>
+        <p>Dit schema komt uit het cursusmateriaal en is met een Leonardo getekend. Voor de bedrading maakt dat niets uit, want de draden gaan naar de pinnen SDA en SCL naast AREF en die staan op een UNO op dezelfde plaats.</p>
     </div>
 
     <h2 id="de-int-pin">De /INT pin</h2>
