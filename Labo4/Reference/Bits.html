@@ -11,43 +11,55 @@
 <body>
 <div class="container">
     <h1>Werken met bits</h1>
-    <p class="lead">De PCF8574 stuurt acht pinnen tegelijk aan met één byte. Je kan dus niet één pin apart aanspreken, want je leest en schrijft altijd alle acht samen. Om toch met één pin te kunnen werken heb je een paar operatoren nodig die je in de vorige labo's nog niet gebruikt hebt.</p>
+    <p class="lead">Een byte is één getal, en tegelijk acht losse bits die elk 0 of 1 zijn. De <a href="PCF8574.html">PCF8574</a> geeft zijn acht pinnen door als één byte, met elke bit op één pin, dus je leest en schrijft ze altijd alle acht samen. Om toch met één pin te kunnen werken, moet je met één bit kunnen werken: er één uit de byte halen, of er één in aanpassen. C++ heeft daarvoor operatoren die bit per bit rekenen in plaats van met een byte als geheel. Onder elke uitleg staan een paar vragen om het meteen te proberen.</p>
 
     <h2 id="een-byte-is-acht-bits">Een byte is acht bits</h2>
 
-    <p>Een <code>byte</code> bestaat uit 8 bits, en elke bit is 0 of 1. Bij de PCF8574 hoort elke bit bij één pin. De <strong>rechtse</strong> bit is P0, de <strong>linkse</strong> is P7:</p>
+    <p>Een <a href="../../Labo0/Reference/ConstantenVariabelenGegevenstypes.html#gegevenstypes"><code>byte</code></a> houdt een geheel getal bij van 0 tot en met 255. In het geheugen staat dat getal als acht bits, en elke bit is 0 of 1. Die 256 mogelijke waarden zijn precies het aantal combinaties dat je met acht bits kan maken.</p>
+
+    <p>De bit helemaal rechts noemen we <strong>bit 0</strong>, de volgende bit 1, en zo verder tot bit 7 helemaal links. Elke bit heeft een plaatswaarde die telkens verdubbelt, en de waarde van de byte is de som van de plaatswaarden waar een 1 staat:</p>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
-            <caption>De byte B00100110 pin per pin</caption>
+            <caption>De byte B00100110 uitgeschreven</caption>
             <thead>
                 <tr>
-                    <th scope="col">P7</th>
-                    <th scope="col">P6</th>
-                    <th scope="col">P5</th>
-                    <th scope="col">P4</th>
-                    <th scope="col">P3</th>
-                    <th scope="col">P2</th>
-                    <th scope="col">P1</th>
-                    <th scope="col">P0</th>
+                    <th scope="col"></th>
+                    <th scope="col">bit 7</th>
+                    <th scope="col">bit 6</th>
+                    <th scope="col">bit 5</th>
+                    <th scope="col">bit 4</th>
+                    <th scope="col">bit 3</th>
+                    <th scope="col">bit 2</th>
+                    <th scope="col">bit 1</th>
+                    <th scope="col">bit 0</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>1</td>
-                    <td>0</td>
-                    <td>0</td>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>0</td>
+                    <th scope="row">plaatswaarde</th>
+                    <td>128</td><td>64</td><td>32</td><td>16</td><td>8</td><td>4</td><td>2</td><td>1</td>
+                </tr>
+                <tr>
+                    <th scope="row">B00100110</th>
+                    <td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    <p>Die bit helemaal rechts noemen we <strong>bit 0</strong>, de volgende bit 1, en zo verder tot bit 7. De nummers van de bits komen dus overeen met de nummers van de pinnen.</p>
+    <p>Hier staan er drie bits hoog: bit 5, bit 2 en bit 1. Tel hun plaatswaarden op en je hebt de waarde van de byte.</p>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Reken uit: welke decimale waarde heeft B00100110?</div>
+            <p>De hoge bits zijn bit 5, bit 2 en bit 1. Hun plaatswaarden lees je af in de tabel: 32, 4 en 2. De waarde is dus 32 + 4 + 2 = <strong>38</strong>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Andersom: welke bits staan hoog in de byte 200?</div>
+            <p>Neem telkens de grootste plaatswaarde die er nog in past. 128 past in 200 en laat 72 over, 64 past in 72 en laat 8 over, en 8 past precies. Hoog staan dus bit 7, bit 6 en bit 3, oftewel <strong>B11001000</strong>.</p>
+        </div>
+    </div>
 
     <h2 id="drie-schrijfwijzen">Drie schrijfwijzen voor dezelfde waarde</h2>
 
@@ -57,9 +69,18 @@
 byte b = 0x26;      // hexadecimaal
 byte c = 38;        // decimaal</code></pre>
 
+    <p>Dat is drie keer dezelfde byte als in de tabel hierboven. De binaire schrijfwijze begint met een hoofdletter B en daarachter staan de acht bits, van bit 7 tot bit 0. Hexadecimaal begint met <code>0x</code> en is een compactere notatie die je vaak in datasheets en in adressen tegenkomt. Decimaal is het gewone getal.</p>
+
     <div class="info-box tip">
         <div class="info-title tip">Kies de schrijfwijze die je code leesbaar maakt</div>
-        <p>Gaat het over welke pin aan of uit staat, gebruik dan <strong>binair</strong>. In <code>B11111110</code> zie je meteen dat enkel P0 laag staat. In <code>0xFE</code> moet je dat eerst omrekenen. Gaat het over een gewoon getal, dan is decimaal duidelijker.</p>
+        <p>Gaat het over welke bit hoog of laag staat, gebruik dan <strong>binair</strong>. In <code>B11111110</code> zie je meteen dat enkel bit 0 laag staat. In <code>0xFE</code> en in 254 moet je dat eerst omrekenen. Gaat het over een gewoon getal, dan is decimaal duidelijker.</p>
+    </div>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Schrijf op: een byte waarin enkel bit 4 hoog staat</div>
+            <p><code>byte masker = B00010000;</code> Je mag <code>0x10</code> of <code>16</code> schrijven en de compiler doet exact hetzelfde, maar dan moet je bij het lezen zelf omrekenen welke bit je bedoelde.</p>
+        </div>
     </div>
 
     <h2 id="de-operatoren">De operatoren</h2>
@@ -68,7 +89,7 @@ byte c = 38;        // decimaal</code></pre>
 
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
-            <caption>De bitoperatoren die je in dit labo nodig hebt</caption>
+            <caption>De bitoperatoren</caption>
             <thead>
                 <tr>
                     <th scope="col">Operator</th>
@@ -102,18 +123,110 @@ byte c = 38;        // decimaal</code></pre>
     </div>
 
     <div class="info-box warning">
-        <div class="info-title warning">Verwar <code>&amp;</code> niet met <code>&amp;&amp;</code></div>
+        <div class="info-title warning">Verwar <code>&amp;</code> met <code>&amp;&amp;</code></div>
         <p><code>&amp;&amp;</code> is de logische EN die je in een <code>if</code> gebruikt: die kijkt naar twee voorwaarden als geheel en levert waar of niet waar op. <code>&amp;</code> met één teken werkt bit per bit en levert een byte op. Datzelfde verschil bestaat tussen <code>|</code> en <code>||</code>. Eén teken te veel of te weinig compileert vaak gewoon, en de fout is dan moeilijk terug te vinden.</p>
+    </div>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Reken uit: B11001010 &amp; B01101100</div>
+            <p>Zet de twee bytes onder elkaar en werk kolom per kolom. Alleen waar in beide rijen een 1 staat, komt er een 1 in het resultaat.</p>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <tbody>
+                        <tr>
+                            <th scope="row">B11001010</th>
+                            <td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">B01101100</th>
+                            <td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">resultaat</th>
+                            <td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Het resultaat is <strong>B01001000</strong>.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Reken uit: B11001010 | B01101100</div>
+            <p>Dezelfde twee bytes, maar nu volstaat één 1 in een kolom.</p>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <tbody>
+                        <tr>
+                            <th scope="row">B11001010</th>
+                            <td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">B01101100</th>
+                            <td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">resultaat</th>
+                            <td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Het resultaat is <strong>B11101110</strong>. Vergelijk kolom voor kolom met de tabel hierboven: AND en OR geven een ander antwoord in precies die kolommen waar één van beide rijen een 1 heeft.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Reken uit: ~B11001010</div>
+            <p>NOT heeft maar één operand, terwijl de andere drie er twee nodig hebben. Elke bit keert om.</p>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <tbody>
+                        <tr>
+                            <th scope="row">B11001010</th>
+                            <td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">resultaat</th>
+                            <td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Het resultaat is <strong>B00110101</strong>.</p>
+        </div>
+    </div>
+
+    <p>In de voorwaarde hieronder zit een fout. De bedoeling was te testen of bit 2 van <code>waarde</code> hoog staat. Zoek eerst zelf wat er misloopt:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>if (waarde &amp;&amp; B00000100)
+{
+    // ...
+}</code></pre>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Wat loopt er mis in die voorwaarde?</div>
+            <p>Hier staat de logische EN (<code>&amp;&amp;</code>) in plaats van de bitoperator (<code>&amp;</code>). <code>B00000100</code> is de waarde 4 en dus altijd waar, waardoor deze voorwaarde klopt zodra <code>waarde</code> zelf niet 0 is, ongeacht welke bit hoog staat. Bedoeld was <code>if (waarde &amp; B00000100)</code>. Deze code compileert zonder warnings of errors. Let dus goed op!</p>
+        </div>
     </div>
 
     <h2 id="een-bit-uitlezen">Eén bit uitlezen: maskeren</h2>
 
-    <p>Je leest de hele byte in, maar je wil weten hoe het met één bepaalde pin gesteld is. Daarvoor gebruik je een <strong>masker</strong>: een byte waarin enkel de bit staat waarin je geïnteresseerd bent. Met <code>&amp;</code> houd je van de ingelezen waarde alleen die ene bit over, want overal waar het masker 0 staat wordt het resultaat sowieso 0.</p>
+    <p>Je hebt een byte en je wil weten hoe het met één bepaalde bit gesteld is. Daarvoor gebruik je een <strong>masker</strong>: een byte waarin enkel de bit hoog staat waarin je geïnteresseerd bent. Met <code>&amp;</code> houd je van de oorspronkelijke waarde alleen die ene bit over, want overal waar het masker 0 staat wordt het resultaat sowieso 0.</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte waarde = B01010101; // wat we van de chip lazen
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte waarde = B01010101;
 
-bool bit0 = waarde &amp; B00000001; // 1, want de rechtse bit van waarde is 1
-bool bit1 = waarde &amp; B00000010; // 0, want de tweede bit van waarde is 0</code></pre>
+bool bit0 = waarde &amp; B00000001; // waar, want bit 0 van waarde is 1
+bool bit1 = waarde &amp; B00000010; // niet waar, want bit 1 van waarde is 0
+
+if (bit0 == true)
+{
+    // bit 0 staat hoog
+}
+
+if (bit1 == false)
+{
+    // bit 1 staat laag
+}</code></pre>
 
     <p>Uitgeschreven voor <code>bit1</code>:</p>
 
@@ -137,49 +250,395 @@ bool bit1 = waarde &amp; B00000010; // 0, want de tweede bit van waarde is 0</co
         </table>
     </div>
 
-    <p>Het resultaat is 0, dus die bit stond laag. Merk op dat het resultaat van zo'n maskering niet 1 hoeft te zijn wanneer de bit hoog staat: <code>waarde &amp; B00000010</code> levert bij een hoge bit de waarde 2 op, niet 1. Voor een <code>bool</code> of een <code>if</code> maakt dat niets uit, want alles wat niet 0 is telt als waar.</p>
+    <p>Het resultaat is 0, dus die bit stond laag. Merk op dat het resultaat van zo'n maskering niet 1 hoeft te zijn wanneer de bit hoog staat: <code>waarde &amp; B00000010</code> levert bij een hoge bit de waarde 2 op, en een masker van bit 5 levert 32 op.</p>
 
-    <div class="info-box remark">
-        <div class="info-title remark">Bij een pull-upweerstand is ingedrukt een 0</div>
-        <p>Wil je expliciet weten of een knop ingedrukt is, schrijf dan de vergelijking er voluit bij. Dat leest een stuk duidelijker dan een omgekeerde <code>bool</code>:</p>
-        <pre class="code-wrapper language-cpp linenumbers show-language"><code>bool knop1 = (waarde &amp; B00000001) == 0;</code></pre>
+    <p>Je hoeft de bit niet eerst in een aparte <code>bool</code> te zetten. De maskering mag ook rechtstreeks in de vergelijking staan, en dan moet je er zelf haakjes rond zetten:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>bool bit0Laag = (waarde &amp; B00000001) == 0;</code></pre>
+
+    <p>Lees de code hieronder en bepaal wat er in <code>bit4</code> en in <code>bit6</code> terechtkomt:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte waarde = B10110100;
+
+bool bit4 = waarde &amp; B00010000;
+bool bit6 = waarde &amp; B01000000;</code></pre>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Wat staat er in bit4 en in bit6?</div>
+            <p>Zet <code>waarde</code> en het masker onder elkaar en werk kolom per kolom. Voor <code>bit4</code>:</p>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <tbody>
+                        <tr>
+                            <th scope="row">waarde</th>
+                            <td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">B00010000</th>
+                            <td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">resultaat</th>
+                            <td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Er blijft een bit over, dus <code>bit4</code> is <strong>waar</strong>. Merk op dat het resultaat 16 is en niet 1, want de bit staat op de plaats met plaatswaarde 16. Bij het opslaan in een <code>bool</code> wordt dat <code>true</code>, want alles wat niet 0 is telt als waar.</p>
+            <p>En voor <code>bit6</code>:</p>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered align-middle">
+                    <tbody>
+                        <tr>
+                            <th scope="row">waarde</th>
+                            <td>1</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">B01000000</th>
+                            <td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">resultaat</th>
+                            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Het masker wijst bit 6 aan, en die staat in <code>waarde</code> op 0. Er blijft dus niets over en <code>bit6</code> is <strong>niet waar</strong>.</p>
+        </div>
+    </div>
+
+    <h2 id="een-bit-zetten">Eén bit aanpassen terwijl de rest blijft staan</h2>
+
+    <p>Vaak wil je één bit veranderen en de zeven andere ongemoeid laten, bijvoorbeeld omdat je de hele byte in één keer wegschrijft. Twee eigenschappen van de operatoren maken dat mogelijk:</p>
+
+    <ul>
+        <li>Bij <strong>OR</strong> blijft een bit zichzelf tegenover een 0, en wordt hij 1 tegenover een 1. Een masker met één 1 zet dus precies die ene bit en laat de rest staan.</li>
+        <li>Bij <strong>AND</strong> blijft een bit zichzelf tegenover een 1, en wordt hij 0 tegenover een 0. Een masker met één 0 wist dus precies die ene bit en laat de rest staan.</li>
+    </ul>
+
+    <p>Om bit 2 op 1 te zetten heb je dus een masker nodig met enkel bit 2 hoog: <code>B00000100</code>. Om bit 3 op 0 te zetten heb je er net het omgekeerde van nodig, overal een 1 behalve op de plaats van bit 3: <code>B11110111</code>. In stappen uitgeschreven:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte patroon = B10011010;
+
+// bit 2 op 1 zetten
+byte maskerBit2 = B00000100;
+byte patroonMetBit2 = patroon | maskerBit2; // B10011110
+
+// bit 3 op 0 zetten
+byte maskerBit3 = B11110111;
+byte patroonZonderBit3 = patroon &amp; maskerBit3; // B10010010</code></pre>
+
+    <p>Dat tweede masker kan je ook door de compiler laten uitrekenen met <code>~</code>: <code>~B00001000</code> is <code>B11110111</code>. Dan schrijf je op welke bit je bedoelt, en keer je dat om.</p>
+
+    <p>Beide bewerkingen vertrekken van dezelfde <code>patroon</code>, zodat je ze naast elkaar kan leggen:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>Bit 2 zetten en bit 3 wissen, allebei op <code>B10011010</code></caption>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">bit 7</th>
+                    <th scope="col">bit 6</th>
+                    <th scope="col">bit 5</th>
+                    <th scope="col">bit 4</th>
+                    <th scope="col">bit 3</th>
+                    <th scope="col">bit 2</th>
+                    <th scope="col">bit 1</th>
+                    <th scope="col">bit 0</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">patroon</th>
+                    <td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td>
+                </tr>
+                <tr>
+                    <th scope="row">masker <code>B00000100</code></th>
+                    <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td>
+                </tr>
+                <tr>
+                    <th scope="row"><code>patroon | B00000100</code></th>
+                    <td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td>
+                </tr>
+                <tr>
+                    <th scope="row">masker <code>B11110111</code></th>
+                    <td>1</td><td>1</td><td>1</td><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td>
+                </tr>
+                <tr>
+                    <th scope="row"><code>patroon &amp; B11110111</code></th>
+                    <td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>In beide resultaatrijen zijn de zeven andere bits identiek aan die van <code>patroon</code>. Alleen de bit die het masker aanwijst is veranderd: bit 2 ging van 0 naar 1, bit 3 van 1 naar 0.</p>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Schrijf één regel die bit 5 van patroon op 1 zet</div>
+            <p><code>patroon = patroon | B00100000;</code> Stond bit 5 al hoog, dan verandert er niets, want een 1 tegenover een 1 blijft 1. Dat is de bedoeling: je zet de bit, je keert hem niet om.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">En één regel die bit 0 op 0 zet</div>
+            <p><code>patroon = patroon &amp; B11111110;</code> Overal een 1 behalve op de plaats van bit 0. Je mag ook <code>patroon = patroon &amp; ~B00000001;</code> schrijven, wat hetzelfde masker oplevert maar de bit noemt die je bedoelt.</p>
+        </div>
+    </div>
+
+    <p>In de regel hieronder zit een fout. Het commentaar zegt wat de bedoeling was:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>patroon = patroon &amp; B00001000; // bit 3 op 0 zetten</code></pre>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Wat loopt er mis in die regel?</div>
+            <p>Het masker is niet omgekeerd: er staat <code>B00001000</code> waar <code>B11110111</code> moest staan. Dit masker heeft één 1 en zeven nullen, en volgens de tweede vuistregel wist een AND dan die zeven bits en laat hij bit 3 staan zoals hij was. Dat is precies het omgekeerde van de bedoeling. Correct is <code>patroon = patroon &amp; B11110111;</code>.</p>
+        </div>
+    </div>
+
+    <h3>De verkorte schrijfwijze</h3>
+
+    <p>Omdat je het resultaat meestal in dezelfde variabele terugstopt, mag je die korter schrijven. <code>a &amp;= b</code> betekent precies hetzelfde als <code>a = a &amp; b</code>, net zoals <code>a += b</code> hetzelfde is als <code>a = a + b</code>.</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>patroon |= B00000100; // bit 2 op 1
+patroon &amp;= B11110111; // bit 3 op 0</code></pre>
+
+    <h2 id="veranderingen-opsporen">Zien welke bits veranderd zijn</h2>
+
+    <p>Soms wil je niet weten hoe een byte er nu uitziet, maar wat er sinds de vorige keer veranderd is. Bewaar daarvoor de vorige waarde in een aparte variabele, en vergelijk. Ook dat gaat voor alle acht de bits in één bewerking:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte vorige = B00110101;
+byte huidige = B00011100;
+
+byte naarNul = ~huidige &amp; vorige;  // bits die van 1 naar 0 gingen
+byte naarEen = huidige &amp; ~vorige;  // bits die van 0 naar 1 gingen</code></pre>
+
+    <p><code>~huidige</code> heeft een 1 op elke plaats waar de bit nu laag is. Een AND met <code>vorige</code> houdt daarvan de bits over die vorige keer hoog waren:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption><code>naarNul = ~huidige &amp; vorige</code></caption>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">bit 7</th>
+                    <th scope="col">bit 6</th>
+                    <th scope="col">bit 5</th>
+                    <th scope="col">bit 4</th>
+                    <th scope="col">bit 3</th>
+                    <th scope="col">bit 2</th>
+                    <th scope="col">bit 1</th>
+                    <th scope="col">bit 0</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">vorige</th>
+                    <td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td>
+                </tr>
+                <tr>
+                    <th scope="row">huidige</th>
+                    <td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td>
+                </tr>
+                <tr>
+                    <th scope="row"><code>~huidige</code></th>
+                    <td>1</td><td>1</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td>
+                </tr>
+                <tr>
+                    <th scope="row"><code>naarNul</code></th>
+                    <td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Bit 5 en bit 0 blijven over: dat zijn de twee die van 1 naar 0 gingen. De tweede regel is dezelfde redenering omgekeerd, met de <code>~</code> op <code>vorige</code>:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption><code>naarEen = huidige &amp; ~vorige</code></caption>
+            <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">bit 7</th>
+                    <th scope="col">bit 6</th>
+                    <th scope="col">bit 5</th>
+                    <th scope="col">bit 4</th>
+                    <th scope="col">bit 3</th>
+                    <th scope="col">bit 2</th>
+                    <th scope="col">bit 1</th>
+                    <th scope="col">bit 0</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">vorige</th>
+                    <td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td>
+                </tr>
+                <tr>
+                    <th scope="row">huidige</th>
+                    <td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td>
+                </tr>
+                <tr>
+                    <th scope="row"><code>~vorige</code></th>
+                    <td>1</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>1</td><td>0</td>
+                </tr>
+                <tr>
+                    <th scope="row"><code>naarEen</code></th>
+                    <td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p>Daar blijft enkel bit 3 over. De bits die in beide bytes gelijk zijn, bit 7, 6, 4, 2 en 1, staan in geen van beide resultaten.</p>
+
+    <p>Vergeet daarna niet de huidige waarde op te slaan voor de volgende vergelijking:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>vorige = huidige;</code></pre>
+
+    <p>Lees de code hieronder en bepaal welke bits er hoog komen te staan in <code>naarNul</code>:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte vorige = B00001111;
+byte huidige = B00000011;
+
+byte naarNul = ~huidige &amp; vorige;</code></pre>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Welke bits staan hoog in naarNul?</div>
+            <p><code>~huidige</code> is <code>B11111100</code>. Een AND met <code>vorige</code> (<code>B00001111</code>) geeft <strong>B00001100</strong>, dus bit 2 en bit 3 zijn van 1 naar 0 gegaan. Bit 0 en bit 1 stonden hoog en staan nog altijd hoog, dus die zijn niet veranderd.</p>
+        </div>
     </div>
 
     <h2 id="een-masker-berekenen">Een masker berekenen met <code>&lt;&lt;</code></h2>
 
-    <p>Zolang je de maskers zelf uitschrijft is er niets aan de hand. Maar zodra je in een lus werkt, ken je het bitnummer pas terwijl je programma loopt. Dan bereken je het masker met <code>&lt;&lt;</code>: je vertrekt van een 1 helemaal rechts en schuift ze zoveel plaatsen naar links als je nodig hebt.</p>
+    <p>Alles hierboven werkt met maskers die je zelf uitschrijft, en zolang je bij het schrijven van je code al weet over welke bit het gaat, volstaat dat. Deze sectie gaat over het geval waarin je dat pas weet terwijl je programma draait. In labo 4 en labo 7 kom je die situatie tegen.</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>1 &lt;&lt; 0  // B00000001, de bit van P0
-1 &lt;&lt; 1  // B00000010, de bit van P1
-1 &lt;&lt; 5  // B00100000, de bit van P5</code></pre>
+    <p>Stel dat je wil tellen hoeveel bits er in een byte hoog staan. Met de maskers die je zelf uitschrijft, wordt dat acht keer bijna dezelfde code:</p>
 
-    <p><code>1 &lt;&lt; n</code> is dus het masker van bit <code>n</code>, en daarmee kan je in een lus elke pin apart aanspreken.</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte waarde = B10110100;
+byte aantalHoog = 0;
 
-    <h2 id="een-bit-zetten">Eén bit aanpassen zonder de rest te raken</h2>
+if (waarde &amp; B00000001)
+{
+    aantalHoog++;
+}
 
-    <p>Je schrijft altijd de hele byte naar de chip, dus wil je één bit veranderen en de zeven andere laten staan. Met OR zet je een bit op 1, met AND van het omgekeerde masker zet je hem op 0:</p>
+if (waarde &amp; B00000010)
+{
+    aantalHoog++;
+}
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte patroon = B11111111;
+if (waarde &amp; B00000100)
+{
+    aantalHoog++;
+}
 
-patroon = patroon | (1 &lt;&lt; 2);  // bit 2 op 1 zetten
-patroon = patroon &amp; ~(1 &lt;&lt; 3); // bit 3 op 0 zetten</code></pre>
+// en zo verder, tot B10000000</code></pre>
 
-    <p>Die tweede regel lees je van binnen naar buiten. <code>1 &lt;&lt; 3</code> is <code>B00001000</code>, het masker van bit 3. <code>~</code> keert dat om tot <code>B11110111</code>: overal een 1 behalve op de plaats van bit 3. Doe je daar een AND mee, dan blijft elke andere bit gewoon zichzelf, en wordt enkel bit 3 gegarandeerd 0.</p>
+    <p>Alleen het masker verschilt tussen die blokken, dus hier hoort een <a href="../../Labo0/Reference/Iteraties.html">lus</a>. Met een uitgeschreven masker lukt dat niet. Zo'n masker typ je zelf in je code en het ligt dus vast voor je programma start, terwijl de teller van een lus pas tijdens het uitvoeren een waarde krijgt. Om alle acht de bits met dezelfde regel te behandelen, bereken je het masker uit het bitnummer.</p>
 
-    <p>Omdat je het resultaat meestal in dezelfde variabele terugstopt, mag je dat korter schrijven. <code>a &amp;= b</code> betekent precies hetzelfde als <code>a = a &amp; b</code>, net zoals <code>a += b</code> hetzelfde is als <code>a = a + b</code>:</p>
+    <p>Daarvoor dient <code>&lt;&lt;</code>. Je vertrekt van een 1 helemaal rechts en schuift ze een aantal plaatsen naar links. Rechts komen nullen bij:</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>patroon |= (1 &lt;&lt; 2);  // bit 2 op 1
-patroon &amp;= ~(1 &lt;&lt; 3); // bit 3 op 0</code></pre>
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De acht maskers, berekend met <code>&lt;&lt;</code></caption>
+            <thead>
+                <tr>
+                    <th scope="col">Uitdrukking</th>
+                    <th scope="col">Binair</th>
+                    <th scope="col">Decimaal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><code>1 &lt;&lt; 0</code></td><td>B00000001</td><td>1</td></tr>
+                <tr><td><code>1 &lt;&lt; 1</code></td><td>B00000010</td><td>2</td></tr>
+                <tr><td><code>1 &lt;&lt; 2</code></td><td>B00000100</td><td>4</td></tr>
+                <tr><td><code>1 &lt;&lt; 3</code></td><td>B00001000</td><td>8</td></tr>
+                <tr><td><code>1 &lt;&lt; 4</code></td><td>B00010000</td><td>16</td></tr>
+                <tr><td><code>1 &lt;&lt; 5</code></td><td>B00100000</td><td>32</td></tr>
+                <tr><td><code>1 &lt;&lt; 6</code></td><td>B01000000</td><td>64</td></tr>
+                <tr><td><code>1 &lt;&lt; 7</code></td><td>B10000000</td><td>128</td></tr>
+            </tbody>
+        </table>
+    </div>
 
-    <h2 id="veranderingen-opsporen">Alle bits vergelijken in één keer</h2>
+    <p>De rechtse kolom is de rij plaatswaarden uit de tabel bovenaan deze pagina, want elke plaats die je opschuift verdubbelt de waarde. <code>1 &lt;&lt; n</code> is dus tegelijk het masker van bit <code>n</code> en de plaatswaarde van bit <code>n</code>. Het verschil met een uitgeschreven masker is dat <code>n</code> hier een variabele mag zijn.</p>
 
-    <p>Een laatste patroon dat je in dit labo tegenkomt, is nagaan welke knoppen <em>net</em> ingedrukt zijn. Een knop die je ingedrukt houdt, blijft immers doorlopend een 0 geven, waardoor je programma tientallen keren per seconde een nieuwe druk registreert.</p>
+    <p>Daarmee worden de acht blokken van hierboven één lus. Hieronder staan de twee tussenstappen in een aparte variabele, zodat je kan volgen wat er bij elke doorloop gebeurt:</p>
 
-    <p>Bewaar daarvoor de vorige byte, en zoek de bits die van 1 naar 0 gegaan zijn:</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte waarde = B10110100;
+byte aantalHoog = 0;
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte netIngedrukt = ~knoppen &amp; vorigeKnoppen;</code></pre>
+for (byte i = 0; i &lt; 8; i++)
+{
+    // bij i = 0 wordt dit B00000001, bij i = 1 wordt het B00000010, bij i = 2 B00000100
+    byte masker = 1 &lt;&lt; i;
 
-    <p><code>~knoppen</code> heeft een 1 staan op elke plaats waar een knop <strong>nu</strong> ingedrukt is. <code>vorigeKnoppen</code> heeft een 1 staan op elke plaats waar een knop <strong>vorige keer</strong> los was. Een AND van die twee houdt dus precies de knoppen over die deze doorloop van los naar ingedrukt gegaan zijn. Alle acht de knoppen worden daarbij in één bewerking behandeld.</p>
+    // houdt enkel bit i van waarde over, en is 0 zodra die bit laag staat
+    byte resultaat = waarde &amp; masker;
+
+    if (resultaat != 0)
+    {
+        aantalHoog++;
+    }
+}
+
+// aantalHoog is nu 4</code></pre>
+
+    <p>De lus loopt acht keer. Bij elke doorloop schuift het masker één plaats op, en <code>resultaat</code> zegt of die ene bit van <code>waarde</code> hoog stond:</p>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <caption>De acht doorlopen voor <code>waarde = B10110100</code></caption>
+            <thead>
+                <tr>
+                    <th scope="col">i</th>
+                    <th scope="col">waarde</th>
+                    <th scope="col">masker</th>
+                    <th scope="col">resultaat</th>
+                    <th scope="col">resultaat als getal</th>
+                    <th scope="col">aantalHoog</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>0</td><td>B10110100</td><td>B00000001</td><td>B00000000</td><td>0</td><td>0</td></tr>
+                <tr><td>1</td><td>B10110100</td><td>B00000010</td><td>B00000000</td><td>0</td><td>0</td></tr>
+                <tr><td>2</td><td>B10110100</td><td>B00000100</td><td>B00000100</td><td>4</td><td>1</td></tr>
+                <tr><td>3</td><td>B10110100</td><td>B00001000</td><td>B00000000</td><td>0</td><td>1</td></tr>
+                <tr><td>4</td><td>B10110100</td><td>B00010000</td><td>B00010000</td><td>16</td><td>2</td></tr>
+                <tr><td>5</td><td>B10110100</td><td>B00100000</td><td>B00100000</td><td>32</td><td>3</td></tr>
+                <tr><td>6</td><td>B10110100</td><td>B01000000</td><td>B00000000</td><td>0</td><td>3</td></tr>
+                <tr><td>7</td><td>B10110100</td><td>B10000000</td><td>B10000000</td><td>128</td><td>4</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Waarom staat er&nbsp;<code>1 &lt;&lt; i</code>&nbsp;en niet&nbsp;<code>i &lt;&lt; 1</code>&nbsp;?</div>
+            <p>Omdat het altijd dezelfde ene bit is die verschuift, en het bitnummer zegt hoe ver. <code>i &lt;&lt; 1</code> doet het omgekeerde: dat schuift de waarde van <code>i</code> zelf één plaats op, wat neerkomt op een verdubbeling. Bij <code>i</code> gelijk aan 3 levert dat 6, oftewel <code>B00000110</code>, en dat is helemaal geen masker: er staan twee bits hoog.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Pas de lus aan zodat ze de&nbsp;<em>lage</em>&nbsp;bits telt</div>
+            <p>Draai de test om: <code>if (resultaat == 0)</code>. De rest van de lus blijft gelijk. In de tabel hierboven zijn dat de rijen waar <code>resultaat</code> op nul uitkomt, en dat zijn er ook 4. Zet je beide tussenstappen in de <code>if</code> zelf, dan heb je haakjes nodig rond de maskering: <code>if ((waarde &amp; (1 &lt;&lt; i)) == 0)</code>.</p>
+        </div>
+    </div>
+
+    <h3>Een bit zetten of wissen met een variabel bitnummer</h3>
+
+    <p>Hetzelfde geldt voor het aanpassen van een bit. De twee vuistregels blijven gelden, alleen wordt het masker nu berekend in plaats van uitgeschreven:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>byte bitNummer = 3;
+
+patroon = patroon | (1 &lt;&lt; bitNummer);  // die bit op 1 zetten
+patroon = patroon &amp; ~(1 &lt;&lt; bitNummer); // die bit op 0 zetten</code></pre>
+
+    <p>De tweede regel lees je van binnen naar buiten. <code>1 &lt;&lt; bitNummer</code> is <code>B00001000</code> voor bitnummer 3, en <code>~</code> keert dat om tot <code>B11110111</code>. Dat is precies het masker dat je in de sectie hierboven zelf uitschreef. Met de verkorte schrijfwijze wordt dat <code>patroon |= (1 &lt;&lt; bitNummer);</code> en <code>patroon &amp;= ~(1 &lt;&lt; bitNummer);</code>, en dat is de vorm die je in de oefeningen van labo 4 en labo 7 ziet staan.</p>
 
     <div class="info-box tip">
         <div class="info-title tip">Twijfel je? Schrijf de tabel uit</div>

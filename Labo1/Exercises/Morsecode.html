@@ -181,7 +181,16 @@ void loop()
                 SOS direct overlopen in de eerste S van de volgende herhaling.
                 Die pauze duurt 0,7s, opnieuw min de 0,1s uit <code>knipper()</code>, dus 600 ms.
             </p>
+            <p>
+                De actieve buzzer staat mee in de code hieronder, op pin 8. Hij komt op elke
+                plaats waar de led aan- of uitgaat, dus alleen <code>setup()</code> en
+                <code>knipper()</code> hebben er een regel bij. Let op de richting van de
+                twee: de buzzer hangt met zijn langere pin aan pin 8 en met de andere aan
+                GND, dus die is sourcing en zoemt bij <code>HIGH</code>, terwijl de led
+                sinking is en brandt bij <code>LOW</code>.
+            </p>
             <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 12;
+const int buzzerPin = 8;
 
 const bool KORT = false;
 const bool LANG = true;
@@ -189,17 +198,20 @@ const bool LANG = true;
 void setup()
 {
   pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
 }
 
 void knipper(bool duur)
 {
-  digitalWrite(ledPin, LOW); // led aan
+  digitalWrite(ledPin, LOW); // led aan, want sinking
+  digitalWrite(buzzerPin, HIGH); // buzzer aan, want sourcing
   delay(100);
   if (duur)
   {
     delay(200); //Extra delay
   }
   digitalWrite(ledPin, HIGH); // led uit
+  digitalWrite(buzzerPin, LOW); // buzzer uit
   delay(100);
 }
 

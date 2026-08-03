@@ -147,7 +147,13 @@ byte binair = B11110111;</code></pre>
 
     <p>Begin je byte bij <code>0xFF</code>, dus alle bits op 1. Dan staan je vier knoppinnen meteen goed en zijn al je leds uit. Vervolgens zet je alleen de bits op 0 van de leds die moeten branden. Zo kan je onmogelijk per ongeluk een knoppin laag zetten.</p>
 
-    <p>Handig daarbij zijn <code>bitRead()</code> en <code>bitClear()</code>. Zie <a href="../../Labo4/Reference/Bits.html">Bits</a>.</p>
+    <p>Handig daarbij zijn <code>bitRead()</code> en <code>bitClear()</code>, twee functies die Arduino zelf aanbiedt. Ze doen precies wat je op <a href="../../Labo4/Reference/Bits.html">Werken met bits</a> met maskers deed, maar dan met het bitnummer als tweede argument:</p>
+
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>bitRead(patroon, 3);  // levert 0 of 1, de waarde van bit 3
+bitClear(patroon, 3); // zet bit 3 op 0, hetzelfde als patroon &amp;= ~(1 &lt;&lt; 3)
+bitSet(patroon, 3);   // zet bit 3 op 1, hetzelfde als patroon |= (1 &lt;&lt; 3)</code></pre>
+
+    <p><code>bitClear()</code> en <code>bitSet()</code> passen je variabele zelf aan, dus je hoeft het resultaat niet toe te wijzen. In tegenstelling tot een maskering levert <code>bitRead()</code> altijd 0 of 1 op, nooit de plaatswaarde van de bit.</p>
 
     <hr>
 

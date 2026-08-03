@@ -158,7 +158,7 @@ window.LAB_REFERENCE = {
             {
                 name: 'Bits en bytes',
                 topics: [
-                    { id: 'bits', name: 'Werken met bits', href: 'Bits.html', blurb: 'Binaire notatie, maskeren met &, en de operatoren ~ en << waarmee je één pin aanspreekt terwijl je altijd een hele byte schrijft.' }
+                    { id: 'bits', name: 'Werken met bits', href: 'Bits.html', blurb: 'De acht bits van een byte, binaire notatie, en de operatoren &, |, ~ en << waarmee je één bit uitleest of aanpast. Met oefenvragen per onderdeel.' }
                 ]
             },
             {
