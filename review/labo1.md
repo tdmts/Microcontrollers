@@ -305,3 +305,80 @@ omgekeerde.
 voorbeeldcode en de drie plaatsen gebruiken die naam.
 
 **Status:** opgelost, 2026-07-26
+
+---
+
+## L1-09 &middot; BEGRIP &middot; vertraagt &middot; opgelost
+
+**Pagina:** [Morsecode.html](../Labo1/Exercises/Morsecode.html)
+
+**Wat de student raakt:** de eerste oefening van het labo bevatte geen enkele link naar een
+referentiepagina, ook niet naar die van labo 0 (de onderliggende reden staat in L1-04, dat
+intussen opgelost is). Drie dingen komen er ongekondigd binnen. Het type `bool` met
+`true`/`false` als parameterwaarde, terwijl de student in labo 0 alleen `int`-parameters
+gaf. `if (duur)` zonder vergelijking, terwijl de lead van
+[Selecties](../Labo0/Reference/Selecties.html) letterlijk zegt dat een voorwaarde een
+vergelijking is en elk labo 0-voorbeeld `== HIGH` schrijft. En de buzzersectie introduceert
+`tone()`, oscillator, hertz en gepolariseerd in vier zinnen, terwijl de uitleg over
+frequentie pas in oefening 2 staat.
+
+Daarbij bleef de eigenlijke truc van `knipper()` onbesproken: de extra `delay(200)` staat
+b&iacute;nnen de brandperiode (samen 300 ms, de streep) en de afsluitende `delay(100)` valt
+terwijl de led uit is. De opgave zei alleen "lees de functie aandachtig door".
+
+**Besluit (2026-08-02):** aanvaard. De pagina heeft nu een info-box "Waar je deze code uit
+labo 0 terugvindt" boven de voorbeeldcode, met links naar constanten en gegevenstypes,
+`pinMode`/`setup`/`digitalWrite`, eigen functies met parameters, selecties en de for-lus.
+Die box staat v&oacute;&oacute;r de code, zodat hij dient om in op te zoeken en niet om de
+denkvraag te beantwoorden. Daaronder een tweede denksectie "Denk eens na over knipper()"
+met twee accordions, in dezelfde vorm als de bestaande niveauvraag uit L1-03: de duur van
+`knipper(KORT)` en `knipper(LANG)`, en waarom `if (duur)` zonder vergelijking mag. Hertz,
+oscillator en gepolariseerd zijn ter plaatse uitgelegd in de buzzersectie, omdat de
+Hz-uitleg in [Looplicht](../Labo1/Exercises/Looplicht.html) staat en dat oefening 2 is.
+
+**Status:** opgelost, 2026-08-02
+
+---
+
+## L1-10 &middot; BEELD &middot; blokkeert &middot; opgelost
+
+**Pagina:** [Morsecode.html](../Labo1/Exercises/Morsecode.html)
+
+**Wat de student raakt:** de opgave zegt alleen "plaats een rode led op pin 12", terwijl de
+voorbeeldcode sinking is. Er staat geen schema, geen bedrading en geen woord over de
+voorschakelweerstand. Wie labo 0 gevolgd heeft, bedraadt de led volgens sourcing, en dan
+doet de gegeven code exact het omgekeerde van wat de pagina beschrijft. L1-03 heeft de
+redenering erover toegevoegd, maar niet de bedrading zelf. Looplicht en Knight rider kregen
+in L1-05 wel een schema, Morsecode niet, en die is nochtans oefening 1.
+
+**Besluit (2026-08-02):** aanvaard, zonder nieuwe tekening. De concrete aansluiting (anode
+aan 5 V, kathode via 220 &Omega; naar pin 12) staat nu n&aacute; de niveau-accordion, zodat
+de afleidingsrichting van die denkvraag intact blijft: de student leidt eerst uit de code af
+d&aacute;t het sinking is, en leest daarna hoe hij het bouwt. Het schema is
+`img/sinking-schema.png` uit [Sourcen en sinken](../Labo0/Reference/SourcenSinken.html),
+hergebruikt omdat het exact deze schakeling toont, inclusief de 220 &Omega;. Geen
+`TODO-`figuur nodig.
+
+**Status:** opgelost, 2026-08-02
+
+---
+
+## L1-11 &middot; OPDRACHT &middot; vertraagt &middot; opgelost
+
+**Pagina:** [Morsecode.html](../Labo1/Exercises/Morsecode.html)
+
+**Wat de student raakt:** de timingtabel in de opgave en de gegeven code spraken elkaar
+tegen. `knipper()` eindigt zelf al met `delay(100)`, en de `delay(300)` in `loop()` kwam
+daar bovenop: de pauze tussen twee letters duurde dus 400 ms in plaats van de 0,3s uit de
+tabel, en de pauze tussen twee woorden 800 ms in plaats van 0,7s. De punt, de streep en de
+pauze binnen een letter klopten wel. Een student die de timing narekent (en L1-09 nodigt
+daar nu uitdrukkelijk toe uit) vindt een voorbeeldcode die zijn eigen opgave niet haalt.
+
+**Besluit (2026-08-02):** aanvaard, optie 'de code aanpassen'. De tabel is de
+morsestandaard (1 / 3 / 1 / 3 / 7 eenheden van 0,1s) en blijft dus ongewijzigd. De
+voorbeeldcode en de oplossing gebruiken nu `delay(200)` en `delay(600)`, met een
+commentaarregel die de aftrekking benoemt. De denkvraag over `knipper()` uit L1-09 sluit
+daarop aan: wie begrijpt dat elk signaal zelf al met 0,1s pauze eindigt, kan die 200 en 600
+zelf verantwoorden.
+
+**Status:** opgelost, 2026-08-02

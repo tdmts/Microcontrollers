@@ -13,14 +13,6 @@
     <h1>Morsecode</h1>
     <p class="lead">Maak een nieuw programma. Plaats een rode led op pin 12 en schrijf een programma waarbij de led het woord <strong>SOS</strong> in morsecode weergeeft.</p>
 
-    <p>De schakeling van de morse decoder is beschikbaar via Tinkercad. Volg deze stappen om de schakeling te openen:</p>
-    <ol>
-        <li>Log in op Tinkercad.</li>
-        <li>Ga naar Circuits.</li>
-        <li>Zoek naar <strong>morse decoder HOGENT-ELM</strong>.</li>
-        <li>Kopieer de schakeling.</li>
-    </ol>
-
     <h2 id="opgave">Opgave</h2>
     <p>Morsecode bestaat uit korte signalen (punten) en lange signalen (strepen). De letter <strong>S</strong> bestaat uit drie punten, de letter <strong>O</strong> uit drie strepen. Om SOS te seinen laat je de led dus knipperen volgens het patroon <strong>S - O - S</strong>.</p>
 
@@ -32,11 +24,12 @@
         <li>Tussen twee woorden zit een pauze van 0,7s.</li>
     </ul>
 
-    <p>Gebruik lussen om je programma zo efficiënt mogelijk te maken. In de voorbeeldcode hieronder is de letter S al volledig uitgewerkt: vul zelf de O en de tweede S aan.</p>
+    <p>Gebruik <a href="../../Labo0/Reference/Iteraties.html#de-for-instructie">lussen</a> om je programma zo efficiënt mogelijk te maken. In de voorbeeldcode hieronder is de letter S al volledig uitgewerkt: vul zelf de O en de tweede S aan.</p>
 
     <h2 id="voorbeeldcode">Voorbeeldcode</h2>
 
-    <p>Lees de functie <code>knipper()</code> eerst eens aandachtig door voor je begint. Er staat iets in dat op het eerste gezicht omgekeerd lijkt aan wat je in labo 0 gebouwd hebt.</p>
+    <p>Bekijk de code en lees vooral de functie <code>knipper()</code> eerst eens aandachtig door voor je begint.</p>
+
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 12;
 
 const bool KORT = false;
@@ -49,13 +42,13 @@ void setup()
 
 void knipper(bool duur)
 {
-  digitalWrite(ledPin, LOW);
+  digitalWrite(ledPin, LOW); // led aan, want sinking
   delay(100);
   if (duur)
   {
     delay(200); //Extra delay
   }
-  digitalWrite(ledPin, HIGH);
+  digitalWrite(ledPin, HIGH); // led uit
   delay(100);
 }
 
@@ -66,7 +59,7 @@ void loop()
   {
     knipper(KORT);
   }
-  delay(300); //Pauze tussen twee letters.
+  delay(200); //Pauze tussen twee letters: 300 ms in totaal, waarvan knipper() er al 100 gedaan heeft
 
   //Nu nog de O
   //...
@@ -75,6 +68,17 @@ void loop()
   //...
 
 }</code></pre>
+
+<div class="info-box">
+        <div class="info-title remark">Flashback naar labo 0</div>
+        <p>Alles wat in de voorbeeldcode staat, heb je in labo 0 al gezien:</p>
+        <ul>
+            <li><a href="../../Labo0/Reference/ConstantenVariabelenGegevenstypes.html">Constanten</a> voor het pinnummer, en het gegevenstype <a href="../../Labo0/Reference/ConstantenVariabelenGegevenstypes.html#gegevenstypes"><code>bool</code></a>, dat enkel <code>true</code> of <code>false</code> kan bevatten.</li>
+            <li><a href="../../Labo0/Reference/pinMode.html#hoe-definieer-je-een-pin"><code>pinMode()</code></a> in <a href="../../Labo0/Reference/SetupLoop.html#setup"><code>setup()</code></a>, en <a href="../../Labo0/Reference/digitalReadDigitalWrite.html"><code>digitalWrite()</code></a> om de pin hoog of laag te zetten.</li>
+            <li>Een <a href="../../Labo0/Reference/FunctiesParameters.html#eigen-functies-maken">eigen functie met een parameter</a>. In de begeleide oefening gaf je <code>knipper()</code> een aantal en een duurtijd mee, hier krijgt hij één parameter <code>duur</code>.</li>
+            <li>Een <a href="../../Labo0/Reference/Selecties.html#voorbeeld-enkelvoudige-selectie">enkelvoudige selectie</a> met <code>if</code>, en de <a href="../../Labo0/Reference/Iteraties.html#de-for-instructie">for-lus</a> die de drie signalen van een letter herhaalt.</li>
+        </ul>
+    </div>
 
     <h2 id="denk-eens-na-over-de-niveaus">Denk eens na over de niveaus</h2>
 
@@ -85,7 +89,38 @@ void loop()
             <div class="title">Waarom brandt de led hier bij LOW?</div>
             <p>Deze schakeling is <strong>sinking</strong>. De led hangt met de anode aan de +5V-rail en met de kathode (via de weerstand) aan pin 12. Er staat dus pas spanning over de led wanneer de pin <code>LOW</code> is: de pin "zinkt" de stroom naar de massa. Bij <code>HIGH</code> staan beide kanten op 5 V, is er geen spanningsverschil, en blijft de led gedoofd.</p>
             <p>In labo 0 hing de led er net andersom in, met de anode aan de pin: dat is <strong>sourcing</strong>, waarbij <code>HIGH</code> hem doet branden. Welke van de twee je hebt, lees je dus af van je schema en niet van je code. Zie <a href="../../Labo0/Reference/SourcenSinken.html">Sourcen en sinken</a>.</p>
-            <p>Zo'n actief lage schakeling kom je in dit vak nog vaak tegen, onder meer bij het 7-segment display met common anode en bij de I/O-expander in labo 4.</p>
+           
+            <p>Sluit je led dus zo aan: de anode aan de +5&nbsp;V, de kathode aan een <a href="../../Labo0/Reference/WetVanOhm.html#voorschakelweerstand-berekenen">voorschakelweerstand</a> van 220&nbsp;&Omega;, en die weerstand aan pin 12. Welke poot de anode is, herken je met het ezelsbruggetje <strong>KNAP</strong> uit <a href="../../Labo0/Exercises/BegeleideOefening.html">de begeleide oefening van labo 0</a>: <strong>K</strong>athode <strong>N</strong>egatief, <strong>A</strong>node <strong>P</strong>ositief.</p>
+
+            <div class="my-4">
+                <figure class="figure w-100 text-center figure-zoom">
+                    <img src="../../img/sinking-schema.png" class="img-fluid" alt="Schema van een led die volgens sinking is aangesloten: de anode aan de 5V-voeding, daaronder de led, dan een weerstand van 220 ohm en vandaar naar de Arduino-pin">
+                    <figcaption>De led hangt aan de 5&nbsp;V en de pin neemt de stroom op. In deze oefening is dat pin 12.</figcaption>
+                </figure>
+            </div>
+
+        </div>
+    </div>
+
+    
+
+    <h2 id="denk-eens-na-over-knipper">Denk eens na over knipper()</h2>
+
+    <p>De functie krijgt één parameter mee van het type <code>bool</code>. Roep je <code>knipper(KORT)</code> aan, dan komt er <code>false</code> binnen, en bij <code>knipper(LANG)</code> komt er <code>true</code> binnen.</p>
+
+    <div class="accordion-container">
+        <div class="accordion-item">
+            <div class="title">Hoe lang brandt de led bij knipper(KORT) en bij knipper(LANG)?</div>
+            <p>Bij <code>knipper(KORT)</code> gaat de led aan, volgt er een <code>delay(100)</code>, en gaat hij weer uit. Hij brandt dus 100 ms, en dat is de punt van 0,1s uit de opgave.</p>
+            <p>Bij <code>knipper(LANG)</code> is de voorwaarde van de <code>if</code> waar en komt er een <code>delay(200)</code> bij, terwijl de led ondertussen nog altijd aanstaat. Samen is dat 100 + 200 = 300 ms, de streep van 0,3s. Daarom staat die extra pauze <strong>binnen</strong> het stuk waarin de led brandt en niet erachter.</p>
+            <p>De laatste <code>delay(100)</code> valt na <code>digitalWrite(ledPin, HIGH)</code>, dus terwijl de led uit is. Dat is de pauze van 0,1s tussen twee signalen van dezelfde letter. Elk signaal eindigt zelf al met die pauze, dus in je <code>loop()</code> hoef je er tussen twee punten of strepen geen meer te zetten.</p>
+            <p>Reken daar wel mee wanneer je de pauze tussen twee letters schrijft. Die moet 0,3s duren, en de laatste <code>knipper()</code> van de vorige letter heeft er al 0,1s van gedaan, dus zet je er nog 200 ms bij. Om dezelfde reden is de pauze tussen twee woorden 600 ms en geen 700.</p>
+        </div>
+        <div class="accordion-item">
+            <div class="title">Waarom staat er if (duur) en niet if (duur == true)?</div>
+            <p>Een <code>if</code> heeft een voorwaarde nodig die te herleiden is tot <code>true</code> of <code>false</code>. In labo 0 schreef je daar een vergelijking voor, zoals <code>if (toestand == LOW)</code>: die vergelijking wordt eerst uitgerekend, en het resultaat is <code>true</code> of <code>false</code>. Zie <a href="../../Labo0/Reference/Selecties.html">Selecties</a>.</p>
+            <p><code>duur</code> is zelf al een <code>bool</code> en bevat dus al <code>true</code> of <code>false</code>. Er valt niets meer uit te rekenen, dus mag de naam er rechtstreeks staan. <code>if (duur == true)</code> doet precies hetzelfde.</p>
+            <p>De <a href="../../Labo0/Reference/ConstantenVariabelenGegevenstypes.html">constanten</a> <code>KORT</code> en <code>LANG</code> staan er om dezelfde reden als <code>ledPin</code>: <code>knipper(LANG)</code> zegt op de plaats van de oproep wat er gaat gebeuren, terwijl je bij <code>knipper(true)</code> in de functie moet gaan kijken wat <code>true</code> hier betekent.</p>
         </div>
     </div>
 
@@ -94,19 +129,23 @@ void loop()
     <p>Je kan het SOS-signaal ook hoorbaar maken. In je Arduino-kit zitten daarvoor twee buzzers: een actieve en een passieve.</p>
 
     <ul>
-        <li>Een <strong>actieve buzzer</strong> heeft een oscillator ingebouwd. Zet je er spanning op, dan geeft hij één vaste toon. Aansturen doe je met <code>digitalWrite()</code>, net zoals bij een led.</li>
-        <li>Een <strong>passieve buzzer</strong> heeft die oscillator niet en zet alleen om wat je erop zet. Je moet dus zelf een wisselend signaal genereren, met <code>tone(buzzerPin, 1000)</code> om een toon van 1000 Hz te starten en <code>noTone(buzzerPin)</code> om hem te stoppen. De frequentie die je meegeeft, bepaalt de toonhoogte.</li>
+        <li>Een <strong>actieve buzzer</strong> heeft een oscillator ingebouwd, een schakeling die zelf een snel wisselend signaal opwekt. Zet je er spanning op, dan geeft hij één vaste toon. Aansturen doe je met <a href="../../Labo0/Reference/digitalReadDigitalWrite.html"><code>digitalWrite()</code></a>, net zoals bij een led.</li>
+        <li>Een <strong>passieve buzzer</strong> heeft die oscillator niet en zet alleen om wat je erop zet. Je moet dus zelf een wisselend signaal genereren. Dat doe je met <code>tone(buzzerPin, 1000)</code>, waarbij <code>buzzerPin</code> de pin is waarop je de buzzer aansluit. Die pin gaat dan 1000 keer per seconde aan en uit. Met <code>noTone(buzzerPin)</code> leg je dat weer stil. Dat aantal keer per seconde heet de <strong>frequentie</strong> en wordt uitgedrukt in hertz (Hz). Hoe hoger het getal, hoe hoger de toon.</li>
     </ul>
 
-    <p>Voor deze oefening is de <strong>actieve</strong> buzzer dus direct bruikbaar. Een punt en een streep zijn ook hier een korte en een lange periode waarin de uitgang aanstaat, dus je vervangt de led door de buzzer en je code blijft dezelfde.</p>
+    <p>Voor deze oefening is de <strong>actieve</strong> buzzer direct bruikbaar. Een punt en een streep zijn ook hier een korte en een lange periode waarin de uitgang aanstaat, dus je hebt aan dezelfde <code>knipper()</code> genoeg.</p>
 
-    <p>Welke van de twee je in handen hebt, weet je door de buzzer kort tussen 5V en GND te hangen: de actieve zoemt onmiddellijk, de passieve geeft één klik en daarna stilte. Aan de behuizing zie je het meestal ook, want bij de passieve buzzer is de onderkant een open printplaat en bij de actieve is die dichtgemaakt. De actieve buzzer is gepolariseerd, met de langere pin aan de plus.</p>
+    <p>Welke van de twee je in handen hebt, weet je door de buzzer kort tussen 5V en GND te hangen: de actieve zoemt onmiddellijk, de passieve geeft één klik en daarna stilte. Aan de behuizing zie je het meestal ook, want bij de passieve buzzer is de onderkant een open printplaat en bij de actieve is die dichtgemaakt. De actieve buzzer is <strong>gepolariseerd</strong>: net als bij een led maakt het uit hoe je hem in de schakeling hangt. De langere pin gaat naar de plus.</p>
 
     <div class="video-container">
         <div class="ratio ratio-16x9">
             <iframe src="https://www.youtube.com/embed/4U5eYG8NnL4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
         </div>
     </div>
+
+    <h3 id="led-en-buzzer-samen">De led en de buzzer samen</h3>
+
+    <p>De buzzer komt naast de led en niet in de plaats ervan, zodat je het SOS tegelijk ziet en hoort. Geef hem daarvoor een eigen pin, bijvoorbeeld pin 8, en laat de led op pin 12 staan.</p>
 
     <hr>
 
@@ -131,34 +170,61 @@ void loop()
             <p>
                 De letter <strong>O</strong> bestaat uit drie strepen, dus 3x
                 <code>knipper(LANG)</code>. Na elke letter volgt een pauze van 0,3s
-                (al gegeven na de eerste S). Na de laatste letter is er geen "volgende
-                letter" meer, maar omdat <code>loop()</code> meteen herbegint met een
-                nieuwe S, wordt die pauze hier gebruikt als pauze tussen twee woorden
-                (0,7s), anders zou de laatste S van dit SOS direct overlopen in
-                de eerste S van de volgende herhaling.
+                (al gegeven na de eerste S). Daarvan zit er 0,1s al in
+                <code>knipper()</code> zelf, dus blijft er 200 ms over om zelf te
+                schrijven.
             </p>
-            <pre class="code-wrapper language-cpp linenumbers show-language"><code>void loop()
+            <p>
+                Na de laatste letter is er geen "volgende letter" meer, maar omdat
+                <code>loop()</code> meteen herbegint met een nieuwe S, gebruik je die
+                plaats voor de pauze tussen twee woorden. Anders zou de laatste S van dit
+                SOS direct overlopen in de eerste S van de volgende herhaling.
+                Die pauze duurt 0,7s, opnieuw min de 0,1s uit <code>knipper()</code>, dus 600 ms.
+            </p>
+            <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int ledPin = 12;
+
+const bool KORT = false;
+const bool LANG = true;
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+}
+
+void knipper(bool duur)
+{
+  digitalWrite(ledPin, LOW); // led aan
+  delay(100);
+  if (duur)
+  {
+    delay(200); //Extra delay
+  }
+  digitalWrite(ledPin, HIGH); // led uit
+  delay(100);
+}
+
+void loop()
 {
   //De letter S = 3x kort
   for (int i = 0; i < 3; i++)
   {
     knipper(KORT);
   }
-  delay(300); //Pauze tussen twee letters.
+  delay(200); //Pauze tussen twee letters: 300 ms in totaal, waarvan knipper() er al 100 gedaan heeft
 
   //Nu nog de O
   for (int i = 0; i < 3; i++)
   {
     knipper(LANG);
   }
-  delay(300); //Pauze tussen twee letters.
+  delay(200); //Pauze tussen twee letters: 300 ms in totaal, waarvan knipper() er al 100 gedaan heeft
 
   //Nu nog de S
   for (int i = 0; i < 3; i++)
   {
     knipper(KORT);
   }
-  delay(700); //Pauze tussen twee woorden (voor herhaling van SOS)
+  delay(600); //Pauze tussen twee woorden: 700 ms in totaal, waarvan knipper() er al 100 gedaan heeft
 }</code></pre>
         </div>
     </div>
