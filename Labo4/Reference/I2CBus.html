@@ -19,12 +19,10 @@
 
     <p>Het woord bus slaat op de manier van aansluiten. Elke chip verbindt zijn SDA-pin met dezelfde SDA-lijn en zijn SCL-pin met dezelfde SCL-lijn, dus er loopt geen aparte draad per chip. Een tweede chip komt ernaast te hangen, en aan de kant van de Arduino verandert de bedrading niet.</p>
 
-    <!-- TODO: tekening van de bus. Een Arduino links, twee chips ernaast, met twee doorlopende
-         lijnen SDA en SCL waar alle drie op aftakken, en Vcc en GND als de twee andere lijnen -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-i2c-bus-twee-chips.png" class="img-fluid" alt="TODO: schema van een I2C bus met een Arduino en twee chips die alle drie op dezelfde SDA- en SCL-lijn aftakken">
-            <figcaption class="figure-caption">Twee chips die op dezelfde SDA- en SCL-lijn aftakken.</figcaption>
+            <img src="../../img/i2c-bus-drie-toestellen.png" class="img-fluid" alt="Schema van een I2C bus: een Arduino UNO met een lcd-scherm, een 7-segmentmodule en een PCF8574 die alle drie op dezelfde SDA- en SCL-lijn aftakken, plus Vcc en GND">
+            <figcaption class="figure-caption">Drie toestellen die op dezelfde SDA- en SCL-lijn aftakken. De oranje en de groene draad zijn SDA en SCL, de rode en de zwarte zijn Vcc en GND.</figcaption>
         </figure>
     </div>
 

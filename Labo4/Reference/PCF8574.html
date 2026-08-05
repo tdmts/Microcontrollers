@@ -92,11 +92,6 @@
         </div>
     </div>
 
-    <div class="info-box remark">
-        <div class="info-title remark">Waarom staat er een Leonardo op het schema?</div>
-        <p>Dit schema komt uit het cursusmateriaal en is met een Leonardo getekend. Voor de bedrading maakt dat niets uit, want de draden gaan naar de pinnen SDA en SCL naast AREF en die staan op een UNO op dezelfde plaats.</p>
-    </div>
-
     <h2 id="de-int-pin">De /INT pin</h2>
 
     <p>De <strong>/INT</strong>-pin wordt <strong>geactiveerd zodra er een wijziging optreedt op één of meer van de 8 I/O-lijnen</strong>. Daardoor kan die pin dienen als <strong>interruptsignaal</strong> voor de master wanneer je de 8 lijnen als ingangen gebruikt. In plaats van constant via de bus te moeten checken of een pin van waarde veranderd is, krijg je via /INT een signaal.</p>
@@ -105,53 +100,83 @@
 
     <h2 id="aan-de-slag">Aan de slag</h2>
 
-    <p>We maken gebruik van de <a href="Bibliotheken.html">Wire-bibliotheek</a>. Bovenaan je programma staat dus de regel:</p>
-
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;</code></pre>
-
-    <p>Vooraleer je de I²C kan gebruiken moet je het Wire-object initialiseren. Dat doe je in de <code>setup()</code>-functie:</p>
-
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.begin();</code></pre>
+    <p>We maken gebruik van de <a href="Bibliotheken.html">Wire-bibliotheek</a>. Bovenaan je programma staat dus de regel <code>#include &lt;Wire.h&gt;</code>, en in je <code>setup()</code> initialiseer je de bus met <code>Wire.begin()</code>. Die twee regels heeft elk programma in dit labo nodig, of je nu schrijft of leest.</p>
 
     <h3>Schrijven naar de bus</h3>
 
-    <p>Het <em>schrijven</em> naar de I²C bus gebeurt in 3 stappen.</p>
+    <p>Het <em>schrijven</em> naar de I²C bus gebeurt in 3 stappen:</p>
 
-    <p><strong>Eerst</strong> wordt de communicatie geïnitialiseerd:</p>
+    <ul>
+        <li><code>Wire.beginTransmission(adres)</code> opent de communicatie. <code>adres</code> is het adres van de chip die je wil aanspreken. Wanneer A2, A1 en A0 op 0 staan gebruik je hier 0x38 (of 0x20, afhankelijk van je type).</li>
+        <li><code>Wire.write(waarde)</code> geeft de byte mee die op de uitgangen moet komen.</li>
+        <li><code>Wire.endTransmission()</code> sluit de communicatie af en stuurt de byte effectief door.</li>
+    </ul>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.beginTransmission(adres);</code></pre>
+    <p>De waarde mag je in elk talstelsel schrijven. Wil je het bitpatroon 10101010 op de pinnen P7 tot P0 plaatsen, dan schrijf je 170 decimaal, 0xAA hexadecimaal of B10101010 binair.</p>
 
-    <p><code>adres</code> is het adres van de chip die je wil aanspreken. Wanneer A2, A1 en A0 op 0 staan gebruik je hier 0x38 (of 0x20, afhankelijk van je type).</p>
+    <p>In een volledig programma ziet dat er zo uit. Dit voorbeeld wisselt elke seconde tussen twee patronen, zodat de acht uitgangen om beurt hoog en laag staan:</p>
 
-    <p><strong>Vervolgens</strong> geef je de waarde van de byte mee die op de uitgangen moet komen:</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.write(waarde);</code></pre>
+const int adresExpander = 0x38; // A0, A1 en A2 aan GND
 
-    <p><code>waarde</code> mag je in elk talstelsel schrijven. Wil je het bitpatroon 10101010 op de pinnen P7 tot P0 plaatsen, dan schrijf je 170 decimaal, 0xAA hexadecimaal of B10101010 binair.</p>
+void setup()
+{
+  Wire.begin();
+}
 
-    <p>De communicatie wordt <strong>afgesloten</strong> met:</p>
+void loop()
+{
+  Wire.beginTransmission(adresExpander);
+  Wire.write(B10101010); // P7, P5, P3 en P1 hoog
+  Wire.endTransmission();
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.endTransmission();</code></pre>
+  delay(1000);
+
+  Wire.beginTransmission(adresExpander);
+  Wire.write(B01010101); // P6, P4, P2 en P0 hoog
+  Wire.endTransmission();
+
+  delay(1000);
+}</code></pre>
+
+    <p>Je schrijft altijd de volledige byte, dus alle acht de pinnen tegelijk. Eén pin apart aansturen kan niet: je bouwt het hele patroon op en stuurt dat door. Hoe je zo'n patroon opbouwt, staat op <a href="Bits.html">Werken met bits</a>.</p>
 
     <h3>Lezen van de bus</h3>
 
-    <p>Het <em>lezen</em> gebeurt op een net iets andere manier. Om een byte te lezen van de I/O-lijnen begin je met:</p>
+    <p>Het <em>lezen</em> gebeurt op een net iets andere manier, in 2 stappen:</p>
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>Wire.requestFrom(adres, aantal);</code></pre>
+    <ul>
+        <li><code>Wire.requestFrom(adres, aantal)</code> vraagt de chip om gegevens. <code>aantal</code> geeft aan hoeveel bytes je verwacht. Bij een PCF8574 is dat altijd 1, maar er bestaan ook I²C-sensoren die meerdere bytes na elkaar versturen.</li>
+        <li><code>Wire.available()</code> zegt of er een byte klaarstaat, en <code>Wire.read()</code> haalt die op.</li>
+    </ul>
 
-    <p>Het adres is dat van het IC. <code>aantal</code> geeft aan hoeveel bytes informatie je verwacht. Bij een PCF8574 is dat altijd 1, maar er bestaan ook I²C-sensoren die meerdere bytes na elkaar versturen.</p>
+    <p>Ook hiervan het volledige programma. Het leest elke halve seconde de acht ingangen uit en zet de byte op de seriële monitor:</p>
 
-    <p><strong>Vervolgens</strong> kijk je of er een byte klaarstaat om van de PCF8574 naar de master te gaan:</p>
+    <pre class="code-wrapper language-cpp linenumbers show-language"><code>#include &lt;Wire.h&gt;
 
-    <pre class="code-wrapper language-cpp linenumbers show-language"><code>if (Wire.available())
+const int adresExpander = 0x38; // A0, A1 en A2 aan GND
+
+void setup()
 {
-  waarde = Wire.read();
+  Wire.begin();
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  Wire.requestFrom(adresExpander, 1);
+
+  if (Wire.available())
+  {
+    byte waarde = Wire.read();
+    Serial.println(waarde, BIN);
+  }
+
+  delay(500);
 }</code></pre>
 
-    <div class="info-box warning">
-        <div class="info-title warning">Een uitgang die laag staat, lees je niet</div>
-        <p>De pinnen van de PCF8574 zijn <strong>quasi-bidirectioneel</strong>: er is geen aparte instelling voor ingang of uitgang. Een pin die je wil <em>lezen</em>, moet in zijn uitgangslatch een <strong>1</strong> hebben staan. Bij het opstarten staan alle pinnen hoog, dus meestal merk je hier niets van. Maar heb je er eerder een 0 naar geschreven, dan lees je die 0 terug en lijkt je knop permanent ingedrukt. Schrijf in je <code>setup()</code> dus een 1 naar elke pin die je als ingang gebruikt.</p>
-    </div>
+    <p>Je leest de acht pinnen in één keer in, net zoals je ze in één keer wegschrijft. Welke bit bij welke pin hoort en hoe je er één uit haalt, lees je op <a href="Bits.html">Werken met bits</a>.</p>
 
     <p>Voor de volledige specificaties, zoals hoeveel stroom een uitgang kan leveren of opnemen, kan je terecht in de <a href="../../datasheets/datasheet-pcf8574.pdf" target="_blank" rel="noopener">datasheet</a>.</p>
 </div>
