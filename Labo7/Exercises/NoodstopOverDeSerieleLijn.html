@@ -30,7 +30,7 @@
             <caption>De aansluitingen</caption>
             <thead>
                 <tr>
-                    <th scope="col">Bord</th>
+                    <th scope="col">Arduino</th>
                     <th scope="col">Aansluiting</th>
                     <th scope="col">Waarvoor</th>
                 </tr>
@@ -57,7 +57,7 @@
 
     <div class="info-box warning">
         <div class="info-title warning">Pin 0 en pin 1 zijn ook je USB-kabel</div>
-        <p>Net als in labo 6 deelt je USB-verbinding op een echt bord pin 0 en pin 1 met de kruisdraden. Maak ze los voor je uploadt en hang ze er daarna weer aan. In TinkerCAD merk je daar niets van. Zie <a href="../../Labo6/Reference/SerieelKanaal.html">Het seri&euml;le kanaal</a>.</p>
+        <p>Net als in labo 6 deelt je USB-verbinding op een echte Arduino pin 0 en pin 1 met de kruisdraden. Maak ze los voor je uploadt en hang ze er daarna weer aan. In TinkerCAD merk je daar niets van. Zie <a href="../../Labo6/Reference/SerieelKanaal.html">Het seri&euml;le kanaal</a>.</p>
     </div>
 
     <h2 id="wat-je-moet-programmeren">Wat je moet programmeren</h2>
@@ -86,7 +86,7 @@
         <div class="info-title warning">De vertraging zit bij de ontvanger</div>
         <p>Arduino 2 reageert inderdaad meteen. Zijn ISR gaat af binnen enkele microseconden en het bericht staat op de lijn voor je vinger van de knop is.</p>
         <p>Maar Arduino 1 zit in <code>delay(250)</code>. Het bericht blijft in de ontvangstbuffer staan, en pas wanneer die <code>delay()</code> afgelopen is kijkt hij ernaar. Je noodstop is dus nog altijd tot een kwart seconde te laat, ook al reageert de knop zelf meteen.</p>
-        <p>Een interrupt versnelt alleen het bord waar hij op staat.</p>
+        <p>Een interrupt versnelt alleen de Arduino waar hij op staat.</p>
     </div>
 
     <p>Arduino 1 moet dus zijn <code>delay()</code> opgeven. In plaats van te wachten tot het tijd is voor de volgende led, blijft hij rondjes draaien en <strong>kijkt</strong> hij telkens of het al tijd is.</p>
@@ -135,7 +135,7 @@ void loop()
             <li><label><input type="checkbox" class="form-check-input me-2"> Arduino 1 leest per lijn, met <code>readStringUntil('\n')</code> en <code>trim()</code></label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Er gaat alleen een boodschap over de lijn wanneer er echt gedrukt wordt</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> E&eacute;n druk geeft ook maar &eacute;&eacute;n boodschap, dus je knop is ontdenderd</label></li>
-            <li><label><input type="checkbox" class="form-check-input me-2"> Beide borden delen een gemeenschappelijke massa</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Beide Arduino's delen een gemeenschappelijke massa</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> Geen errors of warnings in de log</label></li>
         </ul>
     </div>

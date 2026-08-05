@@ -64,8 +64,8 @@
 
     <div class="info-box warning">
         <div class="info-title warning">Op echte hardware deelt je USB-kabel pin 0 en 1</div>
-        <p>De USB-poort waarlangs je een programma uploadt, hangt op precies dezelfde Rx en Tx. Op een echt bord mislukt het uploaden dus zolang er draden op pin 0 en 1 zitten. Trek die twee draden er uit, upload je programma, en steek ze daarna terug.</p>
-        <p>In TinkerCAD heb je daar geen last van, want daar is er geen echte USB-kabel. Onthoud het toch voor de dag dat je dit op een echt bord bouwt.</p>
+        <p>De USB-poort waarlangs je een programma uploadt, hangt op precies dezelfde Rx en Tx. Op een echte Arduino mislukt het uploaden dus zolang er draden op pin 0 en 1 zitten. Trek die twee draden er uit, upload je programma, en steek ze daarna terug.</p>
+        <p>In TinkerCAD heb je daar geen last van, want daar is er geen echte USB-kabel. Onthoud het toch voor de dag dat je dit op een echte Arduino bouwt.</p>
     </div>
 
     <h2 id="dezelfde-baudrate">Beide kanten moeten even snel praten</h2>
@@ -82,7 +82,7 @@
     <div class="info-box remark">
         <div class="info-title remark">Achter Serial zit een UART</div>
         <p>Het onderdeel dat dit werk doet, heet een <strong>UART</strong>: universal asynchronous receiver-transmitter. Het zit in je ATmega328P ingebouwd, naast het geheugen en de timers. Jij geeft er met <code>Serial.print()</code> een byte aan, en de UART schuift die bits daarna zelf een voor een naar buiten op het afgesproken tempo, terwijl je <code>loop()</code> gewoon verder draait. Aan de overkant doet een tweede UART het omgekeerde: die vangt de bits op, zet ze terug samen tot een byte en houdt ze bij tot jij <code>Serial.read()</code> doet. De <em>a</em> van asynchroon is wat hierboven staat: er loopt geen klok mee over de draad, dus telt elke UART zijn eigen tijd af en moeten beide kanten op dezelfde baudrate ingesteld staan.</p>
-        <p>Zowat elke microcontroller heeft er minstens &eacute;&eacute;n aan boord, en veel grotere chips hebben er drie of vier. De modules die je erop aansluit gebruiken dezelfde manier van praten: gps-ontvangers, bluetoothmodules, vingerafdruklezers, 4G-modems en heel wat sensoren hebben geen andere aansluiting dan een TX, een RX en een massa. Wat je hier tussen twee Arduino's legt, is dus ook de manier waarop je later zo'n module aan je bord hangt.</p>
+        <p>Zowat elke microcontroller heeft er minstens &eacute;&eacute;n aan boord, en veel grotere chips hebben er drie of vier. De modules die je erop aansluit gebruiken dezelfde manier van praten: gps-ontvangers, bluetoothmodules, vingerafdruklezers, 4G-modems en heel wat sensoren hebben geen andere aansluiting dan een TX, een RX en een massa. Wat je hier tussen twee Arduino's legt, is dus ook de manier waarop je later zo'n module aan je Arduino hangt.</p>
         <p>Ook in afgewerkte apparaten blijft die aansluiting zitten. Open je een router, een decoder of een industri&euml;le sturing, dan vind je op de print vaak vier contacten op een rij, soms met een header erin en meestal zonder. Daar hangt de fabrikant een kabel aan om te volgen wat het toestel doet terwijl het opstart, en om erbij te kunnen wanneer het scherm of het netwerk niets meer geeft. Zo'n verbinding heeft genoeg aan &eacute;&eacute;n draad per richting en een gemeenschappelijke massa, en werkt zonder driver en zonder netwerk.</p>
         <p>In de video hieronder wordt zo'n aansluiting op een echt toestel opgezocht en aangesloten, tot de opstartboodschappen binnenlopen. De video is Engelstalig.</p>
         <div class="video-container">

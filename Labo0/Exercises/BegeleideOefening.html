@@ -23,18 +23,18 @@
 
     <h3>Stap 1: Sketch aanmaken</h3>
     <p>Open de Arduino IDE en verbind je Arduino met een USB-kabel met je computer. De Arduino krijgt zo meteen ook stroom, je hoeft dus verder niets aan te sluiten.</p>
-    <p>Controleer nu of je computer je Arduino herkent. Bovenaan in de IDE kies je bij <strong>Select board</strong> je bord en de juiste poort. Lukt dat niet meteen? In <a href="../Reference/ProgrammaUploaden.html">Een programma uploaden</a> lees je hoe je het juiste bord en de juiste poort selecteert.</p>
+    <p>Controleer nu of je computer je Arduino herkent. Bovenaan in de IDE kies je bij <strong>Select board</strong> je Arduino en de juiste poort. Lukt dat niet meteen? In <a href="../Reference/ProgrammaUploaden.html">Een programma uploaden</a> lees je hoe je de juiste Arduino en de juiste poort selecteert.</p>
     <p>Maak daarna een nieuwe sketch en sla hem op onder de naam <code>Labo0_KnopEnLed</code>. Zo vind je je werk straks makkelijk terug.</p>
     <!-- TODO: bestaande screenshot hergebruikt; vervang gerust door een recentere als de IDE-versie verandert -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/arduino-ide-select-board.png" class="img-fluid" alt="De Select board-dropdown in de Arduino IDE waarmee je je bord en poort kiest">
+            <img src="../../img/arduino-ide-select-board.png" class="img-fluid" alt="De Select board-dropdown in de Arduino IDE waarmee je je Arduino en poort kiest">
         </figure>
     </div>
 
     <h3>Stap 2: Drukknop aansluiten op pin 2</h3>
     <p>Verbind een <a href="../Reference/PullUpPullDown.html#pushbutton">pushbutton</a> met pin 2 van je Arduino. Werk altijd op een uitgeschakelde of losgekoppelde Arduino terwijl je bedraadt, zo vermijd je kortsluitingen.</p>
-    <p>Je bouwt de schakeling op het breadboard. Welke gaten van die plaat al met elkaar doorverbonden zijn, en waar die verbinding stopt, staat op <a href="../Reference/HetBreadboard.html">Het breadboard</a>.</p>
+    <p>Je bouwt de schakeling op het breadboard. Welke gaten van dat breadboard al met elkaar doorverbonden zijn, en waar die verbinding stopt, staat op <a href="../Reference/HetBreadboard.html">Het breadboard</a>.</p>
     <p>Een knopingang mag niet "zweven": zonder vaste waarde leest de pin willekeurig hoog of laag. Daarom plaats je tussen pin 2 en de +5&nbsp;V een <a href="../Reference/PullUpPullDown.html">pull-upweerstand</a>, die de ingang een vaste rustwaarde geeft. Neem daarvoor best een weerstand van ongeveer <strong>10&nbsp;k&Omega;</strong> (een waarde tussen 1&nbsp;k&Omega; en 10&nbsp;k&Omega; werkt). Sluit alles aan zoals op de foto:</p>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">

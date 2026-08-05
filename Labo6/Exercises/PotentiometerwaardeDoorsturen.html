@@ -11,7 +11,7 @@
 <body>
 <div class="container">
     <h1>Een potentiometerwaarde doorsturen en dimmen</h1>
-    <p class="lead">De potentiometer zit op Arduino 1, de led op Arduino 2. Draai je aan de knop, dan verandert de helderheid van een led die aan een heel ander bord hangt.</p>
+    <p class="lead">De potentiometer zit op Arduino 1, de led op Arduino 2. Draai je aan de knop, dan verandert de helderheid van een led die aan een heel andere Arduino hangt.</p>
 
     <p>De vorige oefening stuurde alleen aan of uit door. Nu stuur je een gemeten waarde. Een meting verandert voortdurend een klein beetje, dus je moet nadenken over hoe vaak je iets doorstuurt. Alles wat je hiervoor nodig hebt aan analoge in- en uitgangen ken je al uit <a href="../../Labo2/Reference/analogRead.html">analogRead()</a>, <a href="../../Labo2/Reference/analogWrite.html">analogWrite()</a> en <a href="../../Labo2/Reference/map.html">map()</a>.</p>
 
@@ -30,7 +30,7 @@
             <caption>Wat er bij komt bovenop de seri&euml;le verbinding</caption>
             <thead>
                 <tr>
-                    <th scope="col">Bord</th>
+                    <th scope="col">Arduino</th>
                     <th scope="col">Aansluiting</th>
                     <th scope="col">Waarvoor</th>
                 </tr>
@@ -80,7 +80,7 @@
         <div class="info-title evaluation">Checklist</div>
         <p>Overloop volgende checklist om je oefening zelf te evalueren:</p>
         <ul class="checklist">
-            <li><label><input type="checkbox" class="form-check-input me-2"> Draai je aan de potentiometer, dan verandert de helderheid van de led op het andere bord</label></li>
+            <li><label><input type="checkbox" class="form-check-input me-2"> Draai je aan de potentiometer, dan verandert de helderheid van de led op de andere Arduino</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De led gaat volledig uit aan de ene kant en brandt vol aan de andere kant</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De led reageert vlot, zonder zichtbare achterstand op je vinger</label></li>
             <li><label><input type="checkbox" class="form-check-input me-2"> De led hangt op een pin met een ~</label></li>

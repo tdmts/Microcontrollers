@@ -86,12 +86,12 @@
 
     <h2 id="valkuil-1">Valkuil 1: de expander uitlezen hoort in je loop()</h2>
 
-    <p>De opdracht zoals hij in het oude cursusmateriaal staat, luidt: lees in je ISR de knoppen uit, en houd je <code>loop()</code> volledig leeg. Dat kan niet. Probeer je het, dan hangt je bord vast en helpt alleen de resetknop nog.</p>
+    <p>De opdracht zoals hij in het oude cursusmateriaal staat, luidt: lees in je ISR de knoppen uit, en houd je <code>loop()</code> volledig leeg. Dat kan niet. Probeer je het, dan hangt je Arduino vast en helpt alleen de resetknop nog.</p>
 
     <div class="info-box warning">
-        <div class="info-title warning">Waarom een Wire-opdracht in een ISR je bord ophangt</div>
+        <div class="info-title warning">Waarom een Wire-opdracht in een ISR je Arduino ophangt</div>
         <p>De I&sup2;C-hardware in je chip werkt byte per byte, en gebruikt <strong>zelf een interrupt</strong> om na elke byte verder te gaan. <code>Wire.requestFrom()</code> zet de overdracht in gang en blijft dan wachten tot die klaar is.</p>
-        <p>Maar in een ISR staan alle interrupts uit. Die hulp komt dus nooit, en <code>Wire.requestFrom()</code> blijft eeuwig wachten. Je krijgt geen foutmelding en geen timeout, en je bord doet niets meer.</p>
+        <p>Maar in een ISR staan alle interrupts uit. Die hulp komt dus nooit, en <code>Wire.requestFrom()</code> blijft eeuwig wachten. Je krijgt geen foutmelding en geen timeout, en je Arduino doet niets meer.</p>
         <p>Je lost dit ook niet op door <code>interrupts()</code> bovenaan je ISR te zetten. Zie <a href="../Reference/InterruptServiceRoutine.html">De regels van een ISR</a> voor waarom dat nog erger is.</p>
     </div>
 

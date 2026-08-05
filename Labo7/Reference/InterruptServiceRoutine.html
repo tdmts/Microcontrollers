@@ -48,7 +48,7 @@
   digitalWrite(ledPin, LOW);
 }</code></pre>
 
-    <p><code>delay()</code> telt de tijd af met behulp van een timer die zelf een interrupt gebruikt. Die interrupt staat uit terwijl jouw ISR draait, dus de tijd staat stil, dus <code>delay()</code> is nooit klaar. Je bord hangt, en alleen de resetknop helpt nog.</p>
+    <p><code>delay()</code> telt de tijd af met behulp van een timer die zelf een interrupt gebruikt. Die interrupt staat uit terwijl jouw ISR draait, dus de tijd staat stil, dus <code>delay()</code> is nooit klaar. Je Arduino hangt, en alleen de resetknop helpt nog.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Waarom een korte delay wel lijkt te werken</div>
@@ -56,32 +56,32 @@
         <p>Moet je in een ISR echt kort wachten, dan bestaat <code>delayMicroseconds()</code>, want die telt instructies. Maar als je in een ISR aan het wachten bent, klopt je ontwerp meestal niet.</p>
     </div>
 
-    <h2 id="geen-wire">Wire hangt je bord op</h2>
+    <h2 id="geen-wire">Wire hangt je Arduino op</h2>
 
     <p>Dit is de gemeenste van allemaal, en je botst er in dit labo op zodra je met de PCF8574 werkt.</p>
 
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>void expanderMelddeIets()
 {
-  Wire.requestFrom(adresExpander, 1); // FOUT: je bord hangt hier vast
+  Wire.requestFrom(adresExpander, 1); // FOUT: je Arduino hangt hier vast
   byte knoppen = Wire.read();
 }</code></pre>
 
     <p>De I&sup2;C-hardware in de chip werkt byte per byte, en gebruikt <strong>zelf een interrupt</strong> om na elke byte verder te gaan. <code>Wire.requestFrom()</code> zet de boel in gang en blijft dan wachten tot die interrupt het werk afgemaakt heeft.</p>
 
-    <p>Maar je zit in een ISR. De interrupts staan uit. Die hulp komt dus nooit, en <code>Wire.requestFrom()</code> blijft eeuwig wachten. Je bord hangt tot je op reset drukt, en er is geen foutmelding en geen timeout.</p>
+    <p>Maar je zit in een ISR. De interrupts staan uit. Die hulp komt dus nooit, en <code>Wire.requestFrom()</code> blijft eeuwig wachten. Je Arduino hangt tot je op reset drukt, en er is geen foutmelding en geen timeout.</p>
 
     <p>Hetzelfde geldt voor <code>Wire.beginTransmission()</code> en <code>Wire.endTransmission()</code>. Kortom, je gebruikt geen enkele I&sup2;C-opdracht in een ISR.</p>
 
     <div class="info-box warning">
         <div class="info-title warning">Waarom interrupts() in je ISR gevaarlijk is</div>
         <p>Vroeg of laat bedenkt iemand dat je de interrupts toch weer kan aanzetten met <code>interrupts()</code> als eerste regel van je ISR.</p>
-        <p>Dat werkt, en daarom is het gevaarlijk. Zodra de interrupts weer aanstaan, mag je knop je ISR opnieuw onderbreken, terwijl de eerste nog bezig is. Een denderende knop doet dat tientallen keren na elkaar, en elke onderbreking legt een nieuwe laag op de stapel. Je Arduino heeft 2 kB geheugen. Die stapel loopt over, je variabelen worden overschreven en je programma doet vanaf dan volstrekt willekeurige dingen. Dat is veel moeilijker te vinden dan een bord dat hangt.</p>
+        <p>Dat werkt, en daarom is het gevaarlijk. Zodra de interrupts weer aanstaan, mag je knop je ISR opnieuw onderbreken, terwijl de eerste nog bezig is. Een denderende knop doet dat tientallen keren na elkaar, en elke onderbreking legt een nieuwe laag op de stapel. Je Arduino heeft 2 kB geheugen. Die stapel loopt over, je variabelen worden overschreven en je programma doet vanaf dan volstrekt willekeurige dingen. Dat is veel moeilijker te vinden dan een Arduino die hangt.</p>
         <p>De oplossing is het werk uit de ISR te halen met <a href="VolatileEnVlaggen.html">het vlagpatroon</a>.</p>
     </div>
 
     <h2 id="geen-serial">Serial vertraagt alles</h2>
 
-    <p>Printen vanuit een ISR is verboden, maar om een andere reden dan <code>Wire</code>. Je bord hangt er niet van, en daardoor lijkt het te werken wanneer je het probeert.</p>
+    <p>Printen vanuit een ISR is verboden, maar om een andere reden dan <code>Wire</code>. Je Arduino hangt er niet van, en daardoor lijkt het te werken wanneer je het probeert.</p>
 
     <p>Bij 9600 baud duurt &eacute;&eacute;n teken ruim een milliseconde. Normaal geeft je Arduino de tekens beetje bij beetje weg terwijl je programma verder loopt. In een ISR kan dat niet, dus zit je ISR ineens tientallen milliseconden vast te schrijven. Al die tijd staat alles stil: je mist andere knopdrukken, je klok loopt achter, en een I&sup2;C-overdracht die elders bezig was gaat stuk.</p>
 
