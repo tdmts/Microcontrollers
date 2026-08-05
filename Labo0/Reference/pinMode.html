@@ -50,8 +50,8 @@ void loop()
     <p>Dit kan opgelost worden door extern een pullup- of pulldownweerstand aan te schakelen. Meestal gebruik je daarvoor een weerstand van 10 KOhm.</p>
 
     <h3>INPUT_PULLUP</h3>
-    <p>In deze mode schakel je de ingebouwde pullupweerstand in. Deze ligt tussen 20 KOhm en 50 KOhm en zorgt ervoor dat er, wanneer er niets met de pin verbonden is, altijd een hoge waarde gelezen wordt. Om een laag niveau te lezen, moeten we de pin dus verbinden met de massa.</p>
-    <p>De meest gebruikte manier hiervoor is een switch, waarvan de NO-kant verbonden wordt met de pin en de COM-kant met de massa. Wanneer de switch niet bediend is, staat op de ingang een hoog niveau vanwege de pullupweerstand. Zodra de schakelaar ingedrukt wordt, krijgen we een verbinding met massa en bijgevolg een laag niveau op de pin. De pin is dus laag assertief.</p>
+    <p>In deze mode schakel je de ingebouwde pullupweerstand in. Deze ligt tussen 20 KOhm en 50 KOhm en zorgt ervoor dat er, wanneer er niets met de pin verbonden is, altijd een hoge waarde gelezen wordt. Om een laag niveau te lezen, moet je de pin dus verbinden met de massa.</p>
+    <p>De meest gebruikte manier hiervoor is een switch, waarvan de NO-kant verbonden wordt met de pin en de COM-kant met de massa. Wanneer de switch niet bediend is, staat op de ingang een hoog niveau vanwege de pullupweerstand. Zodra de schakelaar ingedrukt wordt, krijg je een verbinding met massa en bijgevolg een laag niveau op de pin. De pin is dus laag assertief.</p>
     <div class="info-box">
         <div class="info-title remark">Ingebouwde led</div>
         <p>Pin 13 is standaard verbonden met de ingebouwde led en is dus minder geschikt om als ingang gebruikt te worden. De led staat dan in serie geschakeld met de pullupweerstand, waardoor een spanning van ongeveer 1,7 V op de ingang staat en deze altijd als LOW wordt gelezen. Wil je pin 13 absoluut als ingang gebruiken, gebruik dan beter de INPUT-mode en voorzie een externe pulldownweerstand. Deze ingang is dan hoog assertief.</p>
@@ -62,8 +62,8 @@ void loop()
     <p>Hoewel een led rechtstreeks op de pin kan worden aangesloten, is het toch altijd verstandig om een outputpin te voorzien van een externe serieweerstand. Een outputpin die bijvoorbeeld kortgesloten wordt, kan beschadigd worden waardoor hij niet meer werkt. Dit heeft meestal geen gevolgen voor de rest van de controller, maar je houdt dan wel een "dode pin" over waar je niets meer mee kan aanvangen. Voor een led op 5 V kom je uit bij <strong>220 Ohm</strong>, en voor andere toepassingen is 1 KOhm een gangbare waarde. Hoe je die 220 Ohm zelf berekent, lees je op <a href="WetVanOhm.html">De wet van Ohm</a>.</p>
     <div class="info-box">
         <div class="info-title remark">Stroombeperking</div>
-        <p>Je zou verkeerdelijk kunnen rekenen dat we, als elke pin 40 mA kan leveren, in totaal 13 × 40 mA = 520 mA kunnen leveren. Dit is onmogelijk, aangezien de USB-aansluiting zelf al beperkt is tot 500 mA max. Maar zelfs 500 mA is niet haalbaar omdat <strong>de Arduino de stroom op alle pinnen samen beperkt tot een maximum van 200 mA.</strong></p>
-        <p>De voedingspinnen +5V en GND kunnen tot maximum 500 mA leveren via USB, maar indien de Arduino extern gevoed wordt via de barrelconnector door een voeding met voldoende vermogen, dan kunnen we hier tot 1 A gaan. De ingebouwde spanningsregelaar gaat daarna wel in thermal shutdown.</p>
+        <p>Je zou verkeerdelijk kunnen rekenen dat je, als elke pin 40 mA kan leveren, in totaal 13 × 40 mA = 520 mA kan leveren. Dit is onmogelijk, aangezien de USB-aansluiting zelf al beperkt is tot 500 mA max. Maar zelfs 500 mA is niet haalbaar omdat <strong>de Arduino de stroom op alle pinnen samen beperkt tot een maximum van 200 mA.</strong></p>
+        <p>De voedingspinnen +5V en GND kunnen tot maximum 500 mA leveren via USB, maar indien de Arduino extern gevoed wordt via de barrelconnector door een voeding met voldoende vermogen, dan kan je hier tot 1 A gaan. De ingebouwde spanningsregelaar gaat daarna wel in thermal shutdown.</p>
         <p>Er is ook een 3,3V-spanningsregelaar aanwezig, die op de 3,3V-pin een maximale stroom van 150 mA kan leveren.</p>
     </div>
 </div>

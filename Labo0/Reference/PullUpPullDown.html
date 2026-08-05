@@ -30,7 +30,7 @@
     <p>Bij een NO is de verbinding standaard verbroken (open) en zorgt het drukken op de knop voor het leggen van de verbinding, terwijl bij een NC de verbinding standaard gelegd is en het drukken op de knop de verbinding verbreekt.</p>
 
     <h2 id="pushbutton">Pushbutton</h2>
-    <p>Een gewone schakelaar is bistabiel. Dit wil zeggen dat de status behouden blijft. In onze projecten gaan we echter heel vaak een pushbutton gebruiken. Deze eenvoudige knop gedraagt zich zoals beschreven in de tabel.</p>
+    <p>Een gewone schakelaar is bistabiel. Dit wil zeggen dat de status behouden blijft. In je projecten gebruik je echter heel vaak een pushbutton. Deze eenvoudige knop gedraagt zich zoals beschreven in de tabel.</p>
     <div class="table-responsive">
         <table class="table table-striped table-bordered align-middle">
             <tbody>
@@ -54,7 +54,7 @@
     </div>
 
     <h3>Normally open</h3>
-    <p>Er bestaan dus knoppen die in rust "normally open" zijn en waarbij de verbinding standaard onderbroken is. Wanneer we deze knop bekrachtigen, gaan we de verbinding maken. Belangrijk hierbij is om te beseffen dat er, wanneer de knop in rust is, geen verbinding is. Wanneer we zo'n knop verbinden met een ingangspin van de Arduino, hangt er aan de ingang van de Arduino een stuk draad dat met niks verbonden is.</p>
+    <p>Er bestaan dus knoppen die in rust "normally open" zijn en waarbij de verbinding standaard onderbroken is. Wanneer je deze knop bekrachtigt, maak je de verbinding. Belangrijk hierbij is om te beseffen dat er, wanneer de knop in rust is, geen verbinding is. Wanneer je zo'n knop verbindt met een ingangspin van de Arduino, hangt er aan de ingang van de Arduino een stuk draad dat met niks verbonden is.</p>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
             <img src="../../img/open-schakelaar.png" class="img-fluid" alt="Open schakelaar">
@@ -67,24 +67,24 @@
         </figure>
     </div>
     <p>Het probleem is dat zo'n stuk losse draad (in dit geval de gele draad) zich als een antenne gedraagt en alle soorten elektromagnetische storingen uit de omgeving kan oppikken, waardoor de ingang willekeurig een hoog of een laag signaal oppikt.</p>
-    <p>Een oplossing is om op de ingang te zorgen voor een standaardwaarde. Dit kan ook weer op twee manieren. We kunnen een pull-up- of een pull-downweerstand gebruiken. Daarbij verbind je de ingang via een grote weerstand met massa (pull-down, dus trek de ingang omlaag naar 0 V) of met de voedingsspanning Vcc (pull-up, trek de ingang omhoog naar +5 V).</p>
+    <p>Een oplossing is om op de ingang te zorgen voor een standaardwaarde. Dit kan ook weer op twee manieren. Je kan een pull-up- of een pull-downweerstand gebruiken. Daarbij verbind je de ingang via een grote weerstand met massa (pull-down, dus trek de ingang omlaag naar 0 V) of met de voedingsspanning Vcc (pull-up, trek de ingang omhoog naar +5 V).</p>
 
     <h3>Pull-up</h3>
-    <p>Wanneer we een weerstand van een redelijk grote waarde (meestal 1 kΩ, kan ook 10 kΩ zijn) plaatsen tussen +5 V en de ingang, dan zal deze ingang altijd een 1 lezen wanneer er verder niks aan verbonden is.</p>
+    <p>Wanneer je een weerstand van een redelijk grote waarde (meestal 1 kΩ, kan ook 10 kΩ zijn) plaatst tussen +5 V en de ingang, dan zal deze ingang altijd een 1 lezen wanneer er verder niks aan verbonden is.</p>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
             <img src="../../img/pullup-schema.png" class="img-fluid" alt="Ingang met pull-upweerstand">
             <figcaption>Ingang met pull-upweerstand</figcaption>
         </figure>
     </div>
-    <p>Als we aan deze ingang ook nog een NO-knop hangen, heeft deze in rust geen invloed en blijven we een 1 lezen. Als we de andere kant van de knop verbinden met de massa, dan zal het indrukken van de knop ervoor zorgen dat de ingang nu rechtstreeks verbonden is met de massa, waardoor we op de ingang een 0 gaan lezen.</p>
+    <p>Als je aan deze ingang ook nog een NO-knop hangt, heeft die in rust geen invloed en blijf je een 1 lezen. Als je de andere kant van de knop verbindt met de massa, dan zal het indrukken van de knop ervoor zorgen dat de ingang nu rechtstreeks verbonden is met de massa, waardoor je op de ingang een 0 gaat lezen.</p>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
             <img src="../../img/pullup-breadboard-foto.png" class="img-fluid" alt="Breadboard met pull-upweerstand">
         </figure>
     </div>
     <p>Een pull-upweerstand kan dus hardwarematig aan de schakeling worden toegevoegd, maar bij de Arduino kan deze ook softwarematig geïmplementeerd worden.</p>
-    <p>Bij het definiëren van de pin als ingang kunnen we namelijk naast <code>INPUT</code> ook kiezen voor <code>INPUT_PULLUP</code>. Wanneer we <code>INPUT_PULLUP</code> kiezen, zal bij de Arduino <strong>intern</strong> een pull-upweerstand ingeschakeld worden, zodat we deze extern niet meer moeten voorzien.</p>
+    <p>Bij het definiëren van de pin als ingang kan je namelijk naast <code>INPUT</code> ook kiezen voor <code>INPUT_PULLUP</code>. Wanneer je <code>INPUT_PULLUP</code> kiest, zal bij de Arduino <strong>intern</strong> een pull-upweerstand ingeschakeld worden, zodat je die extern niet meer moet voorzien.</p>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
             <img src="../../img/input-pullup-schema.png" class="img-fluid" alt="Ingang met INPUT_PULLUP configuratie">
@@ -104,7 +104,7 @@
             <figcaption>Pull-downschakeling</figcaption>
         </figure>
     </div>
-    <p>Om een 1 op de ingang te krijgen, moeten we de andere kant van de NO-knop verbinden met +5 V, zodat bij het indrukken van de knop de ingang rechtstreeks verbonden wordt met +5 V en de 1 op de ingang komt.</p>
+    <p>Om een 1 op de ingang te krijgen, moet je de andere kant van de NO-knop verbinden met +5 V, zodat bij het indrukken van de knop de ingang rechtstreeks verbonden wordt met +5 V en de 1 op de ingang komt.</p>
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
             <img src="../../img/pulldown-breadboard-foto.png" class="img-fluid" alt="Breadboard met pull-downweerstand">

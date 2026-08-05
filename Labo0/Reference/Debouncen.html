@@ -57,18 +57,20 @@ void loop()
         <p>Tijdens de milliseconden dat de contacten denderen, gaat de ingang meerdere keren van hoog naar laag en terug. Je code doet precies wat er staat: ze telt elke overgang, en voor jouw ene druk zijn dat er meerdere geweest. Hoeveel er dat zijn, hangt af van de knop en van hoe je duwt, en verschilt van druk tot druk.</p>
     </div>
 
-    <!-- TODO: screenshot van de seri&euml;le monitor waarin de teller bij tien drukken
-         voorbij de 10 springt, met een paar sprongen van meer dan 1 zichtbaar -->
+    <!-- TODO: screenshot van de seri&euml;le monitor na tien drukken op de knop, met de kolom
+         eindigend op een getal ver boven de 10. Dezelfde stijl als
+         img/arduino-ide-seriele-monitor.png. Opslaan als img/debounce-teller-springt.png en
+         de TODO-prefix hier weghalen. -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-debounce-teller-springt.png" class="img-fluid" alt="TODO: seri&euml;le monitor waarin de drukteller bij tien drukken tot ver boven de 10 loopt">
+            <img src="../../img/TODO-debounce-teller-springt.png" class="img-fluid" alt="Seri&euml;le monitor waarin de drukteller na tien drukken tot ver boven de 10 loopt">
             <figcaption>Tien drukken op de knop, geteld zonder debouncing.</figcaption>
         </figure>
     </div>
 
     <h2 id="debouncen-met-een-korte-pauze">Debouncen met een korte pauze</h2>
 
-    <p>Dit is een ongewenst fenomeen. We willen een perfecte overgang tussen het ene niveau en het andere niveau. Om dat te bereiken kan je het signaal "debouncen", met andere woorden het denderen van de contacten tegenwerken.</p>
+    <p>Dit is een ongewenst fenomeen. Je wil een perfecte overgang tussen het ene niveau en het andere niveau. Om dat te bereiken kan je het signaal "debouncen", met andere woorden het denderen van de contacten tegenwerken.</p>
     <p>Het denderen zelf gebeurt in een fractie van een seconde. De duur ervan zal altijd minder zijn dan een tiende van een seconde, meestal zelfs nog korter. Een mogelijke debounce-oplossing is dan ook om het ingangssignaal te "pollen" (= constant na elkaar uitlezen) en, zodra een ander niveau gedetecteerd is, een pauze in het pollen in te lassen van 50 ms. Na deze pauze is het denderen zeker voorbij en kan de nu stabiele ingang gelezen worden. Dit heeft wel de beperking dat het signaal niet sneller dan binnen 50 ms mag wisselen.</p>
 
     <div class="info-box tip">

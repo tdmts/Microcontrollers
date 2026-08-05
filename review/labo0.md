@@ -168,7 +168,17 @@ foto's moeten nog gemaakt worden en dat kan alleen met de echte hardware erbij. 
 `TODO-`bestandsnamen blijven staan, zodat `check-content.sh` ze bij elke run als
 niet-blokkerende waarschuwing blijft melden.
 
-**Status:** open, wacht op de foto's
+**Bijgesteld (2026-08-05):** de veronderstelling dat dit hardware vraagt, klopt niet.
+`pullup-breadboard-foto.png` en `pulldown-breadboard-foto.png`, waar labo 0 dit soort beeld
+al gebruikt, zijn Tinkercad-renders en geen foto's; ze heten alleen zo. Beide gaten worden
+dus ingevuld met een render in diezelfde stijl (`sourcing-led-breadboard.png` en
+`breadboard-knop-en-led.png`), wat betekent dat ze zonder kit gemaakt kunnen worden. De
+`alt`-teksten op beide pagina's staan al in hun definitieve vorm en het `TODO-`comment
+ernaast beschrijft nu wat de render moet tonen. Alleen de bestandsnaam draagt nog de
+`TODO-`prefix, want zonder die prefix is een ontbrekend beeld een blokkerende fout in
+plaats van een waarschuwing.
+
+**Status:** open, wacht op de twee renders
 
 ---
 

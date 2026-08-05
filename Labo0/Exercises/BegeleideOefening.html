@@ -17,7 +17,7 @@
          einde zou die antwoorden dupliceren en de stap-voor-stap opbouw
          doorbreken. -->
     <h1>Begeleide oefening</h1>
-    <p class="lead">In deze oefening bouw je stap voor stap een schakeling met een drukknop en een led. We beginnen heel klein en breiden je programma telkens een beetje uit, tot je op het einde een led laat knipperen met een functie die je zelf hebt geschreven. Neem rustig de tijd en lees bij elke stap ook even het waarom.</p>
+    <p class="lead">In deze oefening bouw je stap voor stap een schakeling met een drukknop en een led. Je begint heel klein en breidt je programma telkens een beetje uit, tot je op het einde een led laat knipperen met een functie die je zelf hebt geschreven. Neem rustig de tijd en lees bij elke stap ook even het waarom.</p>
 
     <h2 id="stappenplan">Stappenplan</h2>
 
@@ -57,7 +57,7 @@ void loop()
     <p>Wil je liever geen externe weerstand plaatsen? Dan kan je in plaats daarvan de ingebouwde pull-up van de Arduino gebruiken met <a href="../Reference/pinMode.html#wat-is-het-verschil"><code>INPUT_PULLUP</code></a>. Je hoeft de weerstand op de foto dan niet te plaatsen, en verder blijft alles gelijk.</p>
 
     <h3>Stap 3: Denk eens na over de niveaus bij een pull-up</h3>
-    <p>Voor je iets uittest: probeer eerst zelf te redeneren. Als je een pull-up-weerstand gebruikt, welk niveau (hoog of laag) verwacht je op de pin wanneer je de knop <em>niet</em> indrukt? En welk niveau wanneer je de knop <em>wel</em> indrukt?</p>
+    <p>Denk hier eerst zelf na. Als je een pull-up-weerstand gebruikt, welk niveau (hoog of laag) verwacht je op de pin wanneer je de knop <em>niet</em> indrukt? En welk niveau wanneer je de knop <em>wel</em> indrukt?</p>
     <div class="accordion-container">
         <div class="accordion-item">
             <div class="title">Welk niveau lees je met en zonder de knop ingedrukt?</div>
@@ -123,10 +123,13 @@ void loop()
             <img src="../../img/sourcing-schema.png" class="img-fluid" alt="Schema van een led die volgens het principe van sourcing wordt aangestuurd">
         </figure>
     </div>
-    <!-- TODO: voeg een echte foto toe van dit schema op het breadboard (led met 220 ohm voorschakelweerstand op pin 3) -->
+    <!-- TODO: Tinkercad-render van dit schema op het breadboard, in dezelfde stijl als
+         img/pullup-breadboard-foto.png: Uno onderaan, breadboard erboven, led met een
+         220 ohm voorschakelweerstand van pin 3 naar GND. Opslaan als
+         img/sourcing-led-breadboard.png en de TODO-prefix hier weghalen. -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-sourcing-led-breadboard.png" class="img-fluid" alt="TODO: foto van de led met voorschakelweerstand op pin 3 op het breadboard">
+            <img src="../../img/TODO-sourcing-led-breadboard.png" class="img-fluid" alt="TODO: de led met voorschakelweerstand op pin 3 op het breadboard">
         </figure>
     </div>
     <div class="info-box">
@@ -135,7 +138,7 @@ void loop()
     </div>
 
     <h3>Stap 6: Denk eens na over de niveaus voor sourcing</h3>
-    <p>Opnieuw eerst zelf redeneren. Als je de led aanstuurt volgens sourcing, welk niveau moet er dan op de anode staan en welk op de kathode om de led te doen oplichten?</p>
+    <p>Denk hier eerst zelf na. Als je de led aanstuurt volgens sourcing, welk niveau moet er dan op de anode staan en welk op de kathode om de led te doen oplichten?</p>
     <div class="accordion-container">
         <div class="accordion-item">
             <div class="title">Welk niveau moet er op de anode en op de kathode staan?</div>
@@ -144,14 +147,14 @@ void loop()
     </div>
 
     <h3>Stap 7: De juiste voorschakelweerstand berekenen</h3>
-    <p>Nu berekenen we welke weerstand je nodig hebt. In de datasheet van een led vind je twee waarden terug. De <strong>I<sub>forward</sub></strong> is de nominale stroom die je door de led wil sturen om die mooi te laten branden, vaak ongeveer 20&nbsp;mA. De <strong>V<sub>forward</sub></strong> is de spanning die over de led staat bij die stroom, meestal tussen 1,8&nbsp;V en 2&nbsp;V.</p>
+    <p>Nu bereken je welke weerstand je nodig hebt. In de datasheet van een led vind je twee waarden terug. De <strong>I<sub>forward</sub></strong> is de nominale stroom die je door de led wil sturen om die mooi te laten branden, vaak ongeveer 20&nbsp;mA. De <strong>V<sub>forward</sub></strong> is de spanning die over de led staat bij die stroom, meestal tussen 1,8&nbsp;V en 2&nbsp;V.</p>
     <p>Met de <a href="../Reference/WetVanOhm.html">wet van Ohm</a> reken je de weerstand uit. Je trekt eerst de spanning over de led af van de voedingsspanning, want dat is het stuk spanning dat de weerstand moet opnemen:</p>
     <div class="math-tex">
         $$ R = \frac{U}{I} = \frac{V_{CC} - V_{forward}}{I_{forward}} = \frac{5\,\text{V} - 1{,}8\,\text{V}}{20\,\text{mA}} \approx 160\ \Omega \text{ (theoretisch)} $$
     </div>
 
     <h3>Stap 8: Denk eens na over de beschikbare weerstandswaarden</h3>
-    <p>Je berekende 160&nbsp;&Omega;, maar dat is een theoretische waarde. Zit die 160&nbsp;&Omega; ook echt in je Arduino-starterkit? En welke weerstand neem je dan best?</p>
+    <p>Denk hier eerst zelf na. Je berekende 160&nbsp;&Omega;, maar dat is een theoretische waarde. Zit die 160&nbsp;&Omega; ook echt in je Arduino-starterkit? En welke weerstand neem je dan best?</p>
     <div class="accordion-container">
         <div class="accordion-item">
             <div class="title">Welke weerstand neem je dan uit je kit?</div>
@@ -160,7 +163,7 @@ void loop()
     </div>
 
     <h3>Stap 9: Denk eens na over de stroom die een pin levert</h3>
-    <p>Nog een denkoefening. Hoeveel stroom kan een pin van de Arduino eigenlijk leveren? En hebben we die voorschakelweerstand dan wel echt nodig?</p>
+    <p>Denk hier eerst zelf na. Hoeveel stroom kan een pin van de Arduino eigenlijk leveren? En heb je die voorschakelweerstand dan wel echt nodig?</p>
     <div class="accordion-container">
         <div class="accordion-item">
             <div class="title">Hoeveel stroom levert een pin, en heb je die weerstand echt nodig?</div>
@@ -171,7 +174,7 @@ void loop()
     </div>
 
     <h3>Stap 10: De led laten reageren op de knop</h3>
-    <p>Nu koppelen we knop en led aan elkaar. Breid je programma uit met een <a href="../Reference/digitalReadDigitalWrite.html"><code>digitalWrite</code></a> zodat de led aangaat wanneer je de knop indrukt en weer uitgaat wanneer je loslaat. Denk terug aan stap 3: bij een pull-up is de knop ingedrukt wanneer je <code>LOW</code> leest, dus daar test je met een <a href="../Reference/Selecties.html#voorbeeld-tweevoudige-selectie">tweevoudige selectie</a> (<code>if</code> / <code>else</code>) op.</p>
+    <p>Nu koppel je knop en led aan elkaar. Breid je programma uit met een <a href="../Reference/digitalReadDigitalWrite.html"><code>digitalWrite</code></a> zodat de led aangaat wanneer je de knop indrukt en weer uitgaat wanneer je loslaat. Denk terug aan stap 3: bij een pull-up is de knop ingedrukt wanneer je <code>LOW</code> leest, dus daar test je met een <a href="../Reference/Selecties.html#voorbeeld-tweevoudige-selectie">tweevoudige selectie</a> (<code>if</code> / <code>else</code>) op.</p>
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 const int ledPin = 3;  // ledPin definiëren
 
@@ -198,10 +201,13 @@ void loop()
     digitalWrite(ledPin, LOW); // Sourcing -&gt; LOW = de LED brandt niet
   }
 }</code></pre>
-    <!-- TODO: voeg een breadboardfoto toe van de volledige schakeling (knop op pin 2, led + weerstand op pin 3) -->
+    <!-- TODO: Tinkercad-render van de volledige schakeling, in dezelfde stijl als
+         img/pullup-breadboard-foto.png: knop op pin 2 met externe pull-up, en de led met
+         220 ohm voorschakelweerstand van pin 3 naar GND. Opslaan als
+         img/breadboard-knop-en-led.png en de TODO-prefix hier weghalen. -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-breadboard-knop-en-led.png" class="img-fluid" alt="TODO: breadboardfoto van de volledige schakeling met de knop op pin 2 en de led met weerstand op pin 3">
+            <img src="../../img/TODO-breadboard-knop-en-led.png" class="img-fluid" alt="TODO: de volledige schakeling op het breadboard, met de knop op pin 2 en de led met weerstand op pin 3">
         </figure>
     </div>
 
@@ -236,7 +242,7 @@ void loop()
 }</code></pre>
 
     <h3>Stap 12: Een eigen knipper()-functie maken</h3>
-    <p>Vanaf hier maken we je code netter met een <a href="../Reference/FunctiesParameters.html#eigen-functies-maken">eigen functie</a>. Schrijf een functie <code>knipper()</code> die de led 3 keer na elkaar aan- en uitzet wanneer je de knop indrukt. Vergeet niet om de functie ook echt op te roepen in je <a href="../Reference/SetupLoop.html#loop"><code>loop()</code></a>.</p>
+    <p>Vanaf hier maak je de code netter met een <a href="../Reference/FunctiesParameters.html#eigen-functies-maken">eigen functie</a>. Schrijf een functie <code>knipper()</code> die de led 3 keer na elkaar aan- en uitzet wanneer je de knop indrukt. Vergeet niet om de functie ook echt op te roepen in je <a href="../Reference/SetupLoop.html#loop"><code>loop()</code></a>.</p>
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 const int ledPin = 3;  // ledPin definiëren
 
@@ -325,7 +331,7 @@ void knipper()
 }</code></pre>
 
     <h3>Stap 14: Het aantal knipperingen instelbaar maken</h3>
-    <p>Nu maken we de functie flexibeler met een <a href="../Reference/FunctiesParameters.html#uitleg">parameter</a>. Voeg een parameter <code>aantal</code> toe zodat je zelf kan kiezen hoe vaak de led knippert. Roep de functie daarna zo op dat de led 4 keer aan- en uitgaat: <code>knipper(4)</code>.</p>
+    <p>Nu maak je de functie flexibeler met een <a href="../Reference/FunctiesParameters.html#uitleg">parameter</a>. Voeg een parameter <code>aantal</code> toe zodat je zelf kan kiezen hoe vaak de led knippert. Roep de functie daarna zo op dat de led 4 keer aan- en uitgaat: <code>knipper(4)</code>.</p>
     <pre class="code-wrapper language-cpp linenumbers show-language"><code>const int knopPin = 2;
 const int ledPin = 3;  // ledPin definiëren
 

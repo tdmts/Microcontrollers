@@ -109,16 +109,35 @@ doorloop van labo 6 heeft het deel dat in dat labo viel meegenomen: de twee lead
   [SnelheidEnRichtingMetL293.html](../Labo5/Exercises/SnelheidEnRichtingMetL293.html).
 - De rolluikzin op [RolluikMetLdrEnEindeloopschakelaars.html](../Labo5/Exercises/RolluikMetLdrEnEindeloopschakelaars.html):
   geen beeld meer, maar wat de eindeloopschakelaar doet.
-- De twee herroepen Belgicismen in labo 0, en "Nog een denkoefening." plus "Opnieuw eerst zelf
-  redeneren." in dezelfde map.
-- 12 leads op de dashboards en de referentiehubs. Die van labo 6 en labo 7 zijn gedaan.
-- `we` naar de je-vorm, repo-breed. Labo 6 (vier voorkomens) en labo 7 (&eacute;&eacute;n in lopende
-  tekst) zijn gedaan.
+- 11 leads op de dashboards en de referentiehubs. Die van labo 6 en labo 7 zijn gedaan, en
+  `Labo0/Exercises/dashboard.html` op 5 augustus 2026. De theoriehub van labo 0 is bewust blijven
+  staan: die gaat mee wanneer labo 2 tot 5 samen aan de beurt komen.
+- `we` naar de je-vorm, repo-breed. Labo 6 (vier voorkomens), labo 7 (&eacute;&eacute;n in lopende
+  tekst) en labo 0 (27 voorkomens in tien bestanden, 5 augustus 2026) zijn gedaan. Blijft: labo 1
+  tot 5.
 
 ## Labo 0
 
-Klaar. Zeventien inhoudelijke pagina's plus `dashboard.html` en `reference.html`; die laatste twee
-hebben alleen een boilerplate `lead` en zijn ongewijzigd gebleven.
+Klaar. Zeventien inhoudelijke pagina's plus `dashboard.html` en `reference.html`.
+
+**Nalezing van 5 augustus 2026**, waarmee de achterstand voor dit labo weggewerkt is:
+
+- De twee herroepen Belgicismen zijn teruggedraaid op
+  [Iteraties.html](../Labo0/Reference/Iteraties.html): "op het eerste gezicht" terug naar "op het
+  eerste zicht" (2x) en "voortzetten" terug naar "verderzetten".
+- `we` naar de je-vorm, 27 voorkomens in tien bestanden. Het zwaarst in
+  [PullUpPullDown.html](../Labo0/Reference/PullUpPullDown.html) (7) en
+  [Iteraties.html](../Labo0/Reference/Iteraties.html) (8), waar de meeste zinnen herbouwd moesten
+  worden in plaats van dat er een woord verwisseld kon worden.
+- De aansporing bij een verborgen antwoord staat nu op alle vier de denkstappen van
+  [BegeleideOefening.html](../Labo0/Exercises/BegeleideOefening.html) in dezelfde vorm, "Denk hier
+  eerst zelf na.", de zin die SCHRIJFSTIJL.md zelf als voorbeeld geeft. Dat betreft meer dan de twee
+  werkwoordloze gevallen die hier als achterstand genoteerd stonden: stap 3 had een derde variant
+  ("Voor je iets uittest: probeer eerst zelf te redeneren.") en stap 8 had er helemaal geen. De
+  aansporing behouden in plaats van schrappen is beslist op grond van zeven vindplaatsen in labo 1
+  tot 7, die het patroon repo-breed vastleggen.
+- [dashboard.html](../Labo0/Exercises/dashboard.html) heeft een eigen `lead` gekregen, in de vorm van
+  labo 6 en 7. De theoriehub houdt bewust zijn stock-opener tot labo 2 tot 5 aan de beurt komen.
 
 | Pagina | Wat er veranderde |
 |---|---|

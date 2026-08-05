@@ -13,24 +13,28 @@
     <h1>Een programma uploaden</h1>
     <p class="lead">Stap voor stap van een lege Arduino IDE naar een draaiend programma: het juiste board en de juiste port kiezen, het voorbeeldprogramma Blink openen, compileren en uploaden. Op het einde weet je ook hoe je ziet dat de upload wel of niet gelukt is.</p>
 
-    <p>We gebruiken hier <strong>Blink</strong> als testprogramma. Dat is het voorbeeld dat de ingebouwde led van je bord laat knipperen. Je hoeft er niets voor aan te sluiten en je ziet aan het bord zelf of de upload geslaagd is, en daarmee is het geschikt om je programmeeromgeving te testen.</p>
+    <p>Je gebruikt hier <strong>Blink</strong> als testprogramma. Dat is het voorbeeld dat de ingebouwde led van je bord laat knipperen. Je hoeft er niets voor aan te sluiten en je ziet aan het bord zelf of de upload geslaagd is, en daarmee is het geschikt om je programmeeromgeving te testen.</p>
 
     <h2 id="je-bord-en-poort-kiezen">1. Je bord en poort kiezen</h2>
     <ol>
         <li>Open de Arduino IDE.</li>
         <li>Verbind de Arduino via de USB-kabel met je computer.</li>
-        <li>Als je klikt op <strong>Select board</strong>, dan zou je jouw Arduino in de lijst moeten zien.
+        <li>Klik bovenaan in de werkbalk op <strong>Select Board</strong>.
             <div class="my-4">
                 <figure class="figure w-100 text-center figure-zoom">
-                    <img src="../../img/arduino-ide-select-board.png" class="img-fluid" alt="Arduino in de Select board-lijst" width="600">
-                    <figcaption>De Arduino verschijnt in de lijst onder Select board.</figcaption>
+                    <img src="../../img/arduino-ide-select-board.png" class="img-fluid" alt="De knop Select Board in de werkbalk van de Arduino IDE" width="600">
+                    <figcaption>Select Board staat in de werkbalk, naast de knoppen om te verifi&euml;ren en te uploaden.</figcaption>
                 </figure>
             </div>
         </li>
-        <li>Klap die lijst open en kies de lijn met jouw bord. Daar staat niet alleen het type bord (<strong>Arduino Uno / Leonardo</strong>) maar ook de <strong>poort</strong> waarop het aangesloten is.
+        <li>In de lijst die openklapt, kies je de lijn met jouw bord. Daar staat niet alleen het type bord (<strong>Arduino Uno / Leonardo</strong>) maar ook de <strong>poort</strong> waarop het aangesloten is.
+            <!-- TODO: screenshot van de opengeklapte Select Board-lijst, met het bord en de
+                 COM-poort leesbaar, in dezelfde stijl als de andere beelden op deze pagina
+                 (IDE 2.3.7, rood kader). Opslaan als img/arduino-ide-select-board-open.png
+                 en de TODO-prefix hier weghalen. -->
             <div class="my-4">
                 <figure class="figure w-100 text-center figure-zoom">
-                    <img src="../../img/TODO-arduino-ide-select-board-open.png" class="img-fluid" alt="TODO: screenshot van de opengeklapte Select board-dropdown met Arduino Uno en de COM-poort zichtbaar" width="600">
+                    <img src="../../img/TODO-arduino-ide-select-board-open.png" class="img-fluid" alt="De opengeklapte Select Board-lijst met Arduino Uno en de COM-poort" width="600">
                     <figcaption>In de opengeklapte lijst zie je zowel het bord als de poort staan.</figcaption>
                 </figure>
             </div>
@@ -45,9 +49,13 @@
 
     <h2 id="blink-openen">2. Het voorbeeldprogramma Blink openen</h2>
     <p>De Arduino IDE opent met een lege sketch, met een leeg <code>setup()</code> en een leeg <code>loop()</code>. Dat programma doet nog niets, dus open het voorbeeldprogramma via <strong>File &gt; Examples &gt; 01.Basics &gt; Blink</strong>.</p>
+    <!-- TODO: screenshot van het opengeklapte menu File > Examples > 01.Basics met Blink
+         aangeduid, in dezelfde stijl als de andere beelden op deze pagina (IDE 2.3.7, rood
+         kader). Opslaan als img/arduino-ide-file-examples-blink.png en de TODO-prefix hier
+         weghalen. -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-arduino-ide-file-examples-blink.png" class="img-fluid" alt="TODO: screenshot van het opengeklapte menu File groter dan Examples groter dan 01.Basics groter dan Blink" width="600">
+            <img src="../../img/TODO-arduino-ide-file-examples-blink.png" class="img-fluid" alt="Het opengeklapte menu File, Examples, 01.Basics met Blink aangeduid" width="600">
             <figcaption>Blink zit bij de meegeleverde voorbeelden onder 01.Basics.</figcaption>
         </figure>
     </div>
@@ -89,17 +97,22 @@
 
     <h2 id="is-het-gelukt">5. Hoe weet je dat het gelukt is?</h2>
     <p>Als de upload klaar is, verschijnt de boodschap <strong>Done uploading.</strong></p>
+    <!-- TODO: screenshot van de melding Done uploading, hetzelfde kader als
+         img/arduino-ide-done-compiling.png. Opslaan als img/arduino-ide-done-uploading.png
+         en de TODO-prefix hier weghalen. -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-arduino-ide-done-uploading.png" class="img-fluid" alt="TODO: screenshot van de melding Done uploading in de Arduino IDE" width="600">
+            <img src="../../img/TODO-arduino-ide-done-uploading.png" class="img-fluid" alt="De melding Done uploading in de Arduino IDE" width="600">
             <figcaption>Done uploading: je programma staat nu in het geheugen van de microcontroller.</figcaption>
         </figure>
     </div>
     <p>Vanaf dat moment draait je programma op de Arduino zelf. Kijk naar je bord: de kleine led met de letter <strong>L</strong> ernaast knippert nu één seconde aan en één seconde uit. Dat blijft zo, ook als je de USB-kabel uittrekt en het bord op een andere manier voedt. Het programma staat namelijk in de microcontroller en niet op je laptop.</p>
+    <!-- TODO: foto van je eigen bord terwijl Blink draait, met de led L aan en de letter L
+         leesbaar. Opslaan als img/arduino-uno-blink-led.jpg en de TODO-prefix hier weghalen. -->
     <div class="my-4">
         <figure class="figure w-100 text-center figure-zoom">
-            <img src="../../img/TODO-arduino-uno-blink-led.jpg" class="img-fluid" alt="TODO: foto van een Arduino Uno waarop de ingebouwde led L brandt" width="600">
-            <figcaption>De ingebouwde led L knippert: Blink draait.</figcaption>
+            <img src="../../img/TODO-arduino-uno-blink-led.jpg" class="img-fluid" alt="Een Arduino Uno waarop de ingebouwde led met de letter L ernaast brandt" width="600">
+            <figcaption>De ingebouwde led L staat aan: Blink draait.</figcaption>
         </figure>
     </div>
 
