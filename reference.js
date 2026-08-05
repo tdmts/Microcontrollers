@@ -14,6 +14,7 @@ window.LAB_REFERENCE = {
                 topics: [
                     { id: 'watiseenmicrocontroller', name: 'Wat is een microcontroller?', href: 'WatIsEenMicrocontroller.html', blurb: 'Een computer op één chip: waarin hij verschilt van de pc waarop je programmeert, en van een PLC of Siemens LOGO.' },
                     { id: 'hardensoftware', name: 'Hard- en software', href: 'HardEnSoftware.html', blurb: 'Overzicht van de hardware (Arduino-kit) en software (Arduino IDE, TinkerCAD) die je nodig hebt.' },
+                    { id: 'breadboard', name: 'Het breadboard', href: 'HetBreadboard.html', blurb: 'Welke gaten van de witte plaat al met elkaar doorverbonden zijn: de voedingsrails, de kolommen van vijf, en waar die verbinding stopt.' },
                     { id: 'setuploop', name: 'Setup en loop', href: 'SetupLoop.html', blurb: 'Een Arduino-programma bestaat altijd uit twee functies: setup en loop.' },
                     { id: 'programmauploaden', name: 'Een programma uploaden', href: 'ProgrammaUploaden.html', blurb: 'Stap voor stap je bord en poort kiezen, het voorbeeld Blink openen, verifiëren en uploaden naar de Arduino.' }
                 ]

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Het breadboard</title>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://tdmts.github.io/OrionContent/orion.css">
+    <script src="https://tdmts.github.io/OrionContent/orion.js"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Het breadboard</h1>
+    <p class="lead">Op een breadboard bouw je een schakeling zonder te solderen: je steekt de poten van je componenten en je draden gewoon in de gaten. Onder het plastic zijn bepaalde gaten al met elkaar doorverbonden, en welke dat zijn bepaalt hoe je schakeling loopt.</p>
+    <p>Je ziet die verbindingen niet, want ze zitten onder de witte plaat. Twee poten in hetzelfde groepje gaten hangen elektrisch aan elkaar, ook al raken ze elkaar nergens aan. Twee poten in verschillende groepjes hebben met elkaar te maken zolang je er een draad tussen legt.</p>
+
+    <div class="my-4">
+        <figure class="figure w-100 text-center figure-zoom">
+            <img src="../../img/breadboard-verbindingen.jpg" class="img-fluid" alt="Een breadboard van bovenaf, met pijlen die aanduiden dat de voedingsrails boven- en onderaan over hun lengte doorverbonden zijn, dat de kolommen ertussen per vijf doorverbonden zijn, en dat de voedingsrails halverwege onderbroken zijn">
+            <figcaption>Een breadboard van bovenaf, met de verbindingen aangeduid. De plaat ligt hier liggend, dus de voedingsrails lopen horizontaal en de kolommen van vijf staan rechtop. Bron: Arduino Forum.</figcaption>
+        </figure>
+    </div>
+    <p>De bijschriften op de foto staan in het Engels. <em>Top rows</em> en <em>bottom rows</em> zijn de voedingsrails boven- en onderaan. <em>Rows are linked horizontally</em> zegt dat zo'n rail over zijn lengte doorverbonden is. <em>These columns are linked vertically</em> slaat op de kolommen van vijf gaten daartussen. En <em>connection is broken here</em> wijst naar de plaats waar een rail halverwege onderbroken is.</p>
+
+    <h2 id="de-voedingsrails">De voedingsrails</h2>
+    <p>Langs de twee lange zijden lopen smalle stroken gaten met een rode en een blauwe lijn ernaast, en met een <strong>+</strong> en een <strong>&minus;</strong> aan het uiteinde. Dat zijn de voedingsrails. Alle gaten van &eacute;&eacute;n rail hangen aan elkaar, over de volledige lengte van de plaat.</p>
+    <p>Daar sluit je de voeding van je Arduino op aan: een draad van de 5V-pin naar de rode rail, een draad van een GND-pin naar de blauwe. Vanaf dan kan je overal op de plaat aan 5&nbsp;V en aan massa, zonder telkens tot bij de Arduino terug te moeten. In deze cursus lees je die twee daarom vaak als de <strong>plusrail</strong> en de <strong>massarail</strong> of <strong>GND-rail</strong>.</p>
+    <p>Op veel breadboards is elke rail halverwege onderbroken, en dat is de onderbreking waar de foto twee keer naar wijst. Je herkent ze aan een onderbreking in de rode of blauwe lijn ernaast. De linkerhelft en de rechterhelft van die rail zijn dan twee losse stukken: wat je links aansluit, staat rechts nergens. Wil je de voeding over de hele lengte, dan leg je een korte draad over de onderbreking heen. Bekijk je eigen plaat even, want er bestaan ook breadboards waarvan de rails wel gewoon doorlopen.</p>
+
+    <h2 id="de-kolommen-van-vijf">De kolommen van vijf</h2>
+    <p>Tussen de twee voedingsrails ligt het grote middenveld met de letters en de cijfers. Daar zijn de gaten doorverbonden <strong>per vijf</strong>, dwars op de rails. Zo'n groepje van vijf noemen we een kolom. Elke kolom staat op zichzelf: de kolom ernaast is een apart knooppunt.</p>
+    <p>Op die vijf gaten bouw je je verbindingen. Steek je een weerstand en een draad in dezelfde kolom, dan hangen ze aan elkaar. Je hebt vijf gaten per kolom, dus je kan er tot vijf dingen in laten samenkomen. E&eacute;n gat is bezet door de poot zelf, wat er vier overlaat om verder te gaan.</p>
+    <p>Midden over het bord loopt een groef, en die groef scheidt het middenveld in twee helften. Een kolom boven de groef en de kolom eronder liggen wel in elkaars verlengde, maar ze zijn twee losse knooppunten. Die groef zit er met opzet: een IC met twee rijen pootjes past er precies overheen, zodat elke poot in zijn eigen kolom terechtkomt in plaats van kortgesloten te worden met de poot ertegenover.</p>
+
+    <div class="info-box remark">
+        <div class="info-title remark">Twee gaten hangen aan elkaar wanneer</div>
+        <ul>
+            <li>ze in dezelfde voedingsrail zitten, aan dezelfde kant van de onderbreking;</li>
+            <li>ze in dezelfde kolom van vijf zitten, aan dezelfde kant van de groef.</li>
+        </ul>
+        <p>In alle andere gevallen zijn het losse knooppunten, en leg je er zelf een draad tussen als je ze wil verbinden.</p>
+    </div>
+</div>
+
+<script src="../../reference.js"></script>
+<script src="../../back-link.js"></script>
+</body>
+</html>
